@@ -1,0 +1,155 @@
+<link rel="stylesheet" href="layui/css/layui.css">
+<link rel="stylesheet" href="css/style.css">
+<body class="layui-layout-body">
+
+    <div style="padding: 15px;">
+        <form class="layui-form" action="">
+            
+            
+           <div class="layui-form-item">
+                <label class="layui-form-label">选手</label>
+                <div class="layui-input-block">
+                    <input id="SeasonID" type="hidden" name="" value="">
+                    <select id="SeasonID_s" lay-verify="required" name="SeasonID" lay-filter="myselect">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+  
+            <div class="layui-form-item">
+                <label class="layui-form-label lab_width">风速</label>
+                <div class="layui-inline">
+                     <input id="ID" name="ID" type="hidden"  value="">
+                    <input type="text" id="WindSpeed" name="WindSpeed" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label lab_width">成绩</label>
+                <div class="layui-inline">
+                    <input type="text" id="Result" name="Result" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            
+<!--           <div class="layui-form-item">
+                <label class="layui-form-label">比赛</label>
+                <div class="layui-input-block">
+                    <input id="MatchID" type="hidden" name="" value="">
+                    <select id="MatchID_s" lay-verify="required" name="MatchID" lay-filter="myselect">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+            -->
+            
+            
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即添加</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label"></label>
+
+            </div>
+
+        </form>
+    </div>
+    <script src="https://cdn.bootcss.com/axios/0.18.0/axios.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="layui/layui.js"></script>
+    <script>
+        
+            function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null)
+            return unescape(r[2]);
+        return null; //返回参数值
+    }
+
+        
+        layui.use(['table', 'form'], function() {
+            var table = layui.table;
+            var form = layui.form;
+            form.on('submit(add)', function(data) {
+                var index = parent.layer.getFrameIndex(window.name);
+                let id=data.field.ID;
+                $.ajax({
+                    url:'http://svcsa.org/ctfcmatch/'+getUrlParam('matchid')+'/ctfcstatistics?playerid='+data.field.SeasonID ,
+                    type : 'POST',
+                    dataType : 'json',
+                    data : {
+                        PlayerID: data.field.SeasonID,
+                       WindSpeed: data.field.WindSpeed,
+                        Result: data.field.Result,
+                         MatchID: getUrlParam('matchid'),
+                    },
+                    header:{
+                        Accept:'application/json'
+                    },
+                    success:function(data){
+            layer.msg('添加成功', {
+                            icon: 1,
+                            time: 1500
+                        }, function() {
+                            parent.layer.close(index);
+                        });
+                    },
+                    error:function(xhr){
+                        if (xhr.status == 401)
+							top.location.href = 'login.html';
+                    }
+                });
+            });
+            
+               axios.get('http://svcsa.org/CTFCPlayer', {}).then(function(response) {
+                    console.log(response);
+                    $.each(response.data.data, function(index, item) {
+                $('#SeasonID_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                    });
+                    form.render();
+                    var num = $("#SeasonID").val();
+                    var numbers = $("#SeasonID_s").find("option"); //获取select下拉框的所有值
+                    console.log(numbers);
+                    for (var j = 1; j < numbers.length; j++) {
+                        console.log(numbers);
+                        if ($(numbers[j]).val() == num) {
+                            console.log('ok');
+                            $(numbers[j]).attr("selected", "selected");
+                            $(numbers[j]).attr("class", "layui-this");
+                            form.render();
+                        }
+                    }
+                })
+                
+                
+//                  axios.get('http://svcsa.org/CTFCMatch', {}).then(function(response) {
+//                    console.log(response);
+//                    $.each(response.data.data, function(index, item) {
+//                $('#MatchID_s').append('<option value="' + item.ID + '">' + item.ID + '</option>');
+//                    });
+//                    form.render();
+//                    var num = $("#MatchID").val();
+//                    var numbers = $("#MatchID_s").find("option"); //获取select下拉框的所有值
+//                    console.log(numbers);
+//                    for (var j = 1; j < numbers.length; j++) {
+//                        console.log(numbers);
+//                        if ($(numbers[j]).val() == num) {
+//                            console.log('ok');
+//                            $(numbers[j]).attr("selected", "selected");
+//                            $(numbers[j]).attr("class", "layui-this");
+//                            form.render();
+//                        }
+//                    }
+//                })
+                
+                .catch(function(error) {
+                    console.log(error);
+                });
+            
+        });
+    </script>
+
+</body>

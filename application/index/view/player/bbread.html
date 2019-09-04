@@ -1,0 +1,72 @@
+<div class="inside-banner block athlete-banner" style="background: url({$Think.config.public_assets}/uploads/{$player.PlayerPhotoSrc}) right bottom no-repeat;background-size: contain;">
+    <h3>球员简介</h3>
+    <div class="introduce-box">
+        <span class="name">{$player.PlayerName}</span>
+        <div class="info">
+            <div class="item">
+                号码<i>{$player.Number}</i>
+            </div><!--
+            <div class="item">
+                年龄<i></i>
+            </div>-->
+            <div class="item">
+                身高<i>{$player.Height}cm</i>
+            </div>
+            <div class="item">
+                体重<i>{$player.Weight}Kg</i>
+            </div>
+        </div>
+        <div class="session_1">
+            <table>
+                <thead>
+                <tr>
+                    <th>电子邮箱</th>
+                    <th>所在球队</th>
+                    <th>所属赛季</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{$player.PlayerEmail}</td>
+                    <td>{$player.TeamName?$player.TeamName:'未分配'}</td>
+                    <td>{$player.SeasonName}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+<div class="athlete-wrap">
+    <div class="block">
+        <div class="ath_des-box">
+            <div class="tab-box">
+                <span class="active">{$player.CompetitionName}</span>
+            </div>
+        </div>
+        <div class="all-box">
+            <div class="list-box active">
+                <div class="row clearfix">
+                    {volist name="players" id="player"  empty='暂没球员信息！'}
+                    <div class="col-md-2">
+                        <a href="{:url('index/bbplayer/read',['id'=>$player.PlayerID])}">
+                            <div class="item-box">
+                                <div class="img-box">
+                                    <img src="{$Think.config.public_assets}/uploads/{$player.PlayerPhotoSrc}">
+                                </div>
+                                <div class="txt-box">
+                                    {$player.PlayerName}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {/volist}
+                </div>
+                <div class="other-box">
+                    <a href="{:url('index/bbplayer/lists')}?seasonid={$player.SeasonID}" class="more">查看更多</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

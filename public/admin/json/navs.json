@@ -1,0 +1,106 @@
+{
+	"contentManagement": [
+		{
+			"title": "篮球比赛",
+			"icon": "icon-text",
+			"href": "bb_match.html",
+			"spread": false,
+			"children": [
+				{
+					"title": "比赛项目",
+					"icon": "icon-text",
+					"href": "bb_competition.html",
+					"spread": false
+				},
+				{
+					"title": "篮球赛季",
+					"icon": "icon-text",
+					"href": "bb_season.html",
+					"spread": false
+				},
+				{
+					"title": "篮球球队",
+					"icon": "icon-text",
+					"href": "bb_team.html",
+					"spread": false
+				},
+				{
+					"title": "篮球队员",
+					"icon": "icon-text",
+					"href": "bb_player.html",
+					"spread": false
+				},{
+					"title": "篮球比赛",
+					"icon": "icon-text",
+					"href": "bb_match.html",
+					"spread": false
+				}
+			]
+		},
+		{
+			"title": "田径",
+			"icon": "icon-text",
+			"href": "bb_match.html",
+			"spread": false,
+			"children": [
+				{
+					"title": "田径赛会",
+					"icon": "icon-text",
+					"href": "ctfc_season.html",
+					"spread": false
+				},
+				{
+					"title": "田径项目",
+					"icon": "icon-text",
+					"href": "ctfc_event.html",
+					"spread": false
+				},
+				{
+					"title": "田径比赛",
+					"icon": "icon-text",
+					"href": "ctfc_match.html",
+					"spread": false
+				},
+				{
+					"title": "田径选手",
+					"icon": "icon-text",
+					"href": "ctfc_player.html",
+					"spread": false
+				}
+			]
+		}
+	],
+	"systemeSttings": [
+		{
+			"title": "新闻",
+			"icon": "icon-text",
+			"href": "news.html",
+			"spread": false
+		},
+		{
+			"title": "FAQ",
+			"icon": "icon-text",
+			"href": "FAQ.html",
+			"spread": false
+		},
+		{
+			"title": "友情链接",
+			"icon": "icon-text",
+			"href": "link.html",
+			"spread": false
+		},
+		{
+			"title": "认证",
+			"icon": "icon-text",
+			"href": "Authentication.html",
+			"spread": false
+		},{
+			"title": "系统配置",
+			"icon": "icon-text",
+			"href": "system_edit.html",
+			"spread": false
+		}
+	]
+}
+
+

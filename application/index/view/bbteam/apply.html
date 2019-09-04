@@ -1,0 +1,300 @@
+<div class="inside-banner block img_1-banner">
+    <h3>申请加入</h3>
+    <p>加入{$competitionseason['CompetitionName']} - {$competitionseason['SeasonName']}，团结拼搏，一起奉献。</p>
+</div>
+<div class="site-box">
+    <div class="block">
+        <span class="icon-home home_icon icon"></span><a href="">首页</a><span class="icon-arrow-right arrow_icon icon"></span><span class="active">申请加入</span>
+    </div>
+</div>
+</div>
+<div class="link-wrap block clearfix">
+    <div class="txt-box">
+        <h3>填写有关信息，组建球队，加入SVCSA</h3>
+        <ul>
+            <li>请填写正确队名  </li>
+            <li>填下正确的联系方式</li>
+            <li>审核后将通过电子邮件通知结果</li>
+        </ul>
+    </div>
+    <form action="" id="apply-form" method="post" enctype="multipart/form-data">
+    <div class="form-box" >
+        <div class="input-box">
+            <input type="text" name="Name" placeholder="球队全名：">
+        </div>
+        <div class="input-box">
+            <input type="text" name="ShortName" placeholder="短名：">
+        </div>
+        <div class="input-box">
+            <input type="text" name="Captain" placeholder="队长：">
+        </div>
+        <div class="input-box">
+            <input type="text" name="Email" placeholder="电子邮件：">
+        </div>
+        <div class="input-box">
+            <input type="text" name="Tel" placeholder="电话：">
+        </div>
+        <div class="input-box">
+            <input type="text" name="Wechat" placeholder="微信：">
+        </div>
+
+        <div class="input-box up_pic-box">
+            <p style="line-height: 30px; margin-left: 5px">上传LOGO（背景透明）</p>
+            <!--<div id="drop_area"></div>-->
+            <input type="file" name="Logo" id="logofile" />
+        </div>
+        <div class="input-box up_pic-box">
+            <p style="line-height: 30px; margin-left: 5px">上传合照</p>
+            <!--<div id="drop_area_2"></div>-->
+            <input type="file"  name="Photo" id="photofile" />
+        </div>
+        <div class="input-box select-input">
+            <span class="select-btn">选择球员</span><span class="nub">已选择<em>0</em>个球员</span>
+            <input type="hidden" name="PlayerNumbers" />
+            <input type="hidden" name="PlayerIDs" />
+        </div>
+        <div class="input-box textarea-box">
+            <textarea placeholder="简介：" name="Description"></textarea>
+        </div>
+        <div class="sub">发送</div>
+    </div>
+    <div class="pop-box">
+        <div class="select-pop">
+            <div class="colse-pop"><img src="{$Think.config.public_assets}/images/close_1.png"></div>
+            <div class="other-box">
+                <div class="list-box">
+                    <div class="row clearfix">
+                        {volist name='playersinseason' id='player'}
+                        <div class="col-md-3">
+                            <div class="item-box">
+                                <label>
+                                    <div class="img-box"><img src="{$Think.config.public_assets}/uploads/{$player['PhotoSrc']}" style="width: 180px;height: 240px;"></div>
+                                    <div class="txt"> <input type="checkbox" name="PlayerIDchk[]" value="{$player['ID']}"  />{$player['Name']} </div>
+                                    <div class="txt"> 指定号码：<input type="text" name="PlayerNumber_{$player['ID']}" placeholder="号码" value="{$player['Number']}" style="width:40px" /></div>
+                                </label>
+                            </div>
+                        </div>
+                        {/volist}
+                    </div>
+
+                </div>
+                <div class="btn-box">
+                    <span class="show">选中</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+
+    <script type="text/javascript">
+
+        function DragImgUpload(id,options) {
+            this.me = $(id);
+            var defaultOpt = {
+                boxWidth:'150px',
+                boxHeight:'100px'
+            }
+            this.preview = $('<div id="preview"><img src="{$Think.config.public_assets}/images/add.png" class="img-responsive"  alt="" title=""> </div>');
+            this.opts=$.extend(true, defaultOpt,{
+            }, options);
+            this.init();
+            this.callback = this.opts.callback;
+            this.fileInput = this.opts.fileInput;
+        }
+
+        //定义原型方法
+        DragImgUpload.prototype = {
+            init:function () {
+                this.me.append(this.preview);
+                this.me.append(this.fileupload);
+                this.cssInit();
+                this.eventClickInit();
+            },
+            cssInit:function () {
+                this.me.css({
+                    'width':this.opts.boxWidth,
+                    'height':this.opts.boxHeight,
+                    'border':'1px solid #cccccc',
+                    'padding':'10px',
+                    'cursor':'pointer'
+                })
+                this.preview.css({
+                    'height':'100%',
+                    'overflow':'hidden'
+                })
+
+            },
+            onDragover:function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'copy';
+            },
+            onDrop:function (e) {
+                var self = this;
+                e.stopPropagation();
+                e.preventDefault();
+                var fileList = e.dataTransfer.files; //获取文件对象
+                // do something upload
+                if(fileList.length == 0){
+                    return false;
+                }
+                //检测文件是不是图片
+                if(fileList[0].type.indexOf('image') === -1){
+                    alert("您拖的不是图片！");
+                    return false;
+                }
+
+                //拖拉图片到浏览器，可以实现预览功能
+                var img = window.URL.createObjectURL(fileList[0]);
+                var filename = fileList[0].name; //图片名称
+                var filesize = Math.floor((fileList[0].size)/1024);
+                if(filesize>500){
+                    alert("上传大小不能超过500K.");
+                    return false;
+                }
+
+                self.me.find("img").attr("src",img);
+                self.me.find("img").attr("title",filename);
+                if(this.callback){
+                    this.callback(fileList);
+                }
+            },
+            eventClickInit:function () {
+                var self = this;
+                this.me.unbind().click(function () {
+                    self.createImageUploadDialog();
+                })
+                var dp = this.me[0];
+                dp.addEventListener('dragover', function(e) {
+                    self.onDragover(e);
+                });
+                dp.addEventListener("drop", function(e) {
+                    self.onDrop(e);
+                });
+
+
+            },
+            onChangeUploadFile:function () {
+
+                var fileInput = this.fileInput;
+                var files = fileInput.files;
+                var file = files[0];
+                var img = window.URL.createObjectURL(file);
+                var filename = file.name;
+                this.me.find("img").attr("src",img);
+                this.me.find("img").attr("title",filename);
+                if(this.callback){
+                    this.callback(files);
+                }
+            },
+            createImageUploadDialog:function () {
+                var fileInput = this.fileInput;
+ //               if (!fileInput) {
+ //                   //创建临时input元素
+                    fileInput = document.createElement('input');
+                    //设置input type为文件类型
+                    fileInput.type = 'file';
+                    //设置文件name
+ //                   fileInput.name = 'ime-images';
+                    //允许上传多个文件
+                    fileInput.multiple = true;
+                    fileInput.onchange  = this.onChangeUploadFile.bind(this);
+                    this.fileInput = fileInput;
+ //               }
+                //触发点击input点击事件，弹出选择文件对话框
+                fileInput.click();
+            }
+
+
+
+
+        }
+
+        // var dragImgUpload = new DragImgUpload("#drop_area",{
+        //     callback:function (files) {
+        //         //回调函数，可以传递给后台等等
+        //         var file = files[0];
+        //         console.log(file.name);
+        //     },
+        //     fileInput:$('#logofile')
+        //
+        // })
+        // var dragImgUpload = new DragImgUpload("#drop_area_2",{
+        //     callback:function (files) {
+        //         //回调函数，可以传递给后台等等
+        //         var file = files[0];
+        //         console.log(file.name);
+        //     },
+        //     fileInput:$('#photofile')
+        //
+        // })
+
+
+        $('.colse-pop').click(function(){
+            $('.pop-box').hide();
+        })
+        $('.show').click(function(){
+            $("input[name='PlayerNumbers']").val("");
+            $("input[name='PlayerIDs']").val("");
+            var checkboxes = $(".select-pop input[type='checkbox']:checked");
+            var endval= $(".select-pop input[type='checkbox']:checked:last").val();
+            var checkpass = true;
+            $.each(checkboxes,function(){
+                var numval = $("input[name='PlayerNumber_" + $(this).val() + "']").val();
+                var idsval = $(this).val();
+                if(isNaN(parseInt(numval))) {
+                    window.alert('选择的球员没有填写号码。');
+                    $("input[name='PlayerNumber_" + $(this).val() + "']").focus();
+                    checkpass &= false;
+                }
+
+                numval = $("input[name='PlayerNumbers']").val() + numval;
+                idsval = $("input[name='PlayerIDs']").val() + idsval;
+
+                if($(this).val()!=endval) {
+                    numval +=",";
+                    idsval +=",";
+                }
+
+                console.log(numval);
+                console.log(idsval);
+
+                $("input[name='PlayerNumbers']").val(numval);
+                $("input[name='PlayerIDs']").val(idsval);
+
+            });
+
+            if(!checkpass) return;
+            $('.nub em').html($(".select-pop input[type='checkbox']:checked").length)
+            $('.pop-box').hide();
+        })
+        $('.select-btn').click(function(){
+            $('.pop-box').show();
+        })
+
+        $(".sub").click(function(){
+
+            if($('input[name=Name]').val()=="" ||
+                $('input[name=ShortName]').val()=="" ||
+                $('input[name=Captain]').val()=="" ||
+                $('input[name=Tel]').val()=="" ||
+                $('input[name=Wechat]').val()==""
+            )
+            {
+                alert('申请信息不完整，请检查。');
+                return false;
+            }
+
+            var reg1 = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)/;
+            if(reg1.test( $('input[name=Email]').val() ) == false) {
+                alert('邮箱格式不正确');
+                return false;
+            }
+
+
+
+
+            $("form").submit();
+        });
+    </script>
+</div>

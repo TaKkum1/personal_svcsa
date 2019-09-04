@@ -1,0 +1,244 @@
+<!-- 内容主体区域 -->
+<link rel="stylesheet" href="layui/css/layui.css">
+<div>
+    <div class="layui-tab">
+        <div class="layui-tab-content">
+            <div class="layui-input-inline" style="">
+                <div class="layui-input-inline">
+                    <button id="add" class="layui-btn layui-btn-normal">新建田径比赛</button>
+                </div>
+            </div>
+            <table class="layui-hide" id="test" lay-filter="test"></table>
+            <script type="text/html" id="toolbarDemo">
+            </script>
+            <script type="text/html" id="State">
+                {{#  if(d.State=='NULL'){ }}
+                 未编排
+                {{#  } else if(d.State==-1) { }}
+                已编排未开赛
+                   {{#  } else if(d.State==0) { }}
+                正在比赛
+                   {{#  } else if(d.State==1) { }}
+                已开赛
+                {{#  } }}
+            </script>
+            <script type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </script>
+             <script type="text/html" id="picture">
+                <a class="layui-btn layui-btn-xs" lay-event="picture">查看比赛图片</a>
+            </script>
+                       <script type="text/html" id="statistics">
+                <a class="layui-btn layui-btn-xs" lay-event="statistics">查看技术统计</a>
+            </script>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    layui.use(['table', 'form'], function() {
+        var table = layui.table;
+        var form = layui.form;
+        table.render({
+            elem: '#test',
+            url: 'http://svcsa.org/CTFCMatch',
+            parseData: function(res) {
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": '', //解析提示文本
+                    "count": res.totalcount, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            },
+            method: 'get',
+            request: {
+                pageName: 'page' //页码的参数名称，默认：page
+                ,limitName: 'pagesize' //每页数据量的参数名，默认：limit
+            },
+            title: '用户数据表',
+            cols: [
+                [{
+                    field: 'MatchID',
+                    title: 'ID',
+                    width: 80,
+                    fixed: 'left',
+                    unresize: true,
+                    sort: true,
+                }, {
+                    field: 'MatchName',
+                    title: '比赛名称',
+                    sort: true,
+                    width: 250,
+                }, {
+                    
+                    field: 'State',
+                    title: '项目类型',
+                    templet: '#State',
+                    width: 200,
+                }, {
+                    field: 'StartTime',
+                    title: '比赛时间',
+                    width: 160,
+                }
+                // , {
+                //     field: 'Report',
+                //     title: '比赛战报',
+                //     width: 120,
+                // }
+                ,{
+                    field: 'VideoSrc',
+                    title: '比赛视频链接',
+                    width: 120,
+                },{
+                    title: '查看比赛图片',
+                    width: 150,
+                    toolbar: '#picture'
+                },{
+                    title: '查看技术统计',
+                    width: 150,
+                    toolbar: '#statistics'
+                },{
+                    title: '操作',
+                    width: 150,
+                    toolbar: '#barDemo'
+                }]
+            ],
+            limit: 20,
+            page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                layout: ['count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+                //,curr: 5 //设定初始在第 5 页
+                , groups: 1 //只显示 1 个连续页码
+                , first: false //不显示首页
+                , last: false //不显示尾页
+
+            },
+        });
+        $("#add").click(function() {
+            var vv=layer.open({
+                type: 2,
+                title: '新建田径项目',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['100%', '100%'],
+                content: 'ctfc_match_add.html',
+                success: function(layero, index) {
+                    // layer.iframeAuto(index);
+                },
+                end: function() {
+                    location.reload();
+                }
+            });
+            layer.full(vv);
+            window.sessionStorage.setItem("index",vv);
+            //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+            $(window).on("resize",function(){
+                layer.full(window.sessionStorage.getItem("index"));
+            })
+        })
+        table.on('tool(test)', function(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if (layEvent === 'edit') { //查看
+                console.log(obj.data);
+                var title="添加田径项目"
+                if(data.MatchID!=null){
+                    title="修改田径项目"
+                }
+                var ly=layer.open({
+                    type: 2,
+                    title: title,
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['100%', '100%'],
+                    content: 'ctfc_match_add.html',
+                    success: function(layero, index) {
+                        // layer.iframeAuto(index);
+                        var body = layer.getChildFrame('body', index);
+                        var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                        iframeWin.create_edi(data.Report)
+                        body.find('#EventID').val(data.EventID)
+                        body.find('#SeasonID').val(data.SeasonID)
+                        body.find('#State').val(data.State)
+                        body.find('#StartTime').val(data.StartTime)
+                        // body.find('#Report').val(data.Report)
+                        body.find('#VideoSrc').val(data.VideoSrc)
+                        body.find('#ID').val(data.MatchID)
+                    },
+                    end: function() {
+                        location.reload();
+                    }
+                });
+                layer.full(ly);
+                window.sessionStorage.setItem("ctfc_index",ly);
+                //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+                $(window).on("resize",function(){
+                    layer.full(window.sessionStorage.getItem("ctfc_index"));
+                })
+            } else if (layEvent === 'del') {
+                layer.confirm('确认删除', {
+                    btn: ['确认', '取消'] //按钮
+                }, function() {
+                    $.ajax({
+                        url:'http://svcsa.org/CTFCMatch/' + data.MatchID,
+                        //url:"http://svcsa.org/bbcompetition",
+                        type : 'delete',
+                        dataType : 'json',
+                        header:{
+                            Accept:'application/json'
+                        },
+                        success:function(data){
+                            layer.msg('删除成功', {
+                                icon: 1,
+                                time: 1200
+                            }, function() {
+                                location.reload();
+                            });
+                        },
+                        error:function(xhr){
+                            if (xhr.status == 401)
+							top.location.href = 'login.html';
+                        }
+                    });
+
+                }, function() {});
+            }else if (layEvent === 'picture') {
+                var ly=layer.open({
+                    type: 2,
+                    title: '查看比赛图片',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['100%', '100%'],
+                    content: 'ctfc_picture.html?MatchID='+data.MatchID,
+                    success: function(layero, index) {
+                        layer.iframeAuto(index);
+
+                    },
+                    end: function() {
+                        location.reload();
+                    }
+                });
+                layer.full(ly)
+            }else if (layEvent === 'statistics') {
+                layer.open({
+                    type: 2,
+                    title: '查看技术统计',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['100%', '100%'],
+                    content: 'ctfc_statistics.html?MatchID='+data.MatchID,
+                    success: function(layero, index) {
+            
+                        
+                    },
+                    end: function() {
+                        location.reload();
+                    }
+                });
+            }
+        });
+    });
+</script>

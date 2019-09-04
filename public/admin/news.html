@@ -1,0 +1,192 @@
+<!-- 内容主体区域 -->
+<link rel="stylesheet" href="layui/css/layui.css">
+<div style="padding: 15px;">
+    <div class="layui-tab">
+        <div class="layui-tab-content">
+            <div class="" style="">
+                <div class="layui-input-inline">
+                    <button id="add" class="layui-btn layui-btn-normal">添加新闻</button>
+                </div>
+            </div>
+            <table class="layui-hide" id="test" lay-filter="test"></table>
+            <script type="text/html" id="toolbarDemo">
+            </script>
+            <script type="text/html" id="show-img">
+
+            </script>
+            <script type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    layui.use(['table', 'form'], function() {
+        var table = layui.table;
+        var form = layui.form;
+        table.render({
+            elem: '#test',
+            url: 'http://svcsa.org/news',
+            parseData: function(res) {
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": '', //解析提示文本
+                    "count": res.totalcount, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            },
+            method: 'get',
+            request: {
+                pageName: 'page' //页码的参数名称，默认：page
+                ,limitName: 'pagesize' //每页数据量的参数名，默认：limit
+            },
+            contentType: 'application/json',
+            // toolbar: '#toolbarDemo',
+            title: '用户数据表',
+            cols: [
+                [{
+                        field: 'ID',
+                        title: '编号',
+                        width: 130,
+                        fixed: 'left',
+                        unresize: true,
+                        sort: true,
+                    }, {
+                        field: 'Title',
+                        title: '文章标题',
+                        width: 200,
+                    }, {
+                        field: 'Content',
+                        title: '文章内容',
+                        width: 200,
+                    },
+                    {
+                        field: 'Author',
+                        title: '文章作者',
+                        width: 100,
+                    },{
+                        field: 'Posttime',
+                        title: '发表时间',
+                        width: 150,
+                    },{
+                        field: 'Hits',
+                        title: '阅读次数',
+                        width: 100,
+                    }, {
+                        title: '操作',
+                        width: 130,
+                        toolbar: '#barDemo'
+                    }
+                ]
+            ],
+            limit: 20,
+            page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                layout: ['count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+                //,curr: 5 //设定初始在第 5 页
+                , groups: 1 //只显示 1 个连续页码
+                , first: false //不显示首页
+                , last: false //不显示尾页
+
+            },
+        });
+        $("#add").click(function() {
+            var index=layer.open({
+                type: 2,
+                title: '新建新闻',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['40%', '50%'],
+                content: 'news_add.html',
+                success: function(layero, index) {
+                    layer.iframeAuto(index);
+                },
+                end: function() {
+                    location.reload();
+                }
+            });
+            layer.full(index);
+            window.sessionStorage.setItem("index",index);
+            //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+            $(window).on("resize",function(){
+                layer.full(window.sessionStorage.getItem("index"));
+            })
+        })
+        table.on('tool(test)', function(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if (layEvent === 'edit') { //查看
+                console.log(obj.data);
+                var index=layer.open({
+                    type: 2,
+                    title: '修改新闻',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['40%', '50%'],
+                    content: 'news_edit.html',
+                    success: function(layero, index) {
+                        layer.iframeAuto(index);
+                        // alert(obj.data.Content)
+                        var body = layer.getChildFrame('body', index);
+                        var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                        iframeWin.create_edi(obj.data.Content)
+                        body.find('#Title').val(obj.data.Title)
+                        body.find('#content').val(obj.data.Content)
+                        body.find('#Author').val(obj.data.Author)
+                        body.find('#Posttime').val(obj.data.Posttime)
+                        body.find('#Category').val(obj.data.Category)
+                        body.find('#ID').val(obj.data.ID)
+                    },
+                    end: function() {
+                        location.reload();
+                    }
+                });
+                layer.full(index)
+                window.sessionStorage.setItem("index",index);
+                //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+                $(window).on("resize",function(){
+                    layer.full(window.sessionStorage.getItem("index"));
+                })
+            } else if (layEvent === 'del') {
+                layer.confirm('确认删除', {
+                    btn: ['确认', '取消'] //按钮
+                }, function() {
+                    $.ajax({
+                        url:'http://svcsa.org/Article/' + data.ID,
+                        //url:"http://svcsa.org/bbcompetition",
+                        type : 'delete',
+                        dataType : 'json',
+                        header:{
+                            Accept:'application/json'
+                        },
+                        success:function(data){
+                            console.log(data)
+                        },
+                        error:function(xhr){
+                            if (xhr.status == 401)
+							top.location.href = 'login.html';
+                        }
+                    });
+                    /*axios.delete('../BBCompetition/' + data.ID, {})
+                        .then(function(response) {
+                            console.log(response);
+                        })
+                        .catch(function(error) {
+                            console.log(error);
+                        });*/
+                    layer.msg('删除成功', {
+                        icon: 1,
+                        time: 1200
+                    }, function() {
+                        location.reload();
+                    });
+                }, function() {});
+            }
+        });
+    });
+</script>

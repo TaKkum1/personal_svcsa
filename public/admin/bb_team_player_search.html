@@ -1,0 +1,255 @@
+<!-- 内容主体区域 -->
+<link rel="stylesheet" href="layui/css/layui.css">
+<style>.layui-table-cell {
+    height: 40px;
+    line-height: 40px;
+}
+
+.layui-table-cell img {
+    max-height: 70px;
+}</style>
+<div style="padding: 15px;">
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">篮球球员</li>
+        </ul>
+        <div class="layui-tab-content">
+
+            <!--            <div class="layui-input-inline">
+                            <form class="layui-form" action="">
+                                <select id="Team" name="city" lay-verify="" lay-filter="Team">
+                                    <option value="">选择球队</option>
+                                </select>
+                            </form>
+                        </div>-->
+            <a id="add" class="layui-btn layui-btn-xs" lay-event="add_player">添加球员</a>
+            <table class="layui-hide" id="test" lay-filter="test"></table>
+            <script type="text/html" id="toolbarDemo">
+            </script>
+            <script type="text/html" id="show-img">
+                <img src="http://svcsa.org/uploads/{{d.PlayerPhotoSrc}}" alt="图片名">
+            </script>
+            <script type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </script>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    var url = location.search;
+    var id;
+    var playerids;
+    var passed;
+    var teamid;
+    var Request = new Object();
+    if (url.indexOf("?") != -1) {
+        var str = url.substr(1);
+        strs = str.split("&");
+        for (var i = 0; i < strs.length; i++) {
+            Request[strs[i].split("=")[0]] = (strs[i].split("=")[1]);
+        }
+    }
+    id = Request["id"];
+    passed = parseInt(Request["passed"]);
+    teamid = Request["teamid"];
+    playerids = Request["playerids"];
+    playernums = Request["playernums"];
+//    if(playerids=="") playerids="-1";
+
+
+
+
+
+    layui.use(['table', 'form'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var restids = []
+        var table_data
+        var playeridsurl;
+        if(passed!=0)
+            playeridsurl = 'http://svcsa.org/BBPlayer?teamid=' + teamid;
+        else
+            playeridsurl = 'http://svcsa.org/BBPlayer?playerids=' + playerids;
+        table.render({
+            elem: '#test',
+            url: playeridsurl,
+            parseData: function (res) {
+                table_data = res.data;
+                if(passed==0) {
+                    var playernumsarr = playernums.split(',');
+                    var playeridsarr = playerids.split(',');
+                    var map={};
+                    for (var i = 0; i < playernumsarr.length; i++)
+                    {
+                        map[playeridsarr[i]] = playernumsarr[i];
+                    }
+                    for (var i = 0; i < table_data.length; i++) {
+                        res.data[i].Number = map[res.data[i].PlayerID];
+                    }
+                }
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": '', //解析提示文本
+                    "count": res.totalcount, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            },
+            method: 'get',
+            request: {
+                pageName: 'page' //页码的参数名称，默认：page
+                ,limitName: 'pagesize' //每页数据量的参数名，默认：limit
+            },
+            limit:20,
+            title: '用户数据表',
+            cols: [
+                [
+                    // {type: 'checkbox', fixed: 'left'},
+                    {
+                    field: 'PlayerID',
+                    title: 'ID',
+                    width: 60,
+                    height: 60,
+                    fixed: 'left',
+                    unresize: true,
+                    sort: true,
+                }, {
+                    field: 'PlayerName',
+                    title: '球员名称',
+                    width: 200,
+                }, {
+                    field: 'Number',
+                    title: '球员号码',
+                    width: 100,
+                }, {
+                    field: 'Birth',
+                    title: '出生年月日',
+                    width: 200,
+                }, {
+                    title: '操作',
+                    fixed: 'right',
+                    width: 150,
+                    toolbar: '#barDemo'
+                }]
+            ],
+            page: false
+        });
+
+        $("#add").click(function () {
+
+            if(passed!=1) {
+                layer.alert('球队申请中，不能进行球员增减操作。请审核申请后再操作！', {
+                    icon: 5,
+                    title: "提示"
+                });
+                return false;
+            }
+
+            var ly=layer.open({
+                type: 2,
+                title: '添加球员',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['100%', '100%'],
+                content: 'bb_team_player_add.html?id=' + id,
+                success: function (layero, index) {
+                    var body = layer.getChildFrame('body', index);
+                    var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    var ids='';
+                    var numbers='';
+                    var data = layui.table.cache['test']; //idTest 即为基础参数 id 对应的值
+                    for (var i = 0; i < data.length; i++) {
+                        if (i === data.length - 1) {
+                            ids += data[i].PlayerID
+                            numbers += data[i].Number
+                        } else {
+                            ids += data[i].PlayerID + ','
+                            numbers += data[i].Number + ','
+                        }
+                    }
+                    iframeWin.create_existsnumberids(data);
+                },
+                end: function () {
+                    location.reload();
+                }
+            });
+            layer.full(ly)
+        })
+
+        table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+            if (layEvent === 'del') {
+
+                if(passed!=1) {
+                    layer.alert('球队申请中，不能进行球员增减操作。请审核申请后再操作！', {
+                        icon: 5,
+                        title: "提示"
+                    });
+                    return false;
+                }
+
+                layer.confirm('确认删除', {
+                    btn: ['确认', '取消'] //按钮
+                }, function () {
+                    layer.msg('正在删除...', {icon: 7});
+                    var restids = ''
+                    var restnumbers = ''
+                    for (var i = 0; i < table_data.length; i++) {
+                        var t_player_id=table_data[i].PlayerID;
+
+                        console.log('dataPlayerID:' + data.PlayerID);
+                        console.log('t_player_id:' + t_player_id);
+
+                        if (data.PlayerID != t_player_id) {
+                            console.log('i:' + i);
+                            if (i == table_data.length - 1) {
+                                restids += table_data[i].PlayerID;
+                                restnumbers += table_data[i].Number;
+                            } else {
+                                restids += table_data[i].PlayerID + ',';
+                                restnumbers += table_data[i].Number + ',';
+                            }
+                        }
+                    }
+                    console.log(restids)
+                    console.log(restnumbers)
+                    let index = parent.layer.getFrameIndex(window.name);
+                    $.ajax({
+                        url: 'http://svcsa.org/bbplayer/setteam',
+                        type: 'POST',
+                        dataType: 'json',
+                        data: {
+                            PlayerIDs: restids,
+                            PlayerNumbers: restnumbers,
+                            TeamID: id,
+                        },
+                        header: {
+                            Accept: 'application/json'
+                        },
+                        success: function (data) {
+                            console.log("删除成功-----------")
+                            console.log(data)
+                            layer.msg('删除成功', {
+                                icon: 1,
+                                time: 1500
+                            }, function () {
+                                location.reload();
+                            });
+                        },
+                        error: function (xhr) {
+                            if (xhr.status == 401)
+							top.location.href = 'login.html';
+                        }
+                    });
+                }, function () {
+                });
+            }
+        });
+
+    });
+</script>

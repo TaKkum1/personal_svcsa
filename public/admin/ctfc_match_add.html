@@ -1,0 +1,263 @@
+<link rel="stylesheet" href="layui/css/layui.css">
+<link rel="stylesheet" href="css/style.css">
+<head>
+    <meta charset="utf-8">
+    <title>文章列表--layui后台管理模板 2.0</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="stylesheet" href="css/public.css" media="all"/>
+</head>
+<body>
+
+<div style="padding: 15px;">
+    <form class="layui-form" action="">
+        <!--            <div class="layui-form-item">
+                        <label class="layui-form-label" >项目ID</label>
+                        <div class="layui-inline">
+                            <input id="ID" name="ID" type="hidden" name="" value="">
+                            <input type="text" id="EventID" name="EventID" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                        </div>
+                    </div>-->
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">赛事</label>
+                <div class="layui-input-inline">
+                    <input id="SeasonID" type="hidden" name="" value="">
+                    <select id="SeasonID_s" lay-verify="required" name="SeasonID" lay-filter="myselect">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="layui-inline">
+                <label class="layui-form-label ">项目</label>
+                <div class="layui-input-inline">
+                    <input id="EventID" type="hidden" name="" value="">
+                    <select id="EventID_s" lay-verify="required" name="EventID" lay-filter="myselect">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!--            <div class="layui-form-item">
+                        <div class="layui-inline">
+                        <label class="layui-form-label">赛会ID</label>
+                        <div class="layui-inline">
+                            <input type="text" id="SeasonID" name="SeasonID" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                        </div>
+                      </div>
+                    </div>-->
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label ">比赛时间</label>
+                <div class="layui-input-block">
+                    <input id="ID" name="ID" type="hidden" value="">
+                    <input type="text" id="StartTime" name="StartTime" lay-verify="required" autocomplete="off"
+                           placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 100px;">视频链接</label>
+                <div class="layui-input-inline" style="width: 200px">
+                    <input type="text" id="VideoSrc" name="VideoSrc" lay-verify="required" autocomplete="off"
+                           placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">比赛状态</label>
+            <input type="text" id="State" style="display: none" name="State"
+                   autocomplete="off" placeholder="请输入" class="layui-input">
+            <div class="layui-input-block">
+                <input type="radio" id="State1" name="State" value="" title="未编排">
+                <input type="radio" id="State2" name="State" value="-1" title="已编排未开赛">
+                <input type="radio" id="State3" name="State" value="0" title="正在比赛">
+                <input type="radio" id="State4" name="State" value="1" title="已开赛">
+                <!--<input type="text" id="State" name="State"   lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">-->
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">比赛战报</label>
+            <div id="Report" name="Report" class="layui-input-block">
+                <!--<textarea name="Content" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input"-->
+                <!--style="height:200px;"></textarea>-->
+                <!--<div id="editor">-->
+                <!--</div>-->
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即修改</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+<script src="public/wangEditor.js"></script>
+<script src="https://cdn.bootcss.com/axios/0.18.0/axios.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    var E = window.wangEditor
+    var editor = new E('#Report')
+    // 或者 var editor = new E( document.getElementById('editor') )
+    editor.customConfig.customUploadImg = function (files, insert) {
+        // files 是 input 中选中的文件列表
+        // insert 是获取图片 url 后，插入到编辑器的方法
+
+        // 上传代码返回结果之后，将图片插入到编辑器中
+        var formData = new FormData();
+        formData.append("file", files[0]);
+        $.ajax({
+            url: 'http://svcsa.org/uploadimage',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                insert('http://svcsa.org/uploads/' + JSON.parse(data).data.savename)
+            },
+            error: function (xhr) {
+                if (xhr.status == 401)
+							top.location.href = 'login.html';
+            }
+        });
+    }
+    editor.create();
+
+    function create_edi(valu) {
+        editor.txt.html(valu)
+    }
+
+    layui.use('laydate', function () {
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#StartTime', //指定元素
+            format: 'yyyy-MM-dd HH:mm:ss',
+            type: 'datetime'
+        });
+    });
+    layui.use(['table', 'form'], function () {
+        var table = layui.table;
+        var form = layui.form;
+
+//                   if ($('#State').val() == NULL) {
+//                 $('#State1').attr("checked", true);
+//                 $('#State2').attr("checked", false);
+//                 $('#State3').attr("checked", false);
+//                 $('#State4').attr("checked", false);
+//                   
+//             } else if($('#State').val() == -1) {
+//                 $('#State1').attr("checked", false);
+//                 $('#State2').attr("checked", ture);
+//                 $('#State3').attr("checked", false);
+//                 $('#State4').attr("checked", false);
+//             }else if($('#State').val() == 0) {
+//                 $('#State1').attr("checked", false);
+//                 $('#State2').attr("checked", false);
+//                 $('#State3').attr("checked", ture);
+//                 $('#State4').attr("checked", false);
+//             }else if($('#State').val() == 1) {
+//                 $('#State1').attr("checked", false);
+//                 $('#State2').attr("checked", false);
+//                 $('#State3').attr("checked", false);
+//                 $('#State4').attr("checked", ture);
+//             }
+//             form.render();
+
+        form.on('submit(add)', function (data) {
+            var index = parent.layer.getFrameIndex(window.name);
+            let id = data.field.ID;
+            $.ajax({
+                url: 'http://svcsa.org/CTFCMatch/' + id,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    EventID: data.field.EventID,
+                    SeasonID: data.field.SeasonID,
+                    State: data.field.State,
+                    StartTime: data.field.StartTime,
+                    Report: editor.txt.html(),
+                    VideoSrc: data.field.VideoSrc
+                },
+                header: {
+                    Accept: 'application/json'
+                },
+                success: function (data) {
+                    var title = "添加成功"
+                    if (id != "") {
+                        title = "修改成功"
+                    }
+                    layer.msg(title, {
+                        icon: 1,
+                        time: 1500
+                    }, function () {
+                        parent.layer.close(index);
+                    });
+                },
+                error: function (xhr) {
+                    if (xhr.status == 401)
+							top.location.href = 'login.html';
+                }
+            });
+        });
+
+
+        axios.get('http://svcsa.org/CTFCEvent', {}).then(function (response) {
+            console.log(response);
+            $.each(response.data.data, function (index, item) {
+                $('#EventID_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+            });
+            form.render();
+            var num = $("#EventID").val();
+            var numbers = $("#EventID_s").find("option"); //获取select下拉框的所有值
+            console.log(numbers);
+            for (var j = 1; j < numbers.length; j++) {
+                console.log(numbers);
+                if ($(numbers[j]).val() == num) {
+                    console.log('ok');
+                    $(numbers[j]).attr("selected", "selected");
+                    $(numbers[j]).attr("class", "layui-this");
+                    form.render();
+                }
+            }
+        })
+        axios.get('http://svcsa.org/CTFCSeason', {}).then(function (response) {
+            console.log(response);
+            $.each(response.data.data, function (index, item) {
+                $('#SeasonID_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+            });
+            form.render();
+            var num = $("#SeasonID").val();
+            var numbers = $("#SeasonID_s").find("option"); //获取select下拉框的所有值
+            console.log(numbers);
+            for (var j = 1; j < numbers.length; j++) {
+                console.log(numbers);
+                if ($(numbers[j]).val() == num) {
+                    console.log('ok');
+                    $(numbers[j]).attr("selected", "selected");
+                    $(numbers[j]).attr("class", "layui-this");
+                    form.render();
+                }
+            }
+        })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+
+    });
+</script>
+
+</body>

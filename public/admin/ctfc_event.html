@@ -1,0 +1,153 @@
+<!-- 内容主体区域 -->
+<link rel="stylesheet" href="layui/css/layui.css">
+<div>
+    <div class="layui-tab">
+        <div class="layui-tab-content">
+            <div class="layui-input-inline" style="">
+                <div class="layui-input-inline">
+                    <button id="add" class="layui-btn layui-btn-normal">新建田径项目</button>
+                </div>
+            </div>
+            <table class="layui-hide" id="test" lay-filter="test"></table>
+            <script type="text/html" id="toolbarDemo">
+            </script>
+            <script type="text/html" id="show-img">
+                // <img src="<?php echo $globals_imgurl; ?>{{d.goods_picture}}" alt="图片名">
+            </script>
+            <script type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="layui/layui.js"></script>
+<script type="text/html" id="orderListBar">
+    {{#  if(d.Individual==0){ }}
+    集体项目
+    {{#  } else { }}
+    个人项目
+    {{#  } }}
+</script>
+<script src="https://cdn.bootcss.com/axios/0.18.0/axios.js"></script>
+<script>
+    layui.use(['table', 'form'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        table.render({
+            elem: '#test',
+            url: 'http://svcsa.org/CTFCEvent',
+            parseData: function (res) {
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": '', //解析提示文本
+                    "count": res.totalcount, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            },
+            method: 'get',
+            request: {
+                pageName: 'page' //页码的参数名称，默认：page
+                ,limitName: 'pagesize' //每页数据量的参数名，默认：limit
+            },
+            title: '用户数据表',
+            cols: [
+                [{
+                    field: 'ID',
+                    title: 'ID',
+                    width: 100,
+                    fixed: 'left',
+                    unresize: true,
+                    sort: true,
+                }, {
+                    field: 'Name',
+                    title: '项目名称',
+                    width: 200,
+                }, {
+                    field: 'Individual',
+                    title: '项目类型',
+                    templet: '#orderListBar',
+                    width: 200,
+
+                }, {
+                    title: '操作',
+                    width: 150,
+                    toolbar: '#barDemo'
+                }]
+            ],
+            limit: 20,
+            page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                layout: ['count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+                //,curr: 5 //设定初始在第 5 页
+                , groups: 1 //只显示 1 个连续页码
+                , first: false //不显示首页
+                , last: false //不显示尾页
+
+            },
+        });
+        $("#add").click(function () {
+            layer.open({
+                type: 2,
+                title: '新建田径项目',
+                area: ['30%', '40%'],
+                content: 'ctfc_event_add.html',
+                success: function (layero, index) {
+                    layer.iframeAuto(index);
+                },
+                end: function () {
+                    location.reload();
+                }
+            });
+        })
+        table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象     
+            if (layEvent === 'edit') { //查看
+                console.log(obj.data);
+                var title = "添加田径项目"
+                if (obj.data.ID != null) {
+                    title = '修改田径项目'
+                }
+                layer.open({
+                    type: 2,
+                    title: title,
+                    shadeClose: true,
+                    area: ['30%', '40%'],
+                    content: 'ctfc_event_add.html',
+                    success: function (layero, index) {
+                        layer.iframeAuto(index);
+                        var body = layer.getChildFrame('body', index);
+                        body.find('#Name').val(data.Name);
+                        body.find('#project').val(data.Individual)
+                        body.find('#ID').val(data.ID)
+                    },
+                    end: function () {
+                        location.reload();
+                    }
+                });
+            } else if (layEvent === 'del') {
+                layer.confirm('确认删除吗？', {
+                    btn: ['确认', '取消'] //按钮
+                }, function () {
+                    axios.delete('http://svcsa.org/CTFCEvent/' + data.ID, {})
+                        .then(function (response) {
+                            console.log(response);
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                    layer.msg('删除成功', {
+                        icon: 1,
+                        time: 1200
+                    }, function () {
+                        location.reload();
+                    });
+                }, function () {
+                });
+            }
+        });
+    });
+</script>

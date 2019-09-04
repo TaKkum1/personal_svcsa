@@ -1,0 +1,17 @@
+# VScode setting, 
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+
+#backup
+
+backup/*
+
+# Server info
+nginx.conf
+
+# MAC file
+.DS_Store

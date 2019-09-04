@@ -1,0 +1,233 @@
+<link rel="stylesheet" href="layui/css/layui.css">
+
+<body class="layui-layout-body">
+
+    <div style="padding: 15px;">
+        <form class="layui-form" action="">
+    
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">选手</label>
+                <div class="layui-input-block">
+                    <input id="TeamID" type="hidden" name="" value="">
+                    <select id="TeamID_s" lay-verify="required" name="TeamID" lay-filter="myselect">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+            
+             <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">犯规次数</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="Foul" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">得分</label>
+                    <div class="layui-input-inline">
+                        <input  type="text" name="Points" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+     
+                     <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">助攻</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="Assist" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">抢断</label>
+                    <div class="layui-input-inline">
+                        <input  type="text" name="Steal" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+                     <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">封盖</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="Block" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+                     <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">前场篮板</label>
+                    <div class="layui-input-inline">
+                        <input  type="text" name="OffensiveRebound" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">总篮板</label>
+                    <div class="layui-input-inline">
+                        <input  type="text" name="Rebound" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+            </div>
+                    <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">三分命中</label>
+                    <div class="layui-input-inline">
+                        <input  type="text" name="PointsHit3" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">两分命中</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="2PointsHit" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            
+                  <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">罚篮命中</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="1PointsHit" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">投篮命中</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="Hit" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>     
+            </div>
+                              <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">三分次数</label>
+                    <div class="layui-input-inline">
+                        <input  type="text" name="3PointsShot" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">两分次数</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="2PointsShot" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+            </div>
+                          <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">罚篮次数</label>
+                    <div class="layui-input-inline">
+                        <input type="text" name="1PointsShot" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">投篮次数</label>
+                    <div class="layui-input-inline">
+                        <input  type="text" name="Shot" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+            </div>
+    
+                      <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即添加</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="https://cdn.bootcss.com/axios/0.18.0/axios.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="layui/layui.js"></script>
+    <script>
+                          function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+            if (r != null) return unescape(r[2]); return null; //返回参数值
+        }
+        layui.use(['table', 'form','laydate'], function() {
+            var table = layui.table;
+            var form = layui.form;
+            var $ = layui.jquery;
+            var laydate = layui.laydate;
+                  laydate.render({
+                  elem: '#StartTime',
+                  type: 'datetime'
+                });
+
+
+                
+                         form.on('submit(add)', function(data) {
+                var index = parent.layer.getFrameIndex(window.name);
+ 
+                $.ajax({
+                    url:'http://svcsa.org/bbmatch/' +getUrlParam('MatchID') + '/bbstatistics?player='+data.field.TeamID,
+                    type : 'POST',
+                    dataType : 'json',
+                    data : {
+    
+                        PlayerID:data.field.TeamID,
+                        Points:data.field.Points,
+                        Assist: data.field.Assist,
+                        Steal: data.field.Steal,
+                        Block: data.field.Block,
+                        Foul: data.field.Foul,
+                        OffensiveRebound: data.field.OffensiveRebound,
+                        Rebound: data.field.Rebound,
+//                           3PointsHit: data.field.['3PointsHit'],
+//                        2PointsHit: data.field.2PointsHit,
+//                        1PointsHit: data.field.1PointsHit,
+                        Hit: data.field.Hit,
+//                        3PointsShot: data.field.3PointsShot,
+//                        2PointsShot: data.field.2PointsShot,
+//                        1PointsShot: data.field.1PointsShot,
+                        Shot: data.field.Shot,
+                    },
+                    header:{
+                        Accept:'application/json'
+                    },
+                    success:function(data){
+                        layer.msg('修改成功', {
+                            icon: 1,
+                            time: 500
+                        }, function() {
+                            parent.layer.close(index);
+                        });
+                    },
+                    error:function(xhr){
+                        if (xhr.status == 401)
+							top.location.href = 'login.html';
+                    }
+                });
+
+            });
+                
+                    axios.get('http://svcsa.org/bbplayer', {}).then(function(response) {
+                    console.log(response);
+                    $.each(response.data.data, function(index, item) {
+                        $('#TeamID_s').append('<option value="' + item.PlayerID + '">' + item.PlayerName + '</option>');
+                    });
+                    form.render();
+                    var num = $("#TeamID").val();
+                    var numbers = $("#TeamID_s").find("option"); //获取select下拉框的所有值
+                    console.log(numbers);
+                    for (var j = 1; j < numbers.length; j++) {
+                        console.log(numbers);
+                        if ($(numbers[j]).val() == num) {
+                            console.log('ok');
+                            $(numbers[j]).attr("selected", "selected");
+                            $(numbers[j]).attr("class", "layui-this");
+                            form.render();
+                        }
+                    }
+                })
+                
+
+                
+                .catch(function(error) {
+                    console.log(error);
+                });
+        });
+    </script>
+
+</body>

@@ -1,0 +1,270 @@
+<!-- 内容主体区域 -->
+<link rel="stylesheet" href="layui/css/layui.css">
+<style>.layui-table-cell {
+    height: 80px;
+    line-height: 80px;
+}
+
+.layui-table-cell img {
+    max-height: 70px;
+}</style>
+<div>
+    <div class="layui-tab">
+        <div class="layui-tab-content">
+            <div class="layui-input-inline" style="">
+                <div class="layui-input-inline">
+                    <button id="add" class="layui-btn layui-btn-normal">新建篮球球员</button>
+                </div>
+            </div>
+            <!--
+            <div class="layui-input-inline">
+                <form class="layui-form" action="">
+                    <select id="Season" name="city" lay-verify="" lay-filter="Season">
+                        <option value="">选择赛季</option>
+                    </select>
+                </form>
+            </div>
+            -->
+            <!--            <div class="layui-input-inline">
+                            <form class="layui-form" action="">
+                                <select id="Team" name="city" lay-verify="" lay-filter="Team">
+                                    <option value="">选择球队</option>
+                                </select>
+                            </form>
+                        </div>-->
+            <table class="layui-hide" id="test" lay-filter="test"></table>
+            <script type="text/html" id="toolbarDemo">
+            </script>
+            <script type="text/html" id="show-img">
+                <img src="http://svcsa.org/uploads/{{d.PlayerPhotoSrc}}" alt="图片名">
+            </script>
+            <script type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </script>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.bootcss.com/axios/0.18.0/axios.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    layui.use(['table', 'form'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        table.render({
+            elem: '#test',
+            url: 'http://svcsa.org/BBPlayer?freeagant=1',
+            parseData: function (res) {
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": '', //解析提示文本
+                    "count": res.totalcount, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            },
+            method: 'get',
+            request: {
+                pageName: 'page' //页码的参数名称，默认：page
+                ,limitName: 'pagesize' //每页数据量的参数名，默认：limit
+            },
+            title: '用户数据表',
+            cols: [
+                [{
+                    field: 'PlayerID',
+                    title: 'ID',
+                    width: 80,
+                    fixed: 'left',
+                    unresize: true,
+                    sort: true,
+                }, {
+                    field: 'PlayerName',
+                    title: '球员名称',
+                    width: 200,
+                }, {
+                    field: 'Number',
+                    title: '球员号码',
+                    width: 100,
+                }
+
+                    , {
+                    field: 'Birth',
+                    title: '出生月日',
+                    width: 200,
+                }, {
+                    field: 'Height',
+                    title: '身高',
+                    width: 100,
+                }, {
+                    field: 'Weight',
+                    title: '体重',
+                    width: 100,
+                }, {
+                    field: 'PhotoSrc',
+                    title: '头像存放位置',
+                    templet: '#show-img',
+                    width: 150,
+                }, {
+                    field: 'PlayerEmail',
+                    title: '电子邮件',
+                    width: 150,
+                }
+//                , {
+//                    field: 'TeamID',
+//                    title: '球队id',
+//                    width: 150,
+//                }
+                    , {
+                    field: 'SeasonID',
+                    title: '赛季id',
+                    width: 100,
+                }, {
+                    title: '操作',
+                    fixed: 'right',
+                    width: 122,
+                    toolbar: '#barDemo'
+                }]
+            ], limit: 20,
+            page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                layout: ['count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+                //,curr: 5 //设定初始在第 5 页
+                , groups: 1 //只显示 1 个连续页码
+                , first: false //不显示首页
+                , last: false //不显示尾页
+
+            }
+        });
+        $("#add").click(function () {
+            var index=layer.open({
+                type: 2,
+                title: '新建篮球球员',
+                shadeClose: true,
+                shade: 0.8,
+                offset: '0px',
+                area: ['100%', '100%'],
+                content: 'bb_player_add.html',
+                success: function (layero, index) {
+                    // layer.iframeAuto(index);
+                },
+                end: function () {
+                    location.reload();
+                }
+            });
+            layer.full(index);
+            window.sessionStorage.setItem("bb_player_index", index);
+            //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+            $(window).on("resize", function () {
+                layer.full(window.sessionStorage.getItem("bb_player_index"));
+            })
+        })
+        table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if (layEvent === 'edit') { //查看
+                console.log(obj.data);
+                var index = layer.open({
+                    type: 2,
+                    title: '修改篮球球员',
+                    shadeClose: true,
+                    shade: 0.8,
+                    offset: '0px',
+                    area: ['100%', '100%'],
+                    content: 'bb_player_edit.html',
+                    success: function (layero, index) {
+                        // layer.iframeAuto(index);
+                        var body = layer.getChildFrame('body', index);
+                        body.find('#Name').val(data.PlayerName)
+                        body.find('#Number').val(data.Number)
+                        body.find('#Birth').val(data.Birth)
+                        body.find('#Height').val(data.Height)
+                        body.find('#Weight').val(data.Weight)
+                        body.find('#PhotoSrc').val(data.PlayerPhotoSrc)
+                        body.find('#Email').val(data.PlayerEmail)
+//                        body.find('#TeamID').val(data.TeamID)
+                        body.find('#SeasonID').attr("value", data.SeasonID)
+
+                        body.find('#demo1').attr("src", "http://svcsa.org/uploads/" + data.PlayerPhotoSrc)
+                        body.find('#ID').val(data.PlayerID)
+//                        body.find('#TeamID').attr("value", data.TeamID)
+                    },
+                    end: function () {
+                        location.reload();
+                    }
+                });
+                layer.full(index);
+                window.sessionStorage.setItem("bb_player_index", index);
+                //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+                $(window).on("resize", function () {
+                    layer.full(window.sessionStorage.getItem("bb_player_index"));
+                })
+            } else if (layEvent === 'del') {
+                layer.confirm('确认删除', {
+                    btn: ['确认', '取消'],
+                    offset: ['100px']//按钮
+                }, function () {
+                    axios.delete('http://svcsa.org/BBPlayer/' + data.PlayerID, {})
+                        .then(function (response) {
+                            console.log(response);
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                    layer.msg('删除成功', {
+                        icon: 1,
+                        time: 1200
+                    }, function () {
+                        location.reload();
+                    });
+                }, function () {
+                });
+            }
+        });
+        axios.get('http://svcsa.org/BBSeason', {}).then(function (response) {
+            console.log(response);
+            $.each(response.data.data, function (index, item) {
+                $('#Season').append('<option value="' + item.SeasonID + '">' + item.SeasonName + '</option>');
+            });
+            form.render();
+        })
+            .catch(function (error) {
+                console.log(error);
+            });
+        axios.get('http://svcsa.org/BBTeam', {}).then(function (response) {
+            console.log(response);
+            $.each(response.data.data, function (index, item) {
+                $('#Team').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+            });
+            form.render();
+        })
+            .catch(function (error) {
+                console.log(error);
+            });
+        form.on('select(Season)', function (data) {
+            table.reload('test', {
+                // where: { //设定异步数据接口的额外参数，任意设
+                //     // SeasonID: data.value,
+                //     url: '../bbseason/' + data.value + '/bbplayer',
+                // },
+                url: 'http://svcsa.org/bbseason/' + data.value + '/bbplayer',
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+        });
+        form.on('select(Team)', function (data) {
+            table.reload('test', {
+                // where: { //设定异步数据接口的额外参数，任意设
+                //     // SeasonID: data.value,
+                //     url: '../bbseason/' + data.value + '/bbplayer',
+                // },
+                url: 'http://svcsa.org/bbteam/' + data.value + '/bbplayer',
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+        })
+
+    });
+</script>

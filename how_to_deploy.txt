@@ -1,0 +1,6 @@
+1、代码在nginx或apache下测试通过，不论windows还是linux。
+2、请先安装nginx或apache。
+3、nginx配置参考 nginx.conf
+4、数据库请连接svcsa.org
+mysql管理员账户root密码ab1234cd
+5、请用mysql gui将数据库结构及数据复制一份。

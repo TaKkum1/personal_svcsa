@@ -1,0 +1,231 @@
+<link rel="stylesheet" href="layui/css/layui.css">
+
+<body class="layui-layout-body">
+
+<div style="padding: 15px;">
+    <form class="layui-form" action="" id="form1">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">球员名称</label>
+                <div class="layui-input-block">
+                    <input id="Name" type="text" name="Name" lay-verify="required" autocomplete="off" placeholder="请输入"
+                           class="layui-input">
+                </div>
+            </div>
+            <!--
+            <div class="layui-inline">
+                <label class="layui-form-label">球员号码</label>
+                <div class="layui-input-inline">
+                    <input id="Number" type="text" name="Number" autocomplete="off"
+                           placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            -->
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">身高</label>
+                <div class="layui-input-block">
+                    <input id="Height" type="text" name="Height" lay-verify="required" autocomplete="off"
+                               placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">体重</label>
+                <div class="layui-input-inline">
+                    <input id="Weight" type="text" name="Weight" lay-verify="required" autocomplete="off"
+                           placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">电子邮件</label>
+                <div class="layui-input-block">
+                    <input id="Email" type="text" name="Email" autocomplete="off"
+                           placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">出生月日</label>
+                <div class="layui-input-inline">
+                    <input id="Birth" type="text" name="Birth" class="layui-input" placeholder="MM-dd" lay-verify="chkbirth">
+                </div>
+            </div>
+        </div>
+        <!--
+        <div class="layui-form-item">
+            <label class="layui-form-label">赛季</label>
+            <div class="layui-input-block" style="width: 250px">
+                <input id="SeasonID" type="hidden" name="" value="">
+                <select id="SeasonID_s" lay-verify="required" name="SeasonID" lay-filter="myselect">
+                    <option value="0">未指定</option>
+                </select>
+            </div>
+        </div>
+        -->
+        <!--
+                     <div class="layui-form-item">
+                        <label class="layui-form-label">球队</label>
+                        <div class="layui-input-block">
+                            <input id="TeamID" type="hidden" name="" value="">
+                            <select id="TeamID_s" lay-verify="required" name="TeamID" lay-filter="myselect">
+                                <option value="">请选择</option>
+                            </select>
+                        </div>
+                    </div>
+                    -->
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">头像</label>
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" id="test1">上传图片</button>
+                <input type="hidden" id="img_url" name="PhotoSrc" value=""/>
+                <div class="layui-upload-list">
+                    <img class="layui-upload-img" width="100px" height="80px" id="demo1" src=""/>
+                    <p id="demoText"></p>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="button" lay-submit="" lay-filter="add" id="commit">立即添加</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="https://cdn.bootcss.com/axios/0.18.0/axios.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+
+    layui.use(['table', 'form', 'upload', 'laydate'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var upload = layui.upload;
+        var laydate = layui.laydate;
+        // laydate.render({
+        //     elem: '#Birth',
+        //     type: 'datetime',
+        //     format: 'MM-dd'
+        // });
+        var uploadInst = upload.render({
+            elem: '#test1',
+            url: 'http://svcsa.org/bbplayer',
+            acceptMime: 'image/*',
+            auto:false,
+            bindAction:'',
+            multiple: false,
+            before: function (obj) {
+
+                this.data = {
+                    Name: $('input[name="Name"]').val(),
+//                Number: data.field.Number,
+                    Birth: '1900-' + $('input[name="Birth"]').val(),
+                    Height: $('input[name="Height"]').val(),
+                    Weight: $('input[name="Weight"]').val(),
+//                PhotoSrc: $("#img_url").val(),
+    //                PhotoSrc: $('input[name="PhotoSrc"]').val(),
+                    Email: $('input[name="Email"]').val(),
+//                SeasonID: data.field.SeasonID,
+//                        TeamID: data.field.TeamID,
+                }
+
+            },
+            //选择文件后的回调
+            choose: function (obj) {
+                obj.preview(function (index, file, result) {
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                })
+            },
+            done: function (res) {
+                var index = parent.layer.getFrameIndex(window.name);
+
+                //如果上传失败
+                if (res.status == '0') {
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+                console.log(res);
+    //            picture = res.data.savename;
+    //            $("#img_url").attr("value", picture)
+                layer.msg('添加成功', {
+                    icon: 1,
+                    time: 1500
+                }, function () {
+
+                    parent.layer.close(index);
+                });
+            },
+            error: function (index,upload) {
+
+                return layer.msg('网络异常，新增失败。可能需要重新登录。');
+            }
+        });
+
+
+        form.verify({
+            chkbirth: [/^\d{1,2}-\d{1,2}$/, '生日必须是MM-dd格式！'],
+            chkphotoupl: function(value) {
+                if(value=="") {
+                    alert('图片上传较慢请等待10秒后，再点击添加按钮。');
+                    return '图片上传较慢请等待10秒后，再尝试。';
+                }
+            }
+        });
+
+
+        form.on('submit(add)', function (data) {
+            uploadInst.upload();
+        });
+
+        axios.get('http://svcsa.org/BBSeason', {}).then(function (response) {
+            console.log(response);
+            $.each(response.data.data, function (index, item) {
+                $('#SeasonID_s').append('<option value="' + item.SeasonID + '">' + item.SeasonName + '</option>');
+            });
+            form.render();
+            var num = $("#SeasonID").val();
+            var numbers = $("#SeasonID_s").find("option"); //获取select下拉框的所有值
+            console.log(numbers);
+            for (var j = 1; j < numbers.length; j++) {
+                console.log(numbers);
+                if ($(numbers[j]).val() == num) {
+                    console.log('ok');
+                    $(numbers[j]).attr("selected", "selected");
+                    $(numbers[j]).attr("class", "layui-this");
+                    form.render();
+                }
+            }
+        })
+
+        axios.get('http://svcsa.org/BBTeam', {}).then(function (response) {
+            console.log(response);
+            $.each(response.data.data, function (index, item) {
+                $('#TeamID_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+            });
+            form.render();
+            var num = $("#TeamID").val();
+            var numbers = $("#TeamID_s").find("option"); //获取select下拉框的所有值
+            console.log(numbers);
+            for (var j = 1; j < numbers.length; j++) {
+                console.log(numbers);
+                if ($(numbers[j]).val() == num) {
+                    console.log('ok');
+                    $(numbers[j]).attr("selected", "selected");
+                    $(numbers[j]).attr("class", "layui-this");
+                    form.render();
+                }
+            }
+        })
+
+            .catch(function (error) {
+                console.log(error);
+            });
+    });
+</script>
+
+</body>

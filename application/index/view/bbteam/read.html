@@ -1,0 +1,74 @@
+<div class="inside-banner block team_des-banner clearfix">
+    <div class="txt-box">
+        <h3>{$team['Name']} <div class="logo">
+            {if condition="$team['LogoSrc'] eq ''"}
+            <img src="{$Think.config.public_assets}/images/teamlogo.jpg">
+            {else /}
+            <img src="{$Think.config.public_assets}/uploads/{$team['LogoSrc']}">
+            {/if}
+        </div></h3>
+        <div class="other-info clearfix">
+            <dl>
+                <dt><i class="icon-profile"> </i>球队简称</dt>
+                <dd>{$team['ShortName']}</dd>
+            </dl>
+            <dl>
+                <dt><i class="icon-user"> </i>球队队长</dt>
+                <dd>{$team['Captain']}</dd>
+            </dl>
+            <dl>
+                <dt><i class="icon-tree"> </i>所属赛季</dt>
+                <dd>{$thisseason['SeasonName']}</dd>
+            </dl>
+            <dl>
+                <dt><i class="icon-earth"> </i>球员数量</dt>
+                <dd>{$playercount}名<span><a href="{:url('index/bbplayer/lists',['teamid'=>$team['ID']])}">查看球员>>>></a></span></dd>
+            </dl>
+            <dl>
+                <dt><i class="icon-trophy"> </i>赛季胜场</dt>
+                <dd>{$team['Wins']}</dd>
+            </dl>
+            <dl>
+                <dt><i class="icon-folder-minus"> </i>赛季负场</dt>
+                <dd>{$team['Losses']}</dd>
+            </dl>
+        </div>
+    </div>
+    <div class="img-box">
+        {if condition="$team['PhotoSrc'] eq ''"}
+        <img src="{$Think.config.public_assets}/images/teamstaff.jpg">
+        {else /}
+        <img src="{$Think.config.public_assets}/uploads/{$team['PhotoSrc']}">
+        {/if}
+    </div>
+</div>
+</div>
+<div class="team_des-wrap block">
+    <div class="des-box clearfix">
+        <div class="left-box">
+            <h3>球队联系方式</h3>
+            <dl>
+                <dt><span class="icon-phone"></span> 电话</dt>
+                <dl>
+                    <p>{$team['Tel']}</p>
+                </dl>
+            </dl>
+            <dl>
+                <dt><span class="icon-envelop"></span> E-mail</dt>
+                <dl>
+                    <p>{$team['Email']}</p>
+                </dl>
+            </dl>
+
+            <dl>
+                <dt><span class="icon-wechat"></span> Wechat</dt>
+                <dl>
+                    <p>{$team['Wechat']}</p>
+                </dl>
+            </dl>
+        </div>
+        <div class="right-box">
+            <p>{$team['Description']}</p>
+        </div>
+    </div>
+</div>

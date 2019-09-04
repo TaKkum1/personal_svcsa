@@ -1,0 +1,236 @@
+<link rel="stylesheet" href="layui/css/layui.css">
+<link rel="stylesheet" href="css/style.css">
+<body>
+
+<div style="padding: 15px;">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label lab_width">选手/团队名称</label>
+                <div class="layui-inline">
+                    <input id="ID" name="ID" type="hidden" name="" value="">
+                    <input type="text" id="Name" name="Name" lay-verify="required" autocomplete="off" placeholder="请输入"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label lab_width">负责人姓名</label>
+                <div class="layui-inline">
+                    <input type="text" id="Leader" name="Leader" lay-verify="required" autocomplete="off"
+                           placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label lab_width">赛道</label>
+                <div class="layui-inline">
+                    <input type="text" id="Track" name="Track" lay-verify="required" autocomplete="off"
+                           placeholder="请输入"
+                           class="layui-input">
+                </div>
+            </div>
+            <!--            <div class="layui-form-item">
+                            <label class="layui-form-label lab_width">田径项目</label>
+                            <div class="layui-inline">
+                                <input type="text" id="MatchID" name="MatchID" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                            </div>
+                        </div>
+                        -->
+            <div class="layui-inline">
+                <label class="layui-form-label lab_width">项目</label>
+                <div class="layui-input-inline">
+                    <input id="EventID" type="hidden" name="" value="">
+                    <select id="EventID_s" lay-verify="required" name="EventID" lay-filter="myselect"
+                            style="width: 200px">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label lab_width">联系方式-手机</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Tel" name="Tel" lay-verify="required" autocomplete="off"
+                           placeholder="请输入"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label lab_width">联系方式-微信</label>
+                <div class="layui-inline">
+                    <input type="text" id="Wechat" name="Wechat" lay-verify="required" autocomplete="off"
+                           placeholder="请输入"
+                           class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label lab_width">申请比赛</label>
+                <!--                <input type="text" id="Flag" style="display: none" name="Flag" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">-->
+
+                <div class="layui-input-block" style="width: 250px">
+                    <input type="radio" id="jt_project" name="Flag" value="0" title="申请中">
+                    <input type="radio" id="gr_project" name="Flag" value="1" title="通过申请">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 110px;">项目类型</label>
+                <!--                <input type="hidden" id="Individual" style="display: none" name="Individual" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">-->
+
+                <div class="layui-input-block" style="width: 250px">
+                    <input type="radio" id="jts_project" name="Individual" value="0" title="集体项目">
+                    <input type="radio" id="grs_project" name="Individual" value="1" title="个人项目">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label lab_width">联系方式-电子邮箱</label>
+            <div class="layui-inline" style="width: 200px">
+                <input type="text" id="Email" name="Email" lay-verify="required" autocomplete="off" placeholder="请输入"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label lab_width">选手照片</label>
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" id="test1">上传图片</button>
+                <input type="hidden" id="img_url" name="PhotoSrc" value=""/>
+                <div class="layui-upload-list" style="margin-left: 40px">
+                    <img class="layui-upload-img" width="100px" height="80px" id="demo1" src=""/>
+                    <p id="demoText"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即修改</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+<script src="https://cdn.bootcss.com/axios/0.18.0/axios.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    layui.use(['table', 'form', 'upload'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var upload = layui.upload;
+//        if ($('#Individual').val() == 0) {
+//            $('#jt_project').attr("checked", true);
+//            $('#gr_project').attr("checked", false);
+//        } else {
+//            $('#gr_project').attr("checked", true);
+//            $('#jt_project').attr("checked", false);
+//        }
+
+        var uploadInst = upload.render({
+            elem: '#test1',
+            url: 'http://svcsa.org/uploadimage',
+            acceptMime: 'image/*',
+            multiple: true,
+            before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+            },
+            done: function (res) {
+                //如果上传失败
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+                console.log(res);
+                picture = res.data.savename;
+                $("#img_url").attr("value", picture)
+            },
+            error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText1');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+        });
+
+        form.on('submit(add)', function (data) {
+            var index = parent.layer.getFrameIndex(window.name);
+            let id = data.field.ID;
+            $.ajax({
+                url: 'http://svcsa.org/CTFCPlayer/' + id,
+                type: 'POST',
+                dataType: 'json',
+                data: {
+
+                    Name: data.field.Name,
+                    Leader: data.field.Leader,
+                    Individual: data.field.Individual,
+                    Email: data.field.Email,
+                    Tel: data.field.Tel,
+                    Wechat: data.field.Wechat,
+                    Track: data.field.Track,
+                    MatchID: data.field.EventID,
+                    PhotoSrc: $("#img_url").val(),
+                    PhotoSrc: data.field.PhotoSrc,
+                    Flag: data.field.Flag
+                },
+                header: {
+                    Accept: 'application/json'
+                },
+                success: function (data) {
+                    var title = "添加成功"
+                    if (id != "") {
+                        title = "修改成功"
+                    }
+                    layer.msg(title, {
+                        icon: 1,
+                        time: 1500
+                    }, function () {
+                        parent.layer.close(index);
+                    });
+                },
+                error: function (xhr) {
+                    if (xhr.status == 401)
+							top.location.href = 'login.html';
+                }
+            });
+        });
+
+        axios.get('http://svcsa.org/CTFCMatch', {}).then(function (response) {
+            console.log(response);
+            $.each(response.data.data, function (index, item) {
+                $('#EventID_s').append('<option value="' + item.MatchID + '">' + item.MatchName + '</option>');
+            });
+            form.render();
+            var num = $("#EventID").val();
+            var numbers = $("#EventID_s").find("option"); //获取select下拉框的所有值
+            console.log(numbers);
+            for (var j = 1; j < numbers.length; j++) {
+                console.log(numbers);
+                if ($(numbers[j]).val() == num) {
+                    console.log('ok');
+                    $(numbers[j]).attr("selected", "selected");
+                    $(numbers[j]).attr("class", "layui-this");
+                    form.render();
+                }
+            }
+        })
+
+            .catch(function (error) {
+                console.log(error);
+            });
+
+    });
+</script>
+
+</body>

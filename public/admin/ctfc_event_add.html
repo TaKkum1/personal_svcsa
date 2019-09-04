@@ -1,0 +1,79 @@
+<link rel="stylesheet" href="layui/css/layui.css">
+
+<body class="layui-layout-body">
+
+    <div style="padding: 15px;">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">项目名称</label>
+                <div class="layui-input-block">
+                             <input id="ID" name="ID" type="hidden"  value="">
+                    <input type="text" id="name" name="Name" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">项目类型</label>
+                <div class="layui-input-block">
+                        <input type="radio" id="jt_project" name="sex" value="0" title="集体项目" checked>
+                        <input type="radio" id="gr_project" name="sex" value="1" title="个人项目">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即添加</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="layui/layui.js"></script>
+    <script>
+
+        layui.use(['table', 'form'], function() {
+            var table = layui.table;
+            var form = layui.form;
+            if ($('#project').val() == 0) {
+                 $('#jt_project').attr("checked", true);
+                 $('#gr_project').attr("checked", false);
+             } else {
+                 $('#gr_project').attr("checked", true);
+                 $('#jt_project').attr("checked", false);
+             }
+             form.render();
+            form.on('submit(add)', function(data) {
+                var index = parent.layer.getFrameIndex(window.name);
+                var id=data.field.ID;
+                $.ajax({
+                    url:'http://svcsa.org/CTFCEvent/'+id ,
+                    type : 'POST',
+                    dataType : 'json',
+                    data : {
+                        Name: data.field.Name,
+                        Individual: data.field.sex
+                    },
+                    header:{
+                        Accept:'application/json'
+                    },
+                    success:function(data){
+                        layer.msg('修改成功', {
+                            icon: 1,
+                            time: 1500
+                        }, function() {
+                            parent.layer.close(index);
+                        });
+                    },
+                    error:function(xhr){
+                        if (xhr.status == 401)
+							top.location.href = 'login.html';
+                    }
+                });
+            });
+            
+            
+            
+            
+        });
+    </script>
+
+</body>

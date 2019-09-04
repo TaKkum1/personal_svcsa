@@ -1,0 +1,86 @@
+<div class="inside-banner block statistics-banner">
+    <h3>田径比赛统计</h3>
+    <p>{$statsdescription}</p>
+</div>
+</div>
+<div class="pro-wrap">
+    <div class="block">
+        <div class="input-box">
+            <label>项目纪录选择</label>
+            <select id="selectevent">
+                {volist name="events" id="event"}
+                <option
+                        value="{:url('index/ctfcstatistics/lists').'?eventid='.$event['ID']}"
+                        {if condition="$event['ID'] eq $thiseventid"}selected{/if}>{$event['Name']}</option>
+                {/volist}
+            </select>
+
+            <script>
+                $(function (){
+                    $('#selectevent').on('change',function(){
+                        var selectevent= $('#selectevent option:selected');
+                        window.location.href=selectevent.val();
+                    });
+                });
+            </script>
+
+        </div>
+    </div>
+    <div class="clearfix block">
+        <div class="public-left">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>排名</th>
+                    <th>选手名</th>
+                    <th>项目</th>
+                    <th>赛会</th>
+                    <th>成绩</th>
+                </tr>
+                </thead>
+                <tbody>
+                {volist name="statsresult" id="stats"}
+                <tr>
+                    <td>{$i}</td>
+                    <td>{$stats.PlayerName}</td>
+                    <td>{$stats.EventName}</td>
+                    <td>{$stats.SeasonName}</td>
+                    <td>{$stats.Result}</td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+        <div class="public-right">
+            <div class="tab-box">
+                <h3>项目信息</h3>
+                <ul>
+
+                    <li><a href="
+                        {if condition="$thisseason['ID'] eq 'recent'"}
+                        {:url('index/ctfcseason/readrecent')}
+                        {else/}
+                        {:url('index/ctfcseason/read',['id'=>$thisseason['ID']])}
+                        {/if}"><span class="icon-chevron-right2 icon"></span>比赛列表</a></li>
+                    <li><a href="{:url('index/ctfcplayer/lists')}?seasonid={$thisseason['ID']}"><span class="icon-chevron-right2 icon"></span>选手团队</a></li>
+                    <li class="active"><a href="{:url('index/ctfcstatistics/lists').'?eventid='.$recenteventid}"><span class="icon-chevron-right2 icon"></span>项目记录</a></li>
+                    <li>
+                        <dl>
+                            <dt>其他赛会</dt>
+                            {volist name='otherseasons' id='season'}
+                            <dd><a href="{:url('index/ctfcseason/read',['id'=>$season['ID']])}">{$season.Name}<span class="icon-chevron-right2 icon"></a></dd>
+                            {/volist}
+                        </dl>
+                    </li>
+                    <li><a href=""><span class="icon-chevron-right2 icon"></span>加入比赛</a></li>
+                </ul>
+            </div>
+            <div class="show-box">
+                <div class="img-box"><img src="images/icon_10.png" alt=""></div>
+                <h3>NEWSLETTER SIGNUP</h3>
+                <p>FOR THE LATEST  NEWS & FREE GIVEAWAYS!</p>
+                <a href="">加入赛事<span class="icon-chevron-right icon"></span></a>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,94 @@
+<link rel="stylesheet" href="layui/css/layui.css">
+
+<body class="childrenBody">
+
+    <div style="padding: 15px;" class="layui-layout-body">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 90px;">赛事名称</label>
+                <div class="layui-input-inline">
+                    <input id="ID" name="ID" type="hidden" name="" value="">
+                    <input type="text" id="name" name="Name" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" >
+                <label class="layui-form-label" style="width: 90px;">赛事开始时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="StartTime" id="startTime" lay-verify="required" autocomplete="off" placeholder="请输入"  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即添加</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="layui/layui.js"></script>
+    <script>
+        layui.use('laydate', function(){
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#startTime', //指定元素
+                format:'yyyy-MM-dd HH:mm:ss',
+                type: 'datetime'
+            });
+        });
+        layui.use(['table', 'form'], function() {
+            var table = layui.table;
+            var form = layui.form;
+            form.on('submit(add)', function(data) {
+                var index = parent.layer.getFrameIndex(window.name);
+                var id=data.field.ID;
+                $.ajax({
+                    url:'http://svcsa.org/CTFCSeason/'+id ,
+                    type : 'POST',
+                    dataType : 'json',
+                    data : {
+                        Name: data.field.Name,
+                        StartTime: data.field.StartTime
+                    },
+                    header:{
+                        Accept:'application/json'
+                    },
+                    success:function(data){
+                        var message='修改成功'
+                        if(id===''){
+                            message='添加成功'
+                        }
+                        layer.msg(message, {
+                            icon: 1,
+                            time: 1500
+                        }, function() {
+                            parent.layer.close(index);
+                        });
+                    },
+                    error:function(xhr){
+                        if (xhr.status == 401)
+							top.location.href = 'login.html';
+                    }
+                });
+                // axios.post('http://svcsa.org/CTFCSeason', {
+                //         Name: data.field.Name,
+                //         StartTime: data.field.StartTime,
+                //     })
+                //     .then(function(response) {
+                //         layer.msg('添加成功', {
+                //             icon: 1,
+                //             time: 1500
+                //         }, function() {
+                //             parent.layer.close(index);
+                //         });
+                //     })
+                //     .catch(function(error) {
+                //         console.log(error);
+                //     });
+            });
+        });
+    </script>
+
+</body>

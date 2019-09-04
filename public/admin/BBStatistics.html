@@ -1,0 +1,255 @@
+<!-- 内容主体区域 -->
+<link rel="stylesheet" href="layui/css/layui.css">
+<style>.layui-table-cell {
+    height: 80px;
+    line-height: 80px;
+}
+
+.layui-table-cell img {
+    max-height: 70px;
+}</style>
+<div style="padding: 15px;">
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">篮球球队</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-input-inline" style="">
+                <div class="layui-input-inline">
+                    <button id="add" class="layui-btn layui-btn-normal">新建技术统计</button>
+                </div>
+            </div>
+
+            <table class="layui-hide" id="test" lay-filter="test"></table>
+            <script type="text/html" id="toolbarDemo">
+            </script>
+
+            <script type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return unescape(r[2]);
+        return null; //返回参数值
+    }
+
+
+    layui.use(['table', 'form'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        table.render({
+            elem: '#test',
+            url: 'http://svcsa.org/BBStatistics?matchid=' + getUrlParam('MatchID'),
+//           +'&&player='+getUrlParam('TeamAID')
+            parseData: function (res) {
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": '', //解析提示文本
+                    "count": res.totalcount, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            },
+            method: 'get',
+            request: {
+                pageName: 'page' //页码的参数名称，默认：page
+                ,limitName: 'pagesize' //每页数据量的参数名，默认：limit
+            },
+            title: '用户数据表',
+            cols: [
+                [
+                    {
+                        field: 'MatchName',
+                        title: '比赛',
+                        width: 100,
+                    }, {
+                    field: 'PlayerName',
+                    title: '选手',
+                    width: 100,
+                }, {
+                    field: 'Foul',
+                    title: '犯规次数',
+                    width: 100,
+                }, {
+                    field: 'Points',
+                    title: '得分',
+                    width: 100,
+                }, {
+                    field: 'Assist',
+                    title: '助攻',
+                    width: 100,
+                }, {
+                    field: 'Steal',
+                    title: '抢断',
+                    width: 100,
+                }, {
+                    field: 'Block',
+                    title: '封盖',
+                    width: 150,
+                }, {
+                    field: 'OffensiveRebound',
+                    title: '前场篮板',
+                    width: 100,
+                }, {
+                    field: 'Rebound',
+                    title: '总篮板',
+                    width: 100,
+                }, {
+                    field: '3PointsHit',
+                    title: '三分命中',
+                    width: 100,
+                }, {
+                    field: '2PointsHit',
+                    title: '两分命中',
+                    width: 100,
+                }, {
+                    field: '1PointsHit',
+                    title: '罚球命中',
+                    width: 100,
+                }, {
+                    field: 'Hit',
+                    title: '投篮命中',
+                    width: 100,
+                }, {
+                    field: '3PointsShot',
+                    title: '三分次数',
+                    width: 100,
+                }, {
+                    field: '2PointsShot',
+                    title: '二分次数',
+                    width: 100,
+                }, {
+                    field: '1PointsShot',
+                    title: '罚篮次数',
+                    width: 100,
+                }, {
+                    field: 'Shot',
+                    title: '投篮次数',
+                    width: 100,
+                }, {
+                    title: '操作',
+                    width: 150,
+                    toolbar: '#barDemo'
+                }
+                ]
+            ],
+            limit: 20,
+            page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                layout: ['count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+                //,curr: 5 //设定初始在第 5 页
+                , groups: 1 //只显示 1 个连续页码
+                , first: false //不显示首页
+                , last: false //不显示尾页
+
+            },
+        });
+
+
+        $("#add").click(function () {
+            layer.open({
+                type: 2,
+                title: '新建技术统计',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['40%', '80%'],
+                content: 'BBStatistics_add.html?MatchID=' + getUrlParam('MatchID'),
+                success: function (layero, index) {
+                    layer.iframeAuto(index);
+
+                    StatisticsID
+
+                },
+                end: function () {
+                    location.reload();
+                }
+            });
+        })
+
+
+        table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if (layEvent === 'edit') { //查看
+                console.log(obj.data);
+                layer.open({
+                    type: 2,
+                    title: '修改技术统计',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['50%', '80%'],
+                    content: 'BBStatistics_edit.html',
+                    success: function (layero, index) {
+                        layer.iframeAuto(index);
+                        var body = layer.getChildFrame('body', index);
+                        body.find('#TeamID').val(data.PlayerID)
+                        body.find('#Foul').val(data.Foul)
+                        body.find('#Points').val(data.Points)
+                        body.find('#Foul').val(data.Foul)
+                        body.find('#Assist').val(data.Assist)
+                        body.find('#Steal').val(data.Steal)
+                        body.find('#Block').val(data.Block)
+                        body.find('#OffensiveRebound').val(data.OffensiveRebound)
+                        body.find('#Rebound').val(data.Rebound)
+                        body.find('#Rebound').val(data.Rebound)
+
+
+                        body.find('#3PointsHit').val(data['3PointsHit'])
+                        body.find('#2PointsHit').val(data['2PointsHit'])
+                        body.find('#1PointsHit').val(data['1PointsHit'])
+                        body.find('#Hit').val(data.Hit)
+                        body.find('#3PointsShot').val(data['3PointsShot'])
+                        body.find('#2PointsShot').val(data['2PointsShot'])
+                        body.find('#1PointsShot').val(data['1PointsShot'])
+                        body.find('#Shot').val(data.Shot)
+                        body.find('#MatchID').val(data.MatchID)
+
+
+                    },
+                    end: function () {
+                        location.reload();
+                    }
+                });
+            } else if (layEvent === 'del') {
+                layer.confirm('确认删除', {
+                    btn: ['确认', '取消'] //按钮
+                }, function () {
+                    $.ajax({
+                        url: 'http://svcsa.org/BBStatistics/' + data.StatisticsID,
+                        type: 'delete',
+                        dataType: 'json',
+                        header: {
+                            Accept: 'application/json'
+                        },
+                        success: function (data) {
+                            console.log(data)
+                        },
+                        error: function (xhr) {
+                            if (xhr.status == 401)
+							top.location.href = 'login.html';
+                        }
+                    });
+                    layer.msg('删除成功', {
+                        icon: 1,
+                        time: 1200
+                    }, function () {
+                        location.reload();
+                    });
+                }, function () {
+                });
+            }
+        });
+
+
+    });
+</script>

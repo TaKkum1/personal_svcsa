@@ -1,0 +1,53 @@
+<div class="inside-banner block imgs-banner">
+    <h3>视频图片集锦</h3>
+    <p>查看项目比赛的现场视频图片。</p>
+    <div class="more-btns">
+        <a href="{:url('index/picture/lists',['category'=>'all'])}">全部</a>
+        <a href="{:url('index/picture/lists',['category'=>'bb'])}">篮球</a>
+        <a href="{:url('index/picture/lists',['category'=>'ctfc'])}">田径</a>
+    </div>
+</div>
+</div>
+<div class="imgs-wrap">
+    <div class="clearfix block">
+        <div class="title-box">
+            <span>{$gallerytitle}</span>
+        </div>
+        <div class="all-item">
+            <div class="row clearfix">
+                {volist name="pictures" id="picture"}
+                <div class="col-md-4">
+                    <div class="item-box">
+                        {if condition="$picture.Flag eq 1"}
+                        <iframe
+                                src="https://www.youtube.com/embed/{$picture.Src|mb_strcut=###,strlen($picture.Src)-11,11}"
+                                frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        {else /}
+                        <a class="demo-img" href="{$Think.config.public_assets}/uploads/{$picture.Src}"
+                           data-jbox-image="gallery1" title="{$picture.Description}">
+                            <img src="{$Think.config.public_assets}/uploads/{$picture.Src}" alt="">
+                        </a>
+                        {/if}
+                    </div>
+                </div>
+                {/volist}
+            </div>
+        </div>
+        <div class="page-box">
+            {$pagerender}
+        </div>
+
+        <script type="text/javascript" src="{$Think.config.public_assets}/js/jBox.js"></script>
+        <script type="text/javascript" src="{$Think.config.public_assets}/js/jBox.Image.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                /* Image */
+                new jBox('Image', {
+                    imageCounter: true,
+                    imageCounterSeparator: ' of '
+                });
+            });
+
+        </script>
+    </div>
+</div>

@@ -1,0 +1,132 @@
+<div class="inside-banner block statistics-banner">
+    <h3>技术统计</h3>
+    <p>查看 {$statsa[0]['TeamShortName']}VS{$statsb[0]['TeamShortName']} 的技术统计</p>
+</div>
+<div class="site-box">
+    <div class="block">
+        <span class="icon-home home_icon icon"></span><a href="{:url('index/index/index')}">首页</a><span class="icon-arrow-right arrow_icon icon"></span><span class="active">技术统计</span>
+    </div>
+</div>
+</div>
+<div class="pro-wrap">
+    <div class="clearfix block">
+        <div class="public-left">
+			<div class="title-box">
+                {$statsa[0]['TeamShortName']}
+                </div>
+		
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>球员</th>
+                    <th>得分</th>
+                    <th>篮板</th>
+                    <th>助攻</th>
+                    <th>抢断</th>
+                    <th>盖帽</th>
+                    <th>投篮</th>
+                    <th>3分</th>
+                    <th>失误</th>
+                    <th>犯规</th>
+                </tr>
+                </thead>
+                <tbody>
+                {if condition="!$statsa"}
+                <tr>
+                    <td>暂没有可用排行！</td>
+                </tr>
+                {/if}
+                {volist name="statsa" id="stats" empty='暂时没有比赛统计'}
+                <tr>
+                    <td>{$stats['PlayerName']}{if condition='$stats["Starter"] eq 1'}*{/if}</td>
+                    <td>{$stats['Points']}</td>
+                    <td>{$stats['Rebound']}</td>
+                    <td>{$stats['Assist']}</td>
+                    <td>{$stats['Steal']}</td>
+                    <td>{$stats['Block']}</td>
+                    <td>{$stats['2PointsHit'] + $stats['3PointsHit']}-{$stats['2PointsShot'] + $stats['3PointsShot']}</td>
+                    <td>{$stats['3PointsHit']}-{$stats['3PointsShot']}</td>
+                    <td>{$stats['Turnover']}</td>
+                    <td>{$stats['Foul']}</td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+			
+			
+			<div class="title-box">
+                {$statsb[0]['TeamShortName']}
+            </div>
+
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>球员</th>
+                    <th>得分</th>
+                    <th>篮板</th>
+                    <th>助攻</th>
+                    <th>抢断</th>
+                    <th>盖帽</th>
+                    <th>投篮</th>
+                    <th>3分</th>
+                    <th>失误</th>
+                    <th>犯规</th>
+                </tr>
+                </thead>
+                <tbody>
+                {if condition="!$statsb"}
+                <tr>
+                    <td>暂没有可用排行！</td>
+                </tr>
+                {/if}
+                {volist name="statsb" id="stats" empty='暂时没有比赛统计！'}
+                <tr>
+                    <td>{$stats['PlayerName']}{if condition='$stats["Starter"] eq 1'}*{/if}</td>
+                    <td>{$stats['Points']}</td>
+                    <td>{$stats['Rebound']}</td>
+                    <td>{$stats['Assist']}</td>
+                    <td>{$stats['Steal']}</td>
+                    <td>{$stats['Block']}</td>
+                    <td>{$stats['2PointsHit'] + $stats['3PointsHit']}-{$stats['2PointsShot'] + $stats['3PointsShot']}</td>
+                    <td>{$stats['3PointsHit']}-{$stats['3PointsShot']}</td>
+                    <td>{$stats['Turnover']}</td>
+                    <td>{$stats['Foul']}</td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+        <div class="public-right">
+            <div class="tab-box">
+                <h3>项目信息</h3>
+                <ul>
+                    <li><a href=""><span class="icon-chevron-right2 icon"></span>赛场列表</a></li>
+                    <li><a href="{:url('index/bbteam/lists',['seasonid'=>$thisseason['SeasonID']])}"><span class="icon-chevron-right2 icon"></span>球队展示</a></li>
+                    <li><a href=""><span class="icon-chevron-right2 icon"></span>球员列表</a></li>
+                    <li>
+                        <dl>
+                            <dt>排行榜</dt>
+                            <dd><a href="">球队排行<span class="icon-chevron-right2 icon"></a></dd>
+                            <dd class="active"><a href="">技术统计<span class="icon-chevron-right2 icon"></a></dd>
+                        </dl>
+                    </li>
+                    <li><a href="{:url('index/bbteam/apply',['seasonid'=>$thisseason['SeasonID']])}"><span class="icon-chevron-right2 icon"></span>加入赛事</a></li>
+                    <li>
+                        <dl>
+                            <dt>其他赛季</dt>
+                            {volist name="otherseasons" id="otherseason" empty='暂没其他赛季信息！'}
+                            <dd><a href="{:url('index/bbseason/read',['id'=>$otherseason['SeasonID']])}">{$otherseason['SeasonName']}<span class="icon-chevron-right2 icon"></a></dd>
+                            {/volist}
+                        </dl>
+                    </li>
+                </ul>
+            </div>
+            <div class="show-box">
+                <div class="img-box"><img src="images/icon_10.png" alt=""></div>
+                <h3>现在开始</h3>
+                <p>加入协会并参与比赛!</p>
+                <a href="{:url('index/bbteam/apply',['seasonid'=>$thisseason['SeasonID']])}">加入赛事<span class="icon-chevron-right icon"></span></a>
+            </div>
+        </div>
+    </div>
+</div>
