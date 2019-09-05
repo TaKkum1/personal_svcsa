@@ -15,3 +15,10 @@ nginx.conf
 
 # MAC file
 .DS_Store
+
+runtime/*
+
+application/database.php
+application/config.php
+
+
