@@ -81,22 +81,13 @@
         </div>
 
         <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">队长-本赛季胜场</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="Wins" autocomplete="off" placeholder="请输入"
-                           class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline">
-                <label class="layui-form-label">本赛季负场</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="Losses" autocomplete="off" placeholder="请输入"
-                           class="layui-input">
-                </div>
+            <label class="layui-form-label">时间偏好</label>
+            <div class="layui-input-block">
+                <input type="radio" id="prefer_all" name="TimePref" value="0" title="都可以">
+                <input type="radio" id="prefer_morning" name="TimePref" value="1" title="上午">
+                <input type="radio" id="prefer_afternoon" name="TimePref" value="2" title="下午">
             </div>
         </div>
-
 
         <div class="layui-form-item">
             <label class="layui-form-label">加入赛季</label>
@@ -105,15 +96,6 @@
             <div class="layui-input-block">
                 <input type="radio" id="jt_project" name="Flag" value="0" title="申请中">
                 <input type="radio" id="gr_project" name="Flag" value="1" title="通过申请">
-            </div>
-        </div>
-
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">积分</label>
-            <div class="layui-input-block">
-                <input type="text" name="ScoreInBoard" autocomplete="off" placeholder="请输入"
-                       class="layui-input">
             </div>
         </div>
 
@@ -235,6 +217,7 @@
                     ScoreInBoard: data.field.ScoreInBoard,
                     SeasonID: data.field.SeasonID,
                     Description: data.field.Description,
+                    TimePref: data.field.TimePref,
                 },
                 header: {
                     Accept: 'application/json'

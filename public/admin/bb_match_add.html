@@ -19,7 +19,7 @@
 
         <div class="layui-form-item">
             <div class="layui-inline">
-                <label class="layui-form-label">主队名</label>
+                <label class="layui-form-label">主队</label>
                 <div class="layui-input-block" style="width: 230px">
                     <input id="TeamID" type="hidden" name="" value="">
                     <select id="TeamID_s" lay-verify="required" name="TeamID" lay-filter="myselect">
@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div class="layui-inline" style="width: 380px;">
-                <label class="layui-form-label" style="width: 110px">客队名</label>
+                <label class="layui-form-label" style="width: 110px">客队</label>
                 <div class="layui-input-inline" style="width: 230px">
                     <input id="TeamID2" type="hidden" name="" value="">
                     <select id="TeamID2_s" lay-verify="required" name="TeamID2" lay-filter="myselect">
@@ -40,7 +40,7 @@
 
         <div class="layui-form-item">
             <div class="layui-inline" style="width: 340px">
-                <label class="layui-form-label">赛季</label>
+                <label class="layui-form-label">所属赛季</label>
                 <div class="layui-input-block">
                     <input id="SeasonID" type="hidden" name="" value="">
                     <select id="SeasonID_s" lay-verify="required" name="SeasonID" lay-filter="myselect">
@@ -57,54 +57,22 @@
             </div>
         </div>
 
-
         <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">主队分数</label>
-                <div class="layui-input-inline" style="width: 230px">
-                    <input id="ScoreTeamA" type="text" name="ScoreTeamA" autocomplete="off"
-                           placeholder="请输入" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline">
-                <label class="layui-form-label" style="width: 100px">客队分数</label>
-                <div class="layui-input-inline" style="width: 230px">
-                    <input id="ScoreTeamB" type="text" name="ScoreTeamB" autocomplete="off"
-                           placeholder="请输入" class="layui-input">
-                </div>
+            <label class="layui-form-label">比赛场地</label>
+            <div class="layui-input-block">
+                <input type="radio" name="Court" value="1号场" title="1号场">
+                <input type="radio" name="Court" value="2号场" title="2号场">
             </div>
         </div>
 
         <div class="layui-form-item">
-            <label class="layui-form-label">状态</label>
+            <label class="layui-form-label">比赛状态</label>
             <div class="layui-input-block">
                 <input type="radio" name="State" value="-1" title="未开赛">
                 <input type="radio" name="State" value="0" title="正在比赛">
-                <input type="radio" name="State" value="1" title="已开赛">
+                <input type="radio" name="State" value="1" title="已结束">
             </div>
         </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">视频链接</label>
-            <div class="layui-input-inline" style="width: 615px">
-                <input id="VideoSrc" type="text" name="VideoSrc" autocomplete="off"
-                       placeholder="请输入" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label class="layui-form-label">战报</label>
-            <div id="editor" name="Content" class="layui-input-block">
-                <!--<textarea name="Content" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input"-->
-                <!--style="height:200px;"></textarea>-->
-                <!--<div id="editor">-->
-                <!--<p name="Content"></p>-->
-                <!--</div>-->
-            </div>
-            <!--<div class="layui-input-block">-->
-            <!--<textarea name="Report" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input"-->
-            <!--style="height:150px;"></textarea>-->
-            <!--</div>-->
-        </div>
-
 
         <div class="layui-form-item">
             <div class="layui-input-block">
@@ -161,13 +129,10 @@
 
                 TeamAID: data.field.TeamID,
                 TeamBID: data.field.TeamID2,
-                ScoreTeamA: data.field.ScoreTeamA,
-                ScoreTeamB: data.field.ScoreTeamB,
                 State: data.field.State,
                 StartTime: data.field.StartTime,
-                Report: editor.txt.html(),
-                VideoSrc: data.field.VideoSrc,
                 SeasonID: data.field.SeasonID,
+                Court: data.field.Court,
 
 
             })

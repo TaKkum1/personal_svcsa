@@ -73,52 +73,41 @@
                 [{
                     field: 'PlayerID',
                     title: 'ID',
-                    width: 80,
+                    width: 60,
                     fixed: 'left',
                     unresize: true,
                     sort: true,
                 }, {
                     field: 'PlayerName',
-                    title: '球员名称',
+                    title: '姓名',
                     width: 200,
                 }, {
-                    field: 'Number',
-                    title: '球员号码',
-                    width: 100,
-                }
-
-                    , {
+                    field: 'Sex',
+                    title: '性别',
+                    width: 60,
+                },
+                {
                     field: 'Birth',
                     title: '出生月日',
-                    width: 200,
+                    width: 90,
                 }, {
                     field: 'Height',
                     title: '身高',
-                    width: 100,
+                    width: 60,
                 }, {
                     field: 'Weight',
                     title: '体重',
-                    width: 100,
+                    width: 60,
                 }, {
                     field: 'PhotoSrc',
-                    title: '头像存放位置',
+                    title: '头像',
                     templet: '#show-img',
-                    width: 150,
+                    width: 100,
                 }, {
                     field: 'PlayerEmail',
                     title: '电子邮件',
-                    width: 150,
-                }
-//                , {
-//                    field: 'TeamID',
-//                    title: '球队id',
-//                    width: 150,
-//                }
-                    , {
-                    field: 'SeasonID',
-                    title: '赛季id',
-                    width: 100,
-                }, {
+                    width: 250,
+                  }, {
                     title: '操作',
                     fixed: 'right',
                     width: 122,
@@ -176,17 +165,19 @@
                         // layer.iframeAuto(index);
                         var body = layer.getChildFrame('body', index);
                         body.find('#Name').val(data.PlayerName)
-                        body.find('#Number').val(data.Number)
+                        body.find('#Sex').val(data.Sex)
+                        //body.find('#Number').val(data.Number)
                         body.find('#Birth').val(data.Birth)
                         body.find('#Height').val(data.Height)
                         body.find('#Weight').val(data.Weight)
                         body.find('#PhotoSrc').val(data.PlayerPhotoSrc)
                         body.find('#Email').val(data.PlayerEmail)
 //                        body.find('#TeamID').val(data.TeamID)
-                        body.find('#SeasonID').attr("value", data.SeasonID)
+                  //      body.find('#SeasonID').attr("value", data.SeasonID)
 
                         body.find('#demo1').attr("src", "http://svcsa.org/uploads/" + data.PlayerPhotoSrc)
                         body.find('#ID').val(data.PlayerID)
+
 //                        body.find('#TeamID').attr("value", data.TeamID)
                     },
                     end: function () {

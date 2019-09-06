@@ -6,7 +6,7 @@
     <div style="padding: 15px;">
         <form class="layui-form" action="">
 
-            
+
              <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">队伍名称</label>
@@ -22,17 +22,17 @@
                     </div>
                 </div>
             </div>
-            
-            
-            
+
+
+
             <div class="layui-form-item">
                 <label class="layui-form-label">队长名</label>
                 <div class="layui-input-block">
                     <input id="Captain" type="text" name="Captain" autocomplete="off" placeholder="请输入" class="layui-input">
                 </div>
             </div>
-            
-                        
+
+
              <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">队长-电子邮件</label>
@@ -47,15 +47,15 @@
                     </div>
                 </div>
             </div>
-                  
+
             <div class="layui-form-item">
                 <label class="layui-form-label">队长-微信</label>
                 <div class="layui-input-block">
                     <input id="Wechat" type="text" name="Wechat" autocomplete="off" placeholder="请输入" class="layui-input">
                 </div>
             </div>
-           
-            
+
+
             <div class="layui-form-item">
              <div class="layui-inline">
                <label class="layui-form-label">Logo</label>
@@ -80,39 +80,30 @@
                 </div>
                      </div>
             </div>
-            
-             <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">队长-本赛季胜场</label>
-                    <div class="layui-input-inline">
-                        <input id="Wins" type="text" name="Wins" autocomplete="off" placeholder="请输入" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-inline">
-                    <label class="layui-form-label">本赛季负场</label>
-                    <div class="layui-input-inline">
-                        <input id="Losses"  type="text" name="Losses" autocomplete="off" placeholder="请输入" class="layui-input">
-                    </div>
-                </div>
-            </div>
-           
+
 <!--             <div class="layui-form-item">
                 <label class="layui-form-label">积分</label>
                 <div class="layui-input-block">
                     <input id="ScoreInBoard" type="text" name="ScoreInBoard" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
                 </div>
             </div>-->
-           
+            <div class="layui-form-item">
+                <label class="layui-form-label">时间偏好</label>
+                <div class="layui-input-block">
+                    <input type="radio" id="prefer_all" name="TimePref" value="0" title="都可以">
+                    <input type="radio" id="prefer_morning" name="TimePref" value="1" title="上午">
+                    <input type="radio" id="prefer_afternoon" name="TimePref" value="2" title="下午">
+                </div>
+            </div>
+
            <div class="layui-form-item">
                 <label class="layui-form-label">加入赛季</label>
-<!--                <input type="text" id="Flag" style="display: none" name="Flag" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">-->
-
                 <div class="layui-input-block">
                         <input type="radio" id="jt_project" name="Flag" value="0" title="申请中">
                         <input type="radio" id="gr_project" name="Flag" value="1" title="通过申请">
                 </div>
             </div>
-                
+
 
 
          <div class="layui-form-item">
@@ -132,7 +123,7 @@
                     <input id="Description"  type="text" name="Description" autocomplete="off" placeholder="简介" class="layui-input">
                 </div>
             </div>
-            
+
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即修改</button>
@@ -150,7 +141,7 @@
             var form = layui.form;
             var $ = layui.jquery;
             var upload = layui.upload;
-            
+
             var uploadInst = upload.render({
                 elem: '#test1',
                 url: 'http://svcsa.org/uploadimage',
@@ -181,7 +172,7 @@
                     });
                 }
             });
-            
+
               var uploadInst2 = upload.render({
                 elem: '#test2',
                 url: 'http://svcsa.org/uploadimage',
@@ -225,13 +216,11 @@
                         PhotoSrc: $("#img_url2").val(),
                          LogoSrc:  data.field.LogoSrc,
                         PhotoSrc: data.field.PhotoSrc,
-                        Wins: data.field.Wins,
-                        Losses: data.field.Losses,
                         Flag:data.field.Flag,
-//                        ScoreInBoard: data.field.ScoreInBoard,
                         SeasonID: data.field.SeasonID,
                         Description: data.field.Description,
-                  
+                        TimePref: data.field.TimePref,
+
                     })
                     .then(function(response) {
                         layer.msg('修改成功', {
@@ -264,7 +253,7 @@
                         }
                     }
                 })
- 
+
                 .catch(function(error) {
                     console.log(error);
                 });

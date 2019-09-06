@@ -6,21 +6,19 @@
     <form class="layui-form" action="" id="form1">
         <div class="layui-form-item">
             <div class="layui-inline">
-                <label class="layui-form-label">球员名称</label>
+                <label class="layui-form-label">姓名</label>
                 <div class="layui-input-block">
                     <input id="Name" type="text" name="Name" lay-verify="required" autocomplete="off" placeholder="请输入"
                            class="layui-input">
                 </div>
             </div>
-            <!--
             <div class="layui-inline">
-                <label class="layui-form-label">球员号码</label>
+                <label class="layui-form-label">性别</label>
                 <div class="layui-input-inline">
-                    <input id="Number" type="text" name="Number" autocomplete="off"
+                    <input id="Sex" type="text" name="Sex" lay-verify="required" autocomplete="on"
                            placeholder="请输入" class="layui-input">
                 </div>
             </div>
-            -->
         </div>
 
         <div class="layui-form-item">
@@ -43,7 +41,7 @@
             <div class="layui-inline">
                 <label class="layui-form-label">电子邮件</label>
                 <div class="layui-input-block">
-                    <input id="Email" type="text" name="Email" autocomplete="off"
+                    <input id="Email" type="text" name="Email" lay-verify="required" autocomplete="off"
                            placeholder="请输入" class="layui-input">
                 </div>
             </div>
@@ -123,7 +121,7 @@
 
                 this.data = {
                     Name: $('input[name="Name"]').val(),
-//                Number: data.field.Number,
+                    Sex: $('input[name="Sex"]').val(),
                     Birth: '1900-' + $('input[name="Birth"]').val(),
                     Height: $('input[name="Height"]').val(),
                     Weight: $('input[name="Weight"]').val(),

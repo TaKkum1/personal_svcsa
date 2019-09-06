@@ -6,23 +6,20 @@
     <form class="layui-form" action="">
         <div class="layui-form-item">
             <div class="layui-inline">
-                <label class="layui-form-label">球员名称</label>
+                <label class="layui-form-label">姓名</label>
                 <div class="layui-input-block">
                           <input id="ID" name="ID" type="hidden" value="">
                     <input id="Name" type="text" name="Name" lay-verify="required" autocomplete="off" placeholder="请输入"
                            class="layui-input">
                 </div>
             </div>
-
             <div class="layui-inline">
-                  <input id="ID" type="hidden" name="" value="">
-                <label class="layui-form-label">球员号码</label>
-                <div class="layui-input-inline">
-                    <input id="Number" type="text" name="Number" autocomplete="off"
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-block">
+                    <input id="Sex" type="text" name="Sex" lay-verify="required" autocomplete="on"
                            placeholder="请输入" class="layui-input">
                 </div>
             </div>
-
         </div>
 
         <div class="layui-form-item">
@@ -129,7 +126,7 @@
 
                 this.data = {
                     Name: $('input[name="Name"]').val(),
-                Number: data.field.Number,
+                    Sex: $('input[name="Sex"]').val(),
                     Birth: '1900-' + $('input[name="Birth"]').val(),
                     Height: $('input[name="Height"]').val(),
                     Weight: $('input[name="Weight"]').val(),
@@ -195,8 +192,7 @@
             var index = parent.layer.getFrameIndex(window.name);
             axios.post('http://svcsa.org/bbplayer/' + $('input[name="ID"]').val(), {
                 Name: $('input[name="Name"]').val(),
-
-              Number: data.field.Number,
+                Sex: $('input[name="Sex"]').val(),
                 Birth: '1900-' + $('input[name="Birth"]').val(),
                 Height: $('input[name="Height"]').val(),
                 Weight: $('input[name="Weight"]').val(),

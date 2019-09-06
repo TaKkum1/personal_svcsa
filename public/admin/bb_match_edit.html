@@ -8,7 +8,7 @@
 
         <div class="layui-form-item">
             <div class="layui-inline">
-                <label class="layui-form-label">主队名</label>
+                <label class="layui-form-label">主队</label>
                 <div class="layui-input-block" style="width: 230px">
                     <input id="TeamID" type="hidden" name="" value="">
                     <select id="TeamID_s" lay-verify="required" name="TeamID" lay-filter="myselect">
@@ -17,7 +17,7 @@
                 </div>
             </div>
             <div class="layui-inline" style="width: 380px;">
-                <label class="layui-form-label" style="width: 110px">客队名</label>
+                <label class="layui-form-label" style="width: 110px">客队</label>
                 <div class="layui-input-inline" style="width: 230px">
                     <input id="TeamID2" type="hidden" name="" value="">
                     <select id="TeamID2_s" lay-verify="required" name="TeamID2" lay-filter="myselect">
@@ -28,7 +28,7 @@
         </div>
         <div class="layui-form-item">
             <div class="layui-inline"  style="width: 340px">
-                <label class="layui-form-label">赛季</label>
+                <label class="layui-form-label">所属赛季</label>
                 <div class="layui-input-block">
                     <input id="SeasonID" type="hidden" name="" value="">
                     <select id="SeasonID_s" lay-verify="required" name="SeasonID" lay-filter="myselect">
@@ -63,11 +63,19 @@
         </div>
 
         <div class="layui-form-item">
+            <label class="layui-form-label">比赛场地</label>
+            <div class="layui-input-block">
+                <input type="radio" name="Court" value="1号场" title="1号场">
+                <input type="radio" name="Court" value="2号场" title="2号场">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
             <label class="layui-form-label">状态</label>
             <div class="layui-input-block">
                 <input type="radio" name="State" value="-1" title="未开赛">
                 <input type="radio" name="State" value="0" title="正在比赛">
-                <input type="radio" name="State" value="1" title="已开赛">
+                <input type="radio" name="State" value="1" title="已结束">
             </div>
         </div>
 
@@ -164,6 +172,7 @@
                 Report: editor.txt.html(),
                 VideoSrc: data.field.VideoSrc,
                 SeasonID: data.field.SeasonID,
+                Court: data.field.Court,
             })
                 .then(function (response) {
                     layer.msg('修改成功', {
