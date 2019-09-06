@@ -1,11 +1,10 @@
-<div class="inside-banner block imgs-banner">
-    <h3>球队列表</h3>
-    <p>查看 {$thisseason['SeasonName']} 的所有篮球球队。</p>
-</div>
+<div class="inside-banner img_3-banner block">
+    <h3>{$thisseason['CompetitionName']}比赛</h3>
+    <p>查看{$thisseason['SeasonName']}的所有球队</p>
 </div>
 <div class="team-wrap block">
     <div class="input-box">
-        <label>篮球赛季选择</label>
+        <label>选择赛季</label>
         <select id="selectseason">
             <option value="{:url('index/bbteam/lists',['seasonid'=>$thisseason['SeasonID']])}" selected>{$thisseason['SeasonName']}</option>
             {volist name="otherseasons" id="otherseason" empty='暂没其他赛季信息！'}

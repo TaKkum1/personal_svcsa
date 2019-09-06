@@ -13,10 +13,113 @@ require_once(__DIR__ . '/../../../thinkphp/library/think/db/Expression.php');
 use think\Db;
 use think\Session;
 
+// Used for team ranking.
+class TeamRankInfo {
+    public $ID;
+    public $Name;
+    public $Wins;
+    public $Loses;
+    public $Forfeits;
+    public $Pt_win;
+    public $Pt_lose;
+
+    public function __construct($id, $name) {
+      $this->ID = $id;
+      $this->Name = $name;
+    }
+
+    public function addWins() {
+      ++$this->Wins;
+    }
+
+    public function addLoses() {
+      ++$this->Loses;
+    }
+
+    public function addForfeits() {
+      ++$this->Forfeits;
+    }
+
+    public function addPointWins($points) {
+      $this->Pt_win += $points;
+    }
+
+    public function addPointLoses($points) {
+      $this->Pt_lose += $points;
+    }
+
+    public function getPointDiff() {
+      return $this->Pt_win - $this->Pt_lose;
+    }
+
+    public function getRankPoint() {
+      return $this->Wins * 2 + $this->Loses;
+    }
+}
+
+// Return whether all the same rank point teams have met with each other.
+function AllMet($same_rank_point_teams) {
+  // TODO(Yue): Implement this method.
+  return false;
+}
+
+// Rank same rank point teams by diffs and points get.
+function SimpleRank($same_rank_point_teams) {
+  // Divide teams by diff.
+  $diff_standing = array();
+  foreach ($same_rank_point_teams as $current_team) {
+    $found_same_diff_team = false;
+    foreach ($diff_standing as $diff => $same_diff_teams) {
+      if ($current_team->getPointDiff() == $diff) {
+        array_push($diff_standing[$diff], $current_teamm);
+        $found_same_diff_team = true;
+        break;
+      }
+    }
+    if ($found_same_diff_team == false) {
+      $diff_standing[$current_team->getPointDiff()] = array($current_team);
+    }
+  }
+
+  // Rank same diff teams.
+  krsort($diff_standing);
+
+  // Divide same diff teams by points. Update final ranking results inline.
+  $result = array();
+  foreach ($diff_standing as $diff => $same_diff_teams) {
+    $point_standing = array();
+    foreach ($same_diff_teams as $current_team) {
+      $found_same_point_team = false;
+      foreach ($point_standing as $point => $same_point_teams) {
+        if ($current_team->Pt_win == $point) {
+          array_push($point_standing[$point], $current_team);
+          $found_same_point_team = true;
+          break;
+        }
+      }
+      if ($found_same_point_team == false) {
+        $point_standing[$current_team->Pt_win] = array($current_team);
+      }
+    }
+    krsort($point_standing);
+    foreach ($point_standing as $point => $same_point_teams) {
+      foreach ($same_point_teams as $team_to_be_merged) {
+        array_push($result, $team_to_be_merged);
+      }
+    }
+  }
+  return $result;
+}
+
+// Rank same rank point teams according to results among each other.
+function ComplexRank($same_rank_point_teams, $matches) {
+  // TODO(Yue): Implement this method.
+}
+
 class Bbteam extends Base
 {
     const FIELD = 'Name,ShortName,Captain,Email,Tel,Wechat,LogoSrc,PhotoSrc,Wins,
-    Losses,ScoreInBoard,Flag,SeasonID,Flag,PlayerIDs,PlayerNumbers,Description';
+    Losses,ScoreInBoard,Flag,SeasonID,Flag,PlayerIDs,PlayerNumbers,Description,TimePref';
 
     public function add($seasonid = null)
     {
@@ -215,23 +318,105 @@ class Bbteam extends Base
         $otherseasons = array_slice($seasons, 1);
         $this->view->assign('otherseasons', $otherseasons);
 
-        // $teams = Db::name('bb_team')
-        //     ->where('SeasonID', $seasonid)
-        //     ->order('Wins desc, ScoreInBoard desc')
-        //     ->select();
-        $SQL_QUERY_STR = 
-            'SELECT * FROM 
-                bb_team LEFT JOIN 
-                (SELECT TeamAID AS TeamID, ScoreTeamA - ScoreTeamB AS Score FROM bb_match UNION SELECT TeamBID AS TeamID, ScoreTeamB - ScoreTeamA AS Score FROM bb_match) foo 
-                ON bb_team.ID = foo.TeamID
-                WHERE SeasonID ='.$seasonid.'
-                ORDER BY Wins DESC, Score DESC';
+        $database_teams = Db::name('bb_team')
+            ->where('SeasonID', $seasonid)
+            ->select();
 
-        $teams = Db::query($SQL_QUERY_STR);
+        // An array of TeamRankInfo
+        $teams = array();
+        foreach ($database_teams as $team) {
+          $team_info = new TeamRankInfo($team['ID'], $team['Name']);
+          array_push($teams, $team_info);
+        };
+
+        // Update team rank info from matches.
+        $matches = Db::name('bb_match')
+            ->where('SeasonID', $seasonid)
+            ->where('State', 1)
+            ->select();
+        foreach ($matches as $match) {
+          foreach ($teams as $team) {
+            if ($team->ID == $match['TeamAID']) {
+              # Determine forfeit
+              if ($match['ScoreTeamA'] == 0 && $match['ScoreTeamB'] == 15) {
+                $team->AddForfeits();
+              } else if ($match['ScoreTeamA'] > $match['ScoreTeamB']) {
+                $team->AddWins();
+              } else {
+                $team->AddLoses();
+              }
+              $team->AddPointWins($match['ScoreTeamA']);
+              $team->AddPointLoses($match['ScoreTeamB']);
+            }
+            if ($team->ID == $match['TeamBID']) {
+              # Determine forfeit
+              if ($match['ScoreTeamB'] == 0 && $match['ScoreTeamA'] == 15) {
+                $team->AddForfeits();
+              } else if ($match['ScoreTeamB'] > $match['ScoreTeamA']) {
+                $team->AddWins();
+              } else {
+                $team->AddLoses();
+              }
+              $team->AddPointWins($match['ScoreTeamB']);
+              $team->AddPointLoses($match['ScoreTeamA']);
+            }
+          }
+        }
+
+        // Divide to groups based on rank points.
+        // rank_point => same_rank_point_teams
+        $rank_point_standing = array();
+        foreach ($teams as $team) {
+          $found_same_rank_point_team = false;
+          foreach ($rank_point_standing as $rank_point => $same_rank_point_teams) {
+            if ($team->getRankPoint() == $rank_point) {
+              array_push($rank_point_standing[$rank_point], $team);
+              $found_same_rank_point_team = true;
+              break;
+            }
+          }
+          if ($found_same_rank_point_team == false) {
+            // Form a new group.
+            $rank_point_standing[$team->getRankPoint()] = array($team);
+          }
+        }
+
+        // Rank groups.
+        krsort($rank_point_standing);
+
+        // Rank each group.
+        $final_ranking = array();
+        foreach ($rank_point_standing as $rank_point => $same_rank_point_teams) {
+          file_put_contents('php://stderr', 'enter one same rank point group ');
+          if (AllMet($same_rank_point_teams) == false) {
+            $same_rank_point_teams_ranking = SimpleRank($same_rank_point_teams);
+          } else {
+            $same_rank_point_teams_ranking = ComplexRank($same_rank_point_teams, $matches);
+          }
+          foreach ($same_rank_point_teams_ranking as $team_to_be_merged) {
+            array_push($final_ranking, $team_to_be_merged);
+          }
+        }
+
+        // Reformat final ranking.
+        $display_teams = array();
+        foreach ($final_ranking as $team) {
+          $display_team = array();
+          $display_team['ID'] = $team->ID;
+          $display_team['ShortName'] = $team->Name;
+          $display_team['RankPoints'] = $team->getRankPoint();
+          $display_team['Wins'] = $team->Wins;
+          $display_team['Losses'] = $team->Loses;
+          $display_team['Forfeits'] = $team->Forfeits;
+          $display_team['PointGet'] = $team->Pt_win;
+          $display_team['PointLose'] = $team->Pt_lose;
+          $display_team['PointDiff'] = $team->GetPointDiff();
+          array_push($display_teams, $display_team);
+        }
 
         $this->view->assign('thisseason', $seasons[0]);
         $this->view->assign('otherseasons', $otherseasons);
-        $this->view->assign('teamrankresult', $teams);
+        $this->view->assign('teamrankresult', $display_teams);
 
         return $this->view->fetch('bbteam/rank');
 

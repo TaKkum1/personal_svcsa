@@ -23,6 +23,8 @@ class Article extends Base
         $this->checkauthorization();
 
         $data = request()->only(self::FIELD, 'post');
+        date_default_timezone_set("America/Los_Angeles");
+        $data['Posttime'] = date("Y-m-d h:i:s");
         $this->makeNull($data);
         $validator = validate('Article');
         $result = $validator->check($data);
@@ -192,6 +194,8 @@ notfound:
         $this->checkauthorization();
 
         $data = request()->only(self::FIELD, 'post');
+        date_default_timezone_set("America/Los_Angeles");
+        $data['Posttime'] = date("Y-m-d h:i:s");
         $this->makeNull($data);
 //        $validator = validate('Article');
 //        $result = $validator->check($data);

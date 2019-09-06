@@ -16,7 +16,7 @@ use think\Session;
 
 class Bbplayer extends Base
 {
-    const FIELD = 'Name,Number,Birth,Height,Weight,PhotoSrc,Email,TeamID,SeasonID';
+    const FIELD = 'Name,Number,Birth,Height,Weight,PhotoSrc,Email,TeamID,SeasonID,Sex';
 
     public function add($seasonid = null)
     {
@@ -154,9 +154,10 @@ class Bbplayer extends Base
 
         if (!$seasonid && input('seasonid')) $seasonid = input('seasonid');
         if (!$teamid && input('teamid')) $teamid = input('teamid');
-        if (!$competitionid && input('competitionid')) $competitionid = input('CompetitionID');
-
-        if ($seasonid)
+        if (!$competitionid && input('competitionid')) {
+          $competitionid = input('CompetitionID');
+        }
+        if ($competitionid and $seasonid)
             $list = $list->where('seasonid', $seasonid);
         else if ($teamid)
             $list = $list->where('teamid', $teamid);
@@ -168,7 +169,9 @@ class Bbplayer extends Base
             $list = $list->whereIn('PlayerID',
                 explode(',', input('playerids')));
 
-        $list = $list->paginate($pagesize, false);
+        $list = $list->paginate($pagesize, false, [
+          'query' => input('param.'),
+        ]);
 
         if ($this->jsonRequest())
             $this->paginatedResult($list->total(), $pagesize, $list->currentPage(), $list->items());
@@ -178,24 +181,17 @@ class Bbplayer extends Base
         $this->headerAndFooter('player');
 
         $playertitle = '';
-        $playercategory = 'manbb';
-
-        if ($seasonid && count($list->items())>0)
+        $CompetitionName = $list->items()[0]['CompetitionName'];
+        if ($seasonid && count($list->items())>0) {
             $playertitle = $list->items()[0]['SeasonName'];
+          }
         else if ($teamid && count($list->items())>0)
             $playertitle = $list->items()[0]['TeamName'];
         else
             $playertitle = '优秀';
 
-        if (count($list->items())>0 && $list->items()[0]['CompetitionID'] == 1)
-            $playercategory = 'manbb';
-        else if (count($list->items())>0 &&$list->items()[0]['CompetitionID'] == 2)
-            $playercategory = 'womanbb';
-        else
-            $playercategory = 'other';
-
         $this->view->assign('playertitle', $playertitle);
-        $this->view->assign('playercategory', $playercategory);
+        $this->view->assign('CompetitionName', $CompetitionName);
         $this->view->assign('pagerender', $list->render());
         $this->view->assign('players', $list->items());
 
@@ -231,8 +227,8 @@ class Bbplayer extends Base
     public function copyToSeason($newSeasonID)
     {
         $data = request()->only('OldSeasonID,TeamID,PlayerNumbers', 'post');
-        $copySQL = 'insert into bb_player (Name,Number,Birth,Height,Weight,PhotoSrc,Email,SeasonID)';
-        $copySQL = $copySQL . 'select Name,Number,Birth,Height,Weight,PhotoSrc,Email,' . $newSeasonID;
+        $copySQL = 'insert into bb_player (Name,Number,Birth,Height,Weight,PhotoSrc,Email,SeasonID,Sex)';
+        $copySQL = $copySQL . 'select Name,Number,Birth,Height,Weight,PhotoSrc,Email,Sex' . $newSeasonID;
         $copySQL = $copySQL . ' from bb_player where SeasonID = ' . $this->request('OldSeasonID');
 
     }

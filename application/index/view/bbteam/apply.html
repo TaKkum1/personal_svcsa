@@ -4,7 +4,7 @@
 </div>
 <div class="site-box">
     <div class="block">
-        <span class="icon-home home_icon icon"></span><a href="">首页</a><span class="icon-arrow-right arrow_icon icon"></span><span class="active">申请加入</span>
+        <span class="icon-home home_icon icon"></span><a href="{:url('index/index/index')}">首页</a><span class="icon-arrow-right arrow_icon icon"></span><span class="active">申请加入</span>
     </div>
 </div>
 </div>
@@ -37,6 +37,13 @@
         <div class="input-box">
             <input type="text" name="Wechat" placeholder="微信：">
         </div>
+        <div class="input-radio">
+            <label class="label">时间偏好</label>
+            <input type="radio" id="prefer_all" name="TimePref" value="0"> 都可以 </>
+            <input type="radio" id="prefer_morning" name="TimePref" value="1"> 上午 </>
+            <input type="radio" id="prefer_afternoon" name="TimePref" value="2"> 下午</>
+        </div>
+        <br>
 
         <div class="input-box up_pic-box">
             <p style="line-height: 30px; margin-left: 5px">上传LOGO（背景透明）</p>
@@ -58,9 +65,10 @@
         </div>
         <div class="sub">发送</div>
     </div>
+    <!-- Defined here, shown/hidden by javascript. -->
     <div class="pop-box">
         <div class="select-pop">
-            <div class="colse-pop"><img src="{$Think.config.public_assets}/images/close_1.png"></div>
+            <div class="close-pop"><img src="{$Think.config.public_assets}/images/close_1.png"></div>
             <div class="other-box">
                 <div class="list-box">
                     <div class="row clearfix">
@@ -230,9 +238,10 @@
         // })
 
 
-        $('.colse-pop').click(function(){
+        $('.close-pop').click(function(){
             $('.pop-box').hide();
         })
+        // Player selected.
         $('.show').click(function(){
             $("input[name='PlayerNumbers']").val("");
             $("input[name='PlayerIDs']").val("");
@@ -268,10 +277,12 @@
             $('.nub em').html($(".select-pop input[type='checkbox']:checked").length)
             $('.pop-box').hide();
         })
+        // Show player selection pop box when select button is clicked.
         $('.select-btn').click(function(){
             $('.pop-box').show();
         })
 
+        // Apply button is clicked.
         $(".sub").click(function(){
 
             if($('input[name=Name]').val()=="" ||

@@ -17,20 +17,22 @@
                 <dd>{$team['Captain']}</dd>
             </dl>
             <dl>
+                <dt><i class="icon-clock"> </i>时间偏好</dt>
+                {if condition="$team['TimePref'] eq 0"}
+                  <dd>都可以</dd>
+                {elseif condition="$team['TimePref'] eq 1"}
+                  <dd>上午</dd>
+                {else /}
+                  <dd>下午</dd>
+                {/if}
+            </dl>
+            <dl>
                 <dt><i class="icon-tree"> </i>所属赛季</dt>
                 <dd>{$thisseason['SeasonName']}</dd>
             </dl>
             <dl>
                 <dt><i class="icon-earth"> </i>球员数量</dt>
                 <dd>{$playercount}名<span><a href="{:url('index/bbplayer/lists',['teamid'=>$team['ID']])}">查看球员>>>></a></span></dd>
-            </dl>
-            <dl>
-                <dt><i class="icon-trophy"> </i>赛季胜场</dt>
-                <dd>{$team['Wins']}</dd>
-            </dl>
-            <dl>
-                <dt><i class="icon-folder-minus"> </i>赛季负场</dt>
-                <dd>{$team['Losses']}</dd>
             </dl>
         </div>
     </div>

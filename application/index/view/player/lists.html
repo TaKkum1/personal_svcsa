@@ -1,48 +1,27 @@
-<div class="inside-banner block img_2-banner">
-    <h3>查看选手 </h3>
-    <p>认识SVCSA中{$playertitle}的运动选手。</p>
+<div class="inside-banner img_3-banner block">
+    <h3>{$CompetitionName}比赛</h3>
+    <p>查看{$playertitle}的所有球员</p>
 </div>
 <div class="site-box">
     <div class="block">
-        <span class="icon-home home_icon icon"></span><a href="">首页</a><span class="icon-arrow-right arrow_icon icon"></span><span class="active">运动员</span>
+        <span class="icon-home home_icon icon"></span><a href="{:url('index/index/index')}">首页</a><span class="icon-arrow-right arrow_icon icon"></span><span class="active">球员</span>
     </div>
 </div>
 </div>
 <div class="athlete-wrap">
-
     <div class="block">
-        <div class="tab-box">
-            <a href="{:url('index/bbplayer/lists')}?competition=1"><span {if condition="$playercategory eq 'manbb'"} class="active" {/if}>男篮</span></a>
-            <a href="{:url('index/bbplayer/lists')}?competition=2"><span {if condition="$playercategory eq 'womanbb'"} class="active" {/if}>女篮</span></a>
-            <a href="{:url('index/ctfcplayer/lists')}"><span {if condition="$playercategory eq 'ctfc'"} class="active" {/if}>田径</span></a>
-            <span {if condition="$playercategory eq 'other'"} class="active" {/if}>其他</span>
-        </div>
         <div class="all-box">
-
             <div class="list-box active">
                 <div class="row clearfix">
                     {volist name="players" id="player"  empty='暂没球员信息！'}
                     <div class="col-md-2">
-                        {if condition="$playercategory eq 'ctfc'"}
-                        <a href="{:url('index/ctfcplayer/read',['id'=>$player.ID])}">
-                        {else /}
-                        <a href="{:url('index/bbplayer/read',['id'=>$player.PlayerID])}">
-                        {/if}
+                      <a href="{:url('index/bbplayer/read',['id'=>$player.PlayerID])}">
                             <div class="item-box">
                                 <div class="img-box">
-                                    {if condition="$playercategory eq 'ctfc'"}
-                                        <img src="{$Think.config.public_assets}/uploads/{$player.PhotoSrc}">
-                                    {else /}
-                                        <img src="{$Think.config.public_assets}/uploads/{$player.PlayerPhotoSrc}">
-                                    {/if}
+                                  <img src="{$Think.config.public_assets}/uploads/{$player.PlayerPhotoSrc}">
                                 </div>
                                 <div class="txt-box">
-                                    {if condition="$playercategory eq 'ctfc'"}
-                                        {$player.Name}
-                                    {else /}
-                                        {$player.PlayerName}
-                                    {/if}
-
+                                  {$player.Number}号 {$player.PlayerName}
                                 </div>
                             </div>
                         </a>

@@ -4,7 +4,7 @@
 </div>
 <div class="site-box">
     <div class="block">
-        <span class="icon-home home_icon icon"></span><a href="{:url('index/index/index')}">首页</a><span class="icon-arrow-right arrow_icon icon"></span><span class="active">篮球</span>
+        <span class="icon-home home_icon icon"></span><a href="{:url('index/index/index')}">首页</a><span class="icon-arrow-right arrow_icon icon"></span><span class="active">赛程</span>
     </div>
 </div>
 </div>
@@ -15,10 +15,10 @@
                 <thead>
                 <tr>
                     <th>比赛时间</th>
-                    <th>队伍VS队伍</th>
+                    <th>场地</th>
+                    <th>对阵</th>
                     <th>比分</th>
-                    <th>战报/前瞻</th>
-                    <th>图集</th>
+                    <th>文字直播</th>
                     <th>技术统计</th>
                 </tr>
                 </thead>
@@ -31,6 +31,7 @@
                 {volist name="matches" id="match" }
                 <tr>
                     <td>{$match['StartTime']|strtotime|date='m/d G:i',###}</td>
+                    <td>{$match['Court']}</td>
                     <td>{$match['TeamAShortName']} vs {$match['TeamBShortName']}</td>
                     <td>{if condition="$match['State'] eq -1"}
                         未开赛
@@ -39,8 +40,7 @@
                         {else /}
                         {$match['ScoreTeamA']}:{$match['ScoreTeamB']}
                         {/if}</td>
-                    <td><a href="{:url('index/bbmatch/read',['id'=>$match['MatchID']])}">查看</a></td>
-                    <td><a href="{:url('index/bbpicture/lists',['matchid'=>$match['MatchID']])}">图集</a></td>
+                    <td><a href="{:url('index/bbmatch/read',['id'=>$match['MatchID']])}">文字直播</a></td>
                     <td><a href="{:url('index/bbstatistics/lists') . '?matchid='. $match['MatchID']}">技术统计</a></td>
                 </tr>
                 {/volist}
@@ -51,14 +51,14 @@
             <div class="tab-box">
                 <h3>项目信息</h3>
                 <ul>
-                    <li class="active"><a href="{:url('index/bbseason/read',['id'=>$thisseason['SeasonID']])}"><span class="icon-chevron-right2 icon"></span>赛场列表</a></li>
-                    <li><a href="{:url('index/bbteam/lists',['seasonid'=>$thisseason['SeasonID']])}"><span class="icon-chevron-right2 icon"></span>球队展示</a></li>
-                    <li><a href="{:url('index/bbplayer/lists')}?seasonid={$thisseason['SeasonID']}"><span class="icon-chevron-right2 icon"></span>球员列表</a></li>
+                    <li class="active"><a href="{:url('index/bbseason/read',['id'=>$thisseason['SeasonID']])}"><span class="icon-chevron-right2 icon"></span>赛程</a></li>
+                    <li><a href="{:url('index/bbteam/lists',['seasonid'=>$thisseason['SeasonID']])}"><span class="icon-chevron-right2 icon"></span>球队</a></li>
+                    <li><a href="{:url('index/bbplayer/lists')}?competitionid={$thisseason['CompetitionID']}&seasonid={$thisseason['SeasonID']}"><span class="icon-chevron-right2 icon"></span>球员</a></li>
                     <li>
                         <dl>
-                            <dt>排行榜</dt>
-                            <dd><a href="{:url('index/bbteam/rank',['seasonid'=>$thisseason['SeasonID']])}">球队排行<span class="icon-chevron-right2 icon"></a></dd>
-                            <dd><a href="{:url('index/bbstatistics/lists')}?seasonid={$thisseason['SeasonID']}">赛季统计<span class="icon-chevron-right2 icon"></a></dd>
+                            <dt>常规赛</dt>
+                            <dd><a href="{:url('index/bbteam/rank',['seasonid'=>$thisseason['SeasonID']])}">积分榜<span class="icon-chevron-right2 icon"></a></dd>
+                            <dd><a href="{:url('index/bbstatistics/lists')}?seasonid={$thisseason['SeasonID']}">技术统计<span class="icon-chevron-right2 icon"></a></dd>
                         </dl>
                     </li>
                     <li><a href="{:url('index/bbteam/apply',['seasonid'=>$thisseason['SeasonID']])}"><span class="icon-chevron-right2 icon"></span>加入赛事</a></li>

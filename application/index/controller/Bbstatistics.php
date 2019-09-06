@@ -78,7 +78,106 @@ class Bbstatistics extends Base
 
             $groupedResult = array_group_by($result,'TeamID');
             $groupedResultA = current($groupedResult);
+            // Total stats for team A.
+            $TotalStatA = [];
+            $TotalPointsA = 0;
+            $Total2PointsHitA = 0;
+            $Total2PointsShotA = 0;
+            $Total3PointsHitA = 0;
+            $Total3PointsShotA = 0;
+            $Total1PointsHitA = 0;
+            $Total1PointsShotA = 0;
+            $TotalOffensiveReboudA = 0;
+            $TotalReboundA = 0;
+            $TotalAssistA = 0;
+            $TotalStealA = 0;
+            $TotalBlockA = 0;
+            $TotalTurnoverA = 0;
+            $TotalFoulA = 0;
+            foreach ($groupedResultA as $A_Player) {
+              $TotalPointsA += $A_Player['Points'];
+              $Total2PointsHitA += $A_Player['2PointsHit'];
+              $Total2PointsShotA += $A_Player['2PointsShot'];
+              $Total3PointsHitA += $A_Player['3PointsHit'];
+              $Total3PointsShotA += $A_Player['3PointsShot'];
+              $Total1PointsHitA += $A_Player['1PointsHit'];
+              $Total1PointsShotA += $A_Player['1PointsShot'];
+              $TotalOffensiveReboudA += $A_Player['OffensiveRebound'];
+              $TotalReboundA += $A_Player['Rebound'];
+              $TotalAssistA += $A_Player['Assist'];
+              $TotalStealA += $A_Player['Steal'];
+              $TotalBlockA += $A_Player['Block'];
+              $TotalTurnoverA += $A_Player['Turnover'];
+              $TotalFoulA += $A_Player['Foul'];
+            }
+            $TotalStatA['PlayerName'] = "球队";
+            $TotalStatA['Starter'] = 0;
+            $TotalStatA['Points'] = $TotalPointsA;
+            $TotalStatA['2PointsHit'] = $Total2PointsHitA;
+            $TotalStatA['2PointsShot'] = $Total2PointsShotA;
+            $TotalStatA['3PointsHit'] = $Total3PointsHitA;
+            $TotalStatA['3PointsShot'] = $Total3PointsShotA;
+            $TotalStatA['1PointsHit'] = $Total1PointsHitA;
+            $TotalStatA['1PointsShot'] = $Total1PointsShotA;
+            $TotalStatA['OffensiveRebound'] = $TotalOffensiveReboudA;
+            $TotalStatA['Rebound'] =$TotalReboundA;
+            $TotalStatA['Assist'] = $TotalAssistA;
+            $TotalStatA['Steal'] = $TotalStealA;
+            $TotalStatA['Block'] = $TotalBlockA;
+            $TotalStatA['Turnover'] = $TotalTurnoverA;
+            $TotalStatA['Foul'] = $TotalFoulA;
+            array_push($groupedResultA, $TotalStatA);
+
             $groupedResultB = end($groupedResult);
+            // Total stats for team A.
+            $TotalStatB = [];
+            $TotalPointsB = 0;
+            $Total2PointsHitB = 0;
+            $Total2PointsShotB = 0;
+            $Total3PointsHitB = 0;
+            $Total3PointsShotB = 0;
+            $Total1PointsHitB = 0;
+            $Total1PointsShotB = 0;
+            $TotalOffensiveReboudB = 0;
+            $TotalReboundB = 0;
+            $TotalAssistB = 0;
+            $TotalStealB = 0;
+            $TotalBlockB = 0;
+            $TotalTurnoverB = 0;
+            $TotalFoulB = 0;
+            foreach ($groupedResultB as $B_Player) {
+              $TotalPointsB += $B_Player['Points'];
+              $Total2PointsHitB += $B_Player['2PointsHit'];
+              $Total2PointsShotB += $B_Player['2PointsShot'];
+              $Total3PointsHitB += $B_Player['3PointsHit'];
+              $Total3PointsShotB += $B_Player['3PointsShot'];
+              $Total1PointsHitB += $B_Player['1PointsHit'];
+              $Total1PointsShotB += $B_Player['1PointsShot'];
+              $TotalOffensiveReboudB += $B_Player['OffensiveRebound'];
+              $TotalReboundB += $B_Player['Rebound'];
+              $TotalAssistB += $B_Player['Assist'];
+              $TotalStealB += $B_Player['Steal'];
+              $TotalBlockB += $B_Player['Block'];
+              $TotalTurnoverB += $B_Player['Turnover'];
+              $TotalFoulB += $B_Player['Foul'];
+            }
+            $TotalStatB['PlayerName'] = "球队";
+            $TotalStatB['Starter'] = 0;
+            $TotalStatB['Points'] = $TotalPointsB;
+            $TotalStatB['2PointsHit'] = $Total2PointsHitB;
+            $TotalStatB['2PointsShot'] = $Total2PointsShotB;
+            $TotalStatB['3PointsHit'] = $Total3PointsHitB;
+            $TotalStatB['3PointsShot'] = $Total3PointsShotB;
+            $TotalStatB['1PointsHit'] = $Total1PointsHitB;
+            $TotalStatB['1PointsShot'] = $Total1PointsShotB;
+            $TotalStatB['OffensiveRebound'] = $TotalOffensiveReboudB;
+            $TotalStatB['Rebound'] =$TotalReboundB;
+            $TotalStatB['Assist'] = $TotalAssistB;
+            $TotalStatB['Steal'] = $TotalStealB;
+            $TotalStatB['Block'] = $TotalBlockB;
+            $TotalStatB['Turnover'] = $TotalTurnoverB;
+            $TotalStatB['Foul'] = $TotalFoulB;
+            array_push($groupedResultB, $TotalStatB);
 
             $this->view->assign('statsa',$groupedResultA);
             $this->view->assign('statsb',$groupedResultB);
