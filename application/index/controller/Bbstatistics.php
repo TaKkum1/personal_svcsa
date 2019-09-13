@@ -50,6 +50,65 @@ class Bbstatistics extends Base
         $this->dataResult($result);
     }
 
+    private function CalculateQuarterScores($logs) {
+      $quarterscores = array();
+
+      $current_quarter = 1;
+      foreach($logs as $log) {
+        $event = $log['Event'];
+
+        // Update the quarters if needed.
+        if (strpos($event, '第2节 start') !== false) {
+          $current_quarter = 2;
+        } else if (strpos($event, '第3节 start') !== false) {
+          $current_quarter = 3;
+        } else if (strpos($event, '第4节 start') !== false) {
+          $current_quarter = 4;
+        } else if (strpos($event, '1加时 start') !== false) {
+          $current_quarter = 5;
+        } else if (strpos($event, '2加时 start') !== false) {
+          $current_quarter = 6;
+        }
+
+        // If there is a point event. record it.
+        if (strpos($event, 'Made') !== false) {
+          // Get Team Name.
+          $team = '';
+          $start = strpos($event, '(');
+          $end = strpos($event, ')');
+          if ($start !== false and $end !== false) {
+            $team = substr($event, $start + 1, $end - $start - 1);
+          }
+          if (empty($team)) {
+            return $quarterscores;
+          }
+
+          // Get points to be added.
+          $points = 2;
+          if (strpos($event, 'Three Point Made') !== false) {
+            $points = 3;
+          }
+          if (strpos($event, 'Free Throw Made') !== false) {
+            $points = 1;
+          }
+
+          // Update team scores.
+          if (!array_key_exists($team, $quarterscores)) {
+            $quarterscores[$team] = array();
+            $quarterscores[$team][1] = 0;
+            $quarterscores[$team][2] = 0;
+            $quarterscores[$team][3] = 0;
+            $quarterscores[$team][4] = 0;
+            $quarterscores[$team][5] = 0;
+            $quarterscores[$team][6] = 0;
+          }
+          $quarterscores[$team][$current_quarter] += $points;
+
+        }
+      }
+      return $quarterscores;
+    }
+
     public function readViewByMatchTeam($matchid){
         $pagesize = input('pagesize');
         $list = Db::name('bb_statisticsplayerteam')
@@ -185,7 +244,10 @@ class Bbstatistics extends Base
             $this->view->assign('TeamAShortName',$groupedResultA[0]['TeamShortName']);
             $this->view->assign('TeamBShortName',$groupedResultB[0]['TeamShortName']);
 
-
+            // Get Quarter Scores.
+            $logs = Db::name('bb_log')->where('MatchID', $matchid)->select();
+            $quarterscores = $this->CalculateQuarterScores($logs);
+            $this->view->assign('QuarterScores', $quarterscores);
 
             return $this->view->fetch('bbstatistics/read');
         }

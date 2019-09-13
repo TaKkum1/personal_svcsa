@@ -9,6 +9,70 @@
 </div>
 </div>
 <div class="pro-wrap">
+  <div class="clearfix block">
+    <div class="public-left">
+      {if condition="$QuarterScores"}
+        <table class="table">
+            <tr>
+              <th>球队</th>
+              <th>第1节</th>
+              <th>第2节</th>
+              <th>第3节</th>
+              <th>第4节</th>
+              {if condition="$QuarterScores[$statsa[0]['TeamName']][5] gt 0 or $QuarterScores[$statsb[0]['TeamName']][5] gt 0"}
+                <th>1加时</th>
+              {/if}
+              {if condition="$QuarterScores[$statsa[0]['TeamName']][6] gt 0 or $QuarterScores[$statsb[0]['TeamName']][6] gt 0"}
+                <th>2加时</th>
+              {/if}
+              <th>总分</th>
+            </tr>
+            <tr>
+              <td>{$statsa[0]['TeamShortName']}</td>
+              <td>{$QuarterScores[$statsa[0]['TeamName']][1]}</td>
+              <td>{$QuarterScores[$statsa[0]['TeamName']][2]}</td>
+              <td>{$QuarterScores[$statsa[0]['TeamName']][3]}</td>
+              <td>{$QuarterScores[$statsa[0]['TeamName']][4]}</td>
+              {if condition="$QuarterScores[$statsa[0]['TeamName']][5] gt 0 or $QuarterScores[$statsb[0]['TeamName']][5] gt 0"}
+                <td>{$QuarterScores[$statsa[0]['TeamName']][5]}</td>
+              {/if}
+              {if condition="$QuarterScores[$statsa[0]['TeamName']][6] gt 0 or $QuarterScores[$statsb[0]['TeamName']][6] gt 0"}
+                <td>{$QuarterScores[$statsa[0]['TeamName']][6]}</td>
+              {/if}
+              <td>{$QuarterScores[$statsa[0]['TeamName']][1] +
+                   $QuarterScores[$statsa[0]['TeamName']][2] +
+                   $QuarterScores[$statsa[0]['TeamName']][3] +
+                   $QuarterScores[$statsa[0]['TeamName']][4] +
+                   $QuarterScores[$statsa[0]['TeamName']][5] +
+                   $QuarterScores[$statsa[0]['TeamName']][6]}
+              </td>
+            </tr>
+            <tr>
+              <td>{$statsb[0]['TeamShortName']}</td>
+              <td>{$QuarterScores[$statsb[0]['TeamName']][1]}</td>
+              <td>{$QuarterScores[$statsb[0]['TeamName']][2]}</td>
+              <td>{$QuarterScores[$statsb[0]['TeamName']][3]}</td>
+              <td>{$QuarterScores[$statsb[0]['TeamName']][4]}</td>
+              {if condition="$QuarterScores[$statsa[0]['TeamName']][5] gt 0 or $QuarterScores[$statsb[0]['TeamName']][5] gt 0"}
+                <td>{$QuarterScores[$statsb[0]['TeamName']][5]}</td>
+              {/if}
+              {if condition="$QuarterScores[$statsa[0]['TeamName']][6] gt 0 or $QuarterScores[$statsb[0]['TeamName']][6] gt 0"}
+                <td>{$QuarterScores[$statsb[0]['TeamName']][6]}</td>
+              {/if}
+              <td>{$QuarterScores[$statsb[0]['TeamName']][1] +
+                   $QuarterScores[$statsb[0]['TeamName']][2] +
+                   $QuarterScores[$statsb[0]['TeamName']][3] +
+                   $QuarterScores[$statsb[0]['TeamName']][4] +
+                   $QuarterScores[$statsb[0]['TeamName']][5] +
+                   $QuarterScores[$statsb[0]['TeamName']][6]}
+              </td>
+            </tr>
+        </table>
+      {/if}
+    </div>
+  </div>
+</div>
+<div class="pro-wrap">
     <div class="clearfix block">
         <div class="public-left">
 			<div class="title-box">

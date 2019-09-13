@@ -387,7 +387,6 @@ class Bbteam extends Base
         // Rank each group.
         $final_ranking = array();
         foreach ($rank_point_standing as $rank_point => $same_rank_point_teams) {
-          file_put_contents('php://stderr', 'enter one same rank point group ');
           if (AllMet($same_rank_point_teams) == false) {
             $same_rank_point_teams_ranking = SimpleRank($same_rank_point_teams);
           } else {

@@ -18,6 +18,7 @@ class Bbmatch extends Base
     const FIELD = 'TeamAID,TeamBID,ScoreTeamA,ScoreTeamB,State,StartTime,Report,VideoSrc,SeasonID,Court';
 
     private $stats = array();
+    private $scores = array();
 
     public function add($seasonid=null)
     {
@@ -47,8 +48,23 @@ class Bbmatch extends Base
     private function FormatEvent($player_id, $event, &$duplicate) {
       $result = '';
 
+      // Get team name.
+      $team = '';
+      $start = strpos($event, '(');
+      if ($start !== false) {
+        $end = strpos($event, ')');
+        if ($end != false) {
+          $team = substr($event, $start + 1, $end - $start - 1);
+          // Move team name to the beginning of the event.
+          $event = substr($event, 0, $start);
+          if (empty($event) == true) {
+            return '';
+          }
+        }
+      }
+
       // Don't show Official Timeout event.
-      if (strpos($event, 'Official') !== false) {
+      if (strpos($event, 'Official') !== false or strpos($event, 'Resume') !== false) {
         // Don't show Official timeout event.
         return '';
       }
@@ -56,6 +72,7 @@ class Bbmatch extends Base
       // Don't show xxx start/end twice.
       $prepend_newline = false;
       $append_newline = false;
+      $prepend_team = false;
       if (strpos($event, 'start') !== false or strpos($event, 'end') !== false) {
         if (strpos($event, 'start') !== false) {
           $prepend_newline = true;
@@ -79,42 +96,55 @@ class Bbmatch extends Base
       if (strpos($event, 'Free Throw Made') !== false) {
         $stat_type = 'point';
         $bold = true;
+        $prepend_team = true;
       }
 
       if (strpos($event, 'Two Point Made') !== false) {
         $stat_type = 'point';
         $stat_incremental = 2;
         $bold = true;
+        $prepend_team = true;
       }
 
       if (strpos($event, 'Three Point Made') !== false) {
         $stat_type = 'point';
         $stat_incremental = 3;
         $bold = true;
+        $prepend_team = true;
       }
 
       if (strpos($event, 'Rebound') !== false) {
         $stat_type = 'rebound';
+        $prepend_team = true;
       }
 
       if (strpos($event, 'Assist') !== false) {
         $stat_type = 'assist';
+        $prepend_team = true;
       }
 
       if (strpos($event, 'Steal') !== false) {
         $stat_type = 'steal';
+        $prepend_team = true;
       }
 
       if (strpos($event, 'Block') !== false) {
         $stat_type = 'block';
+        $prepend_team = true;
       }
 
       if (strpos($event, 'Turnover') !== false) {
         $stat_type = 'turnover';
+        $prepend_team = true;
       }
 
       if (strpos($event, ' Personal Foul') !== false) {
         $stat_type = 'foul';
+        $prepend_team = true;
+      }
+
+      if (strpos($event, 'enters') !== false) {
+        $prepend_team = true;
       }
 
       if (!empty($stat_type)) {
@@ -129,7 +159,25 @@ class Bbmatch extends Base
         $result = $event;
       }
 
+      // Update team scores.
+      if (!empty($team)) {
+        if ($stat_type == 'point') {
+          if (array_key_exists($team, $this->scores)) {
+            $this->scores[$team] += $stat_incremental;
+          } else {
+            $this->scores[$team] = $stat_incremental;
+          }
+          $keys = array_keys($this->scores);
+          $scoreA = $this->scores[$keys[0]];
+          $scoreB = array_key_exists(1, $keys) ? $this->scores[$keys[1]] : 0;
+          $result = $result. ' '. $scoreA.':'.$scoreB;
+        }
+      }
+
       // Apply special formats.
+      if ($prepend_team == true and !empty($team)) {
+        $result = $team.': '.$result;
+      }
       if ($bold == true) {
         $result = '<b>'.$result.'</b>';
       }
