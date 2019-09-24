@@ -22,7 +22,7 @@
         {
             "name": "Yue Zhang",
             "email": "zysxqn@gmail.com"
-        },
+        }
     ],
     "require": {
         "php": ">=7.0.0",

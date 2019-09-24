@@ -19,6 +19,12 @@ nginx.conf
 runtime/*
 
 application/database.php
-application/config.php
 
+#Dependency
+thinkphp/*
+vendor/*
+
+#composer files
+composer-setup.php
+composer.phar
 
