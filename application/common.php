@@ -9,10 +9,16 @@
 // | Author: 流年 <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 
-require_once (__DIR__ . '/../vendor/phpmailer/class.phpmailer.php');
+
+// Import PHPMailer classes into the global namespace
+// These must be at the top of your script, not inside a function
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+// Load Composer's autoloader
+require '../vendor/autoload.php';
 
 use think\Config;
-use phpmailer\phpmailer;
 use think\Db;
 
 // 应用公共文件
@@ -127,7 +133,6 @@ function  arrfiltrfun($arr){
  * @param type $data 邮箱队列数据 包含邮箱地址 内容
  */
 function sendEmail($data = []) {
-    Vendor('phpmailer.phpmailer');
 
     $systemconfig = Db::name('system')->find();
 
