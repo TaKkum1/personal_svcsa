@@ -248,4 +248,11 @@ return [
 
     //存放静态公共资源目录
     'public_assets' => '',
+
+    // Dynamic asset config
+    'public_dynamic_assets' => [
+        'prod'        => '',
+        'newprod'     => '',
+        'newbeta'     => '',
+    ],
 ];

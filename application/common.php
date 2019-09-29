@@ -164,3 +164,25 @@ function sendEmail($data = []) {
         }
     }
 }
+
+/**
+ * Return asset url based on current url.
+ * Currently there are two sets of uploads running together. Need to have a way to dynamically determine
+ * which routes the images should be upload to
+ * 
+ * - prod
+ * - new prod
+ * - beta
+ * - local
+ */
+function getAssetUploadUrl() {
+    $currentServer = $_SERVER['SERVER_NAME'];
+    switch ($currentServer) {
+        case "prod.svcsa.org":
+        case "beta.svcsa.org":
+            return "/../../../../uploads";
+            break;
+        default:
+            return "/../../../public/uploads";
+    }
+}

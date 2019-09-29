@@ -7,11 +7,11 @@
 
 
 #backup
-
 backup/*
 
 # Server info
 nginx.conf
+nginx-local/*
 
 # MAC file
 .DS_Store
@@ -21,10 +21,13 @@ runtime/*
 application/database.php
 
 #Dependency
-thinkphp/*
-vendor/*
+# thinkphp/*
+# vendor/*
 
 #composer files
 composer-setup.php
 composer.phar
 
+#public static asset
+public/uploads
+public/uploads/*
