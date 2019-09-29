@@ -16,7 +16,8 @@ nginx-local/*
 # MAC file
 .DS_Store
 
-runtime/*
+runtime/temp/*
+runtime/log/*
 
 application/database.php
 
