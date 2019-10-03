@@ -23,6 +23,7 @@ class Bbplayer extends Base
         $this->checkauthorization();
 
         $data = request()->only(self::FIELD, 'post');
+        $assetUrl = getAssetUploadUrl();
         $this->makeNull($data);
         if (!isset($data["SeasonID"]))
             $data["SeasonID"] = $seasonid;
@@ -34,7 +35,7 @@ class Bbplayer extends Base
             $file = request()->file('file');
             if (!$file) $this->affectedRowsResult(0);
             $data["PhotoSrc"] = $file
-                ->move(__DIR__ . '/../../../public/uploads')->getSaveName();
+                ->move(__DIR__ . $assetUrl)->getSaveName();
         }
 
         $validator = validate('Bb_player');
@@ -206,7 +207,7 @@ class Bbplayer extends Base
     public function update($id)
     {
         $this->checkauthorization();
-
+        $assetUrl = getAssetUploadUrl();
         $data = request()->only(self::FIELD, 'post');
         $this->makeNull($data);
         $validator = validate('Bb_player');
@@ -218,7 +219,7 @@ class Bbplayer extends Base
             $file = request()->file('file');
             if (!$file) $this->affectedRowsResult(0);
             $data["PhotoSrc"] = $file
-                ->move(__DIR__ . '/../../../public/uploads')->getSaveName();
+                ->move(__DIR__ . $assetUrl)->getSaveName();
         }
         $result = Db::name('bb_player')->where('ID', $id)->update($data);
         $this->affectedRowsResult($result);

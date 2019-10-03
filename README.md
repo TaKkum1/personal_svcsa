@@ -63,31 +63,71 @@ application/database-example.php
 ## Development
 
 There are some few points you need to know when onboarding the application
-#### Check in codes
-#### Development environment
-There are two environment setup: `prod` and `beta`
+#### Git repo
+We have these branches reserved. Please make sure you branch is up to date before pushing.
+
+- Master ------> Production codes
+- Beta   ------> Beta codes
+- Any other branches your need 
+
+*Please use `git pull --rebase` to rebase your change based on latest changes*
+
+### Commit codes
+
+First of First, **PLEASE DON'T FORCE PUSH OR PUSH CODES TO `master` DIRECTLY**. This will also be forced by git branch protection. :) 
+Please open a pull request to avoid any potential conflicts.
+e 
+  
+### Deployment
+There are two environment setup: `prod` and `beta`. This application is using `buddy.works` to do the deployment.
 ```
 www.svcsa.org
 ```
 ```
 beta.svcsa.org
 ```
-This is staging environment to push the latest codes for verification before pushing to production
+Beta is staging environment to push the **ANY** codes for verification before pushing to production
 
-This endpoint is running **isolatedly** with production, which means separate php codes. (Since website is readonly to database, database is using production data)
-For more info about how to sync database db from `prod` to `beta`, please checkout section below
+This endpoint is running **Isolatedly** with production, which means separate php codes. 
+> Since this website is heavy read, light write to database, database for both beta and prod is using production endpoint. **PLEASE, PLEASE, PLEASE** make sure you understand this and **DON'T** make write request in BETA
+
+*TODO: This should be forced with different DB username and access*
+
+#### Deploy to BETA
+Only thing you need to do to deploy to beta is to 
+```
+push your change to beta branch on Git
+```
+
+#### Deploy to production
+In order to manage distribution better, direct push to FTP service will be deprecated. Please don't do that and follow the steps here.
+
+0. Make your codes ready
+   - Tested properly
+   - Rebased with latest `master` branch
+   - Better to squash your changes into one commit
+   - Provide good commit information about your changes 
+1. Open an pull request with your latest changes
+   - With necessary information about what are your changes
+   - Ask someone to review    
+2. Merge your change, wait and have fun!
+   - In shadow, one new tag is created in Github release for version management. 
+   - If anything is not working as expected, revert from Github release, open a pull request with revert changes. Get it merged
+
+
+#### Database backup
 #### Version control
 
 #### Nginx management
 
 #### MySQL management
 
-#### Database sync up
-
-## Deployment
-TBA, describe how to release the changes to cloud
 
 ## Pending Issue
-TBA, project target
+1.  `public_assets` to `url_domain_root`
+`public_assets` is misused as `url_domain_root` in building url.
+We should use `url_domain_root` to build relative url and use `public_assets` for asset urls.
+2. Image size optimization
+3. 
 
 ## Data backup and recovery
