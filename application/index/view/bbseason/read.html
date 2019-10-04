@@ -32,7 +32,7 @@
                 <tr>
                     <td>{$match['StartTime']|strtotime|date='m/d G:i',###}</td>
                     <td>{$match['Court']}</td>
-                    <td>{$match['TeamAShortName']} vs {$match['TeamBShortName']}</td>
+                    <td><a href="{:url('index/bbteam/read', ['id'=>$match['TeamAID']])}">{$match['TeamAShortName']}</a> (主) vs <a href="{:url('index/bbteam/read', ['id'=>$match['TeamBID']])}">{$match['TeamBShortName']}</a> (客)</td>
                     <td>{if condition="$match['State'] eq -1"}
                         未开赛
                         {elseif condition="$match['State'] eq 0" /}
@@ -58,7 +58,7 @@
                         <dl>
                             <dt>常规赛</dt>
                             <dd><a href="{:url('index/bbteam/rank',['seasonid'=>$thisseason['SeasonID']])}">积分榜<span class="icon-chevron-right2 icon"></a></dd>
-                            <dd><a href="{:url('index/bbstatistics/lists')}?seasonid={$thisseason['SeasonID']}">技术统计<span class="icon-chevron-right2 icon"></a></dd>
+                            <dd><a href="{:url('index/bbstatistics/lists')}?seasonid={$thisseason['SeasonID']}&ofield=Points&desc=1">技术统计<span class="icon-chevron-right2 icon"></a></dd>
                         </dl>
                     </li>
                     <li><a href="{:url('index/bbteam/apply',['seasonid'=>$thisseason['SeasonID']])}"><span class="icon-chevron-right2 icon"></span>加入赛事</a></li>

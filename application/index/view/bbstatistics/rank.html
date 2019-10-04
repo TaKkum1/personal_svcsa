@@ -25,16 +25,16 @@
                     <th><a href="{:url('index/bbstatistics/lists')}?seasonid={$statsresult[0]['SeasonID']}&ofield=PlayerID{if condition="$ofield eq 'PlayerID'"}&desc={$newdesc}{/if}">序号</a></th>
                     <th><a href="{:url('index/bbstatistics/lists')}?seasonid={$statsresult[0]['SeasonID']}&ofield=PlayerName{if condition="$ofield eq 'PlayerName'"}&desc={$newdesc}{/if}">球员</a></th>
                     <th><a href="{:url('index/bbstatistics/lists')}?seasonid={$statsresult[0]['SeasonID']}&ofield=TeamShortName{if condition="$ofield eq 'TeamShortName'"}&desc={$newdesc}{/if}">球队</a></th>
-                    <th><a href="{:url('index/bbstatistics/lists')}?seasonid={$statsresult[0]['SeasonID']}&ofield=Points{if condition="$ofield eq 'Points'"}&desc={$newdesc}{/if}">得分</a></th>
-                    <th><a href="{:url('index/bbstatistics/lists')}?seasonid={$statsresult[0]['SeasonID']}&ofield=Rebound{if condition="$ofield eq 'Rebound'"}&desc={$newdesc}{/if}">篮板</a></th>
-                    <th><a href="{:url('index/bbstatistics/lists')}?seasonid={$statsresult[0]['SeasonID']}&ofield=Assist{if condition="$ofield eq 'Assist'"}&desc={$newdesc}{/if}">助攻</a></th>
-                    <th><a href="{:url('index/bbstatistics/lists')}?seasonid={$statsresult[0]['SeasonID']}&ofield=Steal{if condition="$ofield eq 'Steal'"}&desc={$newdesc}{/if}">抢断</a></th>
-                    <th><a href="{:url('index/bbstatistics/lists')}?seasonid={$statsresult[0]['SeasonID']}&ofield=Block{if condition="$ofield eq 'Block'"}&desc={$newdesc}{/if}">盖帽</a></th>
-                    <th><a href="{:url('index/bbstatistics/lists')}?seasonid={$statsresult[0]['SeasonID']}&ofield=FGP{if condition="$ofield eq 'FGP'"}&desc={$newdesc}{/if}">投篮</a></th>
-                    <th><a href="{:url('index/bbstatistics/lists')}?seasonid={$statsresult[0]['SeasonID']}&ofield=3GP{if condition="$ofield eq '3GP'"}&desc={$newdesc}{/if}">3分</a></th>
-                    <th><a href="{:url('index/bbstatistics/lists')}?seasonid={$statsresult[0]['SeasonID']}&ofield=FTP{if condition="$ofield eq 'FTP'"}&desc={$newdesc}{/if}">罚球</a></th>
-                    <th><a href="{:url('index/bbstatistics/lists')}?seasonid={$statsresult[0]['SeasonID']}&ofield=Turnover{if condition="$ofield eq 'Turnover'"}&desc={$newdesc}{/if}">失误</a></th>
-                    <th><a href="{:url('index/bbstatistics/lists')}?seasonid={$statsresult[0]['SeasonID']}&ofield=Foul{if condition="$ofield eq 'Foul'"}&desc={$newdesc}{/if}">犯规</a></th>
+                    <th><a href="{:url('index/bbstatistics/lists')}?seasonid={$statsresult[0]['SeasonID']}&ofield=Points&desc=1">得分</a></th>
+                    <th><a href="{:url('index/bbstatistics/lists')}?seasonid={$statsresult[0]['SeasonID']}&ofield=Rebound&desc=1">篮板</a></th>
+                    <th><a href="{:url('index/bbstatistics/lists')}?seasonid={$statsresult[0]['SeasonID']}&ofield=Assist&desc=1{/if}">助攻</a></th>
+                    <th><a href="{:url('index/bbstatistics/lists')}?seasonid={$statsresult[0]['SeasonID']}&ofield=Steal&desc=1{/if}">抢断</a></th>
+                    <th><a href="{:url('index/bbstatistics/lists')}?seasonid={$statsresult[0]['SeasonID']}&ofield=Block&desc=1{/if}">盖帽</a></th>
+                    <th><a href="{:url('index/bbstatistics/lists')}?seasonid={$statsresult[0]['SeasonID']}&ofield=FGP&desc=1">投篮</a></th>
+                    <th><a href="{:url('index/bbstatistics/lists')}?seasonid={$statsresult[0]['SeasonID']}&ofield=3GP&desc=1{/if}">3分</a></th>
+                    <th><a href="{:url('index/bbstatistics/lists')}?seasonid={$statsresult[0]['SeasonID']}&ofield=FTP&desc=1">罚球</a></th>
+                    <th><a href="{:url('index/bbstatistics/lists')}?seasonid={$statsresult[0]['SeasonID']}&ofield=Turnover&desc=1">失误</a></th>
+                    <th><a href="{:url('index/bbstatistics/lists')}?seasonid={$statsresult[0]['SeasonID']}&ofield=Foul&desc=1">犯规</a></th>
                 </tr>
                 </thead>
                 <tbody>
@@ -46,8 +46,8 @@
                 {volist name="statsresult" id="stats"}
                 <tr>
                     <td>{$i}</td>
-                    <td>{$stats['PlayerName']}</td>
-                    <td>{$stats['TeamShortName']}</td>
+                    <td><a href="{:url('index/bbplayer/read', ['id'=>$stats['PlayerID']])}">{$stats['PlayerName']}</td>
+                    <td><a href="{:url('index/bbteam/read', ['id'=>$stats['TeamID']])}">{$stats['TeamShortName']}</td>
                     <td>{$stats['Points']|number_format=###,1,'.',''}</td>
                     <td>{$stats['Rebound']|number_format=###,1,'.',''}</td>
                     <td>{$stats['Assist']|number_format=###,1,'.',''}</td>
@@ -74,7 +74,7 @@
                         <dl>
                             <dt>常规赛</dt>
                             <dd><a href="{:url('index/bbteam/rank',['seasonid'=>$thisseason['SeasonID']])}">积分榜<span class="icon-chevron-right2 icon"></a></dd>
-                            <dd class="active"><a href="{:url('index/bbstatistics/lists')}?seasonid={$thisseason['SeasonID']}">技术统计<span class="icon-chevron-right2 icon"></a></dd>
+                            <dd class="active"><a href="{:url('index/bbstatistics/lists')}?seasonid={$thisseason['SeasonID']}&ofield=Points&desc=1">技术统计<span class="icon-chevron-right2 icon"></a></dd>
                         </dl>
                     </li>
                     <li><a href="{:url('index/bbteam/apply',['seasonid'=>$thisseason['SeasonID']])}"><span class="icon-chevron-right2 icon"></span>加入赛事</a></li>

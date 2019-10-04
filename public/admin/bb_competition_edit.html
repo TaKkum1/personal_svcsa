@@ -11,20 +11,20 @@
                     <input id="Name" type="text" name="Name" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
                 </div>
             </div>
-            
+
               <div class="layui-form-item">
                 <label class="layui-form-label">项目图片</label>
                 <div class="layui-input-block">
                     <button type="button" class="layui-btn" id="test1">上传图片</button>
-                    <input type="hidden" id="Picture" name="Picture" value="" />
+                    <input type="hidden" id="img_url" name="Picture" value="" />
                     <div class="layui-upload-list">
                         <img class="layui-upload-img" width="100px" height="80px" id="demo1" src="" />
                         <p id="demoText"></p>
                     </div>
                 </div>
             </div>
-                       
-       
+
+
             <div class="layui-form-item">
                 <label class="layui-form-label">项目说明</label>
                 <div class="layui-input-block">
@@ -42,7 +42,7 @@
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
     <script src="layui/layui.js"></script>
     <script>
-        
+
             layui.use(['table', 'form', 'upload'], function() {
             var table = layui.table;
             var form = layui.form;
@@ -67,7 +67,7 @@
                     //上传成功
                     console.log(res);
                     picture = res.data.savename;
-                    $("#Picture").attr("value", picture)
+                    $("#img_url").attr("value", picture)
                 },
                 error: function() {
                     //演示失败状态，并实现重传
@@ -87,9 +87,7 @@
                     data : {
                         Name: data.field.Name,
                         Description: data.field.Description,
-                        Picture:$("#Picture").val(),
-                        Picture:data.field.Picture,
-                        
+                        Picture: $("#img_url").val(),
                     },
                     header:{
                         Accept:'application/json'
@@ -110,8 +108,8 @@
 
             });
         });
-        
-       
+
+
     </script>
 
 </body>
