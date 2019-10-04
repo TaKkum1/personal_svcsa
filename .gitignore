@@ -10,7 +10,7 @@
 backup/*
 
 # Server info
-nginx.conf
+# nginx.conf
 nginx-local/*
 
 # MAC file
@@ -32,3 +32,5 @@ composer.phar
 #public static asset
 public/uploads
 public/uploads/*
+#godaddy ssl
+godaddy.html

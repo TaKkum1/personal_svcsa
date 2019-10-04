@@ -17,11 +17,11 @@ use think\Session;
 class TeamRankInfo {
     public $ID;
     public $Name;
-    public $Wins;
-    public $Loses;
-    public $Forfeits;
-    public $Pt_win;
-    public $Pt_lose;
+    public $Wins = 0;
+    public $Loses = 0;
+    public $Forfeits = 0;
+    public $Pt_win = 0;
+    public $Pt_lose = 0;
 
     public function __construct($id, $name) {
       $this->ID = $id;
