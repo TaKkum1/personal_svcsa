@@ -72,11 +72,33 @@ We have these branches reserved. Please make sure you branch is up to date befor
 
 *Please use `git pull --rebase` to rebase your change based on latest changes*
 
+### Basic work flow
+```
+|
+|-> create your branch from latest master branch, work on anything you want, and OF COURSE test it!
+|
+|-> commit your changes in your branch and push.
+|
+|-> open a pull request from your branch to branch `beta`.
+|
+|-> if you are sure, merge your change to `beta` through pull request
+|
+|-> MUST DO: verify your every single change on `beta` 
+|
+|-> open another pull request and notify other collaborators for review
+|
+|-> if everything is good from review, merge the pull request
+|
+|-> verify changes in production sites
+|
+|-> DONT FORGET: create a release tag in GitHub :)
+
+```
 ### Commit codes
 
 First of First, **PLEASE DON'T FORCE PUSH OR PUSH CODES TO `master` DIRECTLY**. This will also be forced by git branch protection. :) 
 Please open a pull request to avoid any potential conflicts.
-e 
+ 
   
 ### Deployment
 There are two environment setup: `prod` and `beta`. This application is using `buddy.works` to do the deployment.
@@ -115,9 +137,6 @@ In order to manage distribution better, direct push to FTP service will be depre
    - If anything is not working as expected, revert from Github release, open a pull request with revert changes. Get it merged
 
 
-#### Database backup
-#### Version control
-
 #### Nginx management
 
 #### MySQL management
@@ -128,6 +147,7 @@ In order to manage distribution better, direct push to FTP service will be depre
 `public_assets` is misused as `url_domain_root` in building url.
 We should use `url_domain_root` to build relative url and use `public_assets` for asset urls.
 2. Image size optimization
-3. 
+3. Image lazy load
+4. Font file loading error
 
 ## Data backup and recovery
