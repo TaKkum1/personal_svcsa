@@ -141,6 +141,25 @@ In order to manage distribution better, direct push to FTP service will be depre
 
 #### MySQL management
 
+## Data backup and recovery
+
+In local, we need mysql utility `mysqldump` to backup remote database
+`mysqldump` is coming with core `mysql` package
+
+For more detail about installing `mysql`, check online resourse. One way is using `brew` in mac to install
+```
+brew install mysql
+```
+
+Check your local env by `mysqldump --version`
+
+When utility is ready, go to `db_backup` folder under root path, and run
+```
+ mysqldump --column-statistics=0 --user=root --password='Ab!234cD' --host=svcsa.org --result-file={MM/DD}backup.sql  --databases match
+```
+Replace {MM/DD} with date
+
+You should see a new file created in `$root/db_backup/`. Free feel to commit this file to GitHub. It will *NOT* be upload to FTP
 
 ## Pending Issue
 1.  `public_assets` to `url_domain_root`
@@ -149,5 +168,4 @@ We should use `url_domain_root` to build relative url and use `public_assets` fo
 2. Image size optimization
 3. Image lazy load
 4. Font file loading error
-
-## Data backup and recovery
+5. Backup database in precommit or after commit
