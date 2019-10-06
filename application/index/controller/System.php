@@ -40,10 +40,11 @@ class System extends Base
         $files = request()->file('image');
 
         $resultarr = array();
+        $assetUrl = getAssetUploadUrl();
 
         foreach($files as $file){
             // 移动到框架应用根目录/uploads/ 目录下
-            $info = $file->validate(['ext'=>'jpg,png,gif'])->move( __DIR__ . '/../../../public/uploads');
+            $info = $file->validate(['ext'=>'jpg,png,gif'])->move( __DIR__ . $assetUrl);
             if($info){
                 // 成功上传后 获取上传信息
                 // 输出 jpg
@@ -71,7 +72,7 @@ class System extends Base
         $file = request()->file('file');
 
 
-        $info = $file->validate(['ext'=>'jpg,png,gif'])->move( __DIR__ . '/../../../public/uploads');
+        $info = $file->validate(['ext'=>'jpg,png,gif'])->move( __DIR__ . $assetUrl);
         if($info){
             // 成功上传后 获取上传信息
             // 输出 jpg

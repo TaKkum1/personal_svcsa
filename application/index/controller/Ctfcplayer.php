@@ -57,9 +57,10 @@ class Ctfcplayer extends Base
             $this->affectedRowsResult(0);
         }
         $data["Flag"] = 0;
+        $assetUrl = getAssetUploadUrl();
 
         $infophotosrc = request()->file('Photo')
-            ->move( __DIR__ . '/../../../public/uploads');
+            ->move( __DIR__ . $assetUrl);
 
         if($infophotosrc) {
             $data["PhotoSrc"] = $infophotosrc->getSaveName();

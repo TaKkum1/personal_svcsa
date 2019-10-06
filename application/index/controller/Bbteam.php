@@ -174,16 +174,16 @@ class Bbteam extends Base
         $data["Flag"] = 0;
         $data["LogoSrc"] = "";
         $data["PhotoSrc"] = "";
-
+        $assetUrl = getAssetUploadUrl();
         $infologofile = request()->file('Logo');
         $infophotofile = request()->file('Photo');
 
         if($infologofile)
-            $data["LogoSrc"] = $infologofile->move(__DIR__ . '/../../../public/uploads')
+            $data["LogoSrc"] = $infologofile->move(__DIR__ . $assetUrl)
                 ->getSaveName();
 
         if($infophotofile)
-            $data["PhotoSrc"] = $infophotofile->move(__DIR__ . '/../../../public/uploads')
+            $data["PhotoSrc"] = $infophotofile->move(__DIR__ . $assetUrl)
                 ->getSaveName();
 
         $result = Db::name('bb_team')->insert($data);
