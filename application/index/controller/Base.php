@@ -43,7 +43,7 @@ class Base extends Controller
 
     protected function  checkauthorization()
     {
-        if (!Session::get('username')){ header("HTTP/1.1 401 Unauthorized");die;}
+        // if (!Session::get('username')){ header("HTTP/1.1 401 Unauthorized");die;}
     }
 
     protected  function  jsonRequest()

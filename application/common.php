@@ -179,10 +179,9 @@ function getAssetUploadUrl() {
     $currentServer = $_SERVER['SERVER_NAME'];
     switch ($currentServer) {
         case "prod.svcsa.org":
-        case "beta.svcsa.org":
-            return "/../../../../uploads";
+            return "/../../../public/uploads";
             break;
         default:
-            return "/../../../public/uploads";
+            return "/../../../../uploads";
     }
 }

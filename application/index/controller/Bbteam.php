@@ -71,7 +71,7 @@ function SimpleRank($same_rank_point_teams) {
     $found_same_diff_team = false;
     foreach ($diff_standing as $diff => $same_diff_teams) {
       if ($current_team->getPointDiff() == $diff) {
-        array_push($diff_standing[$diff], $current_teamm);
+        array_push($diff_standing[$diff], $current_team);
         $found_same_diff_team = true;
         break;
       }
