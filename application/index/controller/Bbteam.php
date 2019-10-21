@@ -241,6 +241,14 @@ class Bbteam extends Base
         $this->view->assign('thisseason', $thisseason);
         $this->view->assign('team', $team);
 
+        // Get team matches.
+        $matches = Db::name('bb_matchteam')
+            ->where('SeasonID', $seasonid)
+            ->where('TeamAID|TeamBID', $id)
+            ->order('StartTime','desc')
+            ->select();
+        $this->view->assign('matches',$matches);
+
         return $this->view->fetch('bbteam/read');
 
         notfound:

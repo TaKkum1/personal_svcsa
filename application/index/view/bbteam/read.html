@@ -74,3 +74,44 @@
         </div>
     </div>
 </div>
+<div class="pro-wrap">
+    <div class="clearfix block">
+        <div class="public-left">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>比赛时间</th>
+                    <th>场地</th>
+                    <th>对阵</th>
+                    <th>比分</th>
+                    <th>文字直播</th>
+                    <th>技术统计</th>
+                </tr>
+                </thead>
+                <tbody>
+                {if condition="!$matches"}
+                <tr>
+                    <td>赛程暂时为空！</td>
+                </tr>
+                {/if}
+                {volist name="matches" id="match" }
+                <tr>
+                    <td>{$match['StartTime']|strtotime|date='m/d G:i',###}</td>
+                    <td>{$match['Court']}</td>
+                    <td><a href="{:url('index/bbteam/read', ['id'=>$match['TeamAID']])}">{$match['TeamAShortName']}</a> (主) vs <a href="{:url('index/bbteam/read', ['id'=>$match['TeamBID']])}">{$match['TeamBShortName']}</a> (客)</td>
+                    <td>{if condition="$match['State'] eq -1"}
+                        未开赛
+                        {elseif condition="$match['State'] eq 0" /}
+                        正在进行..
+                        {else /}
+                        {$match['ScoreTeamA']}:{$match['ScoreTeamB']}
+                        {/if}</td>
+                    <td><a href="{:url('index/bbmatch/read',['id'=>$match['MatchID']])}">文字直播</a></td>
+                    <td><a href="{:url('index/bbstatistics/lists') . '?matchid='. $match['MatchID']}">技术统计</a></td>
+                </tr>
+                {/volist}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
