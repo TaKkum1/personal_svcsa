@@ -19,23 +19,23 @@ class Index extends Base
         $topctfcseason = Db::name('ctfc_season')
             ->order('StartTime desc')->find();
 
-        $swipers = array(
-            0=>['ID'=>$top2competition[0]['ID'],
-                'Name'=>$top2competition[0]['Name'],
-                'Picture'=>$top2competition[0]['Picture'],
-                'Description'=>$top2competition[0]['Description']
-            ],
-            1=>['ID'=>$top2competition[1]['ID'],
-                'Name'=>$top2competition[1]['Name'],
-                'Picture'=>$top2competition[1]['Picture'],
-                'Description'=>$top2competition[1]['Description']
-            ],
-            2=>['ID'=>$topctfcseason['ID'],
-                'Name'=>$topctfcseason['Name'],
-                'Picture'=>$topctfcseason['Picture'],
-                'Description'=>$topctfcseason['Description']
-            ]
-        );
+        // $swipers = array(
+        //     0=>['ID'=>$top2competition[0]['ID'],
+        //         'Name'=>$top2competition[0]['Name'],
+        //         'Picture'=>$top2competition[0]['Picture'],
+        //         'Description'=>$top2competition[0]['Description']
+        //     ],
+        //     1=>['ID'=>$top2competition[1]['ID'],
+        //         'Name'=>$top2competition[1]['Name'],
+        //         'Picture'=>$top2competition[1]['Picture'],
+        //         'Description'=>$top2competition[1]['Description']
+        //     ],
+        //     2=>['ID'=>$topctfcseason['ID'],
+        //         'Name'=>$topctfcseason['Name'],
+        //         'Picture'=>$topctfcseason['Picture'],
+        //         'Description'=>$topctfcseason['Description']
+        //     ]
+        // );
 
 
         $recentnews = Db::name('article')
@@ -81,7 +81,7 @@ class Index extends Base
             ->limit(0,5)
             ->select();
 
-        $this->view->assign('swipers',$swipers);
+        // $this->view->assign('swipers',$swipers);
         $this->view->assign('recentnews',$recentnews);
         $this->view->assign('competitioncount',$competitioncount);
         $this->view->assign('bbteamcount',count($bbteams));
