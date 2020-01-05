@@ -155,9 +155,10 @@ Check your local env by `mysqldump --version`
 
 When utility is ready, go to `db_backup` folder under root path, and run
 ```
- mysqldump --column-statistics=0 --user=root --password='Ab!234cD' --host=svcsa.org --result-file={MM/DD}backup.sql  --databases match
+ mysqldump --column-statistics=0 --user=root --password='xxxxxx' --host=svcsa.org --result-file=backup{YYMMDD}.sql  --databases match
 ```
-Replace {MM/DD} with date
+Replace YYMMDD with date
+Replace XXXXXX with db password
 
 You should see a new file created in `$root/db_backup/`. Free feel to commit this file to GitHub. It will *NOT* be upload to FTP
 
