@@ -53,6 +53,14 @@ class Bbseason extends Base
         $this->affectedRowsResult($result);
     }
 
+    
+    public function playoff($id){
+        $thisseason = Db::name('bb_competitionseason')->where('SeasonID', $id)->find();
+        $this->view->assign('thisseason', $thisseason);
+        $this->headerAndFooter('competition');
+        return $this->view->fetch('bbseason/playoff');
+    }
+
     public function delete($id){
         $this->checkauthorization();
 
@@ -88,8 +96,8 @@ class Bbseason extends Base
             $this->view->assign('otherseasons',$otherseasons);
             return $this->view->fetch('bbseason/read');
         }
-
-notfound:
+    
+        notfound:
             header("HTTP/1.0 404 Not Found");
             die;
 
@@ -127,9 +135,9 @@ notfound:
         return $this->view->fetch('bbseason/read');
 
 
-notfound:
-        header("HTTP/1.0 404 Not Found");
-        die;
+        notfound:
+            header("HTTP/1.0 404 Not Found");
+            die;
 
     }
 
@@ -145,9 +153,9 @@ notfound:
             );
         }
 
-notfound:
-        header("HTTP/1.0 404 Not Found");
-        die;
+        notfound:
+            header("HTTP/1.0 404 Not Found");
+            die;
     }
 
     public function update($id){
