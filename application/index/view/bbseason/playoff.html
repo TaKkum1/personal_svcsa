@@ -1,0 +1,102 @@
+<div class="inside-banner block statistics-banner">
+  <h3>{$thisseason['CompetitionName']}比赛</h3>
+  <p>查看{$thisseason['SeasonName']}的季后赛</p>
+</div>
+<div class="site-box">
+  <div class="block">
+    <span class="icon-home home_icon icon"></span>
+    <a href="{:url('index/index/index')}">首页</a>
+    <span class="icon-arrow-right arrow_icon icon"></span>
+    <a href="{:url('index/bbseason/read',['id'=>$thisseason['SeasonID']])}">{$thisseason['SeasonName']}</a><span
+      class="icon-arrow-right arrow_icon icon"></span>
+    <span class="active">季后赛</span>
+  </div>
+</div>
+<!-- TODO: ending div to end .index-top, which is in another file. Anti pattern -->
+</div>
+<div class="pro-wrap">
+  <div class="clearfix block">
+    <div class="public-left">
+      <div class="playoff-bracket__columns">
+        <div class="playoff-bracket__column">
+          <h4>Quarter Finals</h4>
+          <div class="playoff-bracket__match-card connection-distance connection-distance--1"></div>
+          <div class="playoff-bracket__match-card space-distance--1"></div>
+          <div class="playoff-bracket__match-card connection-distance connection-distance--1"></div>
+          <div class="playoff-bracket__match-card"></div>
+        </div>
+        <div class="playoff-bracket__column">
+          <h4>Semi Finals</h4>
+          <div class="playoff-bracket__match-card connection-distance connection-distance--2 parent-left"></div>
+          <div class="playoff-bracket__match-card parent-left"></div>
+        </div>
+        <div class="playoff-bracket__column">
+          <h4>Final</h4>
+          <div class="playoff-bracket__match-card parent-left"></div>
+          <h4 class="space-distance--2">3RD Place</h4>
+          <div class="playoff-bracket__match-card"></div>
+        </div>
+      </div>
+      <div class="playoff-bracket__columns">
+        <div class="playoff-bracket__column">
+          <h4>CLASSIFICATION 5-8</h4>
+          <div class="playoff-bracket__match-card connection-distance connection-distance--2"></div>
+          <div class="playoff-bracket__match-card"></div>
+        </div>
+        <div class="playoff-bracket__column">
+          <h4>5th place</h4>
+          <div class="playoff-bracket__match-card parent-left"></div>
+          <h4 class="space-distance--2">7th place</h4>
+          <div class="playoff-bracket__match-card"></div>
+        </div>
+      </div>
+      
+      <!-- COMPONENTS -->
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <br>
+      <!-- Match card -->
+      <article class="playoff-bracket__match-card">
+        <div class="teams with-result">
+          <div class="team winner">
+            TeamA
+            <span class="score">12</span>
+          </div>
+          <div class="team">
+            TeamB
+            <span class="score">12</span>
+          </div>
+        </div>
+        <div class="gametime">Tue 10 Sep 2019 - 10:15 am</div>
+      </article>
+
+    </div>
+    <div class="public-right">
+      <div class="tab-box">
+        <h3>项目信息</h3>
+        <ul>
+          <li class="active"><a href="{:url('index/bbseason/playoff',['id'=>$thisseason['SeasonID']])}"><span
+              class="icon-chevron-right2 icon"></span>季后赛</a></li>
+          <li><a href="{:url('index/bbteam/rank',['seasonid'=>$thisseason['SeasonID']])}">积分榜<span
+                    class="icon-chevron-right2 icon"></a>     
+          </li>
+          <li><a href="{:url('index/bbstatistics/lists')}?seasonid={$thisseason['SeasonID']}&ofield=Points&desc=1">技术统计<span
+              class="icon-chevron-right2 icon"></a></li>
+          <li><a href="{:url('index/bbseason/read',['id'=>$thisseason['SeasonID']])}"><span
+                class="icon-chevron-right2 icon"></span>赛程</a></li>
+          <li><a href="{:url('index/bbteam/lists',['seasonid'=>$thisseason['SeasonID']])}"><span
+                class="icon-chevron-right2 icon"></span>球队</a></li>
+          <li><a
+              href="{:url('index/bbplayer/lists')}?competitionid={$thisseason['CompetitionID']}&seasonid={$thisseason['SeasonID']}"><span
+                class="icon-chevron-right2 icon"></span>球员</a></li>
+          <li><a href="{:url('index/bbteam/apply',['seasonid'=>$thisseason['SeasonID']])}"><span
+                class="icon-chevron-right2 icon"></span>加入赛事</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

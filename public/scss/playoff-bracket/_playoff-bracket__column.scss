@@ -1,0 +1,81 @@
+.playoff-bracket__columns{
+  display: flex;
+  align-items: center;
+  position: relative;
+  font-family: Arial, Helvetica, sans-serif;
+  & + & {
+    margin-top: 40px;
+  }
+}
+.playoff-bracket__column{
+  h4{
+    text-transform: uppercase;
+    font-size: 21px;
+    padding: 12px 4px;
+  }
+
+  //Connections
+  // variables
+  // connection-distance--1
+  // connection-distance--2
+  // space-distance--1
+  // space-distance--2
+  // parent-left
+  $distance--1: 240px;
+  $distance--2: 500px;
+  $space--1: 150px;
+  $space--2: 35px;
+  $left--1: 120px;
+
+  .connection-distance{
+    position: relative;
+    &::after{
+      content: '';
+      width: 2px;
+      background-color: #dcdcdc;
+      position: absolute;
+      top: 100%;
+      left: 50%;
+    }
+  }
+  .connection-distance--1{
+    margin-bottom: $distance--1;
+    &::after{
+      height: $distance--1;
+    }
+  }
+  .connection-distance--2{
+    margin-bottom: $distance--2;
+    &::after{
+      height: $distance--2;
+    }
+  }
+  .space-distance--1{
+    margin-bottom: $space--1;
+  }
+  .space-distance--2{
+    margin-top: $space--2;
+  }
+  .parent-left{
+    position: relative;
+    &::before{
+      content: '';
+      width: $left--1;
+      height: 2px;
+      background-color: #dcdcdc;
+      position: absolute;
+      top: 50%;
+      right: 100%;
+    }
+  }
+}
+
+
+//DEV Empty box
+.emptybox{
+  width: 240px;
+  height: 118px;
+  background-color: blue;
+}
+
+
