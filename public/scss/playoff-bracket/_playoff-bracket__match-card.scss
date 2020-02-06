@@ -1,0 +1,52 @@
+.playoff-bracket__match-card{
+  border: 1px solid #d7d7d7;
+  border-radius: 8px;
+  position: relative;
+  font-size: 15px;
+  width: 240px;
+  height: 118px;
+  box-sizing: border-box;
+  .teams{
+    padding: 10px 16px;
+  }
+  .team{
+    display: flex;
+    justify-content: space-between;
+    line-height: 2;
+  }
+  .team+.team{
+    margin-top: 10px;
+  }
+  .score{
+    display: none;
+  }
+  .with-result{
+    position: relative;
+    .team{
+      color: #999;
+    }
+    .team.winner{
+      color: #333;
+      font-weight: 600;
+    }
+    .score{
+      display: inline;
+    }
+    &:before{
+      content: '';
+      position: absolute;
+      right: 46px;
+      top: 5px;
+      bottom: 5px;
+      width: 1px;
+      background-color: #ccc;
+    }
+  } 
+  .gametime{
+    color: #fff;
+    background-color: #8FB444;
+    padding: 4px 16px;
+    font-size: 13px;
+    border-radius: 0 0 7px 7px;
+  }
+}
