@@ -93,14 +93,14 @@
         $("#add").click(function() {
             layer.open({
                 type: 2,
-                title: '新建篮球赛季',
+                title: '新建赛季',
                 shadeClose: true,
                 shade: 0.8,
                 area: ['50%', '80%'],
                 offset: '50px',
                 content: 'bb_season_add.html',
                 success: function(layero, index) {
-                    layer.iframeAuto(index);   
+                    layer.iframeAuto(index);
                 },
                 end: function() {
                     location.reload();
@@ -116,7 +116,7 @@
                 console.log(obj.data);
                 layer.open({
                     type: 2,
-                    title: '修改篮球赛季',
+                    title: '修改赛季',
                     shadeClose: true,
                     shade: 0.8,
                     area: ['50%', '80%'],

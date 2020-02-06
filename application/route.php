@@ -111,6 +111,11 @@
 \think\Route::get('bbseason/:id', 'index/bbseason/read', [], ['id' => '\d+']);
 \think\Route::get('bbseason', 'index/bbseason/lists');
 
+\think\Route::get('bbplayoff', 'index/bbplayoff/lists');
+\think\Route::post('bbplayoff/:id', 'index/bbplayoff/update', [], ['id' => '\d+']);
+\think\Route::post('bbplayoff', 'index/bbplayoff/add');
+\think\Route::delete('bbplayoff/:id', 'index/bbplayoff/delete', [], ['id' => '\d+']);
+
 
 \think\Route::post('bbcompetition/:id', 'index/bbcompetition/update', [], ['id' => '\d+']);
 \think\Route::post('bbcompetition', 'index/bbcompetition/add');

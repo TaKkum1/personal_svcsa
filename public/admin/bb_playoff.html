@@ -5,7 +5,7 @@
         <div class="layui-tab-content">
             <div class="" style="">
                 <div class="layui-input-inline">
-                    <button id="add" class="layui-btn layui-btn-normal">新建赛季</button>
+                    <button id="add" class="layui-btn layui-btn-normal">新建季后赛</button>
                 </div>
             </div>
             <table class="layui-hide" id="test" lay-filter="test"></table>
@@ -27,7 +27,7 @@
         var form = layui.form;
         table.render({
             elem: '#test',
-            url: 'http://svcsa.org/BBSeason',
+            url: 'http://svcsa.org/BBPlayoff',
             parseData: function(res) {
                 return {
                     "code": 0, //解析接口状态
@@ -46,34 +46,32 @@
             title: '用户数据表',
             cols: [
                 [{
-                        field: 'SeasonID',
+                        field: 'ID',
                         title: 'ID',
-                        width: 50,
+                        width: 70,
                         fixed: 'left',
                         unresize: true,
                         sort: true,
                     }, {
-                        field: 'SeasonName',
-                        title: '赛季名称',
+                        field: 'Title',
+                        title: '小组',
                         width: 200,
                     }, {
-                        field: 'StartTime',
-                        title: '赛季开始时间',
+                        field: 'Rule',
+                        title: '赛制',
                         width: 200,
                     },
                     {
-                        field: 'TeamNumber',
-                        title: '球队数量',
+                        field: 'SeasonID',
+                        title: '所属赛季ID',
                         width: 100,
-                    }, {
-                        field: 'Rules',
-                        title: '赛制',
-                        width: 100,
-                    }, {
+                    },
+                    {
                         field: 'CompetitionID',
-                        title: '比赛项目ID',
+                        title: '所属项目ID',
                         width: 100,
-                    }, {
+                    },
+                    {
                         title: '操作',
                         width: 120,
                         toolbar: '#barDemo'
@@ -93,14 +91,14 @@
         $("#add").click(function() {
             layer.open({
                 type: 2,
-                title: '新建篮球赛季',
+                title: '新建季后赛',
                 shadeClose: true,
                 shade: 0.8,
                 area: ['50%', '80%'],
                 offset: '50px',
-                content: 'bb_season_add.html',
+                content: 'bb_playoff_add.html',
                 success: function(layero, index) {
-                    layer.iframeAuto(index);   
+                    layer.iframeAuto(index);
                 },
                 end: function() {
                     location.reload();
@@ -116,21 +114,20 @@
                 console.log(obj.data);
                 layer.open({
                     type: 2,
-                    title: '修改篮球赛季',
+                    title: '修改季后赛',
                     shadeClose: true,
                     shade: 0.8,
                     area: ['50%', '80%'],
                     offset: '50px',
-                    content: 'bb_season_edit.html',
+                    content: 'bb_playoff_edit.html',
                     success: function(layero, index) {
                         layer.iframeAuto(index);
                         var body = layer.getChildFrame('body', index);
-                        body.find('#SeasonName').val(data.SeasonName)
-                        body.find('#StartTime').val(data.StartTime)
-                        body.find('#TeamNumber').val(data.TeamNumber)
-                        body.find('#Rules').val(data.Rules)
-                        body.find('#CompetitionID').val(data.CompetitionID)
+                        body.find('#ID').val(data.ID)
+                        body.find('#Title').val(data.Title)
+                        body.find('#Rule').val(data.Rule)
                         body.find('#SeasonID').val(data.SeasonID)
+                        body.find('#CompetitionID').val(data.CompetitionID)
                     },
                     end: function() {
                         location.reload();
@@ -141,7 +138,7 @@
                     btn: ['确认', '取消'] //按钮
                 }, function() {
                     $.ajax({
-                        url:'http://svcsa.org/BBSeason/' + data.SeasonID,
+                        url:'http://svcsa.org/BBPlayoff/' + data.ID,
                         type : 'delete',
                         dataType : 'json',
                         header:{
