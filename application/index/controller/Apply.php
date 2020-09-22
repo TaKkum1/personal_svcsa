@@ -19,7 +19,7 @@ class Apply extends Base
     {
         $this->headerAndFooter('competition');
 
-        $sql = 'select a.SeasonID,a.SeasonName,a.CompetitionID,a.CompetitionName from bb_competitionseason a join (select max(SeasonID) SeasonID from bb_competitionseason group by CompetitionID) b on a.SeasonID=b.SeasonID';
+        $sql = 'select a.SeasonID,a.SeasonName,a.CompetitionID,a.CompetitionName from bb_competitionseason_view a join (select max(SeasonID) SeasonID from bb_competitionseason_view group by CompetitionID) b on a.SeasonID=b.SeasonID';
         $recentbbseasons =  DB::query($sql);
 
         $sql = 'SELECT b.MatchID,b.EventName,b.SeasonName FROM ctfc_matchevent as b WHERE SeasonID=(SELECT max(a.SeasonID) from ctfc_matchevent as a)';

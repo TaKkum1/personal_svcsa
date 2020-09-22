@@ -355,7 +355,7 @@ class Bbstatistics extends Base
 
     public function readViewByMatchTeam($matchid){
         $pagesize = input('pagesize');
-        $list = Db::name('bb_statisticsplayerteam')
+        $list = Db::name('bb_teamplayerstatistics_view')
             ->where('matchid', $matchid)->order('Starter desc')->paginate($pagesize);
         $result = $list->items();
         if($this->jsonRequest()) {
@@ -372,7 +372,7 @@ class Bbstatistics extends Base
                 $this->headerAndFooter('competition');
 
             $exp = new \think\Db\Expression('field(SeasonID,'. $result[0]['SeasonID'] .'),StartTime DESC');
-            $seasons = Db::name('bb_competitionseason')->where('CompetitionID', $result[0]['CompetitionID'])
+            $seasons = Db::name('bb_competitionseason_view')->where('CompetitionID', $result[0]['CompetitionID'])
                 ->order($exp)->select();
             $seasons = array_reverse($seasons);
             $otherseasons = array_slice($seasons,1);
@@ -414,7 +414,7 @@ notfound:
         $desc = input('desc')>0?1:0;
         $orderby = $desc>0?$ofield . ' desc':$ofield . ' asc';
         $pagesize = input('pagesize');
-        $list = Db::name('bb_statisticsseasonplayer')
+        $list = Db::name('bb_seasonplayerstatistics_view')
             ->where('seasonid', $seasonid)
             ->order($orderby)
             ->paginate($pagesize,false);
@@ -433,7 +433,7 @@ notfound:
                 $this->headerAndFooter('competition');
 
             $exp = new \think\Db\Expression('field(SeasonID,'. $result[0]['SeasonID'] .'),StartTime DESC');
-            $seasons = Db::name('bb_competitionseason')->where('CompetitionID', $result[0]['CompetitionID'])
+            $seasons = Db::name('bb_competitionseason_view')->where('CompetitionID', $result[0]['CompetitionID'])
                 ->order($exp)->select();
             $seasons = array_reverse($seasons);
             $otherseasons = array_slice($seasons,1);
@@ -465,10 +465,11 @@ notfound:
         if($seasonid) return $this->readViewBySeasonPlayer($seasonid);
 
         $pagesize = input('pagesize');
-        $list = Db::name('bb_statisticsplayerteam')->paginate($pagesize);
+        $list = Db::name('bb_teamplayerstatistics_view')->paginate($pagesize);
         $this->paginatedResult(
             $list->total(),
-            $list->listRows(),            $list->currentPage(),
+            $list->listRows(),
+            $list->currentPage(),
             $list->items()
         );
     }

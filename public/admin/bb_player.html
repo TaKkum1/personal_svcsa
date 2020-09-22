@@ -54,7 +54,7 @@
         var form = layui.form;
         table.render({
             elem: '#test',
-            url: 'http://svcsa.org/BBPlayer?freeagant=1',
+            url: 'http://svcsa.org/BBPlayer?all=1',
             parseData: function (res) {
                 return {
                     "code": 0, //解析接口状态
@@ -71,14 +71,14 @@
             title: '用户数据表',
             cols: [
                 [{
-                    field: 'PlayerID',
+                    field: 'ID',
                     title: 'ID',
                     width: 60,
                     fixed: 'left',
                     unresize: true,
                     sort: true,
                 }, {
-                    field: 'PlayerName',
+                    field: 'Name',
                     title: '姓名',
                     width: 200,
                 }, {
@@ -104,7 +104,7 @@
                     templet: '#show-img',
                     width: 100,
                 }, {
-                    field: 'PlayerEmail',
+                    field: 'Email',
                     title: '电子邮件',
                     width: 250,
                   }, {
@@ -164,19 +164,19 @@
                     success: function (layero, index) {
                         // layer.iframeAuto(index);
                         var body = layer.getChildFrame('body', index);
-                        body.find('#Name').val(data.PlayerName)
+                        body.find('#Name').val(data.Name)
                         body.find('#Sex').val(data.Sex)
                         //body.find('#Number').val(data.Number)
                         body.find('#Birth').val(data.Birth)
                         body.find('#Height').val(data.Height)
                         body.find('#Weight').val(data.Weight)
-                        body.find('#PhotoSrc').val(data.PlayerPhotoSrc)
-                        body.find('#Email').val(data.PlayerEmail)
+                        body.find('#PhotoSrc').val(data.PhotoSrc)
+                        body.find('#Email').val(data.Email)
 //                        body.find('#TeamID').val(data.TeamID)
                   //      body.find('#SeasonID').attr("value", data.SeasonID)
 
-                        body.find('#demo1').attr("src", "http://svcsa.org/uploads/" + data.PlayerPhotoSrc)
-                        body.find('#ID').val(data.PlayerID)
+                        body.find('#demo1').attr("src", "http://svcsa.org/uploads/" + data.PhotoSrc)
+                        body.find('#ID').val(data.ID)
 
 //                        body.find('#TeamID').attr("value", data.TeamID)
                     },
@@ -195,7 +195,7 @@
                     btn: ['确认', '取消'],
                     offset: ['100px']//按钮
                 }, function () {
-                    axios.delete('http://svcsa.org/BBPlayer/' + data.PlayerID, {})
+                    axios.delete('http://svcsa.org/BBPlayer/' + data.ID, {})
                         .then(function (response) {
                             console.log(response);
                         })

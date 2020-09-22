@@ -170,14 +170,16 @@ class Bbteam extends Base
         $competitionseason = Db::name('bb_competitionseason_view')
             ->where('SeasonID', $seasonid)->find();
         if (!$competitionseason) goto notfound;
+        $playersex = $competitionseason['CompetitionID'] == 1 ? '男' : '女';
 
         $sql =
             'select * '.
             'from bb_player '.
-            'where bb_player.ID not in ('.
+            'where (bb_player.ID not in ('.
                 'select distinct bb_seasonteamplayer.PlayerID '.
                 'from bb_seasonteamplayer '.
-                'where bb_seasonteamplayer.SeasonID='.strval($seasonid).')'.
+                'where bb_seasonteamplayer.SeasonID='.strval($seasonid).') '.
+                'and bb_player.Sex="'.$playersex.'") '.
             'order by Name asc';
         $available_players = Db::query($sql);
 
@@ -241,7 +243,7 @@ class Bbteam extends Base
         $seasonteam["TeamID"] =  $teamid;
         $seasonteam["SeasonID"] = $seasonid;
         $seasonteam["Approval"] = 0;
-        $seasonteam["TimePreference"] = $data["TimePref"];
+        $seasonteam["TimePreference"] = $data["TimePreference"];
 
         $seasonteam_result = Db::name('bb_seasonteam')->insert($seasonteam);
 
@@ -456,14 +458,14 @@ class Bbteam extends Base
         $otherseasons = array_slice($seasons, 1);
         $this->view->assign('otherseasons', $otherseasons);
 
-        $database_teams = Db::name('bb_team')
+        $database_teams = Db::name('bb_seasonteam_view')
             ->where('SeasonID', $seasonid)
             ->select();
 
         // An array of TeamRankInfo
         $teams = array();
         foreach ($database_teams as $team) {
-          $team_info = new TeamRankInfo($team['ID'], $team['Name']);
+          $team_info = new TeamRankInfo($team['TeamID'], $team['TeamName']);
           array_push($teams, $team_info);
         };
 

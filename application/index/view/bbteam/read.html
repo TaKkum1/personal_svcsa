@@ -18,9 +18,9 @@
             </dl>
             <dl>
                 <dt><i class="icon-clock"> </i>时间偏好</dt>
-                {if condition="$team['TimePref'] eq 0"}
+                {if condition="$time_preference eq 0"}
                   <dd>都可以</dd>
-                {elseif condition="$team['TimePref'] eq 1"}
+                {elseif condition="$time_preference eq 1"}
                   <dd>上午</dd>
                 {else /}
                   <dd>下午</dd>

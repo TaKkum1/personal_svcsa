@@ -49,7 +49,7 @@ class Index extends Base
 
         $competitioncount = count($competitionids);
 
-        $sql = 'select a.SeasonID,a.SeasonName,a.CompetitionID from bb_competitionseason a join (select max(SeasonID) SeasonID from bb_competitionseason group by CompetitionID) b on a.SeasonID=b.SeasonID';
+        $sql = 'select a.SeasonID,a.SeasonName,a.CompetitionID from bb_competitionseason_view a join (select max(SeasonID) SeasonID from bb_competitionseason_view group by CompetitionID) b on a.SeasonID=b.SeasonID';
         $recentseasons =  DB::query($sql);
 
  //       $recentseasonsids = array();
@@ -62,11 +62,11 @@ class Index extends Base
                 $recentseasonsidsstr = $recentseasonsidsstr . ',';
         }
 
-        $bbteams = DB::name('bb_team')
-            ->where('Flag','<>',0)
-            ->where('SeasonID','in',$recentseasonsidsstr)->order('ID desc')->select();
+        $bbteams = DB::name('bb_seasonteam')
+            ->where('Approval','<>',0)
+            ->where('SeasonID','in',$recentseasonsidsstr)->order('TeamID desc')->select();
 
-        $bbplayers = DB::name('bb_playerteam')->where('SeasonID','in',$recentseasonsidsstr)->order('CompetitionID asc')->select();
+        $bbplayers = DB::name('bb_seasonplayer_view')->where('SeasonID','in',$recentseasonsidsstr)->order('CompetitionID asc')->select();
 
         $bbmatchcount = DB::name('bb_match')->where('SeasonID','in',$recentseasonsidsstr)->count();
 

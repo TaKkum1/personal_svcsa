@@ -45,6 +45,7 @@
     var playerids;
     var passed;
     var teamid;
+    var seasonid;
     var Request = new Object();
     if (url.indexOf("?") != -1) {
         var str = url.substr(1);
@@ -58,6 +59,7 @@
     teamid = Request["teamid"];
     playerids = Request["playerids"];
     playernums = Request["playernums"];
+    seasonid = Request["seasonid"];
 //    if(playerids=="") playerids="-1";
 
 
@@ -121,7 +123,7 @@
                     title: '球员名称',
                     width: 200,
                 }, {
-                    field: 'Number',
+                    field: 'PlayerNumber',
                     title: '球员号码',
                     width: 100,
                 }, {
@@ -154,7 +156,7 @@
                 shadeClose: true,
                 shade: 0.8,
                 area: ['100%', '100%'],
-                content: 'bb_team_player_add.html?id=' + id,
+                content: 'bb_team_player_add.html?id=' + id + '&seasonid=' + seasonid,
                 success: function (layero, index) {
                     var body = layer.getChildFrame('body', index);
                     var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
@@ -197,7 +199,7 @@
                     btn: ['确认', '取消'] //按钮
                 }, function () {
                     layer.msg('正在删除...', {icon: 7});
-                    var restids = ''
+                  /*  var restids = ''
                     var restnumbers = ''
                     for (var i = 0; i < table_data.length; i++) {
                         var t_player_id=table_data[i].PlayerID;
@@ -215,17 +217,20 @@
                                 restnumbers += table_data[i].Number + ',';
                             }
                         }
-                    }
-                    console.log(restids)
-                    console.log(restnumbers)
+                    }*/
+                    console.log(data.PlayerID)
+                  //  console.log(restids)
+                  //  console.log(restnumbers)
                     let index = parent.layer.getFrameIndex(window.name);
                     $.ajax({
                         url: 'http://svcsa.org/bbplayer/setteam',
                         type: 'POST',
                         dataType: 'json',
                         data: {
-                            PlayerIDs: restids,
-                            PlayerNumbers: restnumbers,
+                            Mode: 'delete',
+                            PlayerIDs: data.PlayerID,
+                            PlayerNumbers: data.PlayerID,
+                            SeasonID: seasonid,
                             TeamID: id,
                         },
                         header: {

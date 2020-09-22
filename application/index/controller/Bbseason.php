@@ -53,9 +53,9 @@ class Bbseason extends Base
         $this->affectedRowsResult($result);
     }
 
-    
+
     public function playoff($id){
-        $thisseason = Db::name('bb_competitionseason')->where('SeasonID', $id)->find();
+        $thisseason = Db::name('bb_competitionseason_view')->where('SeasonID', $id)->find();
         $this->view->assign('thisseason', $thisseason);
         $this->headerAndFooter('competition');
         return $this->view->fetch('bbseason/playoff');
@@ -71,7 +71,7 @@ class Bbseason extends Base
     public function read($id){
 
 
-        $thisseason = Db::name('bb_competitionseason')->where('SeasonID', $id)->find();
+        $thisseason = Db::name('bb_competitionseason_view')->where('SeasonID', $id)->find();
         if(!$thisseason) goto notfound;
         $competitionid= $thisseason['CompetitionID'];
 
@@ -81,7 +81,7 @@ class Bbseason extends Base
             $this->headerAndFooter('competition');
 
         $exp = new Expression('field(SeasonID,'.$id.'),StartTime DESC');
-        $result = Db::name('bb_competitionseason')->where('CompetitionID', $competitionid)
+        $result = Db::name('bb_competitionseason_view')->where('CompetitionID', $competitionid)
             ->order($exp)->select();
         $result = array_reverse($result);
 
@@ -89,14 +89,14 @@ class Bbseason extends Base
             $this->dataResult($result);
         } else if(count($result)>0){
             $this->view->assign('thisseason',$result[0]);
-            $matches = Db::name('bb_matchteam')->where('SeasonID', $result[0]['SeasonID'])
+            $matches = Db::name('bb_matchteam_view')->where('SeasonID', $result[0]['SeasonID'])
                 ->order('StartTime','desc')->select();
             $this->view->assign('matches',$matches);
             $otherseasons = array_slice($result,1);
             $this->view->assign('otherseasons',$otherseasons);
             return $this->view->fetch('bbseason/read');
         }
-    
+
         notfound:
             header("HTTP/1.0 404 Not Found");
             die;
@@ -110,7 +110,7 @@ class Bbseason extends Base
         else
             $this->headerAndFooter('competition');
 
-        $result = Db::name('bb_competitionseason')->where('CompetitionID', $competitionid)
+        $result = Db::name('bb_competitionseason_view')->where('CompetitionID', $competitionid)
             ->order('StartTime desc')->select();
 
         if($this->jsonRequest())
@@ -124,7 +124,7 @@ class Bbseason extends Base
             $matches=null;
         } else {
             $this->view->assign('thisseason',$result[0]);
-            $matches = Db::name('bb_matchteam')->where('SeasonID', $result[0]['SeasonID'])
+            $matches = Db::name('bb_matchteam_view')->where('SeasonID', $result[0]['SeasonID'])
                 ->order('StartTime','desc')->select();
         }
 
@@ -143,7 +143,7 @@ class Bbseason extends Base
 
     public function lists(){
         $pagesize = input('pagesize');
-        $list = Db::name('bb_competitionseason')->paginate($pagesize);
+        $list = Db::name('bb_competitionseason_view')->paginate($pagesize);
         if($this->jsonRequest()) {
             $this->paginatedResult(
                 $list->total(),
