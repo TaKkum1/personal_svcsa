@@ -94,6 +94,8 @@
 \think\Route::post('bbseason/:seasonid/bbteam', 'index/bbteam/add', [], ['seasonid' => '\d+']);
 \think\Route::post('bbseason/:seasonid/apply', 'index/bbteam/apply', [], ['seasonid' => '\d+']);
 \think\Route::get('bbseason/:seasonid/apply', 'index/bbteam/getapply', [], ['seasonid' => '\d+']);
+\think\Route::get('bbseason/:id/playoff', 'index/bbseason/playoff', [], ['id' => '\d+']);
+
 \think\Route::post('bbteam/passapp', 'index/bbteam/passApplication');
 \think\Route::post('bbteam/:id', 'index/bbteam/update', [], ['id' => '\d+']);
 \think\Route::post('bbteam', 'index/bbteam/add');
@@ -110,6 +112,11 @@
 \think\Route::delete('bbseason/:id', 'index/bbseason/delete', [], ['id' => '\d+']);
 \think\Route::get('bbseason/:id', 'index/bbseason/read', [], ['id' => '\d+']);
 \think\Route::get('bbseason', 'index/bbseason/lists');
+
+\think\Route::get('bbplayoff', 'index/bbplayoff/lists');
+\think\Route::post('bbplayoff/:id', 'index/bbplayoff/update', [], ['id' => '\d+']);
+\think\Route::post('bbplayoff', 'index/bbplayoff/add');
+\think\Route::delete('bbplayoff/:id', 'index/bbplayoff/delete', [], ['id' => '\d+']);
 
 
 \think\Route::post('bbcompetition/:id', 'index/bbcompetition/update', [], ['id' => '\d+']);

@@ -24,6 +24,7 @@
 <script>
     var url = location.search;
     var id;
+    var seasonid;
     var Request = new Object();
     var playerdata;
     if (url.indexOf("?") != -1) {
@@ -41,27 +42,24 @@
     }
 
     id = Request["id"];
+    seasonid = Request["seasonid"];
     layui.use(['table', 'form'], function () {
         var table = layui.table;
         var form = layui.form;
         table.render({
             elem: '#test',
-            url: 'http://svcsa.org/BBPlayer?freeagant=1',
+            url: 'http://svcsa.org/BBPlayer?freeagant=1&seasonid=' + seasonid,
             parseData: function (res) {
-
-
-                for(var i=0;i<res.data.length;i++) {
-                    for(var k=0;k<playerdata.length;k++)
-                    {
-                        if(res.data[i].PlayerName==playerdata[k].PlayerName && res.data[i].Birth==playerdata[k].Birth)
-                        {
-                            res.data[i].PlayerID = playerdata[k].PlayerID;
-                            res.data[i].Number = playerdata[k].Number;
-                            res.data[i].LAY_CHECKED = true;
-                        }
-                    }
-                }
-
+               // res contains only free agent, add existing player info.
+               for (var i=0;i<playerdata.length;i++) {
+                 var existing_player = {}
+                 existing_player.ID = playerdata[i].PlayerID;
+                 existing_player.Name = playerdata[i].PlayerName;
+                 existing_player.Birth = playerdata[i].Birth;
+                 existing_player.Number = playerdata[i].PlayerNumber;
+                 existing_player.LAY_CHECKED = true;
+                 res.data.unshift(existing_player);
+               }
 
                 return {
                     "code": 0, //解析接口状态
@@ -85,14 +83,14 @@
                         width: 80,
 //                    title: 'ID',
                     }, {
-                    field: 'PlayerID',
+                    field: 'ID',
                     title: 'ID',
                     width: 80,
                     fixed: 'left',
                     unresize: true,
                     sort: true,
                 }, {
-                    field: 'PlayerName',
+                    field: 'Name',
                     title: '球员名称',
                     width: 150,
                 }, {
@@ -119,7 +117,7 @@
                 layer.alert('请至少选择一名球员');
             } else {
                 for (var i = 0; i < data.length; i++) {
-                        ids += data[i].PlayerID;
+                        ids += data[i].ID;
                         if(isNaN(parseInt(data[i].Number))) {
                             layer.alert('选择的球员' + data[i].PlayerName + '没有填写号码。');
                             return false;
@@ -141,8 +139,10 @@
                     type: 'POST',
                     dataType: 'json',
                     data: {
+                        Mode: 'insert',
                         PlayerIDs: HTMLDecode(ids),
                         PlayerNumbers:HTMLDecode(numbers),
+                        SeasonID: seasonid,
                         TeamID: id,
                     },
                     header: {

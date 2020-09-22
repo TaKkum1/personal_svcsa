@@ -1,35 +1,35 @@
-<div class="inside-banner block athlete-banner" style="background: url({$Think.config.public_assets}/uploads/{$player.PlayerPhotoSrc}) right bottom no-repeat;background-size: contain;">
-    <h3>球员简介</h3>
+<div class="inside-banner block athlete-banner" style="background: url({$Think.config.public_assets}/uploads/{$player.PhotoSrc}) right bottom no-repeat;background-size: contain;">
+    <h3>田径参赛个体</h3>
     <div class="introduce-box">
-        <span class="name">{$player.PlayerName}</span>
+        <span class="name">{$player.Name}</span>
         <div class="info">
             <div class="item">
-                号码<i>{$player.Number}</i>
-            </div><!--
-            <div class="item">
-                年龄<i></i>
-            </div>-->
-            <div class="item">
-                身高<i>{$player.Height}cm</i>
+                名称<i>{$player.Name}</i>
             </div>
             <div class="item">
-                体重<i>{$player.Weight}Kg</i>
+                代表<i>{$player.Leader}</i>
+            </div>
+            <div class="item">
+                类型<i>{if condition="$player.Individual eq 0"}集体{else /}个人{/if}</i>
+            </div>
+            <div class="item">
+                赛道<i>{$player.Track}</i>
             </div>
         </div>
         <div class="session_1">
             <table>
                 <thead>
                 <tr>
-                    <th>电子邮箱</th>
-                    <th>所在球队</th>
-                    <th>所属赛季</th>
+                    <th>联系电话</th>
+                    <th>微信</th>
+                    <th>Email</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
-                    <td>{$player.PlayerEmail}</td>
-                    <td>{$player.TeamName?$player.TeamName:'未分配'}</td>
-                    <td>{$player.SeasonName}</td>
+                    <td>{$player.Tel}</td>
+                    <td>{$player.Wechat}</td>
+                    <td>{$player.Email}</td>
                 </tr>
                 </tbody>
             </table>
@@ -41,21 +41,21 @@
     <div class="block">
         <div class="ath_des-box">
             <div class="tab-box">
-                <span class="active">{$player.CompetitionName}</span>
+                <span class="active">{$player.SeasonName}</span>
             </div>
         </div>
         <div class="all-box">
             <div class="list-box active">
                 <div class="row clearfix">
-                    {volist name="players" id="player"  empty='暂没球员信息！'}
+                    {volist name="players" id="player"}
                     <div class="col-md-2">
-                        <a href="{:url('index/bbplayer/read',['id'=>$player.PlayerID])}">
+                        <a href="{:url('index/ctfcplayer/read',['id'=>$player.ID])}">
                             <div class="item-box">
                                 <div class="img-box">
-                                    <img src="{$Think.config.public_assets}/uploads/{$player.PlayerPhotoSrc}">
+                                    <img src="{$Think.config.public_assets}/uploads/{$player.PhotoSrc}">
                                 </div>
                                 <div class="txt-box">
-                                    {$player.PlayerName}
+                                    {$player.Name}
                                 </div>
                             </div>
                         </a>
@@ -63,7 +63,7 @@
                     {/volist}
                 </div>
                 <div class="other-box">
-                    <a href="{:url('index/bbplayer/lists')}?seasonid={$player.SeasonID}" class="more">查看更多</a>
+                    <a href="{:url('index/ctfcplayer/lists')}?seasonid={$player.SeasonID}" class="more">查看更多</a>
                 </div>
             </div>
 

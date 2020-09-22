@@ -16,6 +16,5 @@ class BbTeam extends Validate
     protected $rule = [
         'Name'  => 'require',
         'Captain'  => 'require',
-        'SeasonID'  => 'require',
     ];
 }

@@ -196,7 +196,7 @@ class Bbmatch extends Base
 
     public function read($id){
 
-        $result = Db::name('bb_matchteam')->where('MatchID', $id)->find();
+        $result = Db::name('bb_matchteam_view')->where('MatchID', $id)->find();
         $logs = Db::name('bb_log')->where('MatchID', $id)->select();
 
         // Construct play by play from logs.
@@ -237,7 +237,7 @@ notfound:
 
     // Handler for App to read the matches info.
     public function lists($seasonid=null){
-        $list = Db::name('bb_matchteam');
+        $list = Db::name('bb_matchteam_view');
         if($seasonid) $list = $list->where('seasonid',$seasonid);
         $list = $list->order('StartTime','asc');
         $list = $list->paginate(input('pagesize'));

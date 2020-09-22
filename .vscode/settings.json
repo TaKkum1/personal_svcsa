@@ -1,0 +1,14 @@
+{
+  "liveSassCompile.settings.generateMap" : false,
+  "liveSassCompile.settings.formats": [
+    {
+      "format": "compressed",
+      "extensionName": ".min.css",
+      "savePath": "public/css/",
+    }
+  ],
+  "liveSassCompile.settings.includeItems": [
+    "public/scss/main.scss",
+  ]
+
+}

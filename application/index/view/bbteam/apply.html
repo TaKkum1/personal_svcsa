@@ -37,14 +37,6 @@
         <div class="input-box">
             <input type="text" name="Wechat" placeholder="微信：">
         </div>
-        <div class="input-radio">
-            <label class="label">时间偏好</label>
-            <input type="radio" id="prefer_all" name="TimePref" value="0"> 都可以 </>
-            <input type="radio" id="prefer_morning" name="TimePref" value="1"> 上午 </>
-            <input type="radio" id="prefer_afternoon" name="TimePref" value="2"> 下午</>
-        </div>
-        <br>
-
         <div class="input-box up_pic-box">
             <p style="line-height: 30px; margin-left: 5px">上传LOGO（背景透明）</p>
             <!--<div id="drop_area"></div>-->
@@ -55,6 +47,13 @@
             <!--<div id="drop_area_2"></div>-->
             <input type="file"  name="Photo" id="photofile" />
         </div>
+        <div class="input-radio">
+            <label class="label">时间偏好</label>
+            <input type="radio" id="prefer_all" name="TimePreference" value="0"> 都可以 </>
+            <input type="radio" id="prefer_morning" name="TimePreference" value="1"> 上午 </>
+            <input type="radio" id="prefer_afternoon" name="TimePreference" value="2"> 下午</>
+        </div>
+        <br>
         <div class="input-box select-input">
             <span class="select-btn">选择球员</span><span class="nub">已选择<em>0</em>个球员</span>
             <input type="hidden" name="PlayerNumbers" />
@@ -72,13 +71,13 @@
             <div class="other-box">
                 <div class="list-box">
                     <div class="row clearfix">
-                        {volist name='playersinseason' id='player'}
+                        {volist name='available_players' id='player'}
                         <div class="col-md-3">
                             <div class="item-box">
                                 <label>
                                     <div class="img-box"><img src="{$Think.config.public_assets}/uploads/{$player['PhotoSrc']}" style="width: 180px;height: 240px;"></div>
                                     <div class="txt"> <input type="checkbox" name="PlayerIDchk[]" value="{$player['ID']}"  />{$player['Name']} </div>
-                                    <div class="txt"> 指定号码：<input type="text" name="PlayerNumber_{$player['ID']}" placeholder="号码" value="{$player['Number']}" style="width:40px" /></div>
+                                    <div class="txt"> 指定号码：<input type="text" name="PlayerNumber_{$player['ID']}" placeholder="号码" style="width:40px" /></div>
                                 </label>
                             </div>
                         </div>

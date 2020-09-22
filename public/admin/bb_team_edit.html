@@ -90,23 +90,23 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">时间偏好</label>
                 <div class="layui-input-block">
-                    <input type="radio" id="prefer_all" name="TimePref" value="0" title="都可以">
-                    <input type="radio" id="prefer_morning" name="TimePref" value="1" title="上午">
-                    <input type="radio" id="prefer_afternoon" name="TimePref" value="2" title="下午">
+                    <input type="radio" id="prefer_all" name="TimePreference" value="0" title="都可以">
+                    <input type="radio" id="prefer_morning" name="TimePreference" value="1" title="上午">
+                    <input type="radio" id="prefer_afternoon" name="TimePreference" value="2" title="下午">
                 </div>
             </div>
 
-           <div class="layui-form-item">
+<!--           <div class="layui-form-item">
                 <label class="layui-form-label">加入赛季</label>
                 <div class="layui-input-block">
                         <input type="radio" id="jt_project" name="Flag" value="0" title="申请中">
                         <input type="radio" id="gr_project" name="Flag" value="1" title="通过申请">
                 </div>
-            </div>
+            </div>-->
 
 
 
-         <div class="layui-form-item">
+<!--         <div class="layui-form-item">
                 <label class="layui-form-label">赛季</label>
                 <div class="layui-input-block">
                     <input id="SeasonID" type="hidden" name="" value="">
@@ -114,7 +114,17 @@
                         <option value="">请选择</option>
                     </select>
                 </div>
-            </div>
+            </div>-->
+
+            <div class="layui-form-item">
+                   <label class="layui-form-label">季后赛</label>
+                   <div class="layui-input-block">
+                       <input id="PlayoffID" type="hidden" name="" value="">
+                       <select id="PlayoffID_s" lay-verify="required" name="PlayoffID" lay-filter="myselect">
+                           <option value="">请选择</option>
+                       </select>
+                   </div>
+               </div>
 
 
             <div class="layui-form-item">
@@ -216,11 +226,9 @@
                         PhotoSrc: $("#img_url2").val(),
                          LogoSrc:  data.field.LogoSrc,
                         PhotoSrc: data.field.PhotoSrc,
-                        Flag:data.field.Flag,
-                        SeasonID: data.field.SeasonID,
                         Description: data.field.Description,
-                        TimePref: data.field.TimePref,
-
+                        TimePreference: data.field.TimePreference,
+                        PlayoffID: data.field.PlayoffID,
                     })
                     .then(function(response) {
                         layer.msg('修改成功', {
@@ -253,6 +261,27 @@
                         }
                     }
                 })
+
+                axios.get('http://svcsa.org/BBPlayoff', {}).then(function(response) {
+                        console.log(response);
+                        console.log($("#SeasonID").val());
+                        $.each(response.data.data, function(index, item) {
+                           $('#PlayoffID_s').append('<option value="' + item.ID + '">' + item.SeasonID + ':' + item.Title + '</option>');
+                        });
+                        form.render();
+                        var num = $("#PlayoffID").val();
+                        var numbers = $("#PlayoffID_s").find("option"); //获取select下拉框的所有值
+                        console.log(numbers);
+                        for (var j = 1; j < numbers.length; j++) {
+                            console.log(numbers);
+                            if ($(numbers[j]).val() == num) {
+                                console.log('ok');
+                                $(numbers[j]).attr("selected", "selected");
+                                $(numbers[j]).attr("class", "layui-this");
+                                form.render();
+                            }
+                        }
+                    })
 
                 .catch(function(error) {
                     console.log(error);

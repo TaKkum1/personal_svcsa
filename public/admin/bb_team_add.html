@@ -83,9 +83,9 @@
         <div class="layui-form-item">
             <label class="layui-form-label">时间偏好</label>
             <div class="layui-input-block">
-                <input type="radio" id="prefer_all" name="TimePref" value="0" title="都可以">
-                <input type="radio" id="prefer_morning" name="TimePref" value="1" title="上午">
-                <input type="radio" id="prefer_afternoon" name="TimePref" value="2" title="下午">
+                <input type="radio" id="prefer_all" name="TimePreference" value="0" title="都可以">
+                <input type="radio" id="prefer_morning" name="TimePreference" value="1" title="上午">
+                <input type="radio" id="prefer_afternoon" name="TimePreference" value="2" title="下午">
             </div>
         </div>
 
@@ -94,8 +94,8 @@
             <!--                <input type="text" id="Flag" style="display: none" name="Flag" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">-->
 
             <div class="layui-input-block">
-                <input type="radio" id="jt_project" name="Flag" value="0" title="申请中">
-                <input type="radio" id="gr_project" name="Flag" value="1" title="通过申请">
+                <input type="radio" id="jt_project" name="Approval" value="0" title="申请中">
+                <input type="radio" id="gr_project" name="Approval" value="1" title="通过申请">
             </div>
         </div>
 
@@ -211,13 +211,10 @@
                     Wechat: data.field.Wechat,
                     LogoSrc: $("#img_url").val(),
                     PhotoSrc: $("#img_url2").val(),
-                    Wins: data.field.Wins,
-                    Losses: data.field.Losses,
-                    Flag: data.field.Flag,
-                    ScoreInBoard: data.field.ScoreInBoard,
+                    Approval: data.field.Approval,
                     SeasonID: data.field.SeasonID,
                     Description: data.field.Description,
-                    TimePref: data.field.TimePref,
+                    TimePreference: data.field.TimePreference,
                 },
                 header: {
                     Accept: 'application/json'

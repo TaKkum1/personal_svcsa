@@ -118,14 +118,14 @@ function ComplexRank($same_rank_point_teams, $matches) {
 
 class Bbteam extends Base
 {
-    const FIELD = 'Name,ShortName,Captain,Email,Tel,Wechat,LogoSrc,PhotoSrc,Wins,
-    Losses,ScoreInBoard,Flag,SeasonID,Flag,PlayerIDs,PlayerNumbers,Description,TimePref';
-
+    const APPLY_TEAM_FIELD = 'Name,ShortName,Captain,Email,Tel,Wechat,LogoSrc,PhotoSrc,Description,TimePreference,PlayerIDs,PlayerNumbers';
+    const UPDATE_TEAM_FIELD = 'Name,ShortName,Captain,Email,Tel,Wechat,LogoSrc,PhotoSrc,Description,TimePreference,PlayoffID';
+    const ADD_TEAM_FIELD = 'Name,ShortName,Captain,Email,Tel,Wechat,LogoSrc,PhotoSrc,Description,TimePreference,Approval,SeasonID';
     public function add($seasonid = null)
     {
         $this->checkauthorization();
 
-        $data = request()->only(self::FIELD, 'post');
+        $data = request()->only(self::ADD_TEAM_FIELD, 'post');
         $this->makeNull($data);
         if (!isset($data["SeasonID"]))
             $data["SeasonID"] = $seasonid;
@@ -134,7 +134,32 @@ class Bbteam extends Base
         if (!$result) {
             $this->affectedRowsResult(0);
         }
-        $result = Db::name('bb_team')->insert($data);
+        // Update bb_team.
+        $team_data = array();
+        $team_data['Name'] = $data['Name'];
+        $team_data['ShortName'] = $data['ShortName'];
+        $team_data['Captain'] = $data['Captain'];
+        $team_data['Email'] = $data['Email'];
+        $team_data['Tel'] = $data['Tel'];
+        $team_data['Wechat'] = $data['Wechat'];
+        $team_data['LogoSrc'] = $data['LogoSrc'];
+        $team_data['PhotoSrc'] = $data['PhotoSrc'];
+        $team_data['Description'] = $data['Description'];
+        $result = Db::name('bb_team')->insert($team_data);
+        // Update bb_seasonteam.
+        $seasonteam_data = array();
+        $seasonteam_data['SeasonID'] = $data['SeasonID'];
+        // Get the team ID just inserted.
+        $sql =
+            'select ID '.
+            'from bb_team '.
+            'where Name="'.$data['Name'].'" '.
+            'order by ID desc '.
+            'limit 1';
+        $seasonteam_data['TeamID'] = Db::query($sql)[0]["ID"];
+        $seasonteam_data['Approval'] = $data['Approval'];
+        $seasonteam_data['TimePreference'] = $data['TimePreference'];
+        $result += Db::name('bb_seasonteam')->insert($seasonteam_data);
         $this->affectedRowsResult($result);
     }
 
@@ -142,15 +167,23 @@ class Bbteam extends Base
     {
         $this->headerAndFooter('competition');
 
-        $competitionseason = Db::name('bb_competitionseason')
+        $competitionseason = Db::name('bb_competitionseason_view')
             ->where('SeasonID', $seasonid)->find();
         if (!$competitionseason) goto notfound;
+        $playersex = $competitionseason['CompetitionID'] == 1 ? '男' : '女';
 
-        $playersinseason = Db::query("SELECT * FROM bb_player WHERE" .
-            "(TeamID IS NULL or TeamID=0) ". "ORDER BY Name ASC ");
+        $sql =
+            'select * '.
+            'from bb_player '.
+            'where (bb_player.ID not in ('.
+                'select distinct bb_seasonteamplayer.PlayerID '.
+                'from bb_seasonteamplayer '.
+                'where bb_seasonteamplayer.SeasonID='.strval($seasonid).') '.
+                'and bb_player.Sex="'.$playersex.'") '.
+            'order by Name asc';
+        $available_players = Db::query($sql);
 
-
-        $this->view->assign('playersinseason', $playersinseason);
+        $this->view->assign('available_players', $available_players);
         $this->view->assign('competitionseason', $competitionseason);
 
         return $this->view->fetch('bbteam/apply');
@@ -162,40 +195,81 @@ class Bbteam extends Base
 
     public function apply($seasonid)
     {
-        $data = request()->only(self::FIELD, 'post');
+        $data = request()->only(self::APPLY_TEAM_FIELD, 'post');
         $this->makeNull($data);
-        if (!isset($data["SeasonID"]))
-            $data["SeasonID"] = $seasonid;
+
+        // Updated bb_team.
+        $team = array();
+        $team["Name"] = $data["Name"];
+        $team["ShortName"] = $data["ShortName"];
+        $team["Captain"] = $data["Captain"];
+        $team["Email"] = $data["Email"];
+        $team["Wechat"] = $data["Wechat"];
+        $team["Tel"] = $data["Tel"];
+        $team["Description"] = $data["Description"];
+
         $validator = validate('Bb_team');
-        $result = $validator->check($data);
-        if (!$result) {
-            $this->affectedRowsResult(0);
+        $team_result = $validator->check($team);
+        if (!$team_result) {
+          $this->affectedRowsResult(0);
         }
-        $data["Flag"] = 0;
-        $data["LogoSrc"] = "";
-        $data["PhotoSrc"] = "";
+
+        $team["LogoSrc"] = "";
+        $team["PhotoSrc"] = "";
         $assetUrl = getAssetUploadUrl();
         $infologofile = request()->file('Logo');
         $infophotofile = request()->file('Photo');
 
         if($infologofile)
-            $data["LogoSrc"] = $infologofile->move(__DIR__ . $assetUrl)
+            $team["LogoSrc"] = $infologofile->move(__DIR__ . $assetUrl)
                 ->getSaveName();
 
         if($infophotofile)
-            $data["PhotoSrc"] = $infophotofile->move(__DIR__ . $assetUrl)
+            $team["PhotoSrc"] = $infophotofile->move(__DIR__ . $assetUrl)
                 ->getSaveName();
 
-        $result = Db::name('bb_team')->insert($data);
+        $team_result = Db::name('bb_team')->insert($team);
 
+        // Update bb_seasonteam.
+        // Get the TeamID just inserted.
+        $seasonteam = array();
+        $sql =
+            'select ID '.
+            'from bb_team '.
+            'where Name="'.$team["Name"].'" '.
+            'order by ID desc '.
+            'limit 1';
+        $teamid = Db::query($sql)[0]["ID"];
+        $seasonteam["TeamID"] =  $teamid;
+        $seasonteam["SeasonID"] = $seasonid;
+        $seasonteam["Approval"] = 0;
+        $seasonteam["TimePreference"] = $data["TimePreference"];
 
+        $seasonteam_result = Db::name('bb_seasonteam')->insert($seasonteam);
+
+        // Update bb_seasonteamplayer
+        $players = explode(",", $data["PlayerIDs"]);
+        $numbers = explode(",", $data["PlayerNumbers"]);
+        $seasonteamplayer_result = 0;
+        $seasonteamplayer = array();
+        for ($i = 0; $i < count($players); $i++) {
+          $seasonteamplayer["SeasonID"] = $seasonteam["SeasonID"];
+          $seasonteamplayer["TeamID"] = $seasonteam["TeamID"];
+          $seasonteamplayer["PlayerID"] = $players[$i];
+          $seasonteamplayer["PlayerNumber"] = $numbers[$i];
+          $seasonteamplayer_result += Db::name('bb_seasonteamplayer')->insert($seasonteamplayer);
+        }
         if ($this->jsonRequest())
-            $this->affectedRowsResult($result);
+            $this->affectedRowsResult($team_result + $seasonteam_result + $seasonteamplayer_result);
 
+        // Jump to the apply result page.
         $this->headerAndFooter('competition');
 
         $applyresult = '';
-        if ($result > 0) $applyresult = '您的球队申请已提交，审核后将会给您发邮箱或者短信通知，请关注！';
+        if ($team_result > 0 &&
+            $seasonteam_result > 0 &&
+            $seasonteamplayer_result > 0)
+          $applyresult = '您的球队申请已提交，审核后将会给您发邮箱或者短信通知，请关注！';
         $this->view->assign('applyresult', $applyresult);
         return $this->view->fetch('bbteam/applyres');
     }
@@ -203,14 +277,18 @@ class Bbteam extends Base
     public function delete($id)
     {
         $this->checkauthorization();
-
-        $result = Db::name('bb_team')->where('ID', $id)->delete();
+        // Delete from bb_seasonteamplayer.
+        $result = Db::name('bb_seasonteamplayer')->where('TeamID', $id)->delete();
+        // Delete from bb_seasonteam.
+        $result += Db::name('bb_seasonteam')->where('TeamID', $id)->delete();
+        // Delete from bb_team.
+        $result += Db::name('bb_team')->where('ID', $id)->delete();
         $this->affectedRowsResult($result);
     }
 
     public function read($id)
     {
-        $result = Db::name('bb_team')->where('ID', $id)->find();
+        $result = Db::name('bb_seasonteam')->where('TeamID', $id)->find();
         if ($this->jsonRequest()) {
 
             $this->dataResult($result);
@@ -218,7 +296,7 @@ class Bbteam extends Base
 
         $seasonid = $result['SeasonID'];
 
-        $thisseason = Db::name('bb_competitionseason')
+        $thisseason = Db::name('bb_competitionseason_view')
             ->where('SeasonID', $seasonid)
             ->find();
         $competitionid = $thisseason['CompetitionID'];
@@ -233,16 +311,23 @@ class Bbteam extends Base
 
         $team = Db::name('bb_team')->where('ID', $id)->find();
 
-        $playerIDarr = explode(',', $team['PlayerIDs']);
-
-        $this->view->assign('playercount', count($playerIDarr));
-
+        $playercount = Db::name('bb_seasonteamplayer')
+            ->where('SeasonID', $seasonid)
+            ->where('TeamID', $id)
+            ->count();
+        $this->view->assign('playercount', $playercount);
 
         $this->view->assign('thisseason', $thisseason);
         $this->view->assign('team', $team);
+        $team_info = Db::name('bb_seasonteam')
+            ->where('SeasonID', $seasonid)
+            ->where('TeamID', $id)
+            ->where('Approval', 1)
+            ->find();
+        $this->view->assign('time_preference', $team_info['TimePreference']);
 
         // Get team matches.
-        $matches = Db::name('bb_matchteam')
+        $matches = Db::name('bb_matchteam_view')
             ->where('SeasonID', $seasonid)
             ->where('TeamAID|TeamBID', $id)
             ->order('StartTime','desc')
@@ -258,20 +343,59 @@ class Bbteam extends Base
 
     public function lists($seasonid = null)
     {
-
-
         if ($this->jsonRequest()) {
-            $list = Db::name('bb_team');
-            if ($seasonid) $list = $list->where('seasonid', $seasonid);
-            $list = $list->paginate(input('pagesize'));
+            $seasonteams = Db::name('bb_seasonteam');
+            if ($seasonid) $seasonteams = $seasonteams->where('seasonid', $seasonid);
+            $seasonteams = $seasonteams->select();
+            $list = array();
+            foreach ($seasonteams as $seasonteam) {
+              $item = array();
+              // fill out team registration info.
+              $teamid = $seasonteam['TeamID'];
+              $item['ID'] = $teamid;
+              $seasonid = Db::name('bb_seasonteam')->where('teamid', $teamid)->find()['SeasonID'];
+              $seasonname = Db::name('bb_season')->where('id', $seasonid)->find()['Name'];
+              $item['SeasonID'] = $seasonid;
+              $item['SeasonName'] = $seasonname;
+              $item['TimePreference'] = $seasonteam['TimePreference'];
+              $item['Approval'] = $seasonteam['Approval'];
+              // fill out team info.
+              $team = Db::name('bb_team')->where('id', $teamid)->find();
+              $item['Name'] = $team['Name'];
+              $item['ShortName'] = $team['ShortName'];
+              $item['Captain'] = $team['Captain'];
+              $item['Email'] = $team['Email'];
+              $item['Tel'] = $team['Tel'];
+              $item['Wechat'] = $team['Wechat'];
+              $item['LogoSrc'] = $team['LogoSrc'];
+              $item['PhotoSrc'] = $team['PhotoSrc'];
+              $item['Description'] = $team['Description'];
+              // fill out player info.
+              $players = Db::name('bb_seasonteamplayer')
+                  ->where('seasonid', $seasonid)
+                  ->where('teamid', $teamid)->select();
+              $playerIDs_arr = array();
+              $playerNumbers_arr = array();
+              foreach ($players as $player) {
+                array_push($playerIDs_arr, strval($player['PlayerID']));
+                array_push($playerNumbers_arr, strval($player['PlayerNumber']));
+              }
+              $item['PlayerIDs'] = implode(',', $playerIDs_arr);
+              $item['PlayerNumbers'] = implode(',', $playerNumbers_arr);
+              // Add item to list.
+              array_push($list, $item);
+            }
+            // Display to admin page.
+
+            /*$list = $list->paginate(input('pagesize'));
             $this->paginatedResult(
                 $list->total(),
                 $list->listRows(),
                 $list->currentPage(),
-                $list->items()
-            );
+          );*/
+          $this->dataResult($list);
         } else if ($seasonid) {
-            $competitionid = Db::name('bb_competitionseason')
+            $competitionid = Db::name('bb_competitionseason_view')
                 ->where('SeasonID', $seasonid)
                 ->find()['CompetitionID'];
             if (!$competitionid) goto  notfound;
@@ -283,12 +407,20 @@ class Bbteam extends Base
                 $this->headerAndFooter('competition');
 
             $exp = new \think\Db\Expression('field(SeasonID,' . $seasonid . '),StartTime DESC');
-            $seasons = Db::name('bb_competitionseason')->where('CompetitionID', $competitionid)
+            $seasons = Db::name('bb_competitionseason_view')->where('CompetitionID', $competitionid)
                 ->order($exp)->select();
             $seasons = array_reverse($seasons);
             $otherseasons = array_slice($seasons, 1);
-            $bbteams = Db::name('bb_team')->where('seasonid', $seasonid)
-                ->where('Flag', '<>', 0)->select();
+            $teams = Db::name('bb_seasonteam')
+                ->where('SeasonID', $seasonid)
+                ->where('Approval', '<>', 0)
+                ->select('TeamID,TimePreference');
+            $bbteams = array();
+            foreach ($teams as $i => $team) {
+              $item = Db::name('bb_team')->where('ID', $team['TeamID'])->find();
+              $item['TimePreference'] = $team['TimePreference'];
+              array_push($bbteams, $item);
+            }
 
 
             $this->view->assign('thisseason', $seasons[0]);
@@ -308,7 +440,7 @@ class Bbteam extends Base
 
     public function rank($seasonid)
     {
-        $competitionid = Db::name('bb_competitionseason')
+        $competitionid = Db::name('bb_competitionseason_view')
             ->where('SeasonID', $seasonid)
             ->find()['CompetitionID'];
         if (!$competitionid) goto  notfound;
@@ -320,20 +452,20 @@ class Bbteam extends Base
             $this->headerAndFooter('competition');
 
         $exp = new \think\Db\Expression('field(SeasonID,' . $seasonid . '),StartTime DESC');
-        $seasons = Db::name('bb_competitionseason')->where('CompetitionID', $competitionid)
+        $seasons = Db::name('bb_competitionseason_view')->where('CompetitionID', $competitionid)
             ->order($exp)->select();
         $seasons = array_reverse($seasons);
         $otherseasons = array_slice($seasons, 1);
         $this->view->assign('otherseasons', $otherseasons);
 
-        $database_teams = Db::name('bb_team')
+        $database_teams = Db::name('bb_seasonteam_view')
             ->where('SeasonID', $seasonid)
             ->select();
 
         // An array of TeamRankInfo
         $teams = array();
         foreach ($database_teams as $team) {
-          $team_info = new TeamRankInfo($team['ID'], $team['Name']);
+          $team_info = new TeamRankInfo($team['TeamID'], $team['TeamName']);
           array_push($teams, $team_info);
         };
 
@@ -436,14 +568,30 @@ class Bbteam extends Base
     {
         $this->checkauthorization();
 
-        $data = request()->only(self::FIELD, 'post');
+        $data = request()->only(self::UPDATE_TEAM_FIELD, 'post');
         $this->makeNull($data);
 //        $validator = validate('Bb_team');
 //        $result = $validator->check($data);
 //        if (!$result){
 //            $this->result(0);
 //        }
-        $result = Db::name('bb_team')->where('ID', $id)->update($data);
+        // Update bb_team.
+        $team_data = array();
+        $team_data['Name'] = $data['Name'];
+        $team_data['ShortName'] = $data['ShortName'];
+        $team_data['Captain'] = $data['Captain'];
+        $team_data['Email'] = $data['Email'];
+        $team_data['Tel'] = $data['Tel'];
+        $team_data['Wechat'] = $data['Wechat'];
+        $team_data['LogoSrc'] = $data['LogoSrc'];
+        $team_data['PhotoSrc'] = $data['PhotoSrc'];
+        $team_data['Description'] = $data['Description'];
+        $result = Db::name('bb_team')->where('ID', $id)->update($team_data);
+        // Update bb_seasonteam.
+        $seasonteam_data = array();
+        $seasonteam_data['TimePreference'] = $data['TimePref'];
+        $seasonteam_data['PlayoffID'] = $data['PlayoffID'];
+        $result += Db::name('bb_seasonteam')->where('TeamID', $id)->update($seasonteam_data);
         $this->affectedRowsResult($result);
     }
 
@@ -461,11 +609,11 @@ class Bbteam extends Base
 
         if ($passed) {
             foreach ($teamIDsarr as $teamID) {
-                $team = Db::name('bb_team')->where('ID', $teamID)->find();
+                //$seasonteam = Db::name('bb_seasonteam')->where('TeamID', $teamID)->find();
 
-                if($team['Flag']==1) continue;
+                //if($seasonteam['Approval']==1) continue;
 
-                $playerIDarr = array_filter(explode(',', $team['PlayerIDs']),'arrfiltrfun');
+                /*$playerIDarr = array_filter(explode(',', $team['PlayerIDs']),'arrfiltrfun');
                 $playerNumberarr = array_filter(explode(',', $team['PlayerNumbers']),'arrfiltrfun');
 
                 $playerIDs = '';
@@ -490,11 +638,10 @@ class Bbteam extends Base
                         $playerNumbers = $playerNumbers . ',';
                     }
 
-                }
+                }*/
 
-                $result += Db::name('bb_team')->where('ID', $teamID)
-                    ->update(['Flag' => 1, 'PlayerIDs' => $playerIDs,
-                        'PlayerNumbers' => $playerNumbers]);
+                $result += Db::name('bb_seasonteam')->where('TeamID', $teamID)
+                    ->update(['Approval' => 1]);
 
 //                $emailret = sendEmail([[
 //                    'user_email' => $team['Email'],
@@ -504,12 +651,13 @@ class Bbteam extends Base
                     $emailRes++;
 
             }
-        } else {
+     }
+      /* else {
             foreach ($teamIDsarr as $teamID) {
                 $result += Db::name('bb_team')->where('ID', $teamID)
                     ->delete();
             }
-        }
+        }*/
 
         $this->jsonResult(0, ['affectedRows' => $result, 'affectedEmails' => $emailRes]);
 //        $this->affectedRowsResult($result);

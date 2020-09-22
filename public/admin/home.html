@@ -73,6 +73,7 @@
             <dl class="layui-nav-child">
                 <dd> <a href="javascript:;" id="changeToSet"><i class="iconfont icon-shouye1"></i>篮球比赛项目</a></dd>
                 <dd> <a href="javascript:;" id="changeToSet2"><i class="iconfont icon-shouye1"></i>篮球赛季</a></dd>
+                <dd> <a href="javascript:;" id="changeToSet6"><i class="iconfont icon-shouye1"></i>篮球季后赛</a></dd>
                 <dd> <a href="javascript:;" id="changeToSet3"><i class="iconfont icon-shouye1"></i>篮球球队</a></dd>
                 <dd> <a href="javascript:;" id="changeToSet4"><i class="iconfont icon-shouye1"></i>篮球队员</a></dd>
                 <dd> <a href="javascript:;" id="changeToSet5"><i class="iconfont icon-shouye1"></i>篮球比赛</a></dd>
@@ -120,6 +121,10 @@
             })
             $('#changeToSet2').on('click', function() {
                 $(window.parent.document).find('#contentIframe').attr('src', 'bb_season.html')
+                $(this).addClass('layui-this').siblings().removeClass('layui-this');
+            })
+            $('#changeToSet6').on('click', function() {
+                $(window.parent.document).find('#contentIframe').attr('src', 'bb_playoff.html')
                 $(this).addClass('layui-this').siblings().removeClass('layui-this');
             })
             $('#changeToSet3').on('click', function() {

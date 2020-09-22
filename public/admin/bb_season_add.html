@@ -10,7 +10,7 @@
                     <input type="text" name="Name" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
                 </div>
             </div>
-            
+
             <div class="layui-inline">
                 <label class="layui-form-label">赛季开始时间</label>
                 <div class="layui-input-inline">
@@ -37,7 +37,7 @@
                     </select>
                 </div>
             </div>
-            
+
            <div class="layui-form-item">
                 <label class="layui-form-label">比赛项目</label>
                 <div class="layui-input-block">
@@ -47,9 +47,9 @@
                     </select>
                 </div>
             </div>
-            
-            
-           
+
+
+
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即添加</button>
@@ -66,7 +66,7 @@
               var laydate = layui.laydate;
             var table = layui.table;
             var form = layui.form;
-           
+
                 laydate.render({
                   elem: '#StartTime',
                   type: 'date'
@@ -74,7 +74,7 @@
 
             form.on('submit(add)', function(data) {
                 var index = parent.layer.getFrameIndex(window.name);
-                $.ajax({   
+                $.ajax({
                     url:'http://svcsa.org/BBCompetition/'+data.field.CompetitionID+'/BBSeason' ,
                     type : 'POST',
                     dataType : 'json',
@@ -103,7 +103,7 @@
                 });
 
             });
-            
+
                                axios.get('http://svcsa.org/bbcompetition', {}).then(function(response) {
                     console.log(response);
                     $.each(response.data.data, function(index, item) {
@@ -127,8 +127,8 @@
                 .catch(function(error) {
                     console.log(error);
                 });
-            
-            
+
+
         });
     </script>
 

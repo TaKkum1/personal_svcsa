@@ -16,7 +16,7 @@ use think\Session;
 
 class Bbplayer extends Base
 {
-    const FIELD = 'Name,Number,Birth,Height,Weight,PhotoSrc,Email,TeamID,SeasonID,Sex';
+    const FIELD = 'Name,Birth,Height,Weight,PhotoSrc,Email,Sex';
 
     public function add($seasonid = null)
     {
@@ -25,8 +25,6 @@ class Bbplayer extends Base
         $data = request()->only(self::FIELD, 'post');
         $assetUrl = getAssetUploadUrl();
         $this->makeNull($data);
-        if (!isset($data["SeasonID"]))
-            $data["SeasonID"] = $seasonid;
 
         if (!isset($data["Birth"]))
             $data["Birth"] = strtotime($data["Birth"], 'MM-dd');
@@ -51,21 +49,47 @@ class Bbplayer extends Base
     {
         $this->checkauthorization();
 
-        $data = request()->only('PlayerIDs,TeamID,PlayerNumbers', 'post');
+        $data = request()->only('Mode,PlayerIDs,TeamID,PlayerNumbers,SeasonID', 'post');
+        $mode = $data['Mode'];
         $playerIDs = urldecode($data['PlayerIDs']);
         $playerNumbers = urldecode($data['PlayerNumbers']);
-        $teamID = $data['TeamID'];
-
-        if (!$teamID) return $this->affectedRowsResult(0);
-
-
         $playerIDarr = array_filter(explode(',', $playerIDs),'arrfiltrfun');
         $playerNumberarr = array_filter(explode(',', $playerNumbers),'arrfiltrfun');
-//        $newPlayerIDs = '';
-        $team = Db::name('bb_team')->where('ID', $teamID)->find();
+        $teamID = $data['TeamID'];
+        $seasonID = $data['SeasonID'];
+
+        $result = 0;
+        if ($mode == 'delete') {
+          $result = Db::name('bb_seasonteamplayer')
+              ->where('PlayerID', $playerIDarr[0])
+              ->delete();
+        } else if ($mode == 'insert') {
+          foreach ($playerIDarr as $i => $playerID) {
+            $playerNumber = $playerNumberarr[$i];
+            // Check whether the player is already in the team.
+            $player_info = Db::name('bb_seasonteamplayer')
+                ->where('SeasonID', $seasonID)
+                ->where('TeamID', $teamID)
+                ->where('PlayerID', $playerID)
+                ->find();
+            if (!empty($player_info)) {
+              // Player already exists. Just update the number.
+              $result += Db::name('bb_seasonteamplayer')
+                  ->where('SeasonID', $seasonID)
+                  ->where('TeamID', $teamID)
+                  ->where('PlayerID', $playerID)
+                  ->update(['PlayerNumber' => $playerNumber]);
+            } else {
+              // Insert a new player.
+              $result += Db::name('bb_seasonteamplayer')
+                  ->insert(['SeasonID' => $seasonID, 'TeamID' => $teamID, 'PlayerID' => $playerID, 'PlayerNumber' => $playerNumber]);
+            }
+          }
+        }
+        $this->affectedRowsResult($result);
 
 
-        $result = Db::name('bb_player')->where('TeamID', $teamID)
+      /*  $result = Db::name('bb_seasonteamplayer')->where('TeamID', $teamID)
             ->update(['TeamID' => -$teamID]);
 
         $playerIDs = '';
@@ -105,8 +129,8 @@ class Bbplayer extends Base
         $result += Db::name('bb_team')->where('ID', $teamID)
             ->update(['PlayerIDs' => $playerIDs, 'PlayerNumbers' => $playerNumbers]);
 
-        $this->affectedRowsResult($result);
 
+*/
     }
 
     public function delete($id)
@@ -120,7 +144,7 @@ class Bbplayer extends Base
 
     public function read($id)
     {
-        $result = Db::name('bb_playerteam')->where('PlayerID', $id)->find();
+        $result = Db::name('bb_teamplayer_view')->where('PlayerID', $id)->find();
         if ($this->jsonRequest())
             $this->dataResult($result);
 
@@ -131,14 +155,23 @@ class Bbplayer extends Base
 //        $playerage = getAge(strtotime($result['Birth']));
 
         $seasonid = $result['SeasonID'];
+        $seasonname = Db::name('bb_season')
+            ->where('ID', $seasonid)
+            ->find()['Name'];
+        /*$competitionname = Db::name('bb_competitionseason_view')
+            ->where('SeasonID', $seasonid)
+            ->find()['CompetitionName'];
 
-        $players = Db::name('bb_playerteam')
-            ->where('SeasonID', $seasonid)->order('PlayerID desc')
-            ->limit(0, 10)->select();
+        $players = Db::name('bb_teamplayer_view')
+            ->where('SeasonID', $seasonid)->order('PlayerName asc')
+            ->select();*/
 
+
+        $this->view->assign('player_seasonname', $seasonname);
+        //$this->view->assign('player_competitionname', $competitionname);
         $this->view->assign('player', $result);
 //        $this->view->assign('playerage',$playerage);
-        $this->view->assign('players', $players);
+      //  $this->view->assign('players', $players);
 
 
         return $this->view->fetch('player/bbread');
@@ -150,44 +183,71 @@ class Bbplayer extends Base
 
     public function lists($seasonid = null, $teamid = null, $competitionid = null)
     {
+        // Get some basic info from input.
         $pagesize = (!input('pagesize')) ? 100 : input('pagesize');
-        $list = Db::name('bb_playerteam')->order('PlayerID asc');
-
         if (!$seasonid && input('seasonid')) $seasonid = input('seasonid');
         if (!$teamid && input('teamid')) $teamid = input('teamid');
         if (!$competitionid && input('competitionid')) {
           $competitionid = input('CompetitionID');
         }
-        if ($competitionid and $seasonid)
-            $list = $list->where('seasonid', $seasonid);
-        else if ($teamid)
-            $list = $list->where('teamid', $teamid);
-        else if ($competitionid)
-            $list = $list->where('CompetitionID', $competitionid);
-        else if (input('freeagant'))
-            $list = $list->where('teamid', 0)->order('PlayerName asc');
-        else if (input('playerids'))
-            $list = $list->whereIn('PlayerID',
-                explode(',', input('playerids')));
-
-        $list = $list->paginate($pagesize, false, [
-          'query' => input('param.'),
-        ]);
-
-        if ($this->jsonRequest())
+        if (input('freeagant')) {
+          // List all the free agents for a particular season.
+          $sql =
+              'select * '.
+              'from bb_player '.
+              'where bb_player.ID not in ('.
+                  'select distinct bb_seasonteamplayer.PlayerID '.
+                  'from bb_seasonteamplayer '.
+                  'where bb_seasonteamplayer.SeasonID='.strval($seasonid).')'.
+              'order by Name asc';
+          $list = Db::query($sql);
+          if ($this->jsonRequest())
+            $this->dataResult($list);
+          //$list = Db::name('bb_player')->order('Name asc');
+        } else if (input('all')) {
+          // List all players in the database.
+          $list = Db::name('bb_player');
+          $list = $list->paginate($pagesize, false, [
+            'query' => input('param.'),
+          ]);
+          if ($this->jsonRequest())
             $this->paginatedResult($list->total(), $pagesize, $list->currentPage(), $list->items());
+        } else {
+          // List players of a particular season.
+          $list = Db::name('bb_seasonplayer_view')->order('PlayerName asc');
 
+          if ($competitionid and $seasonid)
+              $list = $list->where('seasonid', $seasonid);
+          else if ($teamid)
+              $list = $list->where('teamid', $teamid);
+          else if ($competitionid)
+              $list = $list->where('CompetitionID', $competitionid);
+          else if (input('playerids'))
+              $list = $list->whereIn('PlayerID',
+                  explode(',', input('playerids')));
 
+          $list = $list->paginate($pagesize, false, [
+            'query' => input('param.'),
+          ]);
+
+          if ($this->jsonRequest())
+            $this->paginatedResult($list->total(), $pagesize, $list->currentPage(), $list->items());
+        }
 
         $this->headerAndFooter('player');
 
         $playertitle = '';
-        $CompetitionName = $list->items()[0]['CompetitionName'];
+        $CompetitionName = Db::name('bb_competition')
+            ->where('ID', $competitionid)
+            ->find()['Name'];
         if ($seasonid && count($list->items())>0) {
             $playertitle = $list->items()[0]['SeasonName'];
           }
-        else if ($teamid && count($list->items())>0)
-            $playertitle = $list->items()[0]['TeamName'];
+        else if ($teamid && count($list->items())>0) {
+            $playertitle = Db::name('bb_team')
+                ->where('ID', $teamid)
+                ->find()['Name'];
+        }
         else
             $playertitle = '优秀';
 
@@ -223,14 +283,5 @@ class Bbplayer extends Base
         }
         $result = Db::name('bb_player')->where('ID', $id)->update($data);
         $this->affectedRowsResult($result);
-    }
-
-    public function copyToSeason($newSeasonID)
-    {
-        $data = request()->only('OldSeasonID,TeamID,PlayerNumbers', 'post');
-        $copySQL = 'insert into bb_player (Name,Number,Birth,Height,Weight,PhotoSrc,Email,SeasonID,Sex)';
-        $copySQL = $copySQL . 'select Name,Number,Birth,Height,Weight,PhotoSrc,Email,Sex' . $newSeasonID;
-        $copySQL = $copySQL . ' from bb_player where SeasonID = ' . $this->request('OldSeasonID');
-
     }
 }

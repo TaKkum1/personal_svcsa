@@ -60,7 +60,7 @@ class Bbpicture extends Base
 
         if(!$matchid) goto notfound;
 
-        $matchteam = Db::name('bb_matchteam')->where('MatchID',$matchid)->find();
+        $matchteam = Db::name('bb_matchteam_view')->where('MatchID',$matchid)->find();
         $gallerytitle = '图集：' . date('m月j日',strtotime($matchteam['StartTime'])) . ' ' . $matchteam['MatchName'];
 
         $this->headerAndFooter('gallery');

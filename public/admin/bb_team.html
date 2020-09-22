@@ -37,7 +37,7 @@
                 <img src="http://svcsa.org/uploads/{{d.PhotoSrc}}" alt="图片名">
             </script>
             <script type="text/html" id="add_player">
-                {{#  if(d.Flag==0){ }}
+                {{#  if(d.Approval==0){ }}
                 <a class="layui-btn layui-btn-xs" lay-event="add_player">添加球员</a>
                 {{#  } else { }}
                 <a class="layui-btn layui-btn-disabled" lay-event="add_player">添加球员</a>
@@ -52,7 +52,7 @@
                 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
             </script>
             <script type="text/html" id="shenhe">
-                {{#  if(d.Flag==0){ }}
+                {{#  if(d.Approval==0){ }}
                 <a class="layui-btn layui-btn layui-btn-xs" lay-event="tongguo">通过</a>
                 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="bohui">驳回</a>
 
@@ -60,8 +60,8 @@
                 <a class="layui-btn layui-btn-disabled layui-btn-xs">已通过</a>
                 {{#  } }}
             </script>
-            <script type="text/html" id="Flag">
-                {{#  if(d.Flag==0){ }}
+            <script type="text/html" id="Approval">
+                {{#  if(d.Approval==0){ }}
                 申请中
                 {{#  } else { }}
                 通过申请
@@ -75,6 +75,8 @@
 <script src="layui/layui.js"></script>
 <script>
     function tongguo(ids, passed) {
+      console.log(ids);
+      console.log(passed);
         $.ajax({
             url: 'http://svcsa.org/bbteam/passapp',
             type: 'Post',
@@ -181,21 +183,25 @@
                     //     width: 150,
                     // }
                     , {
-                        field: 'TimePref',
+                        field: 'TimePreference',
                         title: '时间偏好',
                         width: 100,
                     },
                     {
-                        field: 'Flag',
-                        title: '加入赛季',
+                        field: 'Approval',
+                        title: '通过审核',
                         templet: '#Flag',
                         width: 100,
                     },
                     {
-                        field: 'SeasonID',
+                        field: 'SeasonName',
                         title: '赛季',
+                        width: 120,
+                    },
+                    {
+                        field: 'PlayoffID',
+                        title: '季后赛',
                         width: 80,
-                    }
                     // ,
                     // {
                     //     title: '添加球员',
@@ -207,7 +213,7 @@
                     //     width: 150,
                     //     toolbar: '#search_player'
                     // }
-                    , {
+                    }, {
                     title: '审核',
                     width: 130,
                     toolbar: '#shenhe'
@@ -237,11 +243,11 @@
             } else {
                 for (var i = 0; i < data.length; i++) {
                     if (i === data.length - 1) {
-                        if (data[i].Flag === 0) {
+                        if (data[i].Approval === 0) {
                             mycars += data[i].ID
                         }
                     } else {
-                        if (data[i].Flag === 0) {
+                        if (data[i].Approval === 0) {
                             mycars += data[i].ID + ','
                         }
                     }
@@ -297,15 +303,13 @@
                         body.find('#Wechat').val(data.Wechat)
                         body.find('#img_url1').val(data.LogoSrc)
                         body.find('#img_url2').val(data.PhotoSrc)
-                        body.find('#Wins').val(data.Wins)
-                        body.find('#Losses').val(data.Losses)
-//                        body.find('#ScoreInBoard').val(data.ScoreInBoard)
                         body.find('#SeasonID').attr("value", data.SeasonID)
+                        body.find('#PlayoffID').attr("value", data.PlayoffID)
                         body.find('#demo1').attr("src", "http://svcsa.org/uploads/" + data.LogoSrc)
                         body.find('#demo2').attr("src", "http://svcsa.org/uploads/" + data.PhotoSrc)
                         body.find('#ID').val(data.ID)
                         body.find('#Description').val(data.Description)
-                        body.find("input[name='Flag']").get(parseInt(data.Flag)).checked = true
+                        body.find("input[name='Approval']").get(parseInt(data.Approval)).checked = true
 
                     },
                     end: function () {
@@ -342,7 +346,9 @@
                 contenturl += "&teamid=";
                 contenturl += data.ID;
                 contenturl += "&passed=";
-                contenturl += data.Flag;
+                contenturl += data.Approval;
+                contenturl += "&seasonid=";
+                contenturl += data.SeasonID;
                 var ly = layer.open({
                     type: 2,
                     title: '球员管理',

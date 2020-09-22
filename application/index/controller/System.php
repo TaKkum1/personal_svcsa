@@ -71,7 +71,7 @@ class System extends Base
         // 获取表单上传文件
         $file = request()->file('file');
 
-
+        $assetUrl = getAssetUploadUrl();
         $info = $file->validate(['ext'=>'jpg,png,gif'])->move( __DIR__ . $assetUrl);
         if($info){
             // 成功上传后 获取上传信息
