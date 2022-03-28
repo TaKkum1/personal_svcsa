@@ -120,7 +120,7 @@
                    <label class="layui-form-label">季后赛</label>
                    <div class="layui-input-block">
                        <input id="PlayoffID" type="hidden" name="" value="">
-                       <select id="PlayoffID_s" lay-verify="required" name="PlayoffID" lay-filter="myselect">
+                       <select id="PlayoffID_s" name="PlayoffID" lay-filter="myselect">
                            <option value="">请选择</option>
                        </select>
                    </div>
@@ -222,9 +222,7 @@
                         Email: data.field.Email,
                         Tel: data.field.Tel,
                         Wechat: data.field.Wechat,
-                        LogoSrc: $("#img_url1").val(),
-                        PhotoSrc: $("#img_url2").val(),
-                         LogoSrc:  data.field.LogoSrc,
+                        LogoSrc:  data.field.LogoSrc,
                         PhotoSrc: data.field.PhotoSrc,
                         Description: data.field.Description,
                         TimePreference: data.field.TimePreference,

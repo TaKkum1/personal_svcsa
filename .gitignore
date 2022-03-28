@@ -13,6 +13,10 @@ backup/*
 # nginx.conf
 nginx-local/*
 
+
+#image
+uploads/*
+
 # MAC file
 .DS_Store
 
