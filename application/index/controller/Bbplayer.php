@@ -20,28 +20,45 @@ class Bbplayer extends Base
 
     public function add($seasonid = null)
     {
+      $this->checkauthorization();
+      $assetUrl = getAssetUploadUrl();
+      $data = request()->only(self::FIELD, 'post');
+      $this->makeNull($data);
+      $validator = validate('Bb_player');
+
+      if (!isset($data["PhotoSrc"]) || !$data["PhotoSrc"]) {
+          $file = request()->file('file');
+          if (!$file) $this->affectedRowsResult(0);
+          $data["PhotoSrc"] = $file
+              ->move(__DIR__ . $assetUrl)->getSaveName();
+      }
+
+      /*$result = $validator->check($data);
+      if (!$result) {
+          $this->affectedRowsResult(0);
+      }*/
+      $result = Db::name('bb_player')->insert($data);
+      $this->affectedRowsResult($result);
+    }
+
+    public function update($id)
+    {
         $this->checkauthorization();
-
-        $data = request()->only(self::FIELD, 'post');
         $assetUrl = getAssetUploadUrl();
+        $data = request()->only(self::FIELD, 'post');
         $this->makeNull($data);
-
-        if (!isset($data["Birth"]))
-            $data["Birth"] = strtotime($data["Birth"], 'MM-dd');
-
-        if (!isset($data["PhotoSrc"])) {
+        $validator = validate('Bb_player');
+//        $result = $validator->check($data);
+//        if (!$result){
+//            $this->result(0);
+//        }
+        if (!isset($data["PhotoSrc"]) || !$data["PhotoSrc"]) {
             $file = request()->file('file');
             if (!$file) $this->affectedRowsResult(0);
             $data["PhotoSrc"] = $file
                 ->move(__DIR__ . $assetUrl)->getSaveName();
         }
-
-        $validator = validate('Bb_player');
-        $result = $validator->check($data);
-        if (!$result) {
-            $this->affectedRowsResult(0);
-        }
-        $result = Db::name('bb_player')->insert($data);
+        $result = Db::name('bb_player')->where('ID', $id)->update($data);
         $this->affectedRowsResult($result);
     }
 
@@ -142,9 +159,9 @@ class Bbplayer extends Base
     }
 
 
-    public function read($id)
+    public function read($id, $season)
     {
-        $result = Db::name('bb_teamplayer_view')->where('PlayerID', $id)->find();
+        $result = Db::name('bb_teamplayer_view')->where('PlayerID', $id)->where('SeasonID', $season)->find();
         if ($this->jsonRequest())
             $this->dataResult($result);
 
@@ -172,6 +189,15 @@ class Bbplayer extends Base
         $this->view->assign('player', $result);
 //        $this->view->assign('playerage',$playerage);
       //  $this->view->assign('players', $players);
+
+      // Get player statistics.
+      $playerstats = Db::name('bb_seasonplayerstatistics_view')
+          ->where('seasonid', $seasonid)
+          ->where('PlayerID', $id)
+          ->order('PlayerID desc=1')
+          ->paginate(20, false)
+          ->items();
+      $this->view->assign('playerstats', $playerstats);
 
 
         return $this->view->fetch('player/bbread');
@@ -253,6 +279,7 @@ class Bbplayer extends Base
 
         $this->view->assign('playertitle', $playertitle);
         $this->view->assign('CompetitionName', $CompetitionName);
+        $this->view->assign('SeasonID', $seasonid);
         $this->view->assign('pagerender', $list->render());
         $this->view->assign('players', $list->items());
 
@@ -262,26 +289,5 @@ class Bbplayer extends Base
         notfound:
         header("HTTP/1.0 404 Not Found");
         die;
-    }
-
-    public function update($id)
-    {
-        $this->checkauthorization();
-        $assetUrl = getAssetUploadUrl();
-        $data = request()->only(self::FIELD, 'post');
-        $this->makeNull($data);
-        $validator = validate('Bb_player');
-//        $result = $validator->check($data);
-//        if (!$result){
-//            $this->result(0);
-//        }
-        if (!isset($data["PhotoSrc"]) || !$data["PhotoSrc"]) {
-            $file = request()->file('file');
-            if (!$file) $this->affectedRowsResult(0);
-            $data["PhotoSrc"] = $file
-                ->move(__DIR__ . $assetUrl)->getSaveName();
-        }
-        $result = Db::name('bb_player')->where('ID', $id)->update($data);
-        $this->affectedRowsResult($result);
     }
 }

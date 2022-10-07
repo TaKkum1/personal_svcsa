@@ -27,6 +27,20 @@
             </div>
 
             <div class="layui-form-item">
+                <label class="layui-form-label">常规赛小组数量</label>
+                <div class="layui-input-block">
+                    <input id="GroupNumber" type="text" name="GroupNumber" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">季后赛小组数量</label>
+                <div class="layui-input-block">
+                    <input id="PlayoffGroupNumber" type="text" name="PlayoffGroupNumber" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
                 <label class="layui-form-label">赛制</label>
                 <div class="layui-input-block">
 
@@ -36,6 +50,7 @@
                         <option value="1">单循环</option>
                         <option value="2">双循环</option>
                         <option value="3">瑞士制</option>
+                        <option value="4">分组单循环</option>
                     </select>
                 </div>
             </div>
@@ -57,8 +72,8 @@
             </div>
         </form>
     </div>
-    <script src="https://cdn.bootcss.com/axios/0.18.0/axios.js"></script>
-    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
     <script src="layui/layui.js"></script>
     <script>
               layui.use(['table', 'form','laydate',], function() {
@@ -73,13 +88,15 @@
             form.on('submit(add)', function(data) {
                 var index = parent.layer.getFrameIndex(window.name);
                 $.ajax({
-                    url:'http://svcsa.org/BBSeason/' + data.field.SeasonID,
+                    url:'../BBSeason/' + data.field.SeasonID,
                     type : 'POST',
                     dataType : 'json',
                     data : {
                         Name: data.field.SeasonName,
                         StartTime: data.field.StartTime,
                         TeamNumber: data.field.TeamNumber,
+                        GroupNumber: data.field.GroupNumber,
+                        PlayoffGroupNumber: data.field.PlayoffGroupNumber,
                         Rules: data.field.Rules,
                         CompetitionID: data.field.CompetitionID,
                     },
@@ -103,7 +120,7 @@
             });
 
 
-                                   axios.get('http://svcsa.org/bbcompetition', {}).then(function(response) {
+                                   axios.get('../bbcompetition', {}).then(function(response) {
                     console.log(response);
                     $.each(response.data.data, function(index, item) {
                 $('#CompetitionID_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');

@@ -18,7 +18,7 @@ layui.use(['form','layer','jquery'],function(){
     //检测是否登录，登录的话 直接跳转到首页
 
     $.ajax({
-        url: 'http://svcsa.org/authorization/status',
+        url: '../authorization/status',
         type: 'get',
         dataType: 'json',
         header: {
@@ -46,8 +46,8 @@ layui.use(['form','layer','jquery'],function(){
         var pwd=$('#password').val()
 
         $.ajax({
-            url: 'http://svcsa.org/Authorization/Login?username='+name+'&password='+pwd,
-            //url:"http://svcsa.org/bbcompetition",
+            url: '../Authorization/Login?username='+name+'&password='+pwd,
+            //url:"../bbcompetition",
             type: 'get',
             dataType: 'json',
             header: {

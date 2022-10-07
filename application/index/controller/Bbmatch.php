@@ -15,7 +15,7 @@ use think\Session;
 
 class Bbmatch extends Base
 {
-    const FIELD = 'TeamAID,TeamBID,ScoreTeamA,ScoreTeamB,State,StartTime,Report,VideoSrc,SeasonID,Court';
+    const FIELD = 'TeamAID,TeamBID,ScoreTeamA,ScoreTeamB,State,StartTime,SeasonID,Court,Round';
 
     private $stats = array();
     private $scores = array();

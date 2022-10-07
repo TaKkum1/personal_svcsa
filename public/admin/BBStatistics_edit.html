@@ -152,8 +152,8 @@
         </div>
     </form>
 </div>
-<script src="https://cdn.bootcss.com/axios/0.18.0/axios.js"></script>
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="layui/layui.js"></script>
 <script>
     function getUrlParam(name) {
@@ -177,7 +177,7 @@
 //            var PointsHit3=data.field["3PointsHit"]
             var index = parent.layer.getFrameIndex(window.name);
             $.ajax({
-                url:'http://svcsa.org/BBStatistics/' + getUrlParam('MatchID'),
+                url:'../BBStatistics/' + getUrlParam('MatchID'),
                 type : 'POST',
                 dataType : 'json',
                 data : {
@@ -216,7 +216,7 @@
 							top.location.href = 'login.html';
                 }
             });
-//             axios.post('http://svcsa.org/BBStatistics/' + getUrlParam(MatchID) + '/bbstatistics?player=' + data.field.TeamID, {
+//             axios.post('../BBStatistics/' + getUrlParam(MatchID) + '/bbstatistics?player=' + data.field.TeamID, {
 // //                        MatchID：getUrlParam(MatchID),
 //                 PlayerID: data.field.TeamID,
 //                 Points: data.field.Points,
@@ -254,7 +254,7 @@
         });
 
 
-        axios.get('http://svcsa.org/bbplayer', {}).then(function (response) {
+        axios.get('../bbplayer', {}).then(function (response) {
             console.log(response);
             $.each(response.data.data, function (index, item) {
                 $('#TeamID_s').append('<option value="' + item.PlayerID + '">' + item.PlayerName + '</option>');

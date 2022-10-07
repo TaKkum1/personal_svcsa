@@ -36,7 +36,7 @@
             <script type="text/html" id="toolbarDemo">
             </script>
             <script type="text/html" id="show-img">
-                <img src="http://svcsa.org/uploads/{{d.PlayerPhotoSrc}}" alt="图片名">
+                <img src="../uploads/{{d.PlayerPhotoSrc}}" alt="图片名">
             </script>
             <script type="text/html" id="barDemo">
                 <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
@@ -45,8 +45,8 @@
         </div>
     </div>
 </div>
-<script src="https://cdn.bootcss.com/axios/0.18.0/axios.js"></script>
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="layui/layui.js"></script>
 <script>
     layui.use(['table', 'form'], function () {
@@ -54,7 +54,7 @@
         var form = layui.form;
         table.render({
             elem: '#test',
-            url: 'http://svcsa.org/BBPlayer?all=1',
+            url: '../BBPlayer?all=1',
             parseData: function (res) {
                 return {
                     "code": 0, //解析接口状态
@@ -175,7 +175,7 @@
 //                        body.find('#TeamID').val(data.TeamID)
                   //      body.find('#SeasonID').attr("value", data.SeasonID)
 
-                        body.find('#demo1').attr("src", "http://svcsa.org/uploads/" + data.PhotoSrc)
+                        body.find('#demo1').attr("src", "../uploads/" + data.PhotoSrc)
                         body.find('#ID').val(data.ID)
 
 //                        body.find('#TeamID').attr("value", data.TeamID)
@@ -195,7 +195,7 @@
                     btn: ['确认', '取消'],
                     offset: ['100px']//按钮
                 }, function () {
-                    axios.delete('http://svcsa.org/BBPlayer/' + data.ID, {})
+                    axios.delete('../BBPlayer/' + data.ID, {})
                         .then(function (response) {
                             console.log(response);
                         })
@@ -212,7 +212,7 @@
                 });
             }
         });
-        axios.get('http://svcsa.org/BBSeason', {}).then(function (response) {
+        axios.get('../BBSeason', {}).then(function (response) {
             console.log(response);
             $.each(response.data.data, function (index, item) {
                 $('#Season').append('<option value="' + item.SeasonID + '">' + item.SeasonName + '</option>');
@@ -222,7 +222,7 @@
             .catch(function (error) {
                 console.log(error);
             });
-        axios.get('http://svcsa.org/BBTeam', {}).then(function (response) {
+        axios.get('../BBTeam', {}).then(function (response) {
             console.log(response);
             $.each(response.data.data, function (index, item) {
                 $('#Team').append('<option value="' + item.ID + '">' + item.Name + '</option>');
@@ -238,7 +238,7 @@
                 //     // SeasonID: data.value,
                 //     url: '../bbseason/' + data.value + '/bbplayer',
                 // },
-                url: 'http://svcsa.org/bbseason/' + data.value + '/bbplayer',
+                url: '../bbseason/' + data.value + '/bbplayer',
                 page: {
                     curr: 1 //重新从第 1 页开始
                 }
@@ -250,7 +250,7 @@
                 //     // SeasonID: data.value,
                 //     url: '../bbseason/' + data.value + '/bbplayer',
                 // },
-                url: 'http://svcsa.org/bbteam/' + data.value + '/bbplayer',
+                url: '../bbteam/' + data.value + '/bbplayer',
                 page: {
                     curr: 1 //重新从第 1 页开始
                 }

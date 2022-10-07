@@ -26,22 +26,22 @@
     <div class="list-box">
         <div class="row clearfix">
             {volist name="bbteams" id="bbteam" empty='暂没球队信息！'}
-            <div class="col-md-2">
-                <a href="{:url('index/bbteam/read',['id'=>$bbteam['ID']])}">
-                    <div class="item-box">
-                        <div class="img-box">
-                            {if condition="$bbteam['LogoSrc'] eq ''"}
-                            <img src="{$Think.config.public_assets}/images/teamlogo.jpg">
-                            {else /}
-                            <img src="{$Think.config.public_assets}/uploads/{$bbteam['LogoSrc']}">
-                            {/if}
-                        </div>
-                        <div class="txt-box">
-                            {$bbteam['ShortName']}
-                        </div>
-                    </div>
-                </a>
-            </div>
+              <div class="col-md-2">
+                  <a href="{:url('index/bbteam/read',['id'=>$bbteam['ID']])}">
+                      <div class="item-box">
+                          <div class="img-box">
+                              {if condition="$bbteam['LogoSrc'] eq ''"}
+                              <img src="{$Think.config.public_assets}/images/teamlogo.jpg">
+                              {else /}
+                              <img src="{$Think.config.public_assets}/uploads/{$bbteam['LogoSrc']}">
+                              {/if}
+                          </div>
+                          <div class="txt-box">
+                              {$bbteam['ShortName']}
+                          </div>
+                      </div>
+                  </a>
+              </div>
             {/volist}
         </div>
     </div>

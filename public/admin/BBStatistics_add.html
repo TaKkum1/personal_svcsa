@@ -4,7 +4,7 @@
 
     <div style="padding: 15px;">
         <form class="layui-form" action="">
-    
+
 
             <div class="layui-form-item">
                 <label class="layui-form-label">选手</label>
@@ -15,7 +15,7 @@
                     </select>
                 </div>
             </div>
-            
+
              <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">犯规次数</label>
@@ -31,7 +31,7 @@
                 </div>
             </div>
 
-     
+
                      <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">助攻</label>
@@ -84,7 +84,7 @@
                     </div>
                 </div>
             </div>
-            
+
                   <div class="layui-form-item">
                 <div class="layui-inline">
                     <label class="layui-form-label">罚篮命中</label>
@@ -97,7 +97,7 @@
                     <div class="layui-input-inline">
                         <input type="text" name="Hit" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
                     </div>
-                </div>     
+                </div>
             </div>
                               <div class="layui-form-item">
                 <div class="layui-inline">
@@ -127,7 +127,7 @@
                     </div>
                 </div>
             </div>
-    
+
                       <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即添加</button>
@@ -136,8 +136,8 @@
             </div>
         </form>
     </div>
-    <script src="https://cdn.bootcss.com/axios/0.18.0/axios.js"></script>
-    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
     <script src="layui/layui.js"></script>
     <script>
                           function getUrlParam(name) {
@@ -156,16 +156,16 @@
                 });
 
 
-                
+
                          form.on('submit(add)', function(data) {
                 var index = parent.layer.getFrameIndex(window.name);
- 
+
                 $.ajax({
-                    url:'http://svcsa.org/bbmatch/' +getUrlParam('MatchID') + '/bbstatistics?player='+data.field.TeamID,
+                    url:'../bbmatch/' +getUrlParam('MatchID') + '/bbstatistics?player='+data.field.TeamID,
                     type : 'POST',
                     dataType : 'json',
                     data : {
-    
+
                         PlayerID:data.field.TeamID,
                         Points:data.field.Points,
                         Assist: data.field.Assist,
@@ -201,8 +201,8 @@
                 });
 
             });
-                
-                    axios.get('http://svcsa.org/bbplayer', {}).then(function(response) {
+
+                    axios.get('../bbplayer', {}).then(function(response) {
                     console.log(response);
                     $.each(response.data.data, function(index, item) {
                         $('#TeamID_s').append('<option value="' + item.PlayerID + '">' + item.PlayerName + '</option>');
@@ -221,9 +221,9 @@
                         }
                     }
                 })
-                
 
-                
+
+
                 .catch(function(error) {
                     console.log(error);
                 });

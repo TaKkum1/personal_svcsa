@@ -13,8 +13,10 @@ class Util
 {
     public static function getArticleImg($content)
     {
-        $pattern="/<[img|IMG].*?src=[\'|\"](.*?(?:[\.gif|\.jpg|\.png]))[\'|\"].*?[\/]?>/";
+        $pattern="/<[img|IMG].*?src=[\'|\"](.*?(?:[\.gif|\.jpg|\.png|\.JPG|\.jpeg|\.JPEG|\.PNG|\.GIF]))[\'|\"].*?>/";
+        $matchContent=array();
         preg_match_all($pattern,$content,$matchContent);
+        print_r($matchContent);
         if(isset($matchContent[1][0])){
             return $matchContent[1][0];
         }else {

@@ -27,7 +27,7 @@
             <script type="text/html" id="toolbarDemo">
             </script>
             <script type="text/html" id="show-img">
-                <img src="http://svcsa.org/uploads/{{d.PlayerPhotoSrc}}" alt="图片名">
+                <img src="../uploads/{{d.PlayerPhotoSrc}}" alt="图片名">
             </script>
             <script type="text/html" id="barDemo">
                 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
@@ -37,7 +37,7 @@
     </div>
 </div>
 
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="layui/layui.js"></script>
 <script>
     var url = location.search;
@@ -72,10 +72,10 @@
         var restids = []
         var table_data
         var playeridsurl;
-        if(passed!=0)
-            playeridsurl = 'http://svcsa.org/BBPlayer?teamid=' + teamid;
-        else
-            playeridsurl = 'http://svcsa.org/BBPlayer?playerids=' + playerids;
+        //if(passed!=0)
+            playeridsurl = '../BBPlayer?teamid=' + teamid;
+        //else
+        //    playeridsurl = '../BBPlayer?playerids=' + playerids;
         table.render({
             elem: '#test',
             url: playeridsurl,
@@ -142,13 +142,13 @@
 
         $("#add").click(function () {
 
-            if(passed!=1) {
+            /*if(passed!=1) {
                 layer.alert('球队申请中，不能进行球员增减操作。请审核申请后再操作！', {
                     icon: 5,
                     title: "提示"
                 });
                 return false;
-            }
+            }*/
 
             var ly=layer.open({
                 type: 2,
@@ -187,13 +187,13 @@
             var tr = obj.tr; //获得当前行 tr 的DOM对象
             if (layEvent === 'del') {
 
-                if(passed!=1) {
+                /*if(passed!=1) {
                     layer.alert('球队申请中，不能进行球员增减操作。请审核申请后再操作！', {
                         icon: 5,
                         title: "提示"
                     });
                     return false;
-                }
+                }*/
 
                 layer.confirm('确认删除', {
                     btn: ['确认', '取消'] //按钮
@@ -223,7 +223,7 @@
                   //  console.log(restnumbers)
                     let index = parent.layer.getFrameIndex(window.name);
                     $.ajax({
-                        url: 'http://svcsa.org/bbplayer/setteam',
+                        url: '../bbplayer/setteam',
                         type: 'POST',
                         dataType: 'json',
                         data: {

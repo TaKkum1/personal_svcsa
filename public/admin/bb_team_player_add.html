@@ -19,7 +19,7 @@
     </div>
 </div>
 
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="layui/layui.js"></script>
 <script>
     var url = location.search;
@@ -48,7 +48,7 @@
         var form = layui.form;
         table.render({
             elem: '#test',
-            url: 'http://svcsa.org/BBPlayer?freeagant=1&seasonid=' + seasonid,
+            url: '../BBPlayer?freeagant=1&seasonid=' + seasonid,
             parseData: function (res) {
                // res contains only free agent, add existing player info.
                for (var i=0;i<playerdata.length;i++) {
@@ -135,7 +135,7 @@
                 let index = parent.layer.getFrameIndex(window.name);
                 layer.msg('正在添加...', {icon: 7});
                 $.ajax({
-                    url: 'http://svcsa.org/bbplayer/setteam',
+                    url: '../bbplayer/setteam',
                     type: 'POST',
                     dataType: 'json',
                     data: {

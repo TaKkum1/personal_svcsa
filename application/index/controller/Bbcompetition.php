@@ -49,13 +49,13 @@ class BbCompetition extends Base
     }
 
     public function lists(){
-        $pagesize = input('pagesize');
-        $list = Db::name('bb_competition')->paginate($pagesize);
-        $this->paginatedResult(
-            $list->total(),
-            $list->listRows(),
-            $list->currentPage(),
-            $list->items()
+      $pagesize = input('pagesize');
+      $list = Db::name('bb_competition')->paginate($pagesize);
+      $this->paginatedResult(
+          $list->total(),
+          $list->listRows(),
+          $list->currentPage(),
+          $list->items()
         );
     }
 

@@ -91,6 +91,7 @@
 
 \think\Route::get('bbseason/:seasonid/bbteam', 'index/bbteam/lists', [], ['seasonid' => '\d+']);
 \think\Route::get('bbseason/:seasonid/bbteamrank', 'index/bbteam/rank', [], ['seasonid' => '\d+']);
+\think\Route::get('bbseason/:seasonid/bbteamrankplayoff', 'index/bbteam/rankplayoff', [], ['seasonid' => '\d+']);
 \think\Route::post('bbseason/:seasonid/bbteam', 'index/bbteam/add', [], ['seasonid' => '\d+']);
 \think\Route::post('bbseason/:seasonid/apply', 'index/bbteam/apply', [], ['seasonid' => '\d+']);
 \think\Route::get('bbseason/:seasonid/apply', 'index/bbteam/getapply', [], ['seasonid' => '\d+']);

@@ -84,7 +84,7 @@
     </form>
 </div>
 <script src="public/wangEditor.js"></script>
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="layui/layui.js"></script>
 <script>
     var E = window.wangEditor
@@ -94,13 +94,13 @@
         var formData = new FormData();
         formData.append("file", files[0]);
         $.ajax({
-            url: 'http://svcsa.org/uploadimage',
+            url: '../uploadimage',
             type: 'POST',
             data: formData,
             processData: false,
             contentType: false,
             success: function (data) {
-                insert('http://svcsa.org/uploads/' + JSON.parse(data).data.savename)
+                insert('../uploads/' + JSON.parse(data).data.savename)
             },
             error: function (xhr) {
                 if (xhr.status == 401)
@@ -122,7 +122,7 @@
         $(document).ready(function () {
             $.ajax({
                 type: "GET",
-                url: "http://svcsa.org/System",
+                url: "../System",
                 data: {},
                 dataType: "json",
                 async: false,
@@ -152,7 +152,7 @@
         form.on('submit(add)', function (data) {
             var index = parent.layer.getFrameIndex(window.name);
             $.ajax({
-                url: 'http://svcsa.org/System',
+                url: '../System',
                 type: 'POST',
                 dataType: 'json',
                 data: {
@@ -184,4 +184,3 @@
         });
     });
 </script>
-

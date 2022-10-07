@@ -16,26 +16,26 @@ class Index extends Base
             ->select();
 
 
-        $topctfcseason = Db::name('ctfc_season')
-            ->order('StartTime desc')->find();
+        //$topctfcseason = Db::name('ctfc_season')
+      //      ->order('StartTime desc')->find();
 
-        // $swipers = array(
-        //     0=>['ID'=>$top2competition[0]['ID'],
-        //         'Name'=>$top2competition[0]['Name'],
-        //         'Picture'=>$top2competition[0]['Picture'],
-        //         'Description'=>$top2competition[0]['Description']
-        //     ],
-        //     1=>['ID'=>$top2competition[1]['ID'],
-        //         'Name'=>$top2competition[1]['Name'],
-        //         'Picture'=>$top2competition[1]['Picture'],
-        //         'Description'=>$top2competition[1]['Description']
-        //     ],
-        //     2=>['ID'=>$topctfcseason['ID'],
-        //         'Name'=>$topctfcseason['Name'],
-        //         'Picture'=>$topctfcseason['Picture'],
-        //         'Description'=>$topctfcseason['Description']
-        //     ]
-        // );
+        /*$swipers = array(
+           0=>['ID'=>$top2competition[0]['ID'],
+             'Name'=>$top2competition[0]['Name'],
+              'Picture'=>$top2competition[0]['Picture'],
+               'Description'=>$top2competition[0]['Description']
+          ],
+           1=>['ID'=>$top2competition[1]['ID'],
+               'Name'=>$top2competition[1]['Name'],
+               'Picture'=>$top2competition[1]['Picture'],
+                 'Description'=>$top2competition[1]['Description']
+             ],
+             2=>['ID'=>$topctfcseason['ID'],
+                 'Name'=>$topctfcseason['Name'],
+                 'Picture'=>$topctfcseason['Picture'],
+                 'Description'=>$topctfcseason['Description']
+             ]
+         );*/
 
 
         $recentnews = Db::name('article')
@@ -76,11 +76,6 @@ class Index extends Base
         $bbwomanplayers = next($bbplayersbycomp);
         $bbyouthplayers = next($bbplayersbycomp);
 
-        $ctfcplayers = DB::name('ctfc_playermatch')
-            ->order('SeasonID desc')
-            ->limit(0,5)
-            ->select();
-
         // $this->view->assign('swipers',$swipers);
         $this->view->assign('recentnews',$recentnews);
         $this->view->assign('competitioncount',$competitioncount);
@@ -92,8 +87,8 @@ class Index extends Base
         $this->view->assign('bbmanplayers',$bbmanplayers);
         $this->view->assign('bbwomanplayers',$bbwomanplayers);
         $this->view->assign('bbyouthplayers',$bbyouthplayers);
-        $this->view->assign('ctfcplayers',$ctfcplayers);
         $this->view->assign('bbteams',$bbteams);
+        //$this->view->assign('swipers',$swipers);
 
         return $view->fetch('public/index');
     }

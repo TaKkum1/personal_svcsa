@@ -31,10 +31,10 @@
             <script type="text/html" id="toolbarDemo">
             </script>
             <script type="text/html" id="show-img">
-                <img src="http://svcsa.org/uploads/{{d.LogoSrc}}" alt="图片名">
+                <img src="../uploads/{{d.LogoSrc}}" alt="图片名">
             </script>
             <script type="text/html" id="show-img2">
-                <img src="http://svcsa.org/uploads/{{d.PhotoSrc}}" alt="图片名">
+                <img src="../uploads/{{d.PhotoSrc}}" alt="图片名">
             </script>
             <script type="text/html" id="add_player">
                 {{#  if(d.Approval==0){ }}
@@ -70,15 +70,15 @@
         </div>
     </div>
 </div>
-<script src="https://cdn.bootcss.com/axios/0.18.0/axios.js"></script>
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="layui/layui.js"></script>
 <script>
     function tongguo(ids, passed) {
       console.log(ids);
       console.log(passed);
         $.ajax({
-            url: 'http://svcsa.org/bbteam/passapp',
+            url: '../bbteam/passapp',
             type: 'Post',
             dataType: 'json',
             data: {
@@ -108,7 +108,7 @@
         var form = layui.form;
         table.render({
             elem: '#test',
-            url: 'http://svcsa.org/BBTeam',
+            url: '../BBTeam',
             parseData: function (res) {
                 return {
                     "code": 0, //解析接口状态
@@ -199,9 +199,14 @@
                         width: 120,
                     },
                     {
-                        field: 'PlayoffID',
-                        title: '季后赛',
-                        width: 80,
+                        field: 'GroupID',
+                        title: '常规赛小组',
+                        width: 120,
+                    },
+                    {
+                        field: 'PlayoffGroupID',
+                        title: '季后赛小组',
+                        width: 120,
                     // ,
                     // {
                     //     title: '添加球员',
@@ -303,13 +308,21 @@
                         body.find('#Wechat').val(data.Wechat)
                         body.find('#img_url1').val(data.LogoSrc)
                         body.find('#img_url2').val(data.PhotoSrc)
-                        body.find('#SeasonID').attr("value", data.SeasonID)
-                        body.find('#PlayoffID').attr("value", data.PlayoffID)
-                        body.find('#demo1').attr("src", "http://svcsa.org/uploads/" + data.LogoSrc)
-                        body.find('#demo2').attr("src", "http://svcsa.org/uploads/" + data.PhotoSrc)
+                        if (data.TimePreference == 0) {
+                          body.find('#prefer_all').attr("checked", "true");
+                        } else if (data.TimePreference == 1) {
+                          body.find('#prefer_morning').attr("checked", "true");
+                        } else if (data.TimePreference == 2) {
+                          body.find('#prefer_afternoon').attr("checked", "true");
+                        }
+                        body.find('#PlayoffGroupID').attr("value", data.PlayoffGroupID)
+                        body.find('#GroupID').attr("value", data.GroupID)
+                        body.find('#demo1').attr("src", "../uploads/" + data.LogoSrc)
+                        body.find('#demo2').attr("src", "../uploads/" + data.PhotoSrc)
                         body.find('#ID').val(data.ID)
+                        body.find('#SeasonID').val(data.SeasonID)
                         body.find('#Description').val(data.Description)
-                        body.find("input[name='Approval']").get(parseInt(data.Approval)).checked = true
+                        //body.find("input[name='Approval']").get(parseInt(data.Approval)).checked = true
 
                     },
                     end: function () {
@@ -368,7 +381,7 @@
                     btn: ['确认', '取消'] //按钮
                 }, function () {
                     $.ajax({
-                        url: 'http://svcsa.org/BBTeam/' + data.ID,
+                        url: '../BBTeam/' + data.ID,
                         type: 'delete',
                         dataType: 'json',
                         header: {
@@ -408,7 +421,7 @@
                 });
             }
         });
-        axios.get('http://svcsa.org/BBSeason', {}).then(function (response) {
+        axios.get('../BBSeason', {}).then(function (response) {
             console.log(response);
             $.each(response.data.data, function (index, item) {
                 $('#Season').append('<option value="' + item.SeasonID + '">' + item.SeasonName + '</option>');
@@ -425,7 +438,7 @@
                 //     // SeasonID: data.value,
                 //     url: '../bbseason/' + data.value + '/bbplayer',
                 // },
-                url: 'http://svcsa.org/bbteam?seasonid=' + data.value,
+                url: '../bbteam?seasonid=' + data.value,
                 page: {
                     curr: 1 //重新从第 1 页开始
                 }

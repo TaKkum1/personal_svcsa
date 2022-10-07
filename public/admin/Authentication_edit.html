@@ -35,8 +35,8 @@
                     <input id="Level" type="text" name="Level" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
                 </div>
             </div>
-			
-			
+
+
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即修改</button>
@@ -45,7 +45,7 @@
             </div>
         </form>
     </div>
-    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
     <script src="layui/layui.js"></script>
     <script>
               layui.use(['table', 'form'], function() {
@@ -67,7 +67,7 @@
 
 
                 $.ajax({
-                    url:'http://svcsa.org/Authorization/' + data.field.ID,
+                    url:'../Authorization/' + data.field.ID,
                     type : 'POST',
                     dataType : 'json',
                     data : {

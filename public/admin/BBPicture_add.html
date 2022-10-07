@@ -26,14 +26,14 @@
                     <input type="radio" name="Flag" value="0"  lay-filter="Flag" lay-verify="required" autocomplete="off" class="layui-input" checked />图片<br/>
                     <input type="radio" name="Flag" value="1"  lay-filter="Flag" lay-verify="required" autocomplete="off" class="layui-input" />视频
                 </div>
-            
-            
+
+
             <div class="layui-form-item">
                 <label class="layui-form-label">图片说明</label>
                 <div class="layui-input-block">
                     <input type="text" name="Description" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
                 </div>
-	
+
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即添加</button>
@@ -42,7 +42,7 @@
             </div>
         </form>
     </div>
-    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
     <script src="layui/layui.js"></script>
     <script>
                 function getUrlParam(name) {
@@ -60,7 +60,7 @@
             var upload = layui.upload;
                 var uploadInst = upload.render({
                 elem: '#test1',
-                url: 'http://svcsa.org/uploadimage',
+                url: '../uploadimage',
                 acceptMime: 'image/*',
                 multiple: true,
                 before: function(obj) {
@@ -106,9 +106,9 @@
 
                 var mSrc = data.field.Flag=="1"?data.field.VideoUrl:data.field.Logo;
                 alert(mSrc);
- 
+
                 $.ajax({
-                    url:'http://svcsa.org/BBPicture' ,
+                    url:'../BBPicture' ,
                     type : 'POST',
                     dataType : 'json',
                     data : {

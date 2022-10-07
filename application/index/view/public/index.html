@@ -1,4 +1,5 @@
-
+<div class="arr"></div>
+</div>
 <div class="session_1 block">
     <div class="title-box clearfix">
         <a href="{:url('index/article/newslists')}" class="more">查看更多</a>
@@ -7,17 +8,17 @@
     <div class="row clearfix">
         {volist name='recentnews' id='vo1' empty='暂没最近新闻！'}
         <div class="col-md-4">
-                <span class="img-box">
+              <!--  <span class="img-box">
                     <div class="pd">
                         <img src="{$vo1.Content|getArticleImg}">
                         <div class="time-box">
                             <span>{$vo1.Posttime|strtotime|date='D j',###}</span>
                         </div>
                     </div>
-                </span>
+                </span>-->
             <div class="txt-box">
                 <h3><a href="{:url('index/article/newsread',['id' =>$vo1.ID])}" title="{$vo1.Title}">{$vo1.Title|msubstr=0,20}</a></h3>
-                <p>{$vo1.Content|getAbstract=###,330}...</p>
+                <p>{$vo1.Content|getAbstract=###,150}...</p>
                 <div class="more">
                     <a href="{:url('index/article/newsread',['id' =>$vo1.ID])}">阅读全文>><i class="icon-chevron-right"></i></a>
                 </div>

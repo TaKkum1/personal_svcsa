@@ -16,7 +16,7 @@
                 <label class="layui-form-label">项目图片</label>
                 <div class="layui-input-block">
                     <button type="button" class="layui-btn" id="test1">上传图片</button>
-                    <input type="hidden" id="img_url" name="Picture" value="" />
+                    <input type="hidden" id="Picture" name="Picture" value="" />
                     <div class="layui-upload-list">
                         <img class="layui-upload-img" width="100px" height="80px" id="demo1" src="" />
                         <p id="demoText"></p>
@@ -39,7 +39,7 @@
             </div>
         </form>
     </div>
-    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
     <script src="layui/layui.js"></script>
     <script>
 
@@ -50,7 +50,7 @@
             var upload = layui.upload;
             var uploadInst = upload.render({
                 elem: '#test1',
-                url: 'http://svcsa.org/uploadimage',
+                url: '../uploadimage',
                 acceptMime: 'image/*',
                 multiple: true,
                 before: function(obj) {
@@ -67,7 +67,7 @@
                     //上传成功
                     console.log(res);
                     picture = res.data.savename;
-                    $("#img_url").attr("value", picture)
+                    $("#Picture").attr("value", picture)
                 },
                 error: function() {
                     //演示失败状态，并实现重传
@@ -81,13 +81,13 @@
             form.on('submit(add)', function(data) {
                 var index = parent.layer.getFrameIndex(window.name);
                 $.ajax({
-                    url:'http://svcsa.org/bbcompetition/' + data.field.ID,
+                    url:'../bbcompetition/' + data.field.ID,
                     type : 'POST',
                     dataType : 'json',
                     data : {
                         Name: data.field.Name,
                         Description: data.field.Description,
-                        Picture: $("#img_url").val(),
+                        Picture: data.field.Picture,
                     },
                     header:{
                         Accept:'application/json'

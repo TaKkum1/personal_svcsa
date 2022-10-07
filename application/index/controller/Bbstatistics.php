@@ -354,6 +354,7 @@ class Bbstatistics extends Base
     }
 
     public function readViewByMatchTeam($matchid){
+      //  echo($matchid);
         $pagesize = input('pagesize');
         $list = Db::name('bb_teamplayerstatistics_view')
             ->where('matchid', $matchid)->order('Starter desc')->paginate($pagesize);
@@ -382,6 +383,8 @@ class Bbstatistics extends Base
             $groupedResult = array_group_by($result,'TeamID');
             $groupedResultA = current($groupedResult);
             $groupedResultB = end($groupedResult);
+            //echo($groupedResultA[0]['TeamName']);
+            //echo($groupedResultB[0]['TeamName']);
             UpdateTotalStats($groupedResultA);
             UpdateTotalStats($groupedResultB);
 
@@ -412,10 +415,17 @@ notfound:
     public function readViewBySeasonPlayer($seasonid){
         $ofield = input('ofield')?input('ofield'):'PlayerID';
         $desc = input('desc')>0?1:0;
+        $playoff = input('playoff')?input('playoff'):0;
         $orderby = $desc>0?$ofield . ' desc':$ofield . ' asc';
         $pagesize = input('pagesize');
         $list = Db::name('bb_seasonplayerstatistics_view')
-            ->where('seasonid', $seasonid)
+            ->where('seasonid', $seasonid);
+        if ($playoff == 0) {
+          $list = $list->where('round', 0);
+        } else {
+          $list = $list->where('round>0');
+        }
+        $list = $list
             ->order($orderby)
             ->paginate($pagesize,false);
         $result = $list->items();
@@ -444,6 +454,7 @@ notfound:
             $newdesc = (int)(!$desc);
             $this->view->assign('newdesc',$newdesc);
             $this->view->assign('statsresult',$result);
+            $this->view->assign('competitionid', $result[0]['CompetitionID']);
 
 
             return $this->view->fetch('bbstatistics/rank');

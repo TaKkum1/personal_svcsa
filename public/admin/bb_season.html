@@ -19,7 +19,7 @@
     </div>
 </div>
 
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="layui/layui.js"></script>
 <script>
     layui.use(['table', 'form'], function() {
@@ -27,7 +27,7 @@
         var form = layui.form;
         table.render({
             elem: '#test',
-            url: 'http://svcsa.org/BBSeason',
+            url: '../BBSeason',
             parseData: function(res) {
                 return {
                     "code": 0, //解析接口状态
@@ -65,7 +65,18 @@
                         field: 'TeamNumber',
                         title: '球队数量',
                         width: 100,
-                    }, {
+                    },
+                    {
+                        field: 'GroupNumber',
+                        title: '常规赛小组数量',
+                        width: 100,
+                    },
+                    {
+                        field: 'PlayoffGroupNumber',
+                        title: '季后赛小组数量',
+                        width: 100,
+                    },
+                    {
                         field: 'Rules',
                         title: '赛制',
                         width: 100,
@@ -128,6 +139,8 @@
                         body.find('#SeasonName').val(data.SeasonName)
                         body.find('#StartTime').val(data.StartTime)
                         body.find('#TeamNumber').val(data.TeamNumber)
+                        body.find('#GroupNumber').val(data.GroupNumber)
+                        body.find('#PlayoffGroupNumber').val(data.PlayoffGroupNumber)
                         body.find('#Rules').val(data.Rules)
                         body.find('#CompetitionID').val(data.CompetitionID)
                         body.find('#SeasonID').val(data.SeasonID)
@@ -141,7 +154,7 @@
                     btn: ['确认', '取消'] //按钮
                 }, function() {
                     $.ajax({
-                        url:'http://svcsa.org/BBSeason/' + data.SeasonID,
+                        url:'../BBSeason/' + data.SeasonID,
                         type : 'delete',
                         dataType : 'json',
                         header:{

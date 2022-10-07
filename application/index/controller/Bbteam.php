@@ -119,7 +119,7 @@ function ComplexRank($same_rank_point_teams, $matches) {
 class Bbteam extends Base
 {
     const APPLY_TEAM_FIELD = 'Name,ShortName,Captain,Email,Tel,Wechat,LogoSrc,PhotoSrc,Description,TimePreference,PlayerIDs,PlayerNumbers';
-    const UPDATE_TEAM_FIELD = 'Name,ShortName,Captain,Email,Tel,Wechat,LogoSrc,PhotoSrc,Description,TimePreference,PlayoffID';
+    const UPDATE_TEAM_FIELD = 'Name,ShortName,Captain,Email,Tel,Wechat,LogoSrc,PhotoSrc,Description,TimePreference,GroupID,PlayoffGroupID';
     const ADD_TEAM_FIELD = 'Name,ShortName,Captain,Email,Tel,Wechat,LogoSrc,PhotoSrc,Description,TimePreference,Approval,SeasonID';
     public function add($seasonid = null)
     {
@@ -170,17 +170,43 @@ class Bbteam extends Base
         $competitionseason = Db::name('bb_competitionseason_view')
             ->where('SeasonID', $seasonid)->find();
         if (!$competitionseason) goto notfound;
-        $playersex = $competitionseason['CompetitionID'] == 1 ? '男' : '女';
+        $competitionid = $competitionseason['CompetitionID'];
+        $playersex = $competitionid == 2 ? '女' : '男';
 
-        $sql =
-            'select * '.
-            'from bb_player '.
-            'where (bb_player.ID not in ('.
-                'select distinct bb_seasonteamplayer.PlayerID '.
-                'from bb_seasonteamplayer '.
-                'where bb_seasonteamplayer.SeasonID='.strval($seasonid).') '.
-                'and bb_player.Sex="'.$playersex.'") '.
-            'order by Name asc';
+        // Populate available players
+        if ($competitionid == 1) {
+          // Men Open, not selected
+          $sql =
+              'select * '.
+              'from bb_player '.
+              'where bb_player.ID not in ('.
+                  'select distinct bb_seasonteamplayer.PlayerID '.
+                  'from bb_seasonteamplayer '.
+                  'where bb_seasonteamplayer.SeasonID='.strval($seasonid).') '.
+              'order by Name asc';
+        } elseif ($competitionid == 2) {
+          // Women Open, not selected + women players
+          $sql =
+              'select * '.
+              'from bb_player '.
+              'where (bb_player.ID not in ('.
+                  'select distinct bb_seasonteamplayer.PlayerID '.
+                  'from bb_seasonteamplayer '.
+                  'where bb_seasonteamplayer.SeasonID='.strval($seasonid).') '.
+                  'and bb_player.Sex="'.$playersex.'") '.
+              'order by Name asc';
+        } elseif ($competitionid == 4) {
+          // Men Senior, not selected + birth < 1988/01/01
+          $sql =
+              'select * '.
+              'from bb_player '.
+              'where (bb_player.ID not in ('.
+                  'select distinct bb_seasonteamplayer.PlayerID '.
+                  'from bb_seasonteamplayer '.
+                  'where bb_seasonteamplayer.SeasonID='.strval($seasonid).') '.
+                  'and date(bb_player.Birth) < "1988-01-01") '.
+              'order by Name asc';
+        }
         $available_players = Db::query($sql);
 
         $this->view->assign('available_players', $available_players);
@@ -303,7 +329,7 @@ class Bbteam extends Base
         if (!$competitionid) goto  notfound;
 
 
-        if ($competitionid <= 2)
+        if ($competitionid == 1 or $competitionid == 2 or $competitionid == 4)
             $this->headerAndFooter('competition' . $competitionid);
         else
             $this->headerAndFooter('competition');
@@ -334,6 +360,15 @@ class Bbteam extends Base
             ->select();
         $this->view->assign('matches',$matches);
 
+        // Get team statistics.
+        $teamstats = Db::name('bb_seasonplayerstatistics_view')
+            ->where('seasonid', $seasonid)
+            ->where('teamid', $id)
+            ->order('PlayerID desc=1')
+            ->paginate(20, false)
+            ->items();
+        $this->view->assign('teamstats', $teamstats);
+
         return $this->view->fetch('bbteam/read');
 
         notfound:
@@ -344,7 +379,7 @@ class Bbteam extends Base
     public function lists($seasonid = null)
     {
         if ($this->jsonRequest()) {
-            $seasonteams = Db::name('bb_seasonteam');
+            $seasonteams = Db::name('bb_seasonteam_view')->order('TeamName');
             if ($seasonid) $seasonteams = $seasonteams->where('seasonid', $seasonid);
             $seasonteams = $seasonteams->select();
             $list = array();
@@ -358,7 +393,10 @@ class Bbteam extends Base
               $item['SeasonID'] = $seasonid;
               $item['SeasonName'] = $seasonname;
               $item['TimePreference'] = $seasonteam['TimePreference'];
+              $item['GroupID'] = $seasonteam['GroupID'];
+              $item['PlayoffGroupID'] = $seasonteam['PlayoffGroupID'];
               $item['Approval'] = $seasonteam['Approval'];
+              //$item['Approval'] = $seasonteam['Approval'];
               // fill out team info.
               $team = Db::name('bb_team')->where('id', $teamid)->find();
               $item['Name'] = $team['Name'];
@@ -401,7 +439,7 @@ class Bbteam extends Base
             if (!$competitionid) goto  notfound;
 
 
-            if ($competitionid <= 2)
+            if ($competitionid == 1 or $competitionid == 2 or $competitionid == 4)
                 $this->headerAndFooter('competition' . $competitionid);
             else
                 $this->headerAndFooter('competition');
@@ -411,14 +449,17 @@ class Bbteam extends Base
                 ->order($exp)->select();
             $seasons = array_reverse($seasons);
             $otherseasons = array_slice($seasons, 1);
-            $teams = Db::name('bb_seasonteam')
+            $teams = Db::name('bb_seasonteam_view')
                 ->where('SeasonID', $seasonid)
                 ->where('Approval', '<>', 0)
-                ->select('TeamID,TimePreference');
+                ->order('TeamName')
+                ->select('TeamID,TimePreference,GroupID');
             $bbteams = array();
             foreach ($teams as $i => $team) {
               $item = Db::name('bb_team')->where('ID', $team['TeamID'])->find();
               $item['TimePreference'] = $team['TimePreference'];
+              $item['GroupID'] = $team['GroupID'];
+              $item['PlayoffGroupID'] = $team['PlayoffGroupID'];
               array_push($bbteams, $item);
             }
 
@@ -438,7 +479,212 @@ class Bbteam extends Base
         die;
     }
 
-    public function rank($seasonid)
+    public function rank($seasonid, $internal=0)
+    {
+        $competitionid = Db::name('bb_competitionseason_view')
+            ->where('SeasonID', $seasonid)
+            ->find()['CompetitionID'];
+        if (!$competitionid) goto  notfound;
+
+
+        if ($competitionid == 1 or $competitionid == 2 or $competitionid == 4)
+            $this->headerAndFooter('competition' . $competitionid);
+        else
+            $this->headerAndFooter('competition');
+
+        $exp = new \think\Db\Expression('field(SeasonID,' . $seasonid . '),StartTime DESC');
+        $seasons = Db::name('bb_competitionseason_view')->where('CompetitionID', $competitionid)
+            ->order($exp)->select();
+        $seasons = array_reverse($seasons);
+        $otherseasons = array_slice($seasons, 1);
+        $this->view->assign('otherseasons', $otherseasons);
+
+        $database_teams = Db::name('bb_seasonteam_view')
+            ->where('SeasonID', $seasonid)
+            ->select();
+
+        // An array of GroupID => [Teams in the Group]
+        $grouped_teams = array();
+        foreach ($database_teams as $team) {
+          $group_id = 0;
+          if ($team['Rules'] == 4) {
+            // Multiple groups. Find the group id.
+            $group_id = $team['GroupID'];
+          }
+          // Assign the teams to the right group.
+          $group_chr = chr(64 + $group_id);
+          if (!array_key_exists($group_chr, $grouped_teams)) {
+            $grouped_teams[$group_chr] = array();
+          }
+          array_push($grouped_teams[$group_chr], $team);
+        }
+        ksort($grouped_teams);
+
+        // Rank the teams in each group.
+        $display_teams = array(); // Same format as $group_teams, but with the correct ranking for display.
+        foreach ($grouped_teams as $group_chr => $group_teams) {
+          $display_teams[$group_chr] = array();
+          // An array of TeamRankInfo
+          $teams = array();
+          foreach ($group_teams as $team) {
+            $team_info = new TeamRankInfo($team['TeamID'], $team['TeamName']);
+            array_push($teams, $team_info);
+          };
+
+          // Update team rank info from matches.
+          $matches = Db::name('bb_match')
+              ->where('SeasonID', $seasonid)
+              ->where('State', 1)
+              ->where('Round', 0)
+              ->select();
+          foreach ($matches as $match) {
+            foreach ($teams as $team) {
+              if ($team->ID == $match['TeamAID']) {
+                # Determine forfeit
+                if ($match['ScoreTeamA'] == 0 && $match['ScoreTeamB'] == 15) {
+                  $team->AddForfeits();
+                } else if ($match['ScoreTeamA'] > $match['ScoreTeamB']) {
+                  $team->AddWins();
+                } else {
+                  $team->AddLoses();
+                }
+                $team->AddPointWins($match['ScoreTeamA']);
+                $team->AddPointLoses($match['ScoreTeamB']);
+              }
+              if ($team->ID == $match['TeamBID']) {
+                # Determine forfeit
+                if ($match['ScoreTeamB'] == 0 && $match['ScoreTeamA'] == 15) {
+                  $team->AddForfeits();
+                } else if ($match['ScoreTeamB'] > $match['ScoreTeamA']) {
+                  $team->AddWins();
+                } else {
+                  $team->AddLoses();
+                }
+                $team->AddPointWins($match['ScoreTeamB']);
+                $team->AddPointLoses($match['ScoreTeamA']);
+              }
+            }
+          }
+
+          // Divide to groups based on rank points.
+          // rank_point => same_rank_point_teams
+          $rank_point_standing = array();
+          foreach ($teams as $team) {
+            $found_same_rank_point_team = false;
+            foreach ($rank_point_standing as $rank_point => $same_rank_point_teams) {
+              if ($team->getRankPoint() == $rank_point) {
+                array_push($rank_point_standing[$rank_point], $team);
+                $found_same_rank_point_team = true;
+                break;
+              }
+            }
+            if ($found_same_rank_point_team == false) {
+              // Form a new group.
+              $rank_point_standing[$team->getRankPoint()] = array($team);
+            }
+          }
+
+          // Rank groups.
+          krsort($rank_point_standing);
+
+          // Rank each group.
+          $final_ranking = array();
+          foreach ($rank_point_standing as $rank_point => $same_rank_point_teams) {
+            if (AllMet($same_rank_point_teams) == false) {
+              $same_rank_point_teams_ranking = SimpleRank($same_rank_point_teams);
+            } else {
+              $same_rank_point_teams_ranking = ComplexRank($same_rank_point_teams, $matches);
+            }
+            foreach ($same_rank_point_teams_ranking as $team_to_be_merged) {
+              array_push($final_ranking, $team_to_be_merged);
+            }
+          }
+
+          // Reformat final ranking.
+          foreach ($final_ranking as $team) {
+            $display_team = array();
+            $display_team['ID'] = $team->ID;
+            $display_team['ShortName'] = $team->Name;
+            $display_team['RankPoints'] = $team->getRankPoint();
+            $display_team['Wins'] = $team->Wins;
+            $display_team['Losses'] = $team->Loses;
+            $display_team['Forfeits'] = $team->Forfeits;
+            $display_team['PointGet'] = $team->Pt_win;
+            $display_team['PointLose'] = $team->Pt_lose;
+            $display_team['PointDiff'] = $team->GetPointDiff();
+            array_push($display_teams[$group_chr], $display_team);
+          }
+        }
+
+        $this->view->assign('thisseason', $seasons[0]);
+        $this->view->assign('otherseasons', $otherseasons);
+        $this->view->assign('teamrankresult', $display_teams);
+        $this->view->assign('competitionid', $competitionid);
+
+        if ($internal == 0) {
+          return $this->view->fetch('bbteam/rank');
+        } else {
+          return $display_teams;
+        }
+
+        notfound:
+        header("HTTP/1.0 404 Not Found");
+        die;
+    }
+
+    // Sort the teams in bracket.
+    private function SortBrackets($brackets, $seasonid) {
+      $result_brackets = array();
+      foreach($brackets as $group_id => $bracket) {
+        assert(length($bracket) == 8);  // Currently support 8 teams bracket only.
+        $result_bracket = array();
+        // Figure out the rounds. For example, 8 teams equals to 3 rounds.
+        $num_rounds = log(length($bracket), 2) + 1;
+        // sort each round.
+        //   1st round: use regular season ranking:
+        //     Add this array to the bracket: [1 => [A1, C2, B1, D2, C1, A2, D1, B2]]
+        //   2nd round: use playoff 1st round result:
+        //     Add this array to the bracket: [2 => [A1C2, B1D2, C1A2, D1B2]]
+        //   3nd round: use playoff 2nd round result:
+        //     Add this array to the bracket: [3 => [A1C2B1D2, C1A2D1B2]]
+        //   4th round: use playoff 3rd round result:
+        //     Add this array to the bracket: [4 => [A1C2B1D2C1A2D1B2]]
+        for ($i = 1; $i <= $num_rounds; $i++) {
+          $result_round = array();
+          if ($i == 1) {
+            // Use regular season ranking.
+            $ranking = $this->rank($seasonid, 1);
+            if (length($ranking) == 1) {
+              // A1, A8, A4, A5, A2, A7, A3, A6
+              array_push($result_round, $ranking['A'][1+8*($group_id-1)-1]);
+              array_push($result_round, $ranking['A'][8+8*($group_id-1)-1]);
+              array_push($result_round, $ranking['A'][4+8*($group_id-1)-1]);
+              array_push($result_round, $ranking['A'][5+8*($group_id-1)-1]);
+              array_push($result_round, $ranking['A'][2+8*($group_id-1)-1]);
+              array_push($result_round, $ranking['A'][7+8*($group_id-1)-1]);
+              array_push($result_round, $ranking['A'][3+8*($group_id-1)-1]);
+              array_push($result_round, $ranking['A'][6+8*($group_id-1)-1]);
+            } else {
+              assert(length($ranking) == 4);  // currently support 4 groups only.
+              // A1, C2, B1, D2, C1, A2, D1, B2
+              array_push($result_round, $ranking['A'][1+2*($group_id-1)-1]);
+              array_push($result_round, $ranking['C'][2+2*($group_id-1)-1]);
+              array_push($result_round, $anking['B'][1+2*($group_id-1)-1]);
+              array_push($result_round, $ranking['D'][2+2*($group_id-1)-1]);
+              array_push($result_round, $ranking['C'][1+2*($group_id-1)-1]);
+              array_push($result_round, $ranking['A'][2+2*($group_id-1)-1]);
+              array_push($result_round, $ranking['D'][1+2*($group_id-1)-1]);
+              array_push($result_round, $ranking['B'][2+2*($group_id-1)-1]);
+            }
+          } else {
+            // use round i-1 result from bb_match.
+          }
+          $result_bracket[i] = $result_round;
+        }
+      }
+    }
+
+    public function rankplayoff($seasonid)
     {
         $competitionid = Db::name('bb_competitionseason_view')
             ->where('SeasonID', $seasonid)
@@ -462,102 +708,26 @@ class Bbteam extends Base
             ->where('SeasonID', $seasonid)
             ->select();
 
-        // An array of TeamRankInfo
-        $teams = array();
-        foreach ($database_teams as $team) {
-          $team_info = new TeamRankInfo($team['TeamID'], $team['TeamName']);
-          array_push($teams, $team_info);
-        };
-
-        // Update team rank info from matches.
-        $matches = Db::name('bb_match')
-            ->where('SeasonID', $seasonid)
-            ->where('State', 1)
-            ->select();
-        foreach ($matches as $match) {
-          foreach ($teams as $team) {
-            if ($team->ID == $match['TeamAID']) {
-              # Determine forfeit
-              if ($match['ScoreTeamA'] == 0 && $match['ScoreTeamB'] == 15) {
-                $team->AddForfeits();
-              } else if ($match['ScoreTeamA'] > $match['ScoreTeamB']) {
-                $team->AddWins();
-              } else {
-                $team->AddLoses();
-              }
-              $team->AddPointWins($match['ScoreTeamA']);
-              $team->AddPointLoses($match['ScoreTeamB']);
-            }
-            if ($team->ID == $match['TeamBID']) {
-              # Determine forfeit
-              if ($match['ScoreTeamB'] == 0 && $match['ScoreTeamA'] == 15) {
-                $team->AddForfeits();
-              } else if ($match['ScoreTeamB'] > $match['ScoreTeamA']) {
-                $team->AddWins();
-              } else {
-                $team->AddLoses();
-              }
-              $team->AddPointWins($match['ScoreTeamB']);
-              $team->AddPointLoses($match['ScoreTeamA']);
-            }
+        // An array of GroupID => braket of teams.
+        $brackets = array();
+        /*foreach ($database_teams as $team) {
+          $group_id = $team['PlayoffGroupID'];
+          // Assign the teams to the right bracket.
+          if (!array_key_exists($group_id, $brackets)) {
+            $bracket[$group_id] = array();
           }
+          array_push($brackets[$group_id], [$team]);
         }
+        $brackets = SortBrackets($brackets, $seasonid);*/
 
-        // Divide to groups based on rank points.
-        // rank_point => same_rank_point_teams
-        $rank_point_standing = array();
-        foreach ($teams as $team) {
-          $found_same_rank_point_team = false;
-          foreach ($rank_point_standing as $rank_point => $same_rank_point_teams) {
-            if ($team->getRankPoint() == $rank_point) {
-              array_push($rank_point_standing[$rank_point], $team);
-              $found_same_rank_point_team = true;
-              break;
-            }
-          }
-          if ($found_same_rank_point_team == false) {
-            // Form a new group.
-            $rank_point_standing[$team->getRankPoint()] = array($team);
-          }
-        }
 
-        // Rank groups.
-        krsort($rank_point_standing);
-
-        // Rank each group.
-        $final_ranking = array();
-        foreach ($rank_point_standing as $rank_point => $same_rank_point_teams) {
-          if (AllMet($same_rank_point_teams) == false) {
-            $same_rank_point_teams_ranking = SimpleRank($same_rank_point_teams);
-          } else {
-            $same_rank_point_teams_ranking = ComplexRank($same_rank_point_teams, $matches);
-          }
-          foreach ($same_rank_point_teams_ranking as $team_to_be_merged) {
-            array_push($final_ranking, $team_to_be_merged);
-          }
-        }
-
-        // Reformat final ranking.
-        $display_teams = array();
-        foreach ($final_ranking as $team) {
-          $display_team = array();
-          $display_team['ID'] = $team->ID;
-          $display_team['ShortName'] = $team->Name;
-          $display_team['RankPoints'] = $team->getRankPoint();
-          $display_team['Wins'] = $team->Wins;
-          $display_team['Losses'] = $team->Loses;
-          $display_team['Forfeits'] = $team->Forfeits;
-          $display_team['PointGet'] = $team->Pt_win;
-          $display_team['PointLose'] = $team->Pt_lose;
-          $display_team['PointDiff'] = $team->GetPointDiff();
-          array_push($display_teams, $display_team);
-        }
 
         $this->view->assign('thisseason', $seasons[0]);
         $this->view->assign('otherseasons', $otherseasons);
-        $this->view->assign('teamrankresult', $display_teams);
+        $this->view->assign('brackets', $brackets);
+        $this->view->assign('competitionid', $competitionid);
 
-        return $this->view->fetch('bbteam/rank');
+        return $this->view->fetch('bbteam/rank_playoff');
 
         notfound:
         header("HTTP/1.0 404 Not Found");
@@ -589,8 +759,10 @@ class Bbteam extends Base
         $result = Db::name('bb_team')->where('ID', $id)->update($team_data);
         // Update bb_seasonteam.
         $seasonteam_data = array();
-        $seasonteam_data['TimePreference'] = $data['TimePref'];
-        $seasonteam_data['PlayoffID'] = $data['PlayoffID'];
+        $seasonteam_data['TimePreference'] = $data['TimePreference'];
+        //$seasonteam_data['PlayoffID'] = $data['PlayoffID'];
+        $seasonteam_data['GroupID'] = $data['GroupID'];
+        $seasonteam_data['PlayoffGroupID'] = $data['PlayoffGroupID'];
         $result += Db::name('bb_seasonteam')->where('TeamID', $id)->update($seasonteam_data);
         $this->affectedRowsResult($result);
     }

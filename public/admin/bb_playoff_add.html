@@ -53,8 +53,8 @@
            </div>
         </form>
     </div>
-    <script src="https://cdn.bootcss.com/axios/0.18.0/axios.js"></script>
-    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
     <script src="layui/layui.js"></script>
     <script>
 
@@ -66,7 +66,7 @@
       form.on('submit(add)', function(data) {
         var index = parent.layer.getFrameIndex(window.name);
         $.ajax({
-          url:'http://svcsa.org/BBPlayoff',
+          url:'../BBPlayoff',
           type : 'POST',
           dataType : 'json',
           data : {
@@ -100,7 +100,7 @@
       });
 
       // Render Season Selection Drop menu.
-      axios.get('http://svcsa.org/bbseason', {}).then(function(response) {
+      axios.get('../bbseason', {}).then(function(response) {
         console.log(response);
         $.each(response.data.data, function(index, item) {
           $('#SeasonID_s').append('<option value="' + item.SeasonID + '">' + item.SeasonName + '</option>');
@@ -124,7 +124,7 @@
       });
 
       // Render Competition Selection Drop menu.
-      axios.get('http://svcsa.org/bbcompetition', {}).then(function(response) {
+      axios.get('../bbcompetition', {}).then(function(response) {
         console.log(response);
         $.each(response.data.data, function(index, item) {
           $('#CompetitionID_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');

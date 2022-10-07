@@ -21,7 +21,7 @@
             <script type="text/html" id="toolbarDemo">
             </script>
             <script type="text/html" id="show-img">
-                <img src="http://svcsa.org/uploads/{{d.Picture}}" alt="图片名">
+                <img src="../uploads/{{d.Picture}}" alt="图片名">
             </script>
             <script type="text/html" id="barDemo">
                 <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
@@ -31,7 +31,7 @@
     </div>
 </div>
 
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="layui/layui.js"></script>
 <script>
     function hoverOpenImg() {
@@ -56,7 +56,7 @@
         var form = layui.form;
         table.render({
             elem: '#test',
-            url: 'http://svcsa.org/bbcompetition',
+            url: '../bbcompetition',
             parseData: function (res) {
                 return {
                     "code": 0, //解析接口状态
@@ -157,7 +157,7 @@
                         body.find('#Name').val(obj.data.Name)
                         body.find('#Description').val(obj.data.Description)
                         body.find('#ID').val(obj.data.ID)
-                        body.find('#demo1').attr("src", "http://svcsa.org/uploads/" + data.Picture)
+                        body.find('#demo1').attr("src", "../uploads/" + data.Picture)
                         body.find('#Picture').val(obj.data.Picture)
                     },
                     end: function () {
@@ -169,8 +169,8 @@
                     btn: ['确认', '取消'] //按钮
                 }, function () {
                     $.ajax({
-                        url: 'http://svcsa.org/bbcompetition/' + data.ID,
-                        //url:"http://svcsa.org/bbcompetition",
+                        url: '../bbcompetition/' + data.ID,
+                        //url:"../bbcompetition",
                         type: 'delete',
                         dataType: 'json',
                         header: {

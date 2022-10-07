@@ -16,61 +16,70 @@
 <div style="padding: 15px;">
     <form class="layui-form" action="">
 
+      <div class="layui-form-item">
+          <div class="layui-inline" style="width: 340px">
+              <label class="layui-form-label">所属赛季</label>
+              <div class="layui-input-block">
+                  <input id="SeasonID" type="hidden" name="" value="">
+                  <select id="SeasonID_s" lay-verify="required" name="SeasonID" lay-filter="Season">
+                      <option value="">请选择</option>
+                  </select>
+              </div>
+          </div>
+          <div class="layui-inline">
+              <label class="layui-form-label" style="width: 110px">比赛时间</label>
+              <div class="layui-input-inline" style="width: 230px">
+                  <input id="StartTime" type="text" name="StartTime" class="layui-input"
+                         placeholder="yyyy-MM-dd HH:mm:ss">
+              </div>
+          </div>
+      </div>
+
+      <div class="layui-form-item">
+              <div class="layui-inline">
+                  <label class="layui-form-label">主队</label>
+                  <div class="layui-input-block" style="width: 230px">
+                      <input id="TeamID" type="hidden" name="" value="">
+                      <select id="TeamID_s" lay-verify="required" name="TeamID" lay-filter="myselect">
+                          <option value="">请选择</option>
+                      </select>
+                  </div>
+              </div>
+              <div class="layui-inline" style="width: 380px;">
+                  <label class="layui-form-label" style="width: 110px">客队</label>
+                  <div class="layui-input-inline" style="width: 230px">
+                      <input id="TeamID2" type="hidden" name="" value="">
+                      <select id="TeamID2_s" lay-verify="required" name="TeamID2" lay-filter="myselect">
+                          <option value="">请选择</option>
+                      </select>
+                  </div>
+              </div>
+          </div>
+
+          <div class="layui-form-item">
+              <label class="layui-form-label">比赛场地</label>
+              <div class="layui-input-block">
+                  <input type="radio" name="Court" value="1号场" title="1号场">
+                  <input type="radio" name="Court" value="2号场" title="2号场">
+              </div>
+          </div>
+
+          <div class="layui-form-item">
+              <label class="layui-form-label">比赛状态</label>
+              <div class="layui-input-block">
+                  <input type="radio" name="State" value="-1" title="未开赛">
+                  <input type="radio" name="State" value="0" title="正在比赛">
+                  <input type="radio" name="State" value="1" title="已结束">
+              </div>
+          </div>
 
         <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">主队</label>
-                <div class="layui-input-block" style="width: 230px">
-                    <input id="TeamID" type="hidden" name="" value="">
-                    <select id="TeamID_s" lay-verify="required" name="TeamID" lay-filter="myselect">
-                        <option value="">请选择</option>
-                    </select>
-                </div>
-            </div>
-            <div class="layui-inline" style="width: 380px;">
-                <label class="layui-form-label" style="width: 110px">客队</label>
-                <div class="layui-input-inline" style="width: 230px">
-                    <input id="TeamID2" type="hidden" name="" value="">
-                    <select id="TeamID2_s" lay-verify="required" name="TeamID2" lay-filter="myselect">
-                        <option value="">请选择</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <div class="layui-inline" style="width: 340px">
-                <label class="layui-form-label">所属赛季</label>
-                <div class="layui-input-block">
-                    <input id="SeasonID" type="hidden" name="" value="">
-                    <select id="SeasonID_s" lay-verify="required" name="SeasonID" lay-filter="myselect">
-                        <option value="">请选择</option>
-                    </select>
-                </div>
-            </div>
-            <div class="layui-inline">
-                <label class="layui-form-label" style="width: 110px">比赛时间</label>
-                <div class="layui-input-inline" style="width: 230px">
-                    <input id="StartTime" type="text" name="StartTime" class="layui-input"
-                           placeholder="yyyy-MM-dd HH:mm:ss">
-                </div>
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">比赛场地</label>
+            <label class="layui-form-label">比赛轮次</label>
             <div class="layui-input-block">
-                <input type="radio" name="Court" value="1号场" title="1号场">
-                <input type="radio" name="Court" value="2号场" title="2号场">
-            </div>
-        </div>
-
-        <div class="layui-form-item">
-            <label class="layui-form-label">比赛状态</label>
-            <div class="layui-input-block">
-                <input type="radio" name="State" value="-1" title="未开赛">
-                <input type="radio" name="State" value="0" title="正在比赛">
-                <input type="radio" name="State" value="1" title="已结束">
+                <input id="Round" type="hidden" name="" value="">
+                <select id="Round_s" lay-verify="required" name="Round" lay-filter="myselect">
+                    <option value="">请选择</option>
+                </select>
             </div>
         </div>
 
@@ -83,36 +92,10 @@
     </form>
 </div>
 <script src="public/wangEditor.js"></script>
-<script src="https://cdn.bootcss.com/axios/0.18.0/axios.js"></script>
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="layui/layui.js"></script>
 <script>
-    var E = window.wangEditor
-    var editor = new E('#editor')
-    // 或者 var editor = new E( document.getElementById('editor') )
-    editor.customConfig.customUploadImg = function (files, insert) {
-        var formData = new FormData();
-        formData.append("file", files[0]);
-        $.ajax({
-            url: 'http://svcsa.org/uploadimage',
-            type: 'POST',
-            data: formData,
-            processData: false,
-            contentType: false,
-            success: function (data) {
-                insert('http://svcsa.org/uploads/' + JSON.parse(data).data.savename)
-            },
-            error: function (xhr) {
-                if (xhr.status == 401)
-							top.location.href = 'login.html';
-            }
-        });
-        // files 是 input 中选中的文件列表
-        // insert 是获取图片 url 后，插入到编辑器的方法
-        // 上传代码返回结果之后，将图片插入到编辑器中
-        // insert("http://www.pptok.com/wp-content/uploads/2012/08/xunguang-9.jpg")
-    }
-    editor.create();
     layui.use(['table', 'form', 'laydate'], function () {
         var table = layui.table;
         var form = layui.form;
@@ -124,17 +107,13 @@
         });
         form.on('submit(add)', function (data) {
             var index = parent.layer.getFrameIndex(window.name);
-            axios.post('http://svcsa.org/BBSeason/' + data.field.SeasonID + '/BBMatch', {
-
-
+            axios.post('../BBSeason/' + data.field.SeasonID + '/BBMatch', {
                 TeamAID: data.field.TeamID,
                 TeamBID: data.field.TeamID2,
                 State: data.field.State,
                 StartTime: data.field.StartTime,
-                SeasonID: data.field.SeasonID,
                 Court: data.field.Court,
-
-
+                Round: data.field.Round,
             })
                 .then(function (response) {
                     layer.msg('添加成功', {
@@ -148,69 +127,67 @@
                     console.log(error);
                 });
         });
-        axios.get('http://svcsa.org/BBSeason', {}).then(function (response) {
-            console.log(response);
+
+        // Populate Season Selectbox.
+        axios.get('../BBSeason', {}).then(function (response) {
             $.each(response.data.data, function (index, item) {
                 $('#SeasonID_s').append('<option value="' + item.SeasonID + '">' + item.SeasonName + '</option>');
             });
             form.render();
-            var num = $("#SeasonID").val();
-            var numbers = $("#SeasonID_s").find("option"); //获取select下拉框的所有值
-            console.log(numbers);
-            for (var j = 1; j < numbers.length; j++) {
-                console.log(numbers);
-                if ($(numbers[j]).val() == num) {
-                    console.log('ok');
-                    $(numbers[j]).attr("selected", "selected");
-                    $(numbers[j]).attr("class", "layui-this");
-                    form.render();
-                }
-            }
         })
+        .catch(function (error) {
+            console.log(error);
+        });
 
-        axios.get('http://svcsa.org/BBTeam', {}).then(function (response) {
-            console.log(response);
-            $.each(response.data.data, function (index, item) {
-                $('#TeamID_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
-            });
-            form.render();
-            var num = $("#TeamID").val();
-            var numbers = $("#TeamID_s").find("option"); //获取select下拉框的所有值
-            console.log(numbers);
-            for (var j = 1; j < numbers.length; j++) {
-                console.log(numbers);
-                if ($(numbers[j]).val() === num) {
-                    console.log('ok');
-                    $(numbers[j]).attr("selected", "selected");
-                    $(numbers[j]).attr("class", "layui-this");
-                    form.render();
-                }
-            }
-        })
+        // After season selected, populated teams and round selectboxes.
+        form.on('select(Season)', function (data) {
+           $('#SeasonID').attr("value", data.value);
 
-        axios.get('http://svcsa.org/BBTeam', {}).then(function (response) {
-            console.log(response);
-            $.each(response.data.data, function (index, item) {
-                $('#TeamID2_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
-            });
-            form.render();
-            var num = $("#TeamID2").val();
-            var numbers = $("#TeamID2_s").find("option"); //获取select下拉框的所有值
-            console.log(numbers);
-            for (var j = 1; j < numbers.length; j++) {
-                console.log(numbers);
-                if ($(numbers[j]).val() == num) {
-                    console.log('ok');
-                    $(numbers[j]).attr("selected", "selected");
-                    $(numbers[j]).attr("class", "layui-this");
-                    form.render();
-                }
-            }
-        })
+           // Popluate round selectbox.
+           var season_url = '../BBSeason/' + data.value;
+           axios.get(season_url, {}).then(function (response) {
+             $.each(response.data.data, function (index, item) {
+               if (item.SeasonID == data.value) {
+                 // Populate Round select box.
+                 if (item.PlayoffGroupNumber > 0) {
+                   var playoff_round_number = Math.log2(item.TeamNumber / item.PlayoffGroupNumber);
+                   $('#Round_s').append('<option value=0>常规赛</option>');
+                   for (var i = 1; i <= playoff_round_number; i++) {
+                     $('#Round_s').append('<option value=' + i + '>季后赛第' + i + '轮</option>');
+                   }
+                 } else {
+                   $('#Round_s').append('<option value=0>常规赛</option>');
+                 }
+                 form.render();
+               }
+             });
+           })
+           .catch(function (error) {
+               console.log(error);
+           });
 
-            .catch(function (error) {
-                console.log(error);
-            });
+           // Populate team selectboxes.
+           var team_url = '../bbteam?seasonid=' + data.value;
+           axios.get(team_url, {}).then(function (response) {
+             $.each(response.data.data, function (index, item) {
+               $('#TeamID_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+             });
+             form.render();
+           })
+           .catch(function (error) {
+               console.log(error);
+           });;
+
+           axios.get(team_url, {}).then(function (response) {
+             $.each(response.data.data, function (index, item) {
+               $('#TeamID2_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+             });
+             form.render();
+           })
+           .catch(function (error) {
+               console.log(error);
+           });
+        });
     });
 </script>
 

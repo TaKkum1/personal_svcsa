@@ -19,7 +19,7 @@
     </div>
 </div>
 
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="layui/layui.js"></script>
 <script>
     layui.use(['table', 'form'], function() {
@@ -27,7 +27,7 @@
         var form = layui.form;
         table.render({
             elem: '#test',
-            url: 'http://svcsa.org/BBPlayoff',
+            url: '../BBPlayoff',
             parseData: function(res) {
                 return {
                     "code": 0, //解析接口状态
@@ -138,7 +138,7 @@
                     btn: ['确认', '取消'] //按钮
                 }, function() {
                     $.ajax({
-                        url:'http://svcsa.org/BBPlayoff/' + data.ID,
+                        url:'../BBPlayoff/' + data.ID,
                         type : 'delete',
                         dataType : 'json',
                         header:{

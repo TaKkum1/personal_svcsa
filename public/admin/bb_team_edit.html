@@ -12,6 +12,7 @@
                     <label class="layui-form-label">队伍名称</label>
                     <div class="layui-input-inline">
                          <input id="ID" name="ID" type="hidden" value="">
+                         <input id="SeasonID" name="SeasonID" type="hidden" value="">
                        <input id="Name" type="text" name="Name" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
                     </div>
                 </div>
@@ -61,7 +62,7 @@
                <label class="layui-form-label">Logo</label>
                 <div class="layui-input-block">
                     <button type="button" class="layui-btn" id="test1">上传图片</button>
-                    <input  type="hidden" id="img_url1" name="LogoSrc" value="" />
+                    <input  type="hidden" id="LogoSrc" name="LogoSrc" value="" />
                     <div class="layui-upload-list">
                         <img class="layui-upload-img" width="100px" height="80px" id="demo1" />
                         <p id="demoText"></p>
@@ -72,7 +73,7 @@
                 <label class="layui-form-label">集体照</label>
                 <div class="layui-input-block">
                     <button type="button" class="layui-btn" id="test2">上传图片</button>
-                    <input type="hidden" id="img_url2" name="PhotoSrc" value="" />
+                    <input type="hidden" id="PhotoSrc" name="PhotoSrc" value="" />
                     <div class="layui-upload-list">
                         <img class="layui-upload-img" width="100px" height="80px" id="demo2" />
                         <p id="demoText"></p>
@@ -81,12 +82,6 @@
                      </div>
             </div>
 
-<!--             <div class="layui-form-item">
-                <label class="layui-form-label">积分</label>
-                <div class="layui-input-block">
-                    <input id="ScoreInBoard" type="text" name="ScoreInBoard" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
-                </div>
-            </div>-->
             <div class="layui-form-item">
                 <label class="layui-form-label">时间偏好</label>
                 <div class="layui-input-block">
@@ -96,36 +91,25 @@
                 </div>
             </div>
 
-<!--           <div class="layui-form-item">
-                <label class="layui-form-label">加入赛季</label>
+            <div class="layui-form-item">
+                <label class="layui-form-label">常规赛小组</label>
                 <div class="layui-input-block">
-                        <input type="radio" id="jt_project" name="Flag" value="0" title="申请中">
-                        <input type="radio" id="gr_project" name="Flag" value="1" title="通过申请">
-                </div>
-            </div>-->
-
-
-
-<!--         <div class="layui-form-item">
-                <label class="layui-form-label">赛季</label>
-                <div class="layui-input-block">
-                    <input id="SeasonID" type="hidden" name="" value="">
-                    <select id="SeasonID_s" lay-verify="required" name="SeasonID" lay-filter="myselect">
+                    <input id="GroupID" type="hidden" name="" value="">
+                    <select id="GroupID_s" name="GroupID" lay-filter="myselect">
                         <option value="">请选择</option>
                     </select>
                 </div>
-            </div>-->
+            </div>
 
             <div class="layui-form-item">
-                   <label class="layui-form-label">季后赛</label>
+                   <label class="layui-form-label">季后赛小组</label>
                    <div class="layui-input-block">
-                       <input id="PlayoffID" type="hidden" name="" value="">
-                       <select id="PlayoffID_s" name="PlayoffID" lay-filter="myselect">
+                       <input id="PlayoffGroupID" type="hidden" name="" value="">
+                       <select id="PlayoffGroupID_s" name="PlayoffGroupID" lay-filter="myselect">
                            <option value="">请选择</option>
                        </select>
                    </div>
-               </div>
-
+            </div>-->
 
             <div class="layui-form-item">
                 <label class="layui-form-label">简介</label>
@@ -142,8 +126,8 @@
             </div>
         </form>
     </div>
-    <script src="https://cdn.bootcss.com/axios/0.18.0/axios.js"></script>
-    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
     <script src="layui/layui.js"></script>
     <script>
         layui.use(['table', 'form', 'upload'], function() {
@@ -154,7 +138,7 @@
 
             var uploadInst = upload.render({
                 elem: '#test1',
-                url: 'http://svcsa.org/uploadimage',
+                url: '../uploadimage',
                 acceptMime: 'image/*',
                 multiple: true,
                 before: function(obj) {
@@ -171,7 +155,7 @@
                     //上传成功
                     console.log(res);
                     picture = res.data.savename;
-                    $("#img_url1").attr("value", picture)
+                    $("#LogoSrc").attr("value", picture)
                 },
                 error: function() {
                     //演示失败状态，并实现重传
@@ -185,7 +169,7 @@
 
               var uploadInst2 = upload.render({
                 elem: '#test2',
-                url: 'http://svcsa.org/uploadimage',
+                url: '../uploadimage',
                 acceptMime: 'image/*',
                 multiple: true,
                 before: function(obj) {
@@ -202,7 +186,7 @@
                     //上传成功
                     console.log(res);
                     picture = res.data.savename;
-                    $("#img_url2").attr("value", picture)
+                    $("#PhotoSrc").attr("value", picture)
                 },
                 error: function() {
                     //演示失败状态，并实现重传
@@ -215,7 +199,7 @@
             });
             form.on('submit(add)', function(data) {
                 var index = parent.layer.getFrameIndex(window.name);
-                axios.post('http://svcsa.org/BBTeam/' + data.field.ID ,{
+                axios.post('../BBTeam/' + data.field.ID ,{
                         Name: data.field.Name,
                         ShortName: data.field.ShortName,
                         Captain: data.field.Captain,
@@ -226,7 +210,8 @@
                         PhotoSrc: data.field.PhotoSrc,
                         Description: data.field.Description,
                         TimePreference: data.field.TimePreference,
-                        PlayoffID: data.field.PlayoffID,
+                        PlayoffGroupID: data.field.PlayoffGroupID,
+                        GroupID: data.field.GroupID,
                     })
                     .then(function(response) {
                         layer.msg('修改成功', {
@@ -240,47 +225,48 @@
                         console.log(error);
                     });
             });
-            axios.get('http://svcsa.org/BBSeason', {}).then(function(response) {
+            axios.get('../BBSeason', {}).then(function(response) {
                     console.log(response);
                     $.each(response.data.data, function(index, item) {
-                           $('#SeasonID_s').append('<option value="' + item.SeasonID + '">' + item.SeasonName + '</option>');
-                    });
-                    form.render();
-                    var num = $("#SeasonID").val();
-                    var numbers = $("#SeasonID_s").find("option"); //获取select下拉框的所有值
-                    console.log(numbers);
-                    for (var j = 1; j < numbers.length; j++) {
-                        console.log(numbers);
-                        if ($(numbers[j]).val() == num) {
-                            console.log('ok');
-                            $(numbers[j]).attr("selected", "selected");
-                            $(numbers[j]).attr("class", "layui-this");
-                            form.render();
-                        }
-                    }
-                })
-
-                axios.get('http://svcsa.org/BBPlayoff', {}).then(function(response) {
-                        console.log(response);
-                        console.log($("#SeasonID").val());
-                        $.each(response.data.data, function(index, item) {
-                           $('#PlayoffID_s').append('<option value="' + item.ID + '">' + item.SeasonID + ':' + item.Title + '</option>');
-                        });
-                        form.render();
-                        var num = $("#PlayoffID").val();
-                        var numbers = $("#PlayoffID_s").find("option"); //获取select下拉框的所有值
-                        console.log(numbers);
-                        for (var j = 1; j < numbers.length; j++) {
-                            console.log(numbers);
-                            if ($(numbers[j]).val() == num) {
-                                console.log('ok');
-                                $(numbers[j]).attr("selected", "selected");
-                                $(numbers[j]).attr("class", "layui-this");
-                                form.render();
+                        if (item.SeasonID == $("#SeasonID").val()) {
+                          console.log(item);
+                          // Populate GroupID select box values.
+                          for (var i = 1; i <= item.GroupNumber; i++) {
+                             $('#GroupID_s').append('<option value=' + i + '>' + '第' + i + '小组' + '</option>');
+                          }
+                          form.render();
+                          // Select GroupID.
+                          var selected_group = $("#GroupID").val();
+                          var groups = $("#GroupID_s").find("option"); // get all the elements of the select box.
+                          console.log(groups);
+                          for (var i = 1; i < groups.length; i++) {
+                            if ($(groups[i]).val() == selected_group) {
+                              console.log('populating group id.');
+                              $(groups[i]).attr("selected", "selected");
+                              $(groups[i]).attr("class", "layui-this");
+                              form.render();
                             }
-                        }
-                    })
-
+                          }
+                          // Populate PlayoffGroupID select box values.
+                          for (var i = 1; i <= item.PlayoffGroupNumber; i++) {
+                             $('#PlayoffGroupID_s').append('<option value=' + i + '>季后赛第' + i + '小组' + '</option>');
+                          }
+                          form.render();
+                          // Select playoffID.
+                          var selected_playoff_group = $("#PlayoffGroupID").val();
+                          var playoff_groups = $("#PlayoffGroupID_s").find("option"); // get all the elements of the select box.
+                          console.log(playoff_groups);
+                          for (var i = 1; i < playoff_groups.length; i++) {
+                            if ($(playoff_groups[i]).val() == selected_playoff_group) {
+                              console.log('populating playoff group id.');
+                              $(playoff_groups[i]).attr("selected", "selected");
+                              $(playoff_groups[i]).attr("class", "layui-this");
+                              form.render();
+                            }
+                          }
+                      }
+                    });
+                })
                 .catch(function(error) {
                     console.log(error);
                 });

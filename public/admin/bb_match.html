@@ -10,7 +10,8 @@
             </div>
             <div class="layui-input-inline">
                 <form class="layui-form" action="">
-                    <select id="Season" name="city" lay-verify="" lay-filter="Season">
+                    <input id="SeasonID" type="hidden" name="" value="">
+                    <select id="Season" name="season" lay-verify="" lay-filter="Season">
                         <option value="">选择赛季</option>
                     </select>
                 </form>
@@ -44,8 +45,8 @@
         </div>
     </div>
 </div>
-<script src="https://cdn.bootcss.com/axios/0.18.0/axios.js"></script>
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="layui/layui.js"></script>
 <script>
     layui.use(['table', 'form'], function () {
@@ -53,7 +54,7 @@
         var form = layui.form;
         table.render({
             elem: '#test',
-            url: 'http://svcsa.org/BBMatch?SeasonID={SeasonID}',
+            url: '../BBMatch?SeasonID={SeasonID}',
             parseData: function (res) {
                 return {
                     "code": 0, //解析接口状态
@@ -107,30 +108,27 @@
                     title: '比赛场地',
                     width: 90,
                 },
-                    //     {
-                    //     field: 'Report',
-                    //     title: '战报',
-                    //     width: 150,
-                    // },
-                    //     {
-                    //     field: 'VideoSrc',
-                    //     title: '视频链接',
-                    //     width: 150,
-                    // },
-                    {
-                        field: 'SeasonName',
-                        title: '赛季',
-                        width: 200,
-                    }, {
+                {
+                    field: 'Round',
+                    title: '比赛轮次',
+                    width: 90,
+                },
+                {
+                    field: 'SeasonName',
+                    title: '赛季',
+                    width: 200,
+                },
+                {
                     title: '查看比赛图片',
                     width: 120,
                     toolbar: '#BBPicture'
                 },
-                    {
-                        title: '查看技术统计',
-                        width: 120,
-                        toolbar: '#BBStatistics'
-                    }, {
+                {
+                    title: '查看技术统计',
+                    width: 120,
+                    toolbar: '#BBStatistics'
+                },
+                {
                     title: '操作',
                     width: 120,
                     toolbar: '#barDemo'
@@ -181,7 +179,7 @@
             if (layEvent === 'edit') { //查看
                 console.log(obj.data);
                 var index = layer.open({
-                    title : "新建篮球比赛",
+                    title : "修改篮球比赛",
                     type : 2,
                     shade: 0.8,
                     area: ['100%', '100%'],
@@ -189,22 +187,25 @@
                     success: function (layero, index) {
                         //layer.iframeAuto(index);
                         var body = layer.getChildFrame('body', index);
-                        var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
-                        iframeWin.create_edi(data.Report)
+                        //var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                        body.find('#SeasonID').attr("value", data.SeasonID)
+                        body.find('#StartTime').val(data.StartTime)
                         body.find('#TeamID').attr("value", data.TeamAID)
                         body.find('#TeamID2').attr("value", data.TeamBID)
-                        body.find('#SeasonID').attr("value", data.SeasonID)
-                        body.find('#TeamBID').val(data.TeamBID)
-                        body.find('#ScoreTeamA').val(data.ScoreTeamA)
-                        body.find('#ScoreTeamB').val(data.ScoreTeamB)
-//                        单选框没传过去值
-                        body.find('#State').val(data.State)
+                        if (data.Court == "1号场") {
+                          body.find('#Court1').attr("checked", "true")
+                        } else if (data.Court == "2号场") {
+                          body.find('#Court2').attr("checked", "true")
+                        }
+                        if (data.State == -1) {
+                          body.find('#not_started').attr("checked", "true")
+                        } else if (data.State == 0) {
+                          body.find('#in_progress').attr("checked", "true")
+                        } else if (data.State == 1) {
+                          body.find('#completed').attr("checked", "true")
+                        }
+                        body.find('#Round').attr("value", data.Round)
 
-                        body.find('#StartTime').val(data.StartTime)
-                        // body.find('#Report').val(data.Report)
-                        body.find('#VideoSrc').val(data.VideoSrc)
-                        body.find('#SeasonID').val(data.SeasonID)
-                        //  body.find('#MatchID').val(data.MatchID)
                         setTimeout(function(){
                             layer.tips('点击此处返回用户列表', '.layui-layer-setwin .layui-layer-close', {
                                 tips: 3
@@ -227,7 +228,7 @@
                     btn: ['确认', '取消'] //按钮
                 }, function () {
                     $.ajax({
-                        url: 'http://svcsa.org/BBMatch/' + data.MatchID,
+                        url: '../BBMatch/' + data.MatchID,
                         type: 'delete',
                         dataType: 'json',
                         header: {
@@ -284,7 +285,7 @@
                 });
             }
         });
-        axios.get('http://svcsa.org/BBSeason', {}).then(function (response) {
+        axios.get('../BBSeason', {}).then(function (response) {
             console.log(response);
             $.each(response.data.data, function (index, item) {
                 $('#Season').append('<option value="' + item.SeasonID + '">' + item.SeasonName + '</option>');
@@ -298,13 +299,13 @@
 
 //            需要修改路径
         form.on('select(Season)', function (data) {
-
+           $('#SeasonID').attr("value", data.value);
             table.reload('test', {
                 // where: { //设定异步数据接口的额外参数，任意设
                 //     // SeasonID: data.value,
                 //     url: '../bbseason/' + data.value + '/bbplayer',
                 // },
-                url: 'http://svcsa.org/bbmatch?seasonid='+data.value,
+                url: '../bbmatch?seasonid='+data.value,
                 parseData: function (res) {
                     console.log(res)
                     return {
@@ -349,21 +350,17 @@
                         title: '比赛状态',
                         width: 90,
                         toolbar: '#orderListBar'
-                    }, {
+                    },
+                    {
+                        field: 'Round',
+                        title: '比赛轮次',
+                        width: 90,
+                    },
+                    {
                         field: 'StartTime',
                         title: '比赛时间',
                         width: 170,
                     },
-                        //     {
-                        //     field: 'Report',
-                        //     title: '战报',
-                        //     width: 150,
-                        // },
-                        //     {
-                        //     field: 'VideoSrc',
-                        //     title: '视频链接',
-                        //     width: 150,
-                        // },
                         {
                             field: 'SeasonName',
                             title: '赛季',

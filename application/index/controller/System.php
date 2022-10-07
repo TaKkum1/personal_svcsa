@@ -44,7 +44,7 @@ class System extends Base
 
         foreach($files as $file){
             // 移动到框架应用根目录/uploads/ 目录下
-            $info = $file->validate(['ext'=>'jpg,png,gif'])->move( __DIR__ . $assetUrl);
+            $info = $file->validate(['ext'=>'jpg,png,gif,jpeg'])->move( __DIR__ . $assetUrl);
             if($info){
                 // 成功上传后 获取上传信息
                 // 输出 jpg
@@ -52,7 +52,7 @@ class System extends Base
                 // 输出 42a79759f284b767dfcb2a0197904287.jpg
                 $filename = $info->getFilename();
 
-                $savename = $info->getSaveName();
+                $savename = $info->getFileName();
 
                 array_push($resultarr,['savename'=>
                     str_replace('\\','/',$savename)]);
@@ -72,7 +72,7 @@ class System extends Base
         $file = request()->file('file');
 
         $assetUrl = getAssetUploadUrl();
-        $info = $file->validate(['ext'=>'jpg,png,gif'])->move( __DIR__ . $assetUrl);
+        $info = $file->validate(['ext'=>'jpg,png,gif,jpeg'])->move( __DIR__ . $assetUrl);
         if($info){
             // 成功上传后 获取上传信息
             // 输出 jpg
@@ -86,9 +86,8 @@ class System extends Base
 
 
         }else{
-
             $this->dataResult(['savename'=>null]);
-            // 上传失败获取错误信息
+            //上传失败获取错误信息
 
         }
 

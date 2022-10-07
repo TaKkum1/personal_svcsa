@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" href="{$Think.config.public_assets}/css/animate.min.css">
     <link rel="stylesheet" type="text/css" href="{$Think.config.public_assets}/css/swiper.min.css">
     <link rel="stylesheet" type="text/css" href="{$Think.config.public_assets}/css/main.min.css">
+    <link rel="stylesheet" type="text/css" href="{$Think.config.public_assets}/css/bracket.css">
 
     <script type="text/javascript" src="{$Think.config.public_assets}/js/jquery-2.2.4.min.js"></script>
 </head>
@@ -49,12 +50,6 @@
                         <span class="bg"></span>
                     </a>
                 </li>
-                <li{if condition="$nav eq 'news'"} class="on"{/if}>
-                    <a href="{$Think.config.public_assets}/news">
-                        <span>新闻</span>
-                        <span class="bg"></span>
-                    </a>
-                </li>
                 <!--
                 <li{if condition="$nav eq 'competition'"} class="on"{/if}>
                     <a href="#">
@@ -72,13 +67,25 @@
               -->
                 <li{if condition="$nav eq 'competition1'"} class="on"{/if}>
                     <a href="{$Think.config.public_assets}/bbcompetition/1">
-                        <span>男篮</span>
+                        <span>男篮公开组</span>
                         <span class="bg"></span>
                     </a>
                 </li>
                 <li{if condition="$nav eq 'competition2'"} class="on"{/if}>
                     <a href="{$Think.config.public_assets}/bbcompetition/2">
-                        <span>女篮</span>
+                        <span>女篮公开组</span>
+                        <span class="bg"></span>
+                    </a>
+                </li>
+                <li{if condition="$nav eq 'competition4'"} class="on"{/if}>
+                    <a href="{$Think.config.public_assets}/bbcompetition/4">
+                        <span>男篮壮年组</span>
+                        <span class="bg"></span>
+                    </a>
+                </li>
+                <li{if condition="$nav eq 'news'"} class="on"{/if}>
+                    <a href="{$Think.config.public_assets}/news">
+                        <span>新闻</span>
                         <span class="bg"></span>
                     </a>
                 </li>

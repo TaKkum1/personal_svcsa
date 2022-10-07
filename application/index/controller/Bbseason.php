@@ -16,7 +16,7 @@ use think\Db\Expression;
 
 class Bbseason extends Base
 {
-    const FIELD = 'Name,StartTime,TeamNumber,Rules,CompetitionID';
+    const FIELD = 'Name,StartTime,TeamNumber,GroupNumber,PlayoffGroupNumber,Rules,CompetitionID';
 
     /*
     public function add()
@@ -93,7 +93,8 @@ class Bbseason extends Base
                 ->order('StartTime','desc')->select();
             $this->view->assign('matches',$matches);
             $otherseasons = array_slice($result,1);
-            $this->view->assign('otherseasons',$otherseasons);
+            $this->view->assign('otherseasons', $otherseasons);
+            $this->view->assign('competitionid', $competitionid);
             return $this->view->fetch('bbseason/read');
         }
 
@@ -131,7 +132,8 @@ class Bbseason extends Base
 
         $this->view->assign('matches',$matches);
         $otherseasons = array_slice($result,1);
-        $this->view->assign('otherseasons',$otherseasons);
+        $this->view->assign('otherseasons', $otherseasons);
+        $this->view->assign('competitionid', $competitionid);
         return $this->view->fetch('bbseason/read');
 
 
