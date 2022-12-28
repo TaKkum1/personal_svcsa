@@ -55,8 +55,8 @@
                 var index = parent.layer.getFrameIndex(window.name);
                 axios.post('../ctfcevent/' + $('input[name="ID"]').val(), {
                     Name: $('input[name="Name"]').val(),
-                    IsSingle: $('input[name="IsSingle"]').val(),
-                    IsTrack: $('input[name="IsTrack"]').val(),
+                    IsSingle: data.field.IsSingle,
+                    IsTrack: data.field.IsTrack,
                     HeatSize: $('input[name="HeatSize"]').val(),
                 })
                     .then(function (response) {

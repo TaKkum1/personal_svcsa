@@ -14,19 +14,19 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">项目类型</label>
                 <div class="layui-input-block">
-                        <input type="radio" id="jt_project" name="IsSingle" value="0" title="集体项目" checked>
-                        <input type="radio" id="gr_project" name="IsSingle" value="1" title="个人项目">
+                        <input type="radio" name="IsSingle" value="0" title="集体项目" checked>
+                        <input type="radio" name="IsSingle" value="1" title="个人项目">
                 </div>
             </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">田径类型</label>
                 <div class="layui-input-block">
-                        <input type="radio" id="track_project" name="IsTrack" value="0" title="径赛项目" checked>
-                        <input type="radio" id="field_project" name="IsTrack" value="1" title="田赛项目">
+                        <input type="radio" name="IsTrack" value="0" title="径赛项目" checked>
+                        <input type="radio" name="IsTrack" value="1" title="田赛项目">
                 </div>
             </div>
             <div class="layui-form-item">
-                <label class="layui-form-label">HEATSIZE</label>
+                <label class="layui-form-label">小组人数</label>
                 <div class="layui-input-block">
                     <input type="text" id="HeatSize" name="HeatSize" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
                 </div>
@@ -55,8 +55,8 @@
                 var index = parent.layer.getFrameIndex(window.name);
                 axios.post('../ctfcevent/', {
                         Name: $('input[name="Name"]').val(),
-                        IsSingle: $('input[name="IsSingle"]').val(),
-                        IsTrack: $('input[name="IsTrack"]').val(),
+                        IsSingle: data.field.IsSingle,
+                        IsTrack: data.field.IsTrack,
                         HeatSize: $('input[name="HeatSize"]').val(),
 
                 })
