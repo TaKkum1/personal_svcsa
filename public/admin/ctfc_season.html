@@ -5,7 +5,7 @@
         <div class="layui-tab-content">
             <div class="layui-input-inline" style="">
                 <div class="layui-input-inline">
-                    <button id="add" class="layui-btn layui-btn-normal">新建田径赛会</button>
+                    <button id="add" class="layui-btn layui-btn-normal">新建田径赛季</button>
                 </div>
             </div>
             <table class="layui-hide" id="test" lay-filter="test"></table>
@@ -19,16 +19,17 @@
     </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="layui/layui.js"></script>
 <script>
-    layui.use(['table', 'form'], function() {
+    layui.use(['table', 'form'], function () {
         var table = layui.table;
         var form = layui.form;
         table.render({
             elem: '#test',
-            url: 'http://svcsa.org/CTFCSeason',
-            parseData: function(res) {
+            url: '../CTFCSeason',
+            parseData: function (res) {
                 return {
                     "code": 0, //解析接口状态
                     "msg": '', //解析提示文本
@@ -41,7 +42,6 @@
                 pageName: 'page' //页码的参数名称，默认：page
                 ,limitName: 'pagesize' //每页数据量的参数名，默认：limit
             },
-			contentType: 'application/json',
             title: '用户数据表',
             cols: [
                 [{
@@ -53,11 +53,16 @@
                     sort: true,
                 }, {
                     field: 'Name',
-                    title: '赛会名称',
+                    title: '赛季名称',
                     width: 200,
                 }, {
-                    field: 'StartTime',
+                    field: 'Date',
                     title: '赛会开始时间',
+                    sort: true,
+                    width: 200,
+                }, {
+                    field: 'Venue',
+                    title: '赛季地点',
                     sort: true,
                     width: 200,
                 }, {
@@ -76,77 +81,86 @@
 
             }
         });
-        $("#add").click(function() {
-            layer.open({
+        $("#add").click(function () {
+            var index=layer.open({
                 type: 2,
-                title: '添加田径赛事',
+                title: '添加田径赛季',
                 shadeClose: true,
-                area: ['42%', '70%'],
+                shade: 0.8,
+                offset: '0px',
+                area: ['100%', '100%'],
                 content: 'ctfc_season_add.html',
-                success: function(layero, index) {
-                    layer.iframeAuto(index);
+                success: function (layero, index) {
                 },
-                end: function() {
+                end: function () {
                     location.reload();
                 }
             });
+            layer.full(index);
+            window.sessionStorage.setItem("ctfc_season_index", index);
+            //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+            $(window).on("resize", function () {
+                layer.full(window.sessionStorage.getItem("ctfc_season_index"));
+            })
         })
-        table.on('tool(test)', function(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+        table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
             var data = obj.data; //获得当前行数据
             var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
             var tr = obj.tr; //获得当前行 tr 的DOM对象
+            console.log(data.ID);
 
             if (layEvent === 'edit') { //查看
                 console.log(obj.data);
-                var title="添加田径赛事"
+                
                 if(obj.data.ID!=null){
                     title='修改田径赛事'
                 }
-                layer.open({
+
+                var index = layer.open({
                     type: 2,
-                    title: title,
+                    title: '修改田径赛事',
                     shadeClose: true,
-                    area: ['42%', '60%'],
-                    content: 'ctfc_season_add.html',
+                    shade: 0.8,
+                    offset: '0px',
+                    area: ['100%', '100%'],
+                    content: 'ctfc_season_edit.html',
                     success: function(layero, index) {
                         layer.iframeAuto(index);
                         var body = layer.getChildFrame('body', index);
                         body.find('#Name').val(obj.data.Name)
-                        body.find('#StartTime').val(obj.data.StartTime)
+                        body.find('#Date').val(obj.data.Date)
                         body.find('#ID').val(obj.data.ID)
                     },
-                    end: function() {
+                    end: function () {
                         location.reload();
                     }
                 });
+                layer.full(index);
+                window.sessionStorage.setItem("ctfc_season_index", index);
+                //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+                $(window).on("resize", function () {
+                    layer.full(window.sessionStorage.getItem("ctfc_season_index"));
+                })
             } else if (layEvent === 'del') {
                 layer.confirm('确认删除', {
-                    btn: ['确认', '取消'] //按钮
-                }, function() {
-                    $.ajax({
-                        url:'http://svcsa.org/CTFCSeason/' + data.ID,
-                        //url:"http://svcsa.org/bbcompetition",
-                        type : 'delete',
-                        dataType : 'json',
-                        header:{
-                            Accept:'application/json'
-                        },
-                        success:function(data){
-                            layer.msg('删除成功', {
-                                        icon: 1,
-                                        time: 1200
-                                    }, function() {
-                                        location.reload();
-                                    });
-                        },
-                        error:function(xhr){
-                            if (xhr.status == 401)
-							top.location.href = 'login.html';
-                        }
+                    btn: ['确认', '取消'],
+                    offset: ['100px']//按钮
+                }, function () {
+                    axios.delete('../CTFCSeason/' + data.ID, {})
+                        .then(function (response) {
+                            console.log(response);
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                    layer.msg('删除成功', {
+                        icon: 1,
+                        time: 1200
+                    }, function () {
+                        location.reload();
                     });
-
-
-                }, function() {});
+                }, function () {
+                });
             }
         });
     });
