@@ -15,7 +15,7 @@ use think\Session;
 
 class Ctfcevent extends Base
 {
-    const FIELD = 'Name,Individual';
+    const FIELD = 'Name,IsSingle,IsTrack,HeatSize';
 
     public function add()
     {
@@ -23,48 +23,49 @@ class Ctfcevent extends Base
 
         $data = request()->only(self::FIELD, 'post');
         $this->makeNull($data);
-        $validator = validate('Ctfc_event');
-        $result = $validator->check($data);
-        if (!$result){
-            $this->affectedRowsResult(0);
-        }
-        $result = Db::name('ctfc_event')->insert($data);
+        // $validator = validate('ctfc_item');
+        // $result = $validator->check($data);
+        // if (!$result){
+        //     $this->affectedRowsResult(0);
+        // }
+        $result = Db::name('ctfc_item')->insert($data);
         $this->affectedRowsResult($result);
     }
 
     public function delete($id){
         $this->checkauthorization();
 
-        $result = Db::name('ctfc_event')->where('ID', $id)->delete();
+        $result = Db::name('ctfc_item')->where('ID', $id)->delete();
         $this->affectedRowsResult($result);
     }
 
     public function read($id){
-        $result = Db::name('ctfc_event')->where('ID', $id)->find();
+        $result = Db::name('ctfc_item')->where('ID', $id)->find();
         $this->dataResult($result);
     }
 
     public function lists(){
-        $list = Db::name('ctfc_event')->paginate(input('pagesize'));
+        $pagesize = input('pagesize');
+        $list = Db::name('ctfc_item')->paginate($pagesize);
         $this->paginatedResult(
             $list->total(),
             $list->listRows(),
             $list->currentPage(),
             $list->items()
-        );
-    }
+          );
+      }
 
     public function update($id){
         $this->checkauthorization();
 
         $data = request()->only(self::FIELD, 'post');
         $this->makeNull($data);
-//        $validator = validate('Ctfc_event');
+//        $validator = validate('ctfc_item');
 //        $result = $validator->check($data);
 //        if (!$result){
 //            $this->result(0);
 //        }
-        $result = Db::name('ctfc_event')->where('ID', $id)->update($data);
+        $result = Db::name('ctfc_item')->where('ID', $id)->update($data);
         $this->affectedRowsResult($result);
     }
 }
