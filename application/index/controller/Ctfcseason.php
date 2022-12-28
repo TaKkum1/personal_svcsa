@@ -17,7 +17,7 @@ use think\Db\Expression;
 
 class Ctfcseason extends Base
 {
-    const FIELD = 'Name,Date,Venue';
+    const FIELD = 'Name,StartTime';
 
     public function add()
     {
@@ -25,11 +25,11 @@ class Ctfcseason extends Base
 
         $data = request()->only(self::FIELD, 'post');
         $this->makeNull($data);
-        // $validator = validate('Ctfc_season');
-        // $result = $validator->check($data);
-        // if (!$result){
-        //     $this->affectedRowsResult(0);
-        // }
+        $validator = validate('Ctfc_season');
+        $result = $validator->check($data);
+        if (!$result){
+            $this->affectedRowsResult(0);
+        }
         $result = Db::name('ctfc_season')->insert($data);
         $this->affectedRowsResult($result);
     }
