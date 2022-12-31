@@ -72,6 +72,12 @@
 					"icon": "icon-text",
 					"href": "ctfc_player.html",
 					"spread": false
+				},
+				{
+					"title": "田径运动队",
+					"icon": "icon-text",
+					"href": "ctfc_team.html",
+					"spread": false
 				}
 			]
 		}
