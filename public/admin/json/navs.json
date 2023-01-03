@@ -50,7 +50,7 @@
 			"spread": false,
 			"children": [
 				{
-					"title": "田径赛会",
+					"title": "田径赛季",
 					"icon": "icon-text",
 					"href": "ctfc_season.html",
 					"spread": false

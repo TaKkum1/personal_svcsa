@@ -25,7 +25,7 @@
             </div>
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即添加</button>
+                    <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即修改</button>
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                 </div>
             </div>
@@ -53,13 +53,13 @@
         form.on('submit(add)', function (data) {
             var index = parent.layer.getFrameIndex(window.name);
 
-            axios.post('../CTFCSeason/', {
+            axios.post('../CTFCSeason/' + $('input[name="ID"]').val(), {
                 Name: $('input[name="Name"]').val(),
                 Date: $('input[name="Date"]').val(),
                 Venue: $('input[name="Venue"]').val(),
             })
                 .then(function (response) {
-                    layer.msg('添加成功', {
+                    layer.msg('修改成功', {
                         icon: 1,
                         time: 1500
                     }, function () {
