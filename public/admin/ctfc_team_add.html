@@ -1,215 +1,227 @@
 <link rel="stylesheet" href="layui/css/layui.css">
 
-<body class="layui-layout-body">
+<body class="childrenBody">
 
 <div style="padding: 15px;">
     <form class="layui-form" action="">
+
         <div class="layui-form-item">
             <div class="layui-inline">
-                <label class="layui-form-label">运动队名称</label>
-                <div class="layui-input-block">
-                          <input id="ID" name="ID" type="hidden" value="">
-                    <input id="Name" type="text" name="Name" lay-verify="required" autocomplete="off" placeholder="请输入"
+                <label class="layui-form-label">队伍名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="Name" lay-verify="required" autocomplete="off" placeholder="请输入"
                            class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
-                <label class="layui-form-label">运动队简称</label>
+                <label class="layui-form-label">短队名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="ShortName" lay-verify="required" autocomplete="off" placeholder="请输入"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-block">
+                <label class="layui-form-label">队伍简介</label>
                 <div class="layui-input-block">
-                    <input id="ShortName" type="text" name="ShortName" lay-verify="required" autocomplete="on"
+                    <input id="Description" type="text" name="Description" lay-verify="required" autocomplete="on"
                            placeholder="请输入" class="layui-input">
                 </div>
             </div>
-       
-
-            <div class="layui-inline">
-                <label class="layui-form-label">运动队简介</label>
-                <div class="layui-input-block">
-                    <input id="Description" type="text" name="description" lay-verify="required" autocomplete="on"
-                           placeholder="请输入" class="layui-input">
-                </div>
-            </div>
+    
         </div>
-
+       <div >
         <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">队长姓名</label>
-                <div class="layui-input-block">
-                    <input id="CaptainName" type="text" name="CaptainName" lay-verify="required" autocomplete="on"
-                           placeholder="请输入" class="layui-input">
-                </div>
+            <label class="layui-form-label">队长名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="CaptainName" autocomplete="off" placeholder="请输入" class="layui-input">
             </div>
-            
-            <div class="layui-inline">
-                <label class="layui-form-label">队长email</label>
-                <div class="layui-input-block">
-                    <input id="CaptainEmail" type="text" name="email" lay-verify="required" autocomplete="on"
-                           placeholder="请输入" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-inline">
-                <label class="layui-form-label">队长电话</label>
-                <div class="layui-input-block">
-                    <input id="CaptainPhone" type="text" name="CaptainPhone" lay-verify="required" autocomplete="on"
-                           placeholder="请输入" class="layui-input">
-                </div>
         </div>
-        
+
+
+        <div class="layui-inline">
+            <label class="layui-form-label">队长-电子邮件</label>
+            <div class="layui-input-inline">
+                <input type="text" name="CaptainEmail" autocomplete="off" placeholder="请输入"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">队长手机</label>
+            <div class="layui-input-inline">
+                <input type="text" name="CaptainPhone" autocomplete="off" placeholder="请输入"
+                       class="layui-input">
+            </div>
+        </div>
+    </div>
+
+
+
         <div class="layui-form-item">
             <div class="layui-inline">
                 <label class="layui-form-label">Logo</label>
                 <div class="layui-input-block">
-                    <button type="button" class="layui-btn" id="test1">上传 logo</button>
-                    <input type="hidden" id="LogoSrc" name="LogoSrc" value=""/>
+                    <button type="button" class="layui-btn" id="test1">上传图片</button>
+                    <input type="hidden" id="img_url" name="LogoSrc" value=""/>
                     <div class="layui-upload-list">
                         <img class="layui-upload-img" width="100px" height="80px" id="demo1"/>
                         <p id="demoText"></p>
                     </div>
                 </div>
             </div>
-        
-            <!-- <div class="layui-inline">
-                <label class="layui-form-label">运动队图片</label>
+            <div class="layui-inline">
+                <label class="layui-form-label">集体照</label>
                 <div class="layui-input-block">
                     <button type="button" class="layui-btn" id="test2">上传图片</button>
-                    <input type="hidden" id="PhotoSrc" name="PhotoSrc" value=""/>
+                    <input type="hidden" id="img_url2" name="PhotoSrc" value=""/>
                     <div class="layui-upload-list">
-                        <img class="layui-upload-img" width="100px" height="80px" id="demo1"/>
-                        <p id="demoText"></p>
+                        <img class="layui-upload-img" width="100px" height="80px" id="demo2"/>
+                        <!--<p id="demoText"></p>-->
                     </div>
-                </div>
-            </div> -->
-
-            <div class="layui-form-item">
-                <div class="layui-input-block">
-                    <button class="layui-btn" type="button" lay-submit="" lay-filter="add" id="commit">立即添加</button>
-                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                 </div>
             </div>
         </div>
-    </form>
+       
+ 
 
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即添加</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="layui/layui.js"></script>
 <script>
-
     layui.use(['table', 'form', 'upload'], function () {
         var table = layui.table;
         var form = layui.form;
         var $ = layui.jquery;
         var upload = layui.upload;
-        var apiurl = '../ctfcteam/' + $('input[name="ID"]').val();
-       
+
         var uploadInst = upload.render({
             elem: '#test1',
-            url: apiurl,
+            url: '../uploadimage',
             acceptMime: 'image/*',
-            auto:false,
-            bindAction:'',
-            multiple: false,
+            multiple: true,
             before: function (obj) {
-
-                this.data = {
-                    Name: $('input[name="Name"]').val(),
-                    ShortName: $('input[name="ShortName"]').val(),
-                    Description: $('input[name="description"]').val(),
-                    // CaptainName:$('input[name="CaptainName"]').val(),
-                    CaptainName: data.field.CaptainName,
-                    CaptainEmail:$('input[name="email"]').val(),
-                    CaptainPhone:$('input[name="CaptainPhone"]').val(),
-                    // LogoSrc: $("#img_url").val(),
-                    LogoSrc: $('input[name="LogoSrc"]').val(),
-                    // PhotoSrc: $("#img_url").val(),
-                    PhotoSrc: $('input[name="PhotoSrc"]').val(),
-                }
-                console.log(data)
-
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
             },
-            //选择文件后的回调
-            // choose: function (obj) {
-            //     $("input[name=\"PhotoSrc\"]").attr("value", "");
-            //     obj.preview(function (index, file, result) {
-            //         $('#demo1').attr('src', result); //图片链接（base64）
-            //     })
-            // },
             done: function (res) {
-                var index = parent.layer.getFrameIndex(window.name);
-
                 //如果上传失败
-                if (res.status == '0') {
-                    return layer.msg('上传图片失败，请检查网络。');
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
                 }
                 //上传成功
                 console.log(res);
-                //            picture = res.data.savename;
-                //            $("#img_url").attr("value", picture)
-                layer.msg('添加成功', {
-                    icon: 1,
-                    time: 1500
-                }, function () {
-
-                    parent.layer.close(index);
-                });
+                picture = res.data.savename;
+                $("#img_url").attr("value", picture)
             },
-            error: function (index,upload) {
-
-                return layer.msg('网络异常，更新失败。可能需要重新登录。');
+            error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText1');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
             }
-            
-        
         });
 
-        
-
-
-        form.verify({
-            // chkbirth: [/^\d{1,4}-\d{1,2}-\d{1,2}$/, '生日必须是YYYY-MM-dd格式！'],
-            chkphotoupl: function(value) {
-                if(value=="") {
-                    alert('图片上传较慢请等待10秒后，再点击添加按钮。');
-                    return '图片上传较慢请等待10秒后，再尝试。';
+        var uploadInst2 = upload.render({
+            elem: '#test2',
+            url: '../uploadimage',
+            acceptMime: 'image/*',
+            multiple: true,
+            before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#demo2').attr('src', result); //图片链接（base64）
+                });
+            },
+            done: function (res) {
+                //如果上传失败
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
                 }
+                //上传成功
+                console.log(res);
+                picture = res.data.savename;
+                $("#img_url2").attr("value", picture)
+            },
+            error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText2');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst2.upload();
+                });
             }
         });
 
         form.on('submit(add)', function (data) {
-            // if ($('input[name="file"]').val()!="") {
-            //     uploadInst.upload();
-            //     return;
-            // }
-
-            if(!form.verify()) return;
-
             var index = parent.layer.getFrameIndex(window.name);
-            axios.post('../ctfcteam/', {
-                Name: $('input[name="Name"]').val(),
-                ShortName: $('input[name="ShortName"]').val(),
-                Description: $('input[name="description"]').val(),
-                CaptainName:$('input[name="CaptainName"]').val(),
-                // CaptainName: data.field.CaptainName,
-                CaptainEmail:$('input[name="email"]').val(),
-                CaptainPhone:$('input[name="CaptainPhone"]').val(),
-                // LogoSrc: $("#img_url").val(),
-                LogoSrc: $('input[name="LogoSrc"]').val(),
-                // PhotoSrc: $("#img_url").val(),
-                PhotoSrc: $('input[name="PhotoSrc"]').val()
-
-            })
-                .then(function (response) {
-                    layer.msg('添加成功', {
+            $.ajax({
+                url: '../ctfcteam/',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    Name: data.field.Name,
+                    ShortName: data.field.ShortName,
+                    Description: data.field.Description,
+                    CaptainName: data.field.CaptainName,
+                    CaptainEmail: data.field.CaptainEmail,
+                    CaptainPhone: data.field.CaptainPhone,
+                    LogoSrc: $("#img_url").val(),
+                    PhotoSrc: $("#img_url2").val(),
+                },
+                header: {
+                    Accept: 'application/json'
+                },
+                success: function (data) {
+                    layer.msg('新建成功', {
                         icon: 1,
                         time: 1500
                     }, function () {
                         parent.layer.close(index);
                     });
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
+                },
+                error: function (xhr) {
+                    if (xhr.status == 401)
+							top.location.href = 'login.html';
+                }
+            });
+
         });
-        
+        // axios.get('../BBSeason', {}).then(function (response) {
+        //     console.log(response);
+        //     $.each(response.data.data, function (index, item) {
+        //         $('#SeasonID_s').append('<option value="' + item.SeasonID + '">' + item.SeasonName + '</option>');
+        //     });
+        //     form.render();
+        //     var num = $("#SeasonID").val();
+        //     var numbers = $("#SeasonID_s").find("option"); //获取select下拉框的所有值
+        //     console.log(numbers);
+        //     for (var j = 1; j < numbers.length; j++) {
+        //         console.log(numbers);
+        //         if ($(numbers[j]).val() == num) {
+        //             console.log('ok');
+        //             $(numbers[j]).attr("selected", "selected");
+        //             $(numbers[j]).attr("class", "layui-this");
+        //             form.render();
+        //         }
+        //     }
+        // })
+
+            // .catch(function (error) {
+            //     console.log(error);
+            // });
+
+
     });
 </script>
 
