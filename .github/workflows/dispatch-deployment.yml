@@ -1,5 +1,5 @@
 on: workflow_dispatch
-name: 🚀 Deploy beta branch on push
+name: 🚀 Test deployment on beta branch 
 jobs:
   web-deploy:
     name: 🎉 Deploy
