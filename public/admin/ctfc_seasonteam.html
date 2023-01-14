@@ -258,53 +258,53 @@
                 $(window).on("resize", function () {
                     layer.full(window.sessionStorage.getItem("bb_index"));
                 })
-            } else if (layEvent === 'add_player') {
-                layer.open({
-                    type: 2,
-                    title: '添加球员',
-                    shadeClose: true,
-                    shade: 0.8,
-                    area: ['50%', '80%'],
-                    content: 'bb_team_player_add.html?id=' + data.ID,
-                    success: function (layero, index) {
-                    },
-                    end: function () {
-                        location.reload();
-                    }
-                });
-            } else if (layEvent === 'search_player') {//球员管理
-                var contenturl = 'bb_team_player_search.html?id=';
-                contenturl += data.ID;
-                contenturl += "&playerids=";
-                contenturl += (data.PlayerIDs==null?"":data.PlayerIDs);
-                contenturl += "&playernums=";
-                contenturl += (data.PlayerNumbers==null?"":data.PlayerNumbers);
-                contenturl += "&teamid=";
-                contenturl += data.ID;
-                contenturl += "&passed=";
-                contenturl += data.Approval;
-                contenturl += "&seasonid=";
-                contenturl += data.SeasonID;
-                var ly = layer.open({
-                    type: 2,
-                    title: '球员管理',
-                    shadeClose: true,
-                    shade: 0.8,
-                    area: ['100%', '100%'],
-                    content: contenturl,
-                    success: function (layero, index) {
-                    },
-                    end: function () {
+            // } else if (layEvent === 'add_player') {
+            //     layer.open({
+            //         type: 2,
+            //         title: '添加球员',
+            //         shadeClose: true,
+            //         shade: 0.8,
+            //         area: ['50%', '80%'],
+            //         content: 'bb_team_player_add.html?id=' + data.ID,
+            //         success: function (layero, index) {
+            //         },
+            //         end: function () {
+            //             location.reload();
+            //         }
+            //     });
+            // } else if (layEvent === 'search_player') {//球员管理
+            //     var contenturl = 'bb_team_player_search.html?id=';
+            //     contenturl += data.ID;
+            //     contenturl += "&playerids=";
+            //     contenturl += (data.PlayerIDs==null?"":data.PlayerIDs);
+            //     contenturl += "&playernums=";
+            //     contenturl += (data.PlayerNumbers==null?"":data.PlayerNumbers);
+            //     contenturl += "&teamid=";
+            //     contenturl += data.ID;
+            //     contenturl += "&passed=";
+            //     contenturl += data.Approval;
+            //     contenturl += "&seasonid=";
+            //     contenturl += data.SeasonID;
+            //     var ly = layer.open({
+            //         type: 2,
+            //         title: '球员管理',
+            //         shadeClose: true,
+            //         shade: 0.8,
+            //         area: ['100%', '100%'],
+            //         content: contenturl,
+            //         success: function (layero, index) {
+            //         },
+            //         end: function () {
 
-                    }
-                });
-                layer.full(ly)
+            //         }
+            //     });
+            //     layer.full(ly)
             } else if (layEvent === 'del') {
                 layer.confirm('确认删除', {
                     btn: ['确认', '取消'] //按钮
                 }, function () {
                     $.ajax({
-                        url: '../BBTeam/' + data.ID,
+                        url: '../CTFCseasonteam/' + data.ID,
                         type: 'delete',
                         dataType: 'json',
                         header: {
