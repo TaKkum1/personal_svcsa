@@ -74,9 +74,15 @@
 					"spread": false
 				},
 				{
-					"title": "田径队伍",
+					"title": "田径队伍",  
 					"icon": "icon-text",
 					"href": "ctfc_team.html",
+					"spread": false
+				},
+				{
+					"title": "赛季运动队",  
+					"icon": "icon-text",
+					"href": "ctfc_seasonteam.html",
 					"spread": false
 				}
 			]

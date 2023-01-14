@@ -132,7 +132,7 @@ notfound:
             $this->paginatedResult($list->total(), $pagesize, $list->currentPage(), $list->items());
         } else {
           // List players of a particular season.
-          $list = Db::name('ctfc_seasonteam_view')->order('TeamName asc');
+          $list = Db::name('ctfc_seasonteam')->order('TeamName asc');
 
           if ($competitionid and $seasonid)
               $list = $list->where('seasonid', $seasonid);
