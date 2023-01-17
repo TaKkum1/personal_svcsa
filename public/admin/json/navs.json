@@ -78,6 +78,12 @@
 					"icon": "icon-text",
 					"href": "ctfc_team.html",
 					"spread": false
+				},
+				{
+					"title": "年龄组",
+					"icon": "icon-text",
+					"href": "ctfc_agegroup.html",
+					"spread": false
 				}
 			]
 		}
