@@ -1,7 +1,7 @@
 on:
   push:
     branches:
-      - beta
+      - 'beta'
 name: 🚀 Deploy beta branch on push
 jobs:
   web-deploy:

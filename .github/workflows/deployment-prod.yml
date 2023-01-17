@@ -1,5 +1,8 @@
-on: workflow_dispatch
-name: 🚀 Test deployment on beta branch 
+on:
+  push:
+    branches:
+      - 'master'
+name: 🚀 Deploy master branch on push
 jobs:
   web-deploy:
     name: 🎉 Deploy
@@ -8,14 +11,14 @@ jobs:
     - name: 🚚 Get latest code
       uses: actions/checkout@v3
       with:
-        ref: beta
+        ref: master
 
     - name: 📂 Sync files
       uses: SamKirkland/FTP-Deploy-Action@4.3.3
       with:
         server: svcsa.org
         username: phpapi
-        password: ${{ secrets.Ftp_Password }}
+        password: ${{ secrets.FtpPassword }}
         server-dir: ./svcsa/svcsa-beta/
         exclude: |
           **/.git*
