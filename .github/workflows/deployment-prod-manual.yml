@@ -17,7 +17,7 @@ jobs:
         server: svcsa.org
         username: phpapi
         password: ${{ secrets.Ftp_Password }}
-        server-dir: ./svcsa/svcsa-beta/
+        server-dir: ./svcsa/svcsa-prod/
         exclude: |
           **/.git*
           **/.git*/**
