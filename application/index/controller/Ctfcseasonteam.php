@@ -28,10 +28,10 @@ class Ctfcseasonteam extends Base
 
 
 
-    public function delete($id)
+    public function delete($seasonid, $teamid)
     {
         $this->checkauthorization();
-        $result += Db::name('ctfc_seasonteam')->where('TeamID', $id)->delete();
+        $result = Db::name('ctfc_seasonteam')->where('SeasonID', $seasonid)->where('TeamID', $teamid)->delete();
         $this->affectedRowsResult($result);
     }
 
@@ -48,16 +48,18 @@ class Ctfcseasonteam extends Base
               $item = array();
               // fill out team registration info.
               $teamid = $seasonteam['TeamID'];
-              $teamname = Db::name('ctfc_team')->where('id', $teamid)->find()['Name'];
+              $teamname = Db::name('ctfc_team')->where('ID', $teamid)->find()['Name'];
               $item['ID'] = $teamid;
-              $seasonid = Db::name('ctfc_seasonteam')->where('teamid', $teamid)->find()['SeasonID'];
-              $seasonname = Db::name('ctfc_season')->where('id', $seasonid)->find()['Name'];
+              $seasonid = $seasonteam['SeasonID'];
+              $seasonname = Db::name('ctfc_season')->where('ID', $seasonid)->find()['Name'];
               $item['SeasonID'] = $seasonid;
               $item['SeasonName'] = $seasonname;
               $item['TeamID'] = $teamid;
               $item['TeamName'] = $teamname;
               $item['Approve'] = $seasonteam['Approve'];
+       
               $team = Db::name('ctfc_team')->where('id', $teamid)->find();
+          
               array_push($list, $item);
             }
         
@@ -67,7 +69,7 @@ class Ctfcseasonteam extends Base
 
 
 
-    public function update($id)
+    public function update($seasonid, $teamid)
     {
         $this->checkauthorization();
 
@@ -78,7 +80,7 @@ class Ctfcseasonteam extends Base
         $seasonteam_data['TeamID'] = $data['TeamID'];
         $seasonteam_data['Approve'] = $data['Approve'];
 
-        $result = Db::name('ctfc_seasonteam')->where('ID', $id)->update($seasonteam_data);
+        $result = Db::name('ctfc_seasonteam')->where('SeasonID', $seasonid)->where('TeamID', $teamid)->update($seasonteam_data);
       
         $this->affectedRowsResult($result);
     }

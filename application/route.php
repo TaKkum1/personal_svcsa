@@ -187,9 +187,9 @@
 \think\Route::get('sponsor', 'index/sponsor/lists');
 
 \think\Route::post('ctfcseasonteam/passapp', 'index/ctfcseasonteam/passApplication');
-\think\Route::post('ctfcseasonteam/:id', 'index/ctfcseasonteam/update', [], ['id' => '\d+']);
+\think\Route::post('ctfcseasonteam/:seasonid/:teamid', 'index/ctfcseasonteam/update', [], ['seasonid' => '\d+'],['teamid' => '\d+']);
 \think\Route::post('ctfcseasonteam', 'index/ctfcseasonteam/add');
-\think\Route::delete('ctfcseasonteam/:id', 'index/ctfcseasonteam/delete', [], ['id' => '\d+']);
+\think\Route::delete('ctfcseasonteam/:seasonid/:teamid', 'index/ctfcseasonteam/delete', [], ['seasonid' => '\d+'],['teamid' => '\d+']);
 \think\Route::get('ctfcseasonteam/:id', 'index/ctfcseasonteam/read', [], ['id' => '\d+']);
 \think\Route::get('ctfcseasonteam', 'index/ctfcseasonteam/lists');
 

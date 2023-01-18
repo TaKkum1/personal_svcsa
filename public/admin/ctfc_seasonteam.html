@@ -196,20 +196,20 @@
             var tr = obj.tr; //获得当前行 tr 的DOM对象
 
             if (layEvent === 'editSeasonTeam') { //查看
-                console.log(obj.data);
-                var index = layer.open({
+                //console.log(obj.data);
+                layer.open({
                     type: 2,
                     title: '修改赛季队伍',
                     shadeClose: true,
                     shade: 0.8,
-                    offset: '0px',
+                    offset: '50px',
                     area: ['100%', '100%'],
                     content: 'ctfc_seasonteam_edit.html',
                     success: function (layero, index) {
-                        // layer.iframeAuto(index);
+                        layer.iframeAuto(index);
                         var body = layer.getChildFrame('body', index);
-                        body.find('#SeasonIDx').val(data.SeasonID)
-                        body.find('#TeamIDx').attr("value", data.TeamID)
+                        body.find('#SeasonID').val(data.SeasonID)
+                        body.find('#TeamID').val(data.TeamID)
                         body.find('#Approve').val(data.Approve)
                         body.find('#ID').val(data.ID)
                     },
@@ -228,7 +228,7 @@
                     btn: ['确认', '取消'] //按钮
                 }, function () {
                     $.ajax({
-                        url: '../CTFCseasonteam/' + data.ID,
+                        url: '../CTFCseasonteam/' + data.SeasonID + '/' + data.TeamID,
                         type: 'delete',
                         dataType: 'json',
                         header: {
@@ -269,7 +269,7 @@
             }
         });
         axios.get('../CTFCSeason', {}).then(function (response) {
-            console.log(response);
+            //console.log(response);
             $.each(response.data.data, function (index, item) {
                 $('#Season').append('<option value="' + item.ID + '">' + item.Name + '</option>');
             });

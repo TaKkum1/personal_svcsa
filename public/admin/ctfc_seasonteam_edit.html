@@ -8,8 +8,8 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 90px;">队伍</label>
                     <div class="layui-input-inline" style="width: 380px; height: auto;">
-                        <input id="TeamIDx" type="hidden" name="" value="">
-                        <select id="TeamID" name="TeamIDx" lay-verify="required" lay-filter="myselect">
+                        <input id="TeamID" type="hidden" name="" value="" />
+                        <select id="TeamID_s" name="TeamID" lay-verify="required" lay-filter="myselect">
                             <option value="">选择队伍</option>
                         </select>
                     </div>
@@ -17,8 +17,8 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 90px;">赛季</label>
                     <div class="layui-input-inline" style="width: 380px;  height: auto;">
-                        <input id="SeasonIDx" type="hidden">
-                        <select id="SeasonID" name="SeasonIDx" lay-verify="required" lay-filter="Select">
+                        <input id="SeasonID" type="hidden">
+                        <select id="SeasonID_s" name="SeasonID" lay-verify="required" lay-filter="myselect">
                             <option value="">选择赛季</option>
                         </select>
                     </div>
@@ -53,9 +53,9 @@
 
         form.on('submit(add)', function (data) {
             var index = parent.layer.getFrameIndex(window.name);
-    
-
-            axios.post('../CTFCSeasonteam/', {
+            oldseasonid = $("#SeasonID").val();
+            oldteamid = $("#TeamID").val();
+            axios.post('../CTFCSeasonteam/' + oldseasonid + '/' + oldteamid, {
                 Approve: data.field.Approve,
                 SeasonID: data.field.SeasonID,
                 TeamID: data.field.TeamID,
@@ -76,23 +76,39 @@
         });
 
         axios.get('../CTFCSeason', {}).then(function (response) {
-            console.log(response);
+            //console.log(response);
           $.each(response.data.data, function (index, item) {
-                $('#SeasonID').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                $('#SeasonID_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
             });
             form.render();
-        })
+            num = $("#SeasonID").val();
+            numbers = $("#SeasonID_s").find("option"); //获取select下拉框的所有值
+            //console.log(numbers);
+            for (j = 1; j < numbers.length; j++) {
+            //console.log(numbers);
+                if ($(numbers[j]).val() == num) {
+                     //console.log('ok');
+                        $(numbers[j]).attr("selected", "selected");
+                        $(numbers[j]).attr("class", "layui-this");
+                        form.render();
+        }}})
             .catch(function (error) {
                 console.log(error);
             });
-
         axios.get('../CTFCTeam', {}).then(function (response) {
-            console.log(response);
             $.each(response.data.data, function (index, item) {
-                $('#TeamID').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                $('#TeamID_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
             });
             form.render();
-        })
+            num = $("#TeamID").val();
+            numbers = $("#TeamID_s").find("option"); //获取select下拉框的所有值
+            for (j = 1; j < numbers.length; j++) {
+                if ($(numbers[j]).val() == num) {
+                     //console.log('ok');
+                        $(numbers[j]).attr("selected", "selected");
+                        $(numbers[j]).attr("class", "layui-this");
+                        form.render();
+        }}})
             .catch(function (error) {
                 console.log(error);
             });
