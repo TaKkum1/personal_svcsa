@@ -59,14 +59,12 @@
 <script src="layui/layui.js"></script>
 <script>
     function tongguo(ids, passed) {
-      console.log(ids);
-      console.log(passed);
         $.ajax({
             url: '../Ctfcseasonteam/passapp',
             type: 'Post',
             dataType: 'json',
             data: {
-                TeamIDs: ids,
+                SeasonIDTeamIDs: ids,
                 Passed: passed
             },
             header: {
@@ -196,7 +194,6 @@
             var tr = obj.tr; //获得当前行 tr 的DOM对象
 
             if (layEvent === 'editSeasonTeam') { //查看
-                //console.log(obj.data);
                 layer.open({
                     type: 2,
                     title: '修改赛季队伍',
@@ -235,7 +232,6 @@
                             Accept: 'application/json'
                         },
                         success: function (data) {
-                            //console.log(data)
                         },
                         error: function (xhr) {
                             if (xhr.status == 401)
@@ -269,7 +265,6 @@
             }
         });
         axios.get('../CTFCSeason', {}).then(function (response) {
-            //console.log(response);
             $.each(response.data.data, function (index, item) {
                 $('#Season').append('<option value="' + item.ID + '">' + item.Name + '</option>');
             });

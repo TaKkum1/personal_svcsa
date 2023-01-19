@@ -49,9 +49,9 @@ class Ctfcseasonteam extends Base
               // fill out team registration info.
               $teamid = $seasonteam['TeamID'];
               $teamname = Db::name('ctfc_team')->where('ID', $teamid)->find()['Name'];
-              $item['ID'] = $teamid;
               $seasonid = $seasonteam['SeasonID'];
               $seasonname = Db::name('ctfc_season')->where('ID', $seasonid)->find()['Name'];
+              $item['ID'] = $seasonid."-".$teamid;
               $item['SeasonID'] = $seasonid;
               $item['SeasonName'] = $seasonname;
               $item['TeamID'] = $teamid;
@@ -89,28 +89,24 @@ class Ctfcseasonteam extends Base
     {
         $this->checkauthorization();
 
-        $data = request()->only('TeamIDs,Passed', 'post');
-        $teamIDs = urldecode($data['TeamIDs']);
+        $data = request()->only('SeasonIDTeamIDs,Passed', 'post'); //SeasonIDTeamIDs
+        $SeasonIDTeamIDs = urldecode($data['SeasonIDTeamIDs']);
+        //TODO: split SeasonIDTeamIDs to TeamIDs
+        $SeasonIDTeamIDs_arr = explode(',', $SeasonIDTeamIDs);
+
+        // $teamIDs = urldecode($data['TeamIDs']);
         $passed = isset($data['Passed']) ? boolval($data['Passed']) : true;
 
         $result = 0;
-        $teamIDsarr = explode(',', $teamIDs);
         $emailRes = 0;
 
         if ($passed) {
-            foreach ($teamIDsarr as $teamID) {
-               
+            foreach ($SeasonIDTeamIDs_arr as $SeasonIDTeamID) {
 
-                $result += Db::name('ctfc_seasonteam')->where('TeamID', $teamID)
-                    ->update(['Approve' => 1]);
-
-//                $emailret = sendEmail([[
-//                    'user_email' => $team['Email'],
-//                    'content' => "<h1>SVCSA球队申请成功</h1><p>您好，您的球队" . $team['ShortName'] . "已经通过审核。请访问SVCSA.org查看吧。</p>"]]);
-
-                if (isset($emailret['code']) && $emailret['code'] == 1)
-                    $emailRes++;
-
+                $tmparr = explode("-", $SeasonIDTeamID);
+                $result += Db::name('ctfc_seasonteam')->where('SeasonID', $tmparr[0])->where('TeamID', $tmparr[1])
+                ->update(['Approve' => 1]);
+                    
             }
      }
 
