@@ -193,6 +193,13 @@
 \think\Route::get('ctfcseasonteam/:id', 'index/ctfcseasonteam/read', [], ['id' => '\d+']);
 \think\Route::get('ctfcseasonteam', 'index/ctfcseasonteam/lists');
 
+\think\Route::post('ctfcagegroup/:id', 'index/ctfcagegroup/update', [], ['id' => '\d+']);
+\think\Route::post('ctfcagegroup', 'index/ctfcagegroup/add');
+\think\Route::delete('ctfcagegroup/:id', 'index/ctfcagegroup/delete', [], ['id' => '\d+']);
+\think\Route::get('ctfcagegroup/:id', 'index/ctfcagegroup/read', [], ['id' => '\d+']);
+\think\Route::get('ctfcagegroup', 'index/ctfcagegroup/lists');
+
+
 return [
 
 //    '[bbcompetition]' => [

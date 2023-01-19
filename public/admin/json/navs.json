@@ -84,6 +84,12 @@
 					"icon": "icon-text",
 					"href": "ctfc_seasonteam.html",
 					"spread": false
+				},
+				{
+					"title": "年龄组",
+					"icon": "icon-text",
+					"href": "ctfc_agegroup.html",
+					"spread": false	
 				}
 			]
 		}
