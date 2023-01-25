@@ -186,11 +186,19 @@
 \think\Route::get('sponsor/:id', 'index/sponsor/read', [], ['id' => '\d+']);
 \think\Route::get('sponsor', 'index/sponsor/lists');
 
+\think\Route::post('ctfcseasonteam/passapp', 'index/ctfcseasonteam/passApplication');
+\think\Route::post('ctfcseasonteam/:seasonid/:teamid', 'index/ctfcseasonteam/update', [], ['seasonid' => '\d+'],['teamid' => '\d+']);
+\think\Route::post('ctfcseasonteam', 'index/ctfcseasonteam/add');
+\think\Route::delete('ctfcseasonteam/:seasonid/:teamid', 'index/ctfcseasonteam/delete', [], ['seasonid' => '\d+'],['teamid' => '\d+']);
+\think\Route::get('ctfcseasonteam/:id', 'index/ctfcseasonteam/read', [], ['id' => '\d+']);
+\think\Route::get('ctfcseasonteam', 'index/ctfcseasonteam/lists');
+
 \think\Route::post('ctfcagegroup/:id', 'index/ctfcagegroup/update', [], ['id' => '\d+']);
 \think\Route::post('ctfcagegroup', 'index/ctfcagegroup/add');
 \think\Route::delete('ctfcagegroup/:id', 'index/ctfcagegroup/delete', [], ['id' => '\d+']);
 \think\Route::get('ctfcagegroup/:id', 'index/ctfcagegroup/read', [], ['id' => '\d+']);
 \think\Route::get('ctfcagegroup', 'index/ctfcagegroup/lists');
+
 
 return [
 

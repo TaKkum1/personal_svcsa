@@ -1,0 +1,286 @@
+<!-- 内容主体区域 -->
+<link rel="stylesheet" href="layui/css/layui.css">
+<style>
+    .layui-table-cell .layui-form-checkbox[lay-skin="primary"]{
+        top: 50%;
+        transform: translateY(-50%);
+    }
+</style>
+<div style="padding: 15px;">
+    <div class="layui-tab">
+        <div class="layui-tab-content">
+            <div class="layui-input-inline" style="">
+                <div class="layui-input-inline">
+                    <button id="tongguoAll" class="layui-btn layui-btn-normal">批量审核</button>
+                </div>
+            </div>
+            <div class="layui-input-inline" style="">
+                <div class="layui-input-inline">
+                    <button id="add" class="layui-btn layui-btn-normal">新建赛季队伍</button>
+                </div>
+            </div>
+
+            <div class="layui-input-inline">
+                <form class="layui-form" action="">
+                    <select id="Season" name="Season" lay-verify="" lay-filter="Season">
+                        <option value="">选择赛季</option>
+                    </select>
+                </form>
+            </div>
+            <table class="layui-hide" id="test" lay-filter="test"></table>
+            <script type="text/html" id="toolbarDemo">
+            </script>
+        
+            <script type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-xs" lay-event="editSeasonTeam">赛季队伍管理</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </script>
+            <script type="text/html" id="shenhe">
+                {{#  if(d.Approve==0){ }}
+                <a class="layui-btn layui-btn layui-btn-xs" lay-event="tongguo">通过</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="bohui">驳回</a>
+
+                {{#  } else { }}
+                <a class="layui-btn layui-btn-disabled layui-btn-xs">已通过</a>
+                {{#  } }}
+            </script>
+            <script type="text/html" id="Approve">
+                {{#  if(d.Approve==0){ }}
+                申请中
+                {{#  } else { }}
+                通过申请
+                {{#  } }}
+            </script>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    function tongguo(ids, passed) {
+        $.ajax({
+            url: '../Ctfcseasonteam/passapp',
+            type: 'Post',
+            dataType: 'json',
+            data: {
+                SeasonIDTeamIDs: ids,
+                Passed: passed
+            },
+            header: {
+                Accept: 'application/json'
+            },
+            success: function (data) {
+                    layer.msg('成功审核通过' + data['affectedRows']  + '个队伍，发送了' + data['affectedEmails'] +'个邮件', {
+                        icon: 1,
+                        time: 1200
+                    }, function () {
+                        location.reload();
+                    });
+            },
+            error: function (xhr) {
+                if (xhr.status == 401)
+							top.location.href = 'login.html';
+            }
+        });
+    }
+
+    layui.use(['table', 'form'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        table.render({
+            elem: '#test',
+            url: '../CTFCSeasonteam',
+            parseData: function (res) {
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": '', //解析提示文本
+                    "count": res.totalcount, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            },
+            method: 'get',
+            request: {
+                pageName: 'page' //页码的参数名称，默认：page
+                ,limitName: 'pagesize' //每页数据量的参数名，默认：limit
+            },
+            title: '用户数据表',
+            cols: [
+                [{
+                    type: 'checkbox',
+                    title: '选择批量',
+                    fixed: 'left',
+                    width: 90
+                },
+                {
+                    title: '审核',
+                    width: 130,
+                    toolbar: '#shenhe'
+                }, 
+                {
+                    field: 'TeamName',
+                    title: '队伍名称',
+                    width: 200,
+                }, 
+                {
+                    field: 'SeasonName',
+                    title: '赛季',
+                    width: 200,
+                },
+               
+                {
+                    title: '操作',
+                    width: 220,
+                    toolbar: '#barDemo'
+                }]
+            ],
+            limit: 20,
+            page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                layout: ['count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+                //,curr: 5 //设定初始在第 5 页
+                , groups: 1 //只显示 1 个连续页码
+                , first: false //不显示首页
+                , last: false //不显示尾页
+
+            }
+        });
+        $('#tongguoAll').click(function () {
+            var mycars = ''
+            var data = table.checkStatus('test').data; //idTest 即为基础参数 id 对应的值
+            mycars = '';
+            if (data.length === 0) {
+                layer.alert('请至少选择一个队伍')
+            } else {
+                for (var i = 0; i < data.length; i++) {
+                    if (i === data.length - 1) {
+                        if (data[i].Approve === 0) {
+                            mycars += data[i].ID
+                        }
+                    } else {
+                        if (data[i].Approve === 0) {
+                            mycars += data[i].ID + ','
+                        }
+                    }
+                }
+                tongguo(mycars, 1)
+            }
+
+        })
+        $("#add").click(function () {
+            var ctfc_index = layer.open({
+                type: 2,
+                title: '新建赛季队伍',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['100%', '100%'],
+                content: 'ctfc_seasonteam_add.html',
+                success: function (layero, index) {
+                    // layer.iframeAuto(index);
+                },
+                end: function () {
+                    location.reload();
+                }
+            });
+            layer.full(ctfc_index);
+            window.sessionStorage.setItem("ctfc_index", ctfc_index);
+            //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+            $(window).on("resize", function () {
+                layer.full(window.sessionStorage.getItem("ctfc_index"));
+            })
+        })
+        table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if (layEvent === 'editSeasonTeam') { //查看
+                layer.open({
+                    type: 2,
+                    title: '修改赛季队伍',
+                    shadeClose: true,
+                    shade: 0.8,
+                    offset: '50px',
+                    area: ['100%', '100%'],
+                    content: 'ctfc_seasonteam_edit.html',
+                    success: function (layero, index) {
+                        layer.iframeAuto(index);
+                        var body = layer.getChildFrame('body', index);
+                        body.find('#SeasonID').val(data.SeasonID)
+                        body.find('#TeamID').val(data.TeamID)
+                        body.find('#Approve').val(data.Approve)
+                        body.find('#ID').val(data.ID)
+                    },
+                    end: function () {
+                        location.reload();
+                    }
+                });
+                layer.full(index);
+                window.sessionStorage.setItem("ctfc_seasonteam_index", index);
+                //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+                $(window).on("resize", function () {
+                    layer.full(window.sessionStorage.getItem("ctfc_seasonteam_index"));
+                })
+            }  else if (layEvent === 'del') {
+                layer.confirm('确认删除', {
+                    btn: ['确认', '取消'] //按钮
+                }, function () {
+                    $.ajax({
+                        url: '../CTFCseasonteam/' + data.SeasonID + '/' + data.TeamID,
+                        type: 'delete',
+                        dataType: 'json',
+                        header: {
+                            Accept: 'application/json'
+                        },
+                        success: function (data) {
+                        },
+                        error: function (xhr) {
+                            if (xhr.status == 401)
+							top.location.href = 'login.html';
+                        }
+                    });
+                    layer.msg('删除成功', {
+                        icon: 1,
+                        time: 1200
+                    }, function () {
+                        location.reload();
+                    });
+                }, function () {
+                });
+            } else if (layEvent === 'tongguo') {
+                layer.confirm('确认要审核通过吗？', {
+                    btn: ['确认', '取消'] //按钮
+                }, function () {
+                    layer.msg('正在通过...', {icon: 7});
+                    tongguo(data.ID, 1)
+                }, function () {
+                });
+            } else if (layEvent === 'bohui') {
+                layer.confirm('确认要驳回吗？', {
+                    btn: ['确认', '取消'] //按钮
+                }, function () {
+                    layer.msg('正在驳回...', {icon: 7});
+                    tongguo(data.ID, 0)
+                }, function () {
+                });
+            }
+        });
+        axios.get('../CTFCSeason', {}).then(function (response) {
+            $.each(response.data.data, function (index, item) {
+                $('#Season').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+            });
+            form.render();
+        })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        form.on('select(Season)', function (data) {
+            
+            table.reload('test', {
+                url: '../CTFCseasonteam?seasonid=' + data.value,
+                
+            });
+        });
+
+    });
+</script>

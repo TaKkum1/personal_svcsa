@@ -131,15 +131,12 @@ notfound:
           if ($this->jsonRequest())
             $this->paginatedResult($list->total(), $pagesize, $list->currentPage(), $list->items());
         } else {
-          // List players of a particular season.
-          $list = Db::name('ctfc_seasonteam_view')->order('TeamName asc');
+          $list = Db::name('ctfc_team');
 
           if ($competitionid and $seasonid)
               $list = $list->where('seasonid', $seasonid);
           else if ($teamid)
               $list = $list->where('teamid', $teamid);
-          else if ($competitionid)
-              $list = $list->where('CompetitionID', $competitionid);
           else if (input('teamids'))
               $list = $list->whereIn('TeamID',
                   explode(',', input('Teamids')));

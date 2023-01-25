@@ -1,0 +1,118 @@
+<link rel="stylesheet" href="layui/css/layui.css">
+
+<body class="childrenBody">
+
+    <div style="padding: 25px;" class="layui-layout-body" >
+        <form class="layui-form" action="" style= "height:800;">
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 90px;">队伍</label>
+                    <div class="layui-input-inline" style="width: 380px; height: auto;">
+                        <input id="TeamID" type="hidden" name="" value="" />
+                        <select id="TeamID_s" name="TeamID" lay-verify="required" lay-filter="myselect">
+                            <option value="">选择队伍</option>
+                        </select>
+                    </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 90px;">赛季</label>
+                    <div class="layui-input-inline" style="width: 380px;  height: auto;">
+                        <input id="SeasonID" type="hidden">
+                        <select id="SeasonID_s" name="SeasonID" lay-verify="required" lay-filter="myselect">
+                            <option value="">选择赛季</option>
+                        </select>
+                    </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 90px;">审核</label>
+                    <div class="layui-input-block">
+                        <input type="radio" id="Approve" name="Approve" value="1" title="通过" checked>
+                        <input type="radio" id="Approve" name="Approve" value="0" title="暂不通过">
+                    </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即修改</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+       
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="layui/layui.js"></script>
+    <script>
+        layui.use(['table', 'form'], function () {
+        var table = layui.table;
+        var form = layui.form;
+
+        form.on('submit(add)', function (data) {
+            var index = parent.layer.getFrameIndex(window.name);
+            oldseasonid = $("#SeasonID").val();
+            oldteamid = $("#TeamID").val();
+            axios.post('../CTFCSeasonteam/' + oldseasonid + '/' + oldteamid, {
+                Approve: data.field.Approve,
+                SeasonID: data.field.SeasonID,
+                TeamID: data.field.TeamID,
+                
+            })
+                .then(function (response) {
+                    layer.msg('修改成功', {
+                        icon: 1,
+                        time: 1500
+                    }, function () {
+                        parent.layer.close(index);
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+  
+        });
+
+        axios.get('../CTFCSeason', {}).then(function (response) {
+            //console.log(response);
+          $.each(response.data.data, function (index, item) {
+                $('#SeasonID_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+            });
+            form.render();
+            num = $("#SeasonID").val();
+            numbers = $("#SeasonID_s").find("option"); //获取select下拉框的所有值
+            //console.log(numbers);
+            for (j = 1; j < numbers.length; j++) {
+            //console.log(numbers);
+                if ($(numbers[j]).val() == num) {
+                     //console.log('ok');
+                        $(numbers[j]).attr("selected", "selected");
+                        $(numbers[j]).attr("class", "layui-this");
+                        form.render();
+        }}})
+            .catch(function (error) {
+                console.log(error);
+            });
+        axios.get('../CTFCTeam', {}).then(function (response) {
+            $.each(response.data.data, function (index, item) {
+                $('#TeamID_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+            });
+            form.render();
+            num = $("#TeamID").val();
+            numbers = $("#TeamID_s").find("option"); //获取select下拉框的所有值
+            for (j = 1; j < numbers.length; j++) {
+                if ($(numbers[j]).val() == num) {
+                     //console.log('ok');
+                        $(numbers[j]).attr("selected", "selected");
+                        $(numbers[j]).attr("class", "layui-this");
+                        form.render();
+        }}})
+            .catch(function (error) {
+                console.log(error);
+            });
+    });
+</script>
+
+</body>
