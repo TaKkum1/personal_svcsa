@@ -4,33 +4,38 @@
 
     <div style="padding: 15px;">
         <form class="layui-form" action="">
+
             <div class="layui-form-item">
                 <label class="layui-form-label">项目名称</label>
                 <div class="layui-input-block">
-                             <input id="ID" name="ID" type="hidden"  value="">
-                    <input type="text" id="name" name="Name" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                    <input id="ID" name="ID" type="hidden"  value="">
+                    <input type="text" id="Name" name="Name" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
                 </div>
             </div>
+
             <div class="layui-form-item">
                 <label class="layui-form-label">项目类型</label>
                 <div class="layui-input-block">
-                        <input type="radio" id="jt_project" name="IsSingle" value="0" title="接力" checked>
-                        <input type="radio" id="gr_project" name="IsSingle" value="1" title="单项">
+                    <input type="radio" id="IsSingle" name="IsSingle" value="1" title="单项">
+                    <input type="radio" id="IsNotSingle" name="IsSingle" value="0" title="接力">
                 </div>
             </div>
+
             <div class="layui-form-item">
                 <label class="layui-form-label">田径类型</label>
                 <div class="layui-input-block">
-                        <input type="radio" id="track_project" name="IsTrack" value="1" title="径赛项目" checked>
-                        <input type="radio" id="field_project" name="IsTrack" value="0" title="田赛项目">
+                        <input type="radio" id="IsTrack" name="IsTrack" value="1" title="径赛项目">
+                        <input type="radio" id="IsNotTrack" name="IsTrack" value="0" title="田赛项目">
                 </div>
             </div>
+
             <div class="layui-form-item">
                 <label class="layui-form-label">最大单枪人数</label>
-                <div class="layui-input-block">
+                <div class="layui-input-inline">
                     <input type="text" id="HeatSize" name="HeatSize" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
                 </div>
             </div>
+
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即修改</button>
@@ -48,10 +53,13 @@
             var table = layui.table;
             var form = layui.form;
             var $ = layui.jquery;
-    
+            // console.log(IsSingle);
+            // console.log(IsNotSingle);
+            // console.log(IsTrack);
+            // console.log(IsNotTrack);
     
             form.on('submit(add)', function (data) {   
-    
+
                 var index = parent.layer.getFrameIndex(window.name);
                 axios.post('../ctfcevent/' + $('input[name="ID"]').val(), {
                     Name: $('input[name="Name"]').val(),
