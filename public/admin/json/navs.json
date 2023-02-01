@@ -90,6 +90,12 @@
 					"icon": "icon-text",
 					"href": "ctfc_agegroup.html",
 					"spread": false	
+				},
+				{
+					"title": "号码牌分配",
+					"icon": "icon-text",
+					"href": "ctfc_playernumber.html",
+					"spread": false	
 				}
 			]
 		}
