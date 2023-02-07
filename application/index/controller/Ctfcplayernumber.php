@@ -1,10 +1,5 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Aven
- * Date: 2018/10/28
- * Time: 1:30
- */
+
 
 namespace app\index\controller;
 
@@ -38,43 +33,44 @@ class Ctfcplayernumber extends Base
     }
 
 
-    public function lists($seasonid = null)
+    public function lists($teamid = null)
     {
         if ($this->jsonRequest()) {
             $playernumbers = Db::name('ctfc_playernumber')->order('SeasonID');
-            if ($seasonid) $playernumbers = $playernumbers->where('seasonid', $seasonid);
+            $maxseasonID = Db::name('ctfc_playernumber')->max('SeasonID');
+            $playernumbers = $playernumbers->where('seasonid', $maxseasonID);
+            if($teamid) $playernumber = $playernumbers->where('seasonid', $maxseasonID)->where('teamid', $teamid);
+            $currentseasonteams = Db::name('ctfc_seasonteam')->where('seasonid', $maxseasonID);
+
             $playernumbers = $playernumbers->select();
             $list = array();
+            $teamidlist = array();
+
+            $currentseasonteams = $currentseasonteams->select();
+            foreach($currentseasonteams as $seasonteam){
+              $teamidlist[] = $seasonteam['TeamID'];
+            }
             foreach ($playernumbers as $playernumber) {
               $element = array();
               // fill out team registration info.
               $teamid = $playernumber['TeamID'];
-              $teamname = Db::name('ctfc_team')->where('ID', $teamid)->find()['Name'];
-              $seasonid = $playernumber['SeasonID'];
-              $seasonname = Db::name('ctfc_season')->where('ID', $seasonid)->find()['Name'];
-              $playerid = $playernumber['PlayerID'];
-              $playername = Db::name('ctfc_player')->where('ID', $playerid)->find()["Name"];
-              $element['ID'] = $seasonid."-".$seasonid;
-              $element['SeasonID'] = $seasonid;
-              $element['SeasonName'] = $seasonname;
-              $element['TeamID'] = $teamid;
-              $element['TeamName'] = $teamname;
-              $element['PlayerID'] = $playerid;
-              $element['PlayerName'] = $playername;
-              $element['PlayerNumber'] = $playernumber['PlayerNumber'];
-            //   $element['Sex'] = $playernumber['Sex'];
-            //   $element['MinAgeGroupID'] = $playernumber['MinAgeGroupID'];
-            //   $element['MaxAgeGroupID'] = $playernumber['MaxAgeGroupID'];
-            //   $min_agegroup_id = $playernumber['MinAgeGroupID'];
-            //   $max_agegroup_id = $playernumber['MaxAgeGroupID'];
-            //   $min_agegroup_name = Db::name('ctfc_agegroup')->where('ID', $min_agegroup_id)->find()['Name'];
-            //   $max_agegroup_name = Db::name('ctfc_agegroup')->where('ID', $max_agegroup_id)->find()['Name'];
-            //   $element['MinAgeGroupName'] = $min_agegroup_name;
-            //   $element['MaxAgeGroupName'] = $max_agegroup_name;
-                 
-              array_push($list, $element);
+              if (in_array($teamid, $teamidlist)) {
+                $seasonid = $playernumber['SeasonID'];
+                $seasonname = Db::name('ctfc_season')->where('ID', $seasonid)->find()['Name'];
+                $playerid = $playernumber['PlayerID'];
+                $playername = Db::name('ctfc_player')->where('ID', $playerid)->find()["Name"];
+                $element['SeasonID'] = $maxseasonID;
+                $element['SeasonName'] = $seasonname;
+                $element['TeamID'] = $teamid;
+                $teamname = Db::name('ctfc_team')->where('ID', $teamid)->find()['Name'];
+                $element['TeamName'] = $teamname;
+                $element['PlayerID'] = $playerid;
+                $element['PlayerName'] = $playername;
+                $element['PlayerNumber'] = $playernumber['PlayerNumber'];
+                array_push($list, $element);  
+              } 
             }
-        
+            
           $this->dataResult($list);
         } 
     }

@@ -10,8 +10,8 @@
             </div>
             <div class="layui-input-inline">
                 <form class="layui-form" action="">
-                    <select id="Season" name="Season" lay-verify="" lay-filter="Season">
-                        <option value="">选择赛季</option>
+                    <select id="Team" name="Team" lay-verify="" lay-filter="Team">
+                        <option value="">选择队伍</option>
                     </select>
                 </form>
             </div>
@@ -53,7 +53,7 @@
             cols: [
                 [{
                     field: 'SeasonName',
-                    title: '赛季名称',
+                    title: '当前赛季',
                     width: 200,
                     fixed: 'left',
                     sort: true,
@@ -115,6 +115,8 @@
             var data = obj.data; //获得当前行数据
             var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
             var tr = obj.tr; //获得当前行 tr 的DOM对象
+            var maxseasonid = obj.data.SeasonID;
+            
             console.log(data.ID);
 
             if (layEvent === 'edit') { //查看
@@ -179,9 +181,16 @@
             }
     
         });
-        axios.get('../CTFCSeason', {}).then(function (response) {
-            $.each(response.data.data, function (index, item) {
-                $('#Season').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+
+
+        axios.get('../CTFCSeasonteam', {}).then(function (response) {
+            const data = response.data.data;
+            const maxseasonid = data.reduce((max, item)=>{
+                return item.SeasonID > max ? item.SeasonID : max; 
+            }, 0 )
+            const filterData = data.filter(team=> team.SeasonID === maxseasonid);
+            $.each(filterData, function (index, item) {
+            $('#Team').append('<option value="' + item.TeamID + '">' + item.TeamName + '</option>');
             });
             form.render();
         })
@@ -189,10 +198,10 @@
                 console.log(error);
             });
 
-        form.on('select(Season)', function (data) {
-            
+        form.on('select(Team)', function (data) {
+            console.log(data);
             table.reload('test', {
-                url: '../CTFCplayernumber?seasonid=' + data.value,
+                url: '../CTFCplayernumber?teamid=' + data.value,
                 
             });
         });

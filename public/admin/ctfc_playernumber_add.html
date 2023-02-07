@@ -64,7 +64,7 @@
 
         form.on('submit(add)', function (data) {
             var index = parent.layer.getFrameIndex(window.name);
-    
+            
 
             axios.post('../CTFCPlayernumber/', {
                 SeasonID: data.field.SeasonID,
@@ -88,28 +88,34 @@
         });
 
         axios.get('../CTFCSeason', {}).then(function (response) {
-            console.log(response);
-          $.each(response.data.data, function (index, item) {
-                $('#SeasonID').append('<option value="' + item.ID + '">' + item.Name + '</option>');
-            });
+            const data = response.data.data;
+            const maxseasonid = data.reduce((max, item)=>{
+            return item.ID > max ? item.ID : max; 
+        }, 0 )
+            const filterData = data.filter(season=> season.ID === maxseasonid);
+        $.each(filterData, function (index, item) {
+        $('#SeasonID').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+        });
             form.render();
         })
             .catch(function (error) {
                 console.log(error);
             });
 
-        axios.get('../CTFCTeam', {}).then(function (response) {
-            console.log(response);
-            $.each(response.data.data, function (index, item) {
-                $('#TeamID').append('<option value="' + item.ID + '">' + item.Name + '</option>');
-            });
-            form.render();
-        })
-            .catch(function (error) {
-                console.log(error);
-            });
-
-
+        axios.get('../CTFCSeasonteam', {}).then(function (response) {
+        const data = response.data.data;
+        const maxseasonid = data.reduce((max, item)=>{
+            return item.SeasonID > max ? item.SeasonID : max; 
+        }, 0 )
+        const filterData = data.filter(team=> team.SeasonID === maxseasonid);
+        $.each(filterData, function (index, item) {
+        $('#TeamID').append('<option value="' + item.TeamID + '">' + item.TeamName + '</option>');
+        });
+        form.render();
+    })
+        .catch(function (error) {
+            console.log(error);
+        });
 
         axios.get('../CTFCPlayer?all=1', {}).then(function (response) {
         console.log(response);

@@ -67,19 +67,18 @@
 
         form.on('submit(add)', function (data) {
             var index = parent.layer.getFrameIndex(window.name);
-            oldseasonid = $("#SeasonName").val();
-            oldteamid = $("#TeamName").val();
-            oldplayerid = $("#PlayerName").val();
+            oldseasonid = $("#SeasonID").val();
+            oldteamid = $("#TeamID").val();
+            oldplayerid = $("#PlayerID").val();
 
             axios.post('../CTFCPlayernumber/' + oldseasonid + '/' + oldteamid + '/' + oldplayerid, {
                 SeasonID: data.field.SeasonID,
                 TeamID: data.field.TeamID,
                 PlayerID: data.field.PlayerID,
-                PlayerNumber: data.field.PlayerNumber
-                
+                PlayerNumber: data.field.PlayerNumber  
             })
                 .then(function (response) {
-                    layer.msg('添加成功', {
+                        layer.msg('修改成功', {
                         icon: 1,
                         time: 1500
                     }, function () {
@@ -93,8 +92,13 @@
         });
 
         axios.get('../CTFCSeason', {}).then(function (response) {
-            //console.log(response);
-          $.each(response.data.data, function (index, item) {
+            const data = response.data.data;
+            const maxseasonid = data.reduce((max, item)=>{
+            return item.ID > max ? item.ID : max; 
+        }, 0 )
+            const filterData = data.filter(season=> season.ID === maxseasonid);
+
+            $.each(filterData, function (index, item) {
                 $('#SeasonID_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
             });
             form.render();
@@ -112,9 +116,17 @@
             .catch(function (error) {
                 console.log(error);
             });
-        axios.get('../CTFCTeam', {}).then(function (response) {
-            $.each(response.data.data, function (index, item) {
-                $('#TeamID_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+        axios.get('../CTFCSeasonteam', {}).then(function (response) {
+        const data = response.data.data;
+        const maxseasonid = data.reduce((max, item)=>{
+            return item.SeasonID > max ? item.SeasonID : max; 
+        }, 0 )
+        console.log(maxseasonid);
+        const filterData = data.filter(team=> team.SeasonID === maxseasonid);
+        console.log(filterData);
+
+            $.each(filterData, function (index, item) {
+                $('#TeamID_s').append('<option value="' + item.TeamID + '">' + item.TeamName + '</option>');
             });
             form.render();
             num = $("#TeamID").val();
