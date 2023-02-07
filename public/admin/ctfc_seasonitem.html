@@ -28,13 +28,6 @@
             <script type="text/html" id="toolbarDemo">
             </script>
             
-            <script type="text/html" id="xingbie">
-                {{#  if(d.Sex==0){ }}
-                男
-                {{#  } else { }}
-                女
-                {{#  } }}
-            </script>
 
             <script type="text/html" id="barDemo">
                 <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
@@ -81,9 +74,9 @@
                     width: 200,
                 }, 
                 {
+                    field: 'Sex',
                     title: '性别',
                     width: 130,
-                    toolbar: '#xingbie'
                 }, 
                 {
                     field: 'MinAgeGroupName',
@@ -156,7 +149,7 @@
                         body.find('#Sex').val(data.Sex)
                         body.find('#MinAgeGroupID').val(data.MinAgeGroupID)
                         body.find('#MaxAgeGroupID').val(data.MaxAgeGroupID)
-                        if (data.Sex == "1") {
+                        if (data.Sex == "F") {
                             console.log("Female");
                             body.find('#SexF').attr("checked", true);
                             body.find('#SexM').attr("checked", false);
