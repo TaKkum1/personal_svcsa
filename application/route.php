@@ -88,6 +88,8 @@
 \think\Route::delete('bbplayer/:id', 'index/bbplayer/delete', [], ['id' => '\d+']);
 \think\Route::get('bbplayer/:id', 'index/bbplayer/read', [], ['id' => '\d+']);
 \think\Route::get('bbplayer', 'index/bbplayer/lists');
+\think\Route::post('bbplayer/apply', 'index/bbplayer/apply');
+\think\Route::get('bbplayer/apply', 'index/bbplayer/getapply');
 
 \think\Route::get('bbseason/:seasonid/bbteam', 'index/bbteam/lists', [], ['seasonid' => '\d+']);
 \think\Route::get('bbseason/:seasonid/bbteamrank', 'index/bbteam/rank', [], ['seasonid' => '\d+']);

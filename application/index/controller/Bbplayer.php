@@ -290,4 +290,60 @@ class Bbplayer extends Base
         header("HTTP/1.0 404 Not Found");
         die;
     }
+
+    public function getapply()
+    {
+        $this->headerAndFooter();
+
+        // $competitionseason = Db::name('bb_competitionseason_view')
+        //     ->where('SeasonID', $seasonid)->find();
+        // if (!$competitionseason) goto notfound;
+        // $competitionid = $competitionseason['CompetitionID'];
+        // $playersex = $competitionid == 2 ? '女' : '男';
+
+        // // Populate available players
+        // if ($competitionid == 1) {
+        //   // Men Open, not selected
+        //   $sql =
+        //       'select * '.
+        //       'from bb_player '.
+        //       'where bb_player.ID not in ('.
+        //           'select distinct bb_seasonteamplayer.PlayerID '.
+        //           'from bb_seasonteamplayer '.
+        //           'where bb_seasonteamplayer.SeasonID='.strval($seasonid).') '.
+        //       'order by Name asc';
+        // } elseif ($competitionid == 2) {
+        //   // Women Open, not selected + women players
+        //   $sql =
+        //       'select * '.
+        //       'from bb_player '.
+        //       'where (bb_player.ID not in ('.
+        //           'select distinct bb_seasonteamplayer.PlayerID '.
+        //           'from bb_seasonteamplayer '.
+        //           'where bb_seasonteamplayer.SeasonID='.strval($seasonid).') '.
+        //           'and bb_player.Sex="'.$playersex.'") '.
+        //       'order by Name asc';
+        // } elseif ($competitionid == 4) {
+        //   // Men Senior, not selected + birth < 1988/01/01
+        //   $sql =
+        //       'select * '.
+        //       'from bb_player '.
+        //       'where (bb_player.ID not in ('.
+        //           'select distinct bb_seasonteamplayer.PlayerID '.
+        //           'from bb_seasonteamplayer '.
+        //           'where bb_seasonteamplayer.SeasonID='.strval($seasonid).') '.
+        //           'and date(bb_player.Birth) < "1988-01-01") '.
+        //       'order by Name asc';
+        // }
+        // $available_players = Db::query($sql);
+
+        // $this->view->assign('available_players', $available_players);
+        // $this->view->assign('competitionseason', $competitionseason);
+
+        return $this->view->fetch('bbplayer/apply');
+
+        // notfound:
+        // header("HTTP/1.0 404 Not Found");
+        // die;
+    }
 }
