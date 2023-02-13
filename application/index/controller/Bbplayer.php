@@ -16,6 +16,7 @@ use think\Session;
 
 class Bbplayer extends Base
 {
+    const APPLY_PLAYER_FIELD = 'Name,Birth,Height,Weight,Email,Sex,PhotoSrc';
     const FIELD = 'Name,Birth,Height,Weight,PhotoSrc,Email,Sex';
 
     public function add($seasonid = null)
@@ -345,5 +346,77 @@ class Bbplayer extends Base
         // notfound:
         // header("HTTP/1.0 404 Not Found");
         // die;
+    }
+
+    public function apply()
+    {
+        $data = request()->only(self::APPLY_PLAYER_FIELD, 'post');  // ???
+        $this->makeNull($data);
+
+        // Updated bb_team.
+        $player = array();
+        $player["Name"] = $data["Name"];
+        $player["Birth"] = $data["Birth"];
+        $player["Height"] = $data["Height"];
+        $player["Weight"] = $data["Weight"];
+        $player["Email"] = $data["Email"];
+        $player["Sex"] = $data["Sex"];
+
+        $validator = validate('Bb_player');
+        $team_result = $validator->check($player);
+        if (!$team_result) {
+          $this->affectedRowsResult(0);
+        }
+
+        $player["PhotoSrc"] = "";
+        $assetUrl = getAssetUploadUrl();
+        $infophotofile = request()->file('Photo');
+
+        if($infophotofile)
+            $player["PhotoSrc"] = $infophotofile->move(__DIR__ . $assetUrl)
+                ->getSaveName();
+
+        $player_result = Db::name('bb_player')->insert($player);
+
+        // // Update bb_seasonteam.
+        // // Get the TeamID just inserted.
+        // $seasonteam = array();
+        // $sql =
+        //     'select ID '.
+        //     'from bb_team '.
+        //     'where Name="'.$player["Name"].'" '.
+        //     'order by ID desc '.
+        //     'limit 1';
+        // $teamid = Db::query($sql)[0]["ID"];
+        // $seasonteam["TeamID"] =  $teamid;
+        // $seasonteam["SeasonID"] = $seasonid;
+        // $seasonteam["Approval"] = 0;
+        // $seasonteam["TimePreference"] = $data["TimePreference"];
+
+        // $seasonteam_result = Db::name('bb_seasonteam')->insert($seasonteam);
+
+        // // Update bb_seasonteamplayer
+        // $players = explode(",", $data["PlayerIDs"]);
+        // $numbers = explode(",", $data["PlayerNumbers"]);
+        // $seasonteamplayer_result = 0;
+        // $seasonteamplayer = array();
+        // for ($i = 0; $i < count($players); $i++) {
+        //   $seasonteamplayer["SeasonID"] = $seasonteam["SeasonID"];
+        //   $seasonteamplayer["TeamID"] = $seasonteam["TeamID"];
+        //   $seasonteamplayer["PlayerID"] = $players[$i];
+        //   $seasonteamplayer["PlayerNumber"] = $numbers[$i];
+        //   $seasonteamplayer_result += Db::name('bb_seasonteamplayer')->insert($seasonteamplayer);
+        // }
+        // if ($this->jsonRequest())
+        //     $this->affectedRowsResult($team_result + $seasonteam_result + $seasonteamplayer_result);
+
+        // Jump to the apply result page.
+        $this->headerAndFooter('competition');
+
+        $applyresult = '';
+        if ($player_result > 0)
+          $applyresult = '您的球员申请已提交，审核后将会给您发邮箱或者短信通知，请关注！';
+        $this->view->assign('applyresult', $applyresult);
+        return $this->view->fetch('bbplayer/applyres');
     }
 }
