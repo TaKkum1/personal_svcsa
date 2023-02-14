@@ -199,6 +199,11 @@
 \think\Route::get('ctfcagegroup/:id', 'index/ctfcagegroup/read', [], ['id' => '\d+']);
 \think\Route::get('ctfcagegroup', 'index/ctfcagegroup/lists');
 
+\think\Route::post('ctfcseasonitem/:seasonid/:itemid/:sex', 'index/ctfcseasonitem/update', [], ['seasonid' => '\d+'],['itemid' => '\d+'],['sex' => '\d+']);
+\think\Route::post('ctfcseasonitem', 'index/ctfcseasonitem/add');
+\think\Route::delete('ctfcseasonitem/:seasonid/:itemid/:sex', 'index/ctfcseasonitem/delete', [], ['seasonid' => '\d+'],['itemid' => '\d+'],['sex' => '\d+']);
+\think\Route::get('ctfcseasonitem/:id', 'index/ctfcseasonitem/read', [], ['id' => '\d+']);
+\think\Route::get('ctfcseasonitem', 'index/ctfcseasonitem/lists');
 
 return [
 
