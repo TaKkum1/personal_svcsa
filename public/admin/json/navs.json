@@ -90,6 +90,12 @@
 					"icon": "icon-text",
 					"href": "ctfc_agegroup.html",
 					"spread": false	
+				},
+				{
+					"title": "报名项目",
+					"icon": "icon-text",
+					"href": "ctfc_itemplayer.html",
+					"spread": false	
 				}
 			]
 		}
