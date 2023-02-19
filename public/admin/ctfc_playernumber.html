@@ -1,48 +1,31 @@
 <!-- 内容主体区域 -->
 <link rel="stylesheet" href="layui/css/layui.css">
-<style>.layui-table-cell {
-    height: 80px;
-    line-height: 80px;
-}
-
-.layui-table-cell img {
-    max-height: 70px;
-}</style>
 <div>
     <div class="layui-tab">
         <div class="layui-tab-content">
             <div class="layui-input-inline" style="">
                 <div class="layui-input-inline">
-                    <button id="add" class="layui-btn layui-btn-normal">新建比赛项目</button>
+                    <button id="add" class="layui-btn layui-btn-normal">新建号码牌分配</button>
                 </div>
+            </div>
+            <div class="layui-input-inline">
+                <form class="layui-form" action="">
+                    <select id="Team" name="Team" lay-verify="" lay-filter="Team">
+                        <option value="">选择队伍</option>
+                    </select>
+                </form>
             </div>
             <table class="layui-hide" id="test" lay-filter="test"></table>
             <script type="text/html" id="toolbarDemo">
-            </script>
-            <script type="text/html" id="show-img">
-                <img src="../uploads/{{d.PlayerPhotoSrc}}" alt="图片名">
             </script>
             <script type="text/html" id="barDemo">
                 <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
                 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
             </script>
-            <script type="text/html" id="shifoudanxiang">
-                {{#  if(d.IsSingle==1){ }}
-                单项
-                {{#  } else { }}
-                非单项（接力）
-                {{#  } }}
-            </script>
-            <script type="text/html" id="shifoujingsai">
-                {{#  if(d.IsTrack==1){ }}
-                径赛
-                {{#  } else { }}
-                田赛
-                {{#  } }}
-            </script>
         </div>
     </div>
 </div>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="layui/layui.js"></script>
@@ -52,7 +35,7 @@
         var form = layui.form;
         table.render({
             elem: '#test',
-            url: '../ctfcevent',
+            url: '../ctfcplayernumber',
             parseData: function (res) {
                 return {
                     "code": 0, //解析接口状态
@@ -69,35 +52,34 @@
             title: '用户数据表',
             cols: [
                 [{
-                    field: 'ID',
-                    title: 'ID',
-                    width: 80,
+                    field: 'SeasonName',
+                    title: '当前赛季',
+                    width: 200,
                     fixed: 'left',
-                    unresize: true,
                     sort: true,
                 }, {
-                    field: 'Name',
-                    title: '项目名称',
+                    field: 'TeamName',
+                    title: '队伍名称',
                     width: 200,
+                    sort: true,
                 }, {
-                    title: '是否单项',
-                    width: 150,
-                    toolbar: '#shifoudanxiang',
+                    field: 'PlayerName',
+                    title: '运动员姓名',
+                    sort: true,
+                    width: 200,
+                    unresize: true,
                 }, {
-                    title: '是否径赛',
-                    width: 150,
-                    toolbar: '#shifoujingsai',
-                }, {
-                    field: 'HeatSize',
-                    title: '最大单枪人数',
-                    width: 150,
+                    field: 'PlayerNumber',
+                    title: '参赛号码',
+                    sort: true,
+                    width: 200,
                 }, {
                     title: '操作',
                     width: 150,
                     toolbar: '#barDemo'
-                }
-                ]
-            ], limit: 20,
+                }]
+            ],
+            limit: 20,
             page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
                 layout: ['count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
                 //,curr: 5 //设定初始在第 5 页
@@ -110,88 +92,84 @@
         $("#add").click(function () {
             var index=layer.open({
                 type: 2,
-                title: '新建比赛项目',
+                title: '添加号码牌',
                 shadeClose: true,
                 shade: 0.8,
                 offset: '0px',
                 area: ['100%', '100%'],
-                content: 'ctfc_event_add.html',
+                content: 'ctfc_playernumber_add.html',
                 success: function (layero, index) {
-                    // layer.iframeAuto(index);
                 },
                 end: function () {
                     location.reload();
                 }
             });
             layer.full(index);
-            window.sessionStorage.setItem("ctfc_event_index", index);
-            //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
-            $(window).on("resize", function () {
-                layer.full(window.sessionStorage.getItem("ctfc_event_index"));
-            })
+            // window.sessionStorage.setItem("ctfc_season_index", index);
+            // //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+            // $(window).on("resize", function () {
+            //     layer.full(window.sessionStorage.getItem("ctfc_season_index"));
+            // })
         })
         table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
             var data = obj.data; //获得当前行数据
             var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
             var tr = obj.tr; //获得当前行 tr 的DOM对象
+            var maxseasonid = obj.data.SeasonID;
+            
             console.log(data.ID);
 
             if (layEvent === 'edit') { //查看
                 console.log(obj.data);
+                
+                if(obj.data.ID!=null){
+                    title='修改号码牌'
+                }
+
                 var index = layer.open({
                     type: 2,
-                    title: '修改比赛项目',
+                    title: '修改号码牌',
                     shadeClose: true,
                     shade: 0.8,
                     offset: '0px',
                     area: ['100%', '100%'],
-                    content: 'ctfc_event_edit.html',
-                    success: function (layero, index) {
+                    content: 'ctfc_playernumber_edit.html',
+                    success: function(layero, index) {
                         layer.iframeAuto(index);
                         var body = layer.getChildFrame('body', index);
-                        body.find('#Name').val(obj.data.Name)
-                        body.find('#HeatSize').val(obj.data.HeatSize)
-                        body.find('#ID').val(obj.data.ID)
-                        if (data.IsSingle == "1") {
-                            // console.log("IsSingle");
-                            body.find('#IsSingle').attr("checked", true);
-                            body.find('#IsNotSingle').attr("checked", false);
-                        } else {
-                            // console.log("IsNotSingle");
-                            body.find('#IsSingle').attr("checked", false);
-                            body.find('#IsNotSingle').attr("checked", true);                        
-                        }
-                        if (data.IsTrack == "1") {
-                            // console.log("IsTrack");
-                            body.find('#IsTrack').attr("checked", true);
-                            body.find('#IsNotTrack').attr("checked", false);
-                        } else {
-                            // console.log("IsNotTrack");
-                            body.find('#IsTrack').attr("checked", false);
-                            body.find('#IsNotTrack').attr("checked", true);                        
-                        }                    },
+                        body.find('#SeasonID').val(obj.data.SeasonID)
+                        body.find('#TeamID').val(obj.data.TeamID)
+                        body.find('#PlayerID').val(obj.data.PlayerID)
+                        body.find('#PlayerNumber').val(obj.data.PlayerNumber)
+                    },
                     end: function () {
                         location.reload();
                     }
                 });
                 layer.full(index);
-                window.sessionStorage.setItem("ctfc_event_index", index);
-                //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
-                $(window).on("resize", function () {
-                    layer.full(window.sessionStorage.getItem("ctfc_event_index"));
-                })
+                // window.sessionStorage.setItem("ctfc_season_index", index);
+                // //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+                // $(window).on("resize", function () {
+                //     layer.full(window.sessionStorage.getItem("ctfc_season_index"));
+                // })
             } else if (layEvent === 'del') {
                 layer.confirm('确认删除', {
-                    btn: ['确认', '取消'],
-                    offset: ['100px']//按钮
+                    btn: ['确认', '取消'] //按钮
                 }, function () {
-                    axios.delete('../ctfcevent/' + data.ID, {})
-                        .then(function (response) {
-                            console.log(response);
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
+                    $.ajax({
+                        url: '../CTFCplayernumber/' + data.SeasonID + '/' + data.TeamID  + '/' + data.PlayerID,
+                        type: 'delete',
+                        dataType: 'json',
+                        header: {
+                            Accept: 'application/json'
+                        },
+                        success: function (data) {
+                        },
+                        error: function (xhr) {
+                            if (xhr.status == 401)
+							top.location.href = 'login.html';
+                        }
+                    });
                     layer.msg('删除成功', {
                         icon: 1,
                         time: 1200
@@ -201,7 +179,31 @@
                 }, function () {
                 });
             }
+    
         });
 
+
+        axios.get('../CTFCSeasonteam', {}).then(function (response) {
+            const data = response.data.data;
+            const maxseasonid = data.reduce((max, item)=>{
+                return item.SeasonID > max ? item.SeasonID : max; 
+            }, 0 )
+            const filterData = data.filter(team=> team.SeasonID === maxseasonid);
+            $.each(filterData, function (index, item) {
+            $('#Team').append('<option value="' + item.TeamID + '">' + item.TeamName + '</option>');
+            });
+            form.render();
+        })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        form.on('select(Team)', function (data) {
+            console.log(data);
+            table.reload('test', {
+                url: '../CTFCplayernumber?teamid=' + data.value,
+                
+            });
+        });
     });
 </script>

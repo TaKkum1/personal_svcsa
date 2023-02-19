@@ -88,6 +88,8 @@
 \think\Route::delete('bbplayer/:id', 'index/bbplayer/delete', [], ['id' => '\d+']);
 \think\Route::get('bbplayer/:id', 'index/bbplayer/read', [], ['id' => '\d+']);
 \think\Route::get('bbplayer', 'index/bbplayer/lists');
+\think\Route::post('bbplayer/apply', 'index/bbplayer/apply');
+\think\Route::get('bbplayer/apply', 'index/bbplayer/getapply');
 
 \think\Route::get('bbseason/:seasonid/bbteam', 'index/bbteam/lists', [], ['seasonid' => '\d+']);
 \think\Route::get('bbseason/:seasonid/bbteamrank', 'index/bbteam/rank', [], ['seasonid' => '\d+']);
@@ -198,6 +200,18 @@
 \think\Route::delete('ctfcagegroup/:id', 'index/ctfcagegroup/delete', [], ['id' => '\d+']);
 \think\Route::get('ctfcagegroup/:id', 'index/ctfcagegroup/read', [], ['id' => '\d+']);
 \think\Route::get('ctfcagegroup', 'index/ctfcagegroup/lists');
+
+\think\Route::post('ctfcseasonitem/:seasonid/:itemid/:sex', 'index/ctfcseasonitem/update', [], ['seasonid' => '\d+'],['itemid' => '\d+'],['sex' => '\d+']);
+\think\Route::post('ctfcseasonitem', 'index/ctfcseasonitem/add');
+\think\Route::delete('ctfcseasonitem/:seasonid/:itemid/:sex', 'index/ctfcseasonitem/delete', [], ['seasonid' => '\d+'],['itemid' => '\d+'],['sex' => '\d+']);
+\think\Route::get('ctfcseasonitem/:id', 'index/ctfcseasonitem/read', [], ['id' => '\d+']);
+\think\Route::get('ctfcseasonitem', 'index/ctfcseasonitem/lists');
+
+\think\Route::post('ctfcplayernumber/:seasonid/:teamid/:playerid', 'index/ctfcplayernumber/update', [], ['seasonid' => '\d+'],['teamid' => '\d+'],['playerid' => '\d+']);
+\think\Route::delete('ctfcplayernumber/:seasonid/:teamid/:playerid', 'index/ctfcplayernumber/delete', [], ['seasonid' => '\d+'],['teamid' => '\d+'],['playerid' => '\d+']);
+\think\Route::post('ctfcplayernumber', 'index/ctfcplayernumber/add');
+\think\Route::get('ctfcplayernumber/:id', 'index/ctfcplayernumber/read', [], ['id' => '\d+']);
+\think\Route::get('ctfcplayernumber', 'index/ctfcplayernumber/lists');
 
 
 

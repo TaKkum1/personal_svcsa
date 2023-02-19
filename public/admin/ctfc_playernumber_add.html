@@ -1,0 +1,133 @@
+<link rel="stylesheet" href="layui/css/layui.css">
+
+<body class="childrenBody">
+
+    <div style="padding: 25px;" class="layui-layout-body" >
+        <form class="layui-form" action="" style= "height:800;">
+
+       
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 90px;">赛季</label>
+                    <div class="layui-input-inline" style="width: 380px;  height: auto;">
+                        <select id="SeasonID" name="SeasonID" lay-verify="required" lay-filter="myselect">
+                            <option value="">选择赛季</option>
+                        </select>
+                    </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 90px;">队伍</label>
+                    <div class="layui-input-inline" style="width: 380px; height: auto;">
+                        <select id="TeamID" name="TeamID" lay-verify="required" lay-filter="myselect">
+                            <option value="">选择队伍</option>
+                        </select>
+                    </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 90px;">运动员</label>
+                    <div class="layui-input-inline" style="width: 380px; height: auto;">
+                        <select id="PlayerID" name="PlayerID" lay-verify="required" lay-filter="myselect">
+                            <option value="">选择运动员</option>
+                        </select>
+                    </div>
+            </div>
+
+            <div class="layui-form-item" >
+                <label class="layui-form-label" style="width: 90px;">分配号码牌</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="PlayerNumber" id="PlayerNumber" lay-verify="required" autocomplete="off" placeholder="请输入 100-999"  class="layui-input">
+                </div>
+            </div>
+
+
+         
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即添加</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+       
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="layui/layui.js"></script>
+    <script>
+        layui.use(['table', 'form'], function () {
+        var table = layui.table;
+        var form = layui.form;
+
+        form.on('submit(add)', function (data) {
+            var index = parent.layer.getFrameIndex(window.name);
+            
+
+            axios.post('../CTFCPlayernumber/', {
+                SeasonID: data.field.SeasonID,
+                TeamID: data.field.TeamID,
+                PlayerID: data.field.PlayerID,
+                PlayerNumber: data.field.PlayerNumber
+                
+            })
+                .then(function (response) {
+                    layer.msg('添加成功', {
+                        icon: 1,
+                        time: 1500
+                    }, function () {
+                        parent.layer.close(index);
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+  
+        });
+
+        axios.get('../CTFCSeason', {}).then(function (response) {
+            const data = response.data.data;
+            const maxseasonid = data.reduce((max, item)=>{
+            return item.ID > max ? item.ID : max; 
+        }, 0 )
+            const filterData = data.filter(season=> season.ID === maxseasonid);
+        $.each(filterData, function (index, item) {
+        $('#SeasonID').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+        });
+            form.render();
+        })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        axios.get('../CTFCSeasonteam', {}).then(function (response) {
+        const data = response.data.data;
+        const maxseasonid = data.reduce((max, item)=>{
+            return item.SeasonID > max ? item.SeasonID : max; 
+        }, 0 )
+        const filterData = data.filter(team=> team.SeasonID === maxseasonid);
+        $.each(filterData, function (index, item) {
+        $('#TeamID').append('<option value="' + item.TeamID + '">' + item.TeamName + '</option>');
+        });
+        form.render();
+    })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+        axios.get('../CTFCPlayer?all=1', {}).then(function (response) {
+        console.log(response);
+        $.each(response.data.data, function (index, item) {
+            $('#PlayerID').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+        });
+        form.render();
+    })
+        .catch(function (error) {
+            console.log(error);
+        });
+    });
+</script>
+
+</body>
