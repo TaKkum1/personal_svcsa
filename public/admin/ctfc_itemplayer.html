@@ -18,7 +18,7 @@
             </div>
             <div class="layui-input-inline">
                 <form class="layui-form" action="">
-                    <select id="Seaon" name="Sesaon" lay-verify="" lay-filter="Sesaon">
+                    <select id="Season" name="Season" lay-verify="" lay-filter="Season">
                         <option value="">选择赛季</option>
                     </select>
                 </form>
@@ -230,7 +230,25 @@
                 }, function () {
                 });
             }
-        });
+            
 
+        });
+        axios.get('../CTFCSeason', {}).then(function (response) {
+            $.each(response.data.data, function (index, item) {
+                $('#Season').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+            });
+            form.render();
+           })
+            .catch(function (error) {
+                console.log(error);
+            });
+        // form.on('select(Season)', function (data) {
+        
+        // table.reload('test', {
+        //     url: '../CTFCseasonteam?seasonid=' + data.value,
+            
+        // });
+        // });
     });
+  
 </script>
