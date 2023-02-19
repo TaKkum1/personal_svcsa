@@ -17,11 +17,12 @@ class Ctfcitemplayer extends Base
 {
     const FIELD = 'ID,SeasonID,TeamID,Sex,AgeGroupID,ItemID,PlayerID1,PlayerID2,PlayerID3,PlayerID4,PlayerID5,PlayerID6';
    
-    public function lists()
+    public function lists($seasonid = null, $teamid = null)
     {
        
         if ($this->jsonRequest()) {
             $itemplayers = Db::name('ctfc_itemplayer')->order('ID');
+            if ($seasonid && $teamid ) $itemplayers = $itemplayers->where('seasonid', $seasonid)->where('teamid', $teamid);
             $itemplayers = $itemplayers->select();
             $list = array();
             foreach ($itemplayers as $itemplayer) {
