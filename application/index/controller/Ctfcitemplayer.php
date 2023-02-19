@@ -1,7 +1,7 @@
 <?php
 /**
  * Created by Yu Lu
- * Date: Fed 07, 2023
+ * Date: Fed 17, 2023
  * Time: 13:30
  */
 
@@ -17,6 +17,81 @@ class Ctfcitemplayer extends Base
 {
     const FIELD = 'ID,SeasonID,TeamID,Sex,AgeGroupID,ItemID,PlayerID1,PlayerID2,PlayerID3,PlayerID4,PlayerID5,PlayerID6';
    
+    public function lists()
+    {
+       
+        if ($this->jsonRequest()) {
+            $itemplayers = Db::name('ctfc_itemplayer')->order('ID');
+            $itemplayers = $itemplayers->select();
+            $list = array();
+            foreach ($itemplayers as $itemplayer) {
+              $col = array();
+              $col['ID'] = $itemplayer['ID'];
+              
+              $seasonid = $itemplayer['SeasonID'];
+              $seasonname = Db::name('ctfc_season')->where('ID', $seasonid)->find()['Name'];
+              $col['SeasonID'] = $seasonid;
+              $col['SeasonName'] = $seasonname;
+              
+              $teamid = $itemplayer['TeamID'];
+              $teamname = Db::name('ctfc_team')->where('ID', $teamid)->find()['Name']; 
+              $col['TeamID'] = $teamid;
+              $col['TeamName'] = $teamname;
+
+              $col['Sex'] = $itemplayer['Sex'];
+
+              $agegroupid = $itemplayer['AgeGroupID'];
+              $agegroupname = Db::name('ctfc_agegroup')->where('ID', $agegroupid)->find()['Name'];
+              $col['AgeGroupID'] = $agegroupid;
+              $col['AgeGroupName'] = $agegroupname;
+
+              $itemid = $itemplayer['ItemID'];
+              $itemname = Db::name('ctfc_item')->where('ID', $itemid)->find()['Name'];
+              $col['ItemID']= $itemid;
+              $col['ItemName'] = $itemname;
+
+   
+              $playerid1 = $itemplayer['PlayerID1'];
+              $playername1 = Db::name('ctfc_player')->where('ID', $playerid1)->find()['Name'];
+              $col['PlayerID1']= $playerid1;
+              $col['PlayerName1'] = $playername1;
+    
+              $playerid2 = $itemplayer['PlayerID2'];
+              $playername2 = Db::name('ctfc_player')->where('ID', $playerid2)->find()['Name'];
+              $col['PlayerID2']= $playerid2;
+              $col['PlayerName2'] = $playername2;
+    
+              $playerid3 = $itemplayer['PlayerID3'];
+              $playername3 = Db::name('ctfc_player')->where('ID', $playerid3)->find()['Name'];
+              $col['PlayerID3']= $playerid3;
+              $col['PlayerName3'] = $playername3;
+    
+              $playerid4 = $itemplayer['PlayerID4'];
+              $playername4 = Db::name('ctfc_player')->where('ID', $playerid4)->find()['Name'];
+              $col['PlayerID4']= $playerid4;
+              $col['PlayerName4'] = $playername4;
+    
+              $playerid5 = $itemplayer['PlayerID5'];
+              $playername5 = Db::name('ctfc_player')->where('ID', $playerid5)->find()['Name'];
+              $col['PlayerID5']= $playerid5;
+              $col['PlayerName5'] = $playername5;
+
+              $playerid6 = $itemplayer['PlayerID6'];
+              $playername6 = Db::name('ctfc_player')->where('ID', $playerid6)->find()['Name'];
+              $col['PlayerID6']= $playerid6;
+              $col['PlayerName6'] = $playername6;
+
+              
+       
+        //       $team = Db::name('ctfc_team')->where('id', $teamid)->find();
+          
+              array_push($list, $col);
+            }
+        
+          $this->dataResult($list);
+        } 
+    }
+
 
     public function add()
     {
@@ -25,30 +100,6 @@ class Ctfcitemplayer extends Base
         $result = Db::name('ctfc_itemplayer')->insert($data);
         $this->affectedRowsResult($result);
     }
-
-
-
-    public function delete($seasonid, $teamid)
-    {
-        $this->checkauthorization();
-        $result = Db::name('ctfc_itemplayer')->where('SeasonID', $seasonid)->where('TeamID', $teamid)->delete();
-        $this->affectedRowsResult($result);
-    }
-
-
-
-    public function lists(){
-        $list = Db::name('ctfc_itemplayer')->paginate(input('pagesize'));
-        $this->paginatedResult(
-            $list->total(),
-            $list->listRows(),
-            $list->currentPage(),
-            $list->items()
-        );
-    }
-
-
-
 
     public function update($seasonid, $teamid)
     {
@@ -65,6 +116,17 @@ class Ctfcitemplayer extends Base
       
         $this->affectedRowsResult($result);
     }
+
+
+    public function delete($seasonid, $teamid)
+    {
+        $this->checkauthorization();
+        $result = Db::name('ctfc_itemplayer')->where('SeasonID', $seasonid)->where('TeamID', $teamid)->delete();
+        $this->affectedRowsResult($result);
+    }
+
+
+
 
     // public function passApplication()
     // {

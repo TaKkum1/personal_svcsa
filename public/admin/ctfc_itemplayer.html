@@ -18,8 +18,15 @@
             </div>
             <div class="layui-input-inline">
                 <form class="layui-form" action="">
-                    <select id="Item" name="Item" lay-verify="" lay-filter="Item">
-                        <option value="">选择项目</option>
+                    <select id="Seaon" name="Sesaon" lay-verify="" lay-filter="Sesaon">
+                        <option value="">选择赛季</option>
+                    </select>
+                </form>
+            </div>
+            <div class="layui-input-inline">
+                <form class="layui-form" action="">
+                    <select id="team" name="team" lay-verify="" lay-filter="team">
+                        <option value="">选择队伍</option>
                     </select>
                 </form>
             </div>
@@ -67,12 +74,12 @@
                     unresize: true,
                     sort: true,
                 }, {
-                    field: 'SeasonID',
+                    field: 'SeasonName',
                     title: '赛季名称',
                     width: 200,
                 }, 
                 {
-                    field: 'TeamID',
+                    field: 'TeamName',
                     title: '团队名称',
                     width: 200,
                     sort: true,
@@ -82,18 +89,43 @@
                     width: 60,
                 },
                 {
-                    field: 'AgeGroupID',
+                    field: 'AgeGroupName',
                     title: '年龄组',
                     width: 200,
                     sort: true,
                 }, {
-                    field: 'ItemID',
+                    field: 'ItemName',
                     title: '项目',
                     templet: '#show-img',
                     width: 200,
                     sort: true,
                 }, {
-                    field: 'PlayerIDs',
+                    field: 'PlayerName1',
+                    title: '参赛运动员',
+                    width: 200,
+                  },
+                  {
+                    field: 'PlayerName2',
+                    title: '参赛运动员',
+                    width: 200,
+                  },
+                  {
+                    field: 'PlayerName3',
+                    title: '参赛运动员',
+                    width: 200,
+                  },
+                  {
+                    field: 'PlayerName4',
+                    title: '参赛运动员',
+                    width: 200,
+                  },
+                  {
+                    field: 'PlayerName5',
+                    title: '参赛运动员',
+                    width: 200,
+                  },
+                  {
+                    field: 'PlayerName6',
                     title: '参赛运动员',
                     width: 200,
                   },
@@ -160,7 +192,12 @@
                         body.find('#Sex').val(data.Sex)
                         body.find('#AgeGroupID').val(data.AgeGroup)
                         body.find('#ItemID').val(data.Item)
-                        body.find('#PlayerIDs').val(data.Player)
+                        body.find('#PlayerID1').val(data.Player)
+                        body.find('#PlayerID2').val(data.Player)
+                        body.find('#PlayerID3').val(data.Player)
+                        body.find('#PlayerID4').val(data.Player)
+                        body.find('#PlayerID5').val(data.Player)
+                        body.find('#PlayerID6').val(data.Player)
                     },
                     end: function () {
                         location.reload();
