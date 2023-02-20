@@ -220,6 +220,8 @@
 \think\Route::delete('ctfcitemplayer/:id', 'index/ctfcitemplayer/delete', [], ['id' => '\d+']);
 \think\Route::get('ctfcitemplayer/:id', 'index/ctfcitemplayer/read', [], ['id' => '\d+']);
 \think\Route::get('ctfcitemplayer', 'index/ctfcitemplayer/lists');
+\think\Route::get('ctfcitemplayer/getTypeOfItem', 'index/ctfcitemplayer/getItemType');
+
 return [
 
 //    '[bbcompetition]' => [

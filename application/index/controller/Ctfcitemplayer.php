@@ -126,39 +126,20 @@ class Ctfcitemplayer extends Base
         $this->affectedRowsResult($result);
     }
 
+    public function getItemType()
+    {
+        $this->checkauthorization();
 
-
-
-    // public function passApplication()
-    // {
-    //     $this->checkauthorization();
-
-    //     $data = request()->only('SeasonIDTeamIDs,Passed', 'post'); //SeasonIDTeamIDs
-    //     $SeasonIDTeamIDs = urldecode($data['SeasonIDTeamIDs']);
-    //     //TODO: split SeasonIDTeamIDs to TeamIDs
-    //     $SeasonIDTeamIDs_arr = explode(',', $SeasonIDTeamIDs);
-
-    //     // $teamIDs = urldecode($data['TeamIDs']);
-    //     $passed = isset($data['Passed']) ? boolval($data['Passed']) : true;
-
-    //     $result = 0;
-    //     $emailRes = 0;
-
-    //     if ($passed) {
-    //         foreach ($SeasonIDTeamIDs_arr as $SeasonIDTeamID) {
-
-    //             $tmparr = explode("-", $SeasonIDTeamID);
-    //             $result += Db::name('ctfc_itemplayer')->where('SeasonID', $tmparr[0])->where('TeamID', $tmparr[1])
-    //             ->update(['Approve' => 1]);
-                    
-    //         }
-    //  }
-
-
-    //     $this->jsonResult(0, ['affectedRows' => $result, 'affectedEmails' => $emailRes]);
-
-    // }
-
-
+        $data = request()->only('ItemID', 'get');
+        $itemid = urldecode($data['ItemID']);
+        $ctfc_item = Db::name('ctfc_item')->where('ID', $itemid);
+        $ctfc_items = $ctfc_item->select();
+        $list = array();
+        foreach ($ctfc_items as $ctfc_item) {
+            $issingle = $ctfc_item['IsSingle'];
+            array_push($list, $issingle);
+        }
+        $this->jsonResult(0, ['affectedRows' => $list[0]]);
+    }
 
 }
