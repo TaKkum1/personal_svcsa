@@ -159,5 +159,64 @@ class Ctfcitemplayer extends Base
         }
         $this->jsonResult(0, ['affectedRows' => $list]);
     }
+    
+    function calculateAge($dateOfBirth) {
+        $currentYear = date('Y');
+        $birthYear = date('Y', strtotime($dateOfBirth));
+        $age = $currentYear - $birthYear;
+        // if (date('md') < date('md', strtotime($dateOfBirth))) {
+            $age--;
+        // }
+        return $age;
+    }
+    function getAgeGroup($age, $agegroups) {
+        foreach ($agegroups as $agegroup) {
+            if ($age >= $agegroup['MinAge'] && $age <= $agegroup['MaxAge']) {
+                return $agegroup['ID'];
+            }
+        }
+        // If age does not match any age group, return null or an appropriate value.
+        return null;
+    }
+
+    public function getPlayerAgeSex() {
+        $this->checkauthorization();
+        $data = request()->only('PlayerID', 'get');
+        $playerid = urldecode($data['PlayerID']);
+        
+        
+        $player_db = Db::name('ctfc_player')->where('ID', $playerid);
+        $players = $player_db->select();
+        $birthdays = array();
+        $sex = array();
+        foreach ($players as $player) {
+            $player_birthday = $player['Birthday'];
+            $player_sex = $player['Sex'];
+            array_push($birthdays, $player_birthday);
+            array_push($sex, $player_sex);
+        }
+
+        $currentAge = $this->calculateAge($birthdays[0]);
+
+        $agegroup_db = Db::name('ctfc_agegroup');
+        $agegroups = $agegroup_db->select();
+        $agegrouplist =array();
+        foreach ($agegroups as $agegroup) {
+            $agegroup_item =array();
+            $agegroup_item['ID'] = $agegroup['ID'];
+            $agegroup_item['MinAge'] = $agegroup['MinAge'];
+            $agegroup_item['MaxAge'] = $agegroup['MaxAge'];
+            array_push($agegrouplist, $agegroup_item);
+        }
+
+        $currentagegroup = $this->getAgeGroup($currentAge, $agegrouplist);
+        
+        $result = array();
+        array_push($result, $currentagegroup);
+        array_push($result, $sex[0]);
+        
+        $this->jsonResult(0, ['affectedRows' => $result]);
+    }
 }
+
 
