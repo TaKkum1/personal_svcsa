@@ -306,7 +306,15 @@
             $('#SexSingle').empty();
             getPlayerAgeSex(playerid, function(playerAgeGroup, playerSex){
                 console.log("calling getPlayerAgeSex: "+ playerAgeGroup + " and " + playerSex);
-                $('#AgeGroupIDSingle').append('<option value="' + playerAgeGroup + '">' + playerAgeGroup + '</option>');
+                axios.get('../CTFCAgegroup', {}).then(function (response) {
+                console.log(response);
+                $.each(response.data.data, function (index, element) {
+                    if(playerAgeGroup == element.ID) {
+                        $('#AgeGroupIDSingle').append('<option value="' + element.ID + '">' + element.Name + '</option>');
+                    }
+                });
+                form.render();
+                })
                 $('#SexSingle').append('<option value="' + playerSex + '">' + playerSex + '</option>');
                 form.render();
 
@@ -346,12 +354,6 @@
             console.log(error);
         });
 
-
-
-
-
-
-        
    
 
         
