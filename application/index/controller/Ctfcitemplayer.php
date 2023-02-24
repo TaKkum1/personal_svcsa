@@ -129,7 +129,6 @@ class Ctfcitemplayer extends Base
     public function getItemType()
     {
         $this->checkauthorization();
-
         $data = request()->only('ItemID', 'get');
         $itemid = urldecode($data['ItemID']);
         $ctfc_item = Db::name('ctfc_item')->where('ID', $itemid);
@@ -142,4 +141,23 @@ class Ctfcitemplayer extends Base
         $this->jsonResult(0, ['affectedRows' => $list[0]]);
     }
 
+
+    public function YougetSeasonTeamPlayers()
+    {
+        
+        $this->checkauthorization();
+        $data = request()->only('SeasonID,TeamID', 'get');
+        $teamid = urldecode($data['TeamID']);
+        $seasonid = urldecode($data['SeasonID']);
+        
+        $aaa = Db::name('ctfc_playernumber')->where('SeasonID', $seasonid)->where('TeamID', $teamid);
+        $aaa = $aaa->select();
+        $list = array();
+        foreach ($aaa as $ctfc_itemplayer) {
+            $players = $ctfc_itemplayer['PlayerID'];
+            array_push($list, $players);
+        }
+        $this->jsonResult(0, ['affectedRows' => $list]);
+    }
 }
+

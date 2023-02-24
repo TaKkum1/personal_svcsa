@@ -11,7 +11,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 90px;">赛季</label>
                     <div class="layui-input-inline" style="width: 380px;  height: auto;">
-                        <select id="SeasonID" name="SeasonID" lay-verify="required" lay-filter="myselect">
+                        <select id="SeasonID" name="SeasonID" lay-verify="required" lay-filter="Season">
                             <option value="">选择赛季</option>
                         </select>
                     </div>
@@ -20,7 +20,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 90px;">队伍</label>
                     <div class="layui-input-inline" style="width: 380px; height: auto;">
-                        <select id="TeamID" name="TeamID" lay-verify="required" lay-filter="myselect">
+                        <select id="TeamID" name="TeamID" lay-verify="required" lay-filter="TeamClick">
                             <option value="">选择队伍</option>
                         </select>
                     </div>
@@ -40,6 +40,25 @@
 
             <div class="layui-form-item">
                 <div id="0-dropdown" class="dropdown">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 90px;">年龄组</label>
+                        <div class="layui-input-inline" style="width: 380px; height: auto;">
+                            <select id="AgeGroupID" name="AgeGroupID" lay-verify="required" lay-filter="AgeGroupID">
+                                <option value="">选择年龄组</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 90px;">性别/组别</label>
+                        <div class="layui-input-inline" style="width: 380px; height: auto;">
+                            <select id="Sex" name="Sex" lay-verify="required" lay-filter="Sex">
+                                <option value="">选择性别/组别</option>
+                                <option value="M">男子组</option>
+                                <option value="F">女子组</option>
+                                <option value="mix">混合组</option>
+                            </select>
+                        </div>
+                    </div>
                     <label class="layui-form-label" style="width: 90px;">接力队员</label>
                     <div class="layui-input-inline" style="width: 380px; height: auto;">
                         <select id="PlayerID1" name="PlayerID1" lay-verify="required">
@@ -61,24 +80,7 @@
                             <option value="">选择队员#6 (选填)</option>
                         </select>
                     </div>
-                    <div class="layui-form-item">
- 
-                        <label class="layui-form-label" style="width: 90px;">年龄组</label>
-                        <div class="layui-input-inline" style="width: 380px; height: auto;">
-                            <select id="AgeGroupID" name="AgeGroupID" lay-verify="required" lay-filter="AgeGroupID">
-                                <option value="">选择年龄组</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="layui-form-item">
-         
-                        <label class="layui-form-label" style="width: 90px;">性别/组别</label>
-                        <div class="layui-input-inline" style="width: 380px; height: auto;">
-                            <select id="Sex" name="Sex" lay-verify="required" lay-filter="Sex">
-                                <option value="">选择性别/组别</option>
-                            </select>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
 
@@ -87,7 +89,7 @@
                 <div id="1-dropdown" class="dropdown">
                     <label class="layui-form-label" style="width: 90px;">队员</label>
                     <div class="layui-input-inline" style="width: 380px; height: auto;">
-                        <select id="PlayerID1" name="PlayerID1" lay-verify="required">
+                        <select id="PlayerIDOne" name="PlayerIDOne" lay-verify="required">
                             <option value="">选择队员 (必填)</option>
                         </select>
                     </div>
@@ -150,6 +152,34 @@
             }
           });
         }
+    
+    function getPlayerList(sid, tid, callback) {
+        let currentPlayerList = [];
+        
+        console.log('sidtid=====', sid, tid);
+        $.ajax({
+            url: '../ctfcitemplayer/getSeasonTeamPlayers',
+            type: 'Get',
+            dataType: 'json',
+            data: {
+            SeasonID: sid,
+            TeamID: tid
+            },
+            header: {
+            Accept: 'application/json'
+            },
+            success: function (data) {
+            currentPlayerList = data['affectedRows'];
+            console.log('PlayerList=' + currentPlayerList);
+            callback(currentPlayerList); // Call the callback function with the currentPlayerList
+            },
+            error: function (xhr) {
+            console.log(xhr.status);
+            }
+        });
+    }
+
+        
 
         layui.use(['table', 'form'], function () {
         var table = layui.table;
@@ -189,35 +219,84 @@
         });
 
         axios.get('../CTFCSeason', {}).then(function (response) {
+            console.log(response);
             const data = response.data.data;
-            const maxseasonid = data.reduce((max, item)=>{
-            return item.ID > max ? item.ID : max; 
-        }, 0 )
-            const filterData = data.filter(season=> season.ID === maxseasonid);
-        $.each(filterData, function (index, item) {
+        $.each(data, function (index, item) {
         $('#SeasonID').append('<option value="' + item.ID + '">' + item.Name + '</option>');
         });
             form.render();
         })
             .catch(function (error) {
                 console.log(error);
-            });
+        });
 
-        axios.get('../CTFCSeasonteam', {}).then(function (response) {
-        const data = response.data.data;
-        const maxseasonid = data.reduce((max, item)=>{
-            return item.SeasonID > max ? item.SeasonID : max; 
-        }, 0 )
-        const filterData = data.filter(team=> team.SeasonID === maxseasonid);
-        $.each(filterData, function (index, item) {
-        $('#TeamID').append('<option value="' + item.TeamID + '">' + item.TeamName + '</option>');
+        var currentseasonid;
+        var currentteamid;
+        form.on('select(Season)', function (data) {
+            console.log('currentseasonid' + data.value);
+            currentseasonid = data.value;
+            axios.get('../CTFCSeasonteam?seasonid=' + data.value, {}).then(function (response) {
+            console.log(response);
+            const data = response.data.data; 
+            '<option value=""></option>';//clear the element
+            $('#TeamID').empty();
+            if(data.length != 0) {
+                $.each(response.data.data, function (index, item) {
+                    $('#TeamID').append('<option value="' + item.TeamID + '">' + item.TeamName + '</option>');
+                });
+            }
+            form.render();
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        });        
+
+        form.on('select(TeamClick)', function (data) {
+            console.log('currentteamid' + data.value);
+            currentteamid = data.value;
+            '<option value=""></option>';//clear the element
+            $('#PlayerIDOne').empty();
+            getPlayerList(currentseasonid, currentteamid, function(currentPlayerList) {
+                console.log(currentPlayerList);
+                axios.get('../CTFCPlayer?all=1', {}).then(function (response) {
+                    console.log(response);
+                    $.each(response.data.data, function (index, item) {
+                        if(currentPlayerList.includes(item.ID)) {
+                            $('#PlayerIDOne').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                        }
+                    });
+                    form.render();
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            });
+            
+            // console.log(currentPlayerList);
+            console.log('ENDDD');
+
+        });  
+        
+        axios.get('../CTFCPlayernumber?seasonid=' + currentseasonid + '&&teamid=' + currentteamid, {}).then(function (response) {
+            console.log(response.data)
+        });
+
+
+        axios.get('../CTFCAgegroup', {}).then(function (response) {
+        console.log(response);
+        $.each(response.data.data, function (index, element) {
+            $('#AgeGroupID').append('<option value="' + element.ID + '">' + element.Name + '</option>');
         });
         form.render();
-    })
+        })
+        
         .catch(function (error) {
             console.log(error);
         });
 
+
+        
         axios.get('../CTFCEvent', {}).then(function (response) {
         console.log(response);
         $.each(response.data.data, function (index, element) {
@@ -225,20 +304,20 @@
         });
         form.render();
         })
+        
         .catch(function (error) {
             console.log(error);
         });
 
-        axios.get('../CTFCPlayer?all=1', {}).then(function (response) {
-        // console.log(response);
-        $.each(response.data.data, function (index, item) {
-            $('#PlayerID').append('<option value="' + item.ID + '">' + item.Name + '</option>');
-        });
-        form.render();
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+
+
+
+
+
+        
+   
+
+        
     });
 </script>
 
