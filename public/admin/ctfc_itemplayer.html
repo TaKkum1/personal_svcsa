@@ -245,24 +245,18 @@
             .catch(function (error) {
                 console.log(error);
             });
-            axios.get('../CTFCSeason', {}).then(function (response) {
-            $.each(response.data.data, function (index, item) {
-                $('#SeasonID').append('<option value="' + item.ID + '">' + item.ID + '</option>');
-            });
+
+        var currentseasonid;
+        form.on('select(Season)', function (data) {
+            $('#Team').empty();
+            $('#Team').append('<option value="">' + "选择队伍" + '</option>');
             form.render();
-           })
-            .catch(function (error) {
-                console.log(error);
-            });
 
-
-
-            var currentseasonid;
-            form.on('select(Season)', function (data) {
             console.log(data.value);
             axios.get('../CTFCSeasonteam?seasonid=' + data.value, {}).then(function (response) {
             console.log(response);
             const data = response.data.data; 
+
             $.each(response.data.data, function (index, item) {
                 $('#Team').append('<option value="' + item.TeamID + '">' + item.TeamName + '</option>');
             });
