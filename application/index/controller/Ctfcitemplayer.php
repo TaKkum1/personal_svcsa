@@ -119,13 +119,12 @@ class Ctfcitemplayer extends Base
     }
 
 
-    public function delete($seasonid, $teamid)
-    {
+    public function delete($id){
         $this->checkauthorization();
-        $result = Db::name('ctfc_itemplayer')->where('SeasonID', $seasonid)->where('TeamID', $teamid)->delete();
+
+        $result = Db::name('ctfc_itemplayer')->where('ID', $id)->delete();
         $this->affectedRowsResult($result);
     }
-
     public function getItemType()
     {
         $this->checkauthorization();
