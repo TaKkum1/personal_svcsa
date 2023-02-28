@@ -102,18 +102,19 @@ class Ctfcitemplayer extends Base
         $this->affectedRowsResult($result);
     }
 
-    public function update($seasonid, $teamid)
+    public function update($id)
     {
         $this->checkauthorization();
 
         $data = request()->only(self::FIELD, 'post');
         $this->makeNull($data); 
-        $seasonteam_data = array();
-        $seasonteam_data['SeasonID'] = $data['SeasonID'];
-        $seasonteam_data['TeamID'] = $data['TeamID'];
-        $seasonteam_data['Approve'] = $data['Approve'];
+        $itemplayer_data = array();
+        $itemplayer_data['SeasonID'] = $data['SeasonID'];
+        $itemplayer_data['TeamID'] = $data['TeamID'];
+        $itemplayer_data['ItemID'] = $data['ItemID'];
+   
 
-        $result = Db::name('ctfc_itemplayer')->where('SeasonID', $seasonid)->where('TeamID', $teamid)->update($seasonteam_data);
+        $result = Db::name('ctfc_itemplayer')->where('ID', $id)->update($itemplayer_data);
       
         $this->affectedRowsResult($result);
     }

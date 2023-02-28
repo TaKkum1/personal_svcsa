@@ -176,6 +176,7 @@
             var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
             var tr = obj.tr; //获得当前行 tr 的DOM对象
             console.log(data.ID);
+            console.log(data.AgeGroupID);
 
             if (layEvent === 'edit') { //查看
                 console.log(obj.data);
@@ -190,17 +191,20 @@
                     success: function (layero, index) {
                         // layer.iframeAuto(index);
                         var body = layer.getChildFrame('body', index);
-                        body.find('#SeasonID').val(data.SeasonName)
-                        body.find('#TeamID').val(data.TeamName)
+                        body.find('#SeasonID').val(data.SeasonID)
+                        body.find('#TeamID').val(data.TeamID)
+                        body.find('#SexSingle').val(data.Sex)
+                        body.find('#AgeGroupIDSingle').val(data.AgeGroupID)
                         body.find('#Sex').val(data.Sex)
-                        body.find('#AgeGroupID').val(data.AgeGroup)
-                        body.find('#ItemID').val(data.Item)
-                        body.find('#PlayerID1').val(data.Player)
-                        body.find('#PlayerID2').val(data.Player)
-                        body.find('#PlayerID3').val(data.Player)
-                        body.find('#PlayerID4').val(data.Player)
-                        body.find('#PlayerID5').val(data.Player)
-                        body.find('#PlayerID6').val(data.Player)
+                        body.find('#AgeGroupID').val(data.AgeGroupID)
+                        body.find('#ItemID').val(data.ItemID)
+                        body.find('#PlayerIDOne').val(data.PlayerID1)
+                        body.find('#PlayerID1').val(data.PlayerID1)
+                        body.find('#PlayerID2').val(data.PlayerID2)
+                        body.find('#PlayerID3').val(data.PlayerID3)
+                        body.find('#PlayerID4').val(data.PlayerID4)
+                        body.find('#PlayerID5').val(data.PlayerID5)
+                        body.find('#PlayerID6').val(data.PlayerID6)
                     },
                     end: function () {
                         location.reload();
