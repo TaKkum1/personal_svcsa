@@ -153,6 +153,7 @@
 \think\Route::delete('ctfcplayer/:id', 'index/ctfcplayer/delete', [], ['id' => '\d+']);
 \think\Route::get('ctfcplayer/:id', 'index/ctfcplayer/read', [], ['id' => '\d+']);
 \think\Route::get('ctfcplayer', 'index/ctfcplayer/lists');
+\think\Route::post('ctfcplayer/passapp', 'index/ctfcplayer/passApplication');
 
 # route for 田径运动队 
 \think\Route::post('ctfcteam/passapp', 'index/ctfcteam/passApplication');

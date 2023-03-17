@@ -218,7 +218,7 @@ notfound:
         if($passed) {
             foreach ($playerIDsarr as $playerID) {
                 $result += Db::name('ctfc_player')->where('ID', $playerID)
-                    ->update(['Flag'=>1]);
+                    ->update(['Approval'=>1]);
             }
         } else {
             foreach ($playerIDsarr as $playerID) {

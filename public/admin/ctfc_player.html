@@ -13,6 +13,11 @@
         <div class="layui-tab-content">
             <div class="layui-input-inline" style="">
                 <div class="layui-input-inline">
+                    <button id="tongguoAll" class="layui-btn layui-btn-normal">审核通过</button>
+                </div>
+            </div>
+            <div class="layui-input-inline" style="">
+                <div class="layui-input-inline">
                     <button id="add" class="layui-btn layui-btn-normal">新建田径选手</button>
                 </div>
             </div>
@@ -26,6 +31,14 @@
                 <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
                 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
             </script>
+            <script type="text/html" id="shenhe">
+                {{#  if(d.Approval==0){ }}
+                <a class="layui-btn layui-btn layui-btn-xs" lay-event="tongguo">通过</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="bohui">驳回</a>
+                {{#  } else { }}
+                <a class="layui-btn layui-btn-disabled layui-btn-xs">已通过</a>
+                {{#  } }}
+            </script>
         </div>
     </div>
 </div>
@@ -33,6 +46,35 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="layui/layui.js"></script>
 <script>
+    function tongguo(ids, passed) {
+      console.log(ids);
+      console.log(passed);
+        $.ajax({
+            url: '../ctfcplayer/passapp',
+            type: 'Post',
+            dataType: 'json',
+            data: {
+                PlayerIDs: ids,
+                Passed: passed
+            },
+            header: {
+                Accept: 'application/json'
+            },
+            success: function (data) {
+                    layer.msg('成功审核通过' + data['affectedRows']  + '个运动员，发送了' + data['affectedEmails'] +'个邮件', {
+                        icon: 1,
+                        time: 1200
+                    }, function () {
+                        location.reload();
+                    });
+            },
+            error: function (xhr) {
+                if (xhr.status == 401)
+							top.location.href = 'login.html';
+            }
+        });
+    }
+
     layui.use(['table', 'form'], function () {
         var table = layui.table;
         var form = layui.form;
@@ -55,6 +97,10 @@
             title: '用户数据表',
             cols: [
                 [{
+                    type: 'checkbox',
+                    fixed: 'center',
+                    width: 90
+                }, {
                     field: 'ID',
                     title: 'ID',
                     width: 60,
@@ -83,7 +129,12 @@
                     field: 'Email',
                     title: '电子邮件',
                     width: 250,
-                  }, {
+                }, {
+                    field: 'Approval',
+                    title: '审核',
+                    width: 130,
+                    toolbar: '#shenhe'
+                }, {
                     title: '操作',
                     fixed: 'right',
                     width: 122,
@@ -99,6 +150,28 @@
 
             }
         });
+        $('#tongguoAll').click(function () {
+            var mycars = ''
+            var data = table.checkStatus('test').data; //idTest 即为基础参数 id 对应的值
+            mycars = '';
+            if (data.length === 0) {
+                layer.alert('请至少选择一个项目')
+            } else {
+                for (var i = 0; i < data.length; i++) {
+                    if (i === data.length - 1) {
+                        if (data[i].Approval === 0) {
+                            mycars += data[i].ID
+                        }
+                    } else {
+                        if (data[i].Approval === 0) {
+                            mycars += data[i].ID + ','
+                        }
+                    }
+                }
+                tongguo(mycars, 1)
+            }
+
+        })
         $("#add").click(function () {
             var index=layer.open({
                 type: 2,
@@ -184,6 +257,22 @@
                     }, function () {
                         location.reload();
                     });
+                }, function () {
+                });
+            } else if (layEvent === 'tongguo') {
+                layer.confirm('确认要审核通过吗？', {
+                    btn: ['确认', '取消'] //按钮
+                }, function () {
+                    layer.msg('正在通过...', {icon: 7});
+                    tongguo(data.ID, 1)
+                }, function () {
+                });
+            } else if (layEvent === 'bohui') {
+                layer.confirm('确认要驳回吗？', {
+                    btn: ['确认', '取消'] //按钮
+                }, function () {
+                    layer.msg('正在驳回...', {icon: 7});
+                    tongguo(data.ID, 0)
                 }, function () {
                 });
             }

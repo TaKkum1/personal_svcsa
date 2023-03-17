@@ -308,12 +308,12 @@ class Bbplayer extends Base
                     ->update(['Approval'=>1]);
             }
         } 
-        // else {
-        //     foreach ($playerIDsarr as $playerID) {
-        //         $result += Db::name('bb_player')->where('ID', $playerID)
-        //             ->delete();
-        //     }
-        // }
+        else {
+            foreach ($playerIDsarr as $playerID) {
+                $result += Db::name('bb_player')->where('ID', $playerID)
+                    ->delete();
+            }
+        }
 
         $this->affectedRowsResult($result);
     }
