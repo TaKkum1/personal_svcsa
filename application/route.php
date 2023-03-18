@@ -148,12 +148,15 @@
 
 \think\Route::post('ctfcmatch/:matchid/apply', 'index/ctfcplayer/apply', [], ['matchid' => '\d+']);
 \think\Route::get('ctfcmatch/:matchid/apply', 'index/ctfcplayer/getapply', [], ['matchid' => '\d+']);
+
 \think\Route::post('ctfcplayer/passapp', 'index/ctfcplayer/passApplication');
 \think\Route::post('ctfcplayer/:id', 'index/ctfcplayer/update', [], ['id' => '\d+']);
 \think\Route::post('ctfcplayer', 'index/ctfcplayer/add');
 \think\Route::delete('ctfcplayer/:id', 'index/ctfcplayer/delete', [], ['id' => '\d+']);
 \think\Route::get('ctfcplayer/:id', 'index/ctfcplayer/read', [], ['id' => '\d+']);
 \think\Route::get('ctfcplayer', 'index/ctfcplayer/lists');
+\think\Route::post('ctfcplayer/apply', 'index/ctfcplayer/apply');
+\think\Route::get('ctfcplayer/apply', 'index/ctfcplayer/getapply');
 
 # route for 田径运动队 
 \think\Route::post('ctfcteam/passapp', 'index/ctfcteam/passApplication');
