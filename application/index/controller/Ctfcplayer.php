@@ -15,6 +15,7 @@ use think\Session;
 
 class Ctfcplayer extends Base
 {
+    const APPLY_PLAYER_FIELD = 'Name,Birthday,Email,Sex,PhotoSrc';
     const FIELD = 'Name,Sex,Birthday,PhotoSrc,Email';
 
     public function add()
@@ -39,42 +40,44 @@ class Ctfcplayer extends Base
         $this->affectedRowsResult($result);
     }
 
-    public function getapply($matchid)
+    public function getapply()
     {
         $this->headerAndFooter('ctfc');
         return $this->view->fetch('ctfcplayer/apply');
     }
 
-    public function apply($matchid)
+    public function apply()
     {
-        $data = request()->only(self::FIELD, 'post');
+        $data = request()->only(self::APPLY_PLAYER_FIELD, 'post');
         $this->makeNull($data);
-        if(!isset($data["MatchID"]))
-            $data["MatchID"]=$matchid;
+
+        $player = array();
+        $player["Name"] = $data["Name"];
+        $player["Birthday"] = $data["Birthday"];
+        $player["Email"] = $data["Email"];
+        $player["Sex"] = $data["Sex"];
+
         $validator = validate('ctfc_player');
-        $result = $validator->check($data);
+        $result = $validator->check($player);
         if (!$result){
             $this->affectedRowsResult(0);
         }
-        $data["Flag"] = 0;
+
+        $player["PhotoSrc"] = "";
         $assetUrl = getAssetUploadUrl();
+        $infophotofile = request()->file('Photo');
 
-        $infophotosrc = request()->file('Photo')
-            ->move( __DIR__ . $assetUrl);
+        if($infophotofile)
+            $player["PhotoSrc"] = $infophotofile->move(__DIR__ . $assetUrl)
+                ->getSaveName();
 
-        if($infophotosrc) {
-            $data["PhotoSrc"] = $infophotosrc->getSaveName();
-        }
-
-        $result = Db::name('ctfc_player')->insert($data);
-
-        if($this->jsonRequest())
-            $this->affectedRowsResult($result);
+        $result = Db::name('ctfc_player')->insert($player);
 
         $this->headerAndFooter('ctfc');
 
         $applyresult='';
-        if($result>0) $applyresult = '您的申请已提交，审核后将会给您发邮箱或者短信通知，请关注！';
+        if($result > 0) 
+            $applyresult = '您的申请已提交，审核后将会给您发邮箱或者短信通知，请关注！';
         $this->view->assign('applyresult',$applyresult);
         return $this->view->fetch('ctfcplayer/applyres');
     }
@@ -100,7 +103,7 @@ class Ctfcplayer extends Base
 
         return $this->view->fetch('player/ctfcread');
 
-notfound:
+        notfound:
         header("HTTP/1.0 404 Not Found");
         die;
     }
@@ -194,11 +197,11 @@ notfound:
 
         $data = request()->only(self::FIELD, 'post');
         $this->makeNull($data);
-//        $validator = validate('Ctfc_player');
-//        $result = $validator->check($data);
-//        if (!$result){
-//            $this->result(0);
-//        }
+        // $validator = validate('Ctfc_player');
+        // $result = $validator->check($data);
+        // if (!$result){
+        //     $this->result(0);
+        // }
         $result = Db::name('ctfc_player')->where('ID', $id)->update($data);
         $this->affectedRowsResult($result);
     }
