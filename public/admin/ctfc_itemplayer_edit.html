@@ -108,7 +108,7 @@
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label" style="width: 90px;">所属年龄组</label>
-                        <div class="layui-input-inline" style="width: 380px; height: auto;">
+                        <div class="layui-input-inline" style="widt h: 380px; height: auto;">
                             <input id="AgeGroupIDSingle" type="hidden">
                             <select readonly id="AgeGroupIDSingle_s" name="AgeGroupIDSingle" lay-filter="AgeGroupIDSingleClick">
                                 <option value="">选择年龄组</option>
@@ -262,7 +262,7 @@
             var global_currentIsSingleFlag;
             CheckIsSingle(xiangmu, function(currentIsSingleFlag) {
                 global_currentIsSingleFlag = currentIsSingleFlag;
-
+            
                 var index = parent.layer.getFrameIndex(window.name);
                 console.log('global_currentIsSingleFlag='+global_currentIsSingleFlag);
 
@@ -281,11 +281,11 @@
                         AgeGroupID: data.field.AgeGroupIDSingle,
                         ItemID: data.field.ItemID,
                         PlayerID1: data.field.PlayerIDOne,
-                        PlayerID2: null,
-                        PlayerID3: null,
-                        PlayerID4: null,
-                        PlayerID5: null,
-                        PlayerID6: null,
+                        PlayerID2: 0,
+                        PlayerID3: 0,
+                        PlayerID4: 0,
+                        PlayerID5: 0,
+                        PlayerID6: 0,
                     })
                     .then(function (response) {
                         layer.msg('添加成功', {
@@ -299,9 +299,18 @@
                         console.log(error);
                     });
                 } else {
-                 console.log('data.field='+data.field);
-
-                    axios.post('../CTFCItemplayer/', {
+                    console.log('data.field.SeasonID='+data.field.SeasonID);
+                    console.log('data.field.TeamID='+data.field.TeamID);
+                    console.log('data.field.Sex='+data.field.Sex);
+                    console.log('data.field.AgeGroupID='+data.field.AgeGroupID);
+                    console.log('data.field.ItemID='+data.field.ItemID);
+                    console.log('data.field.PlayerID1='+data.field.PlayerID1);
+                    console.log('data.field.PlayerID2='+data.field.PlayerID2);
+                    console.log('data.field.PlayerID3='+data.field.PlayerID3);
+                    console.log('data.field.PlayerID4='+data.field.PlayerID4);
+                    console.log('data.field.PlayerID5='+data.field.PlayerID5);
+                    console.log('data.field.PlayerID6='+data.field.PlayerID6);
+                 axios.post('../CTFCItemplayer/'+ $('input[name="ID"]').val(), {
                         SeasonID: data.field.SeasonID,
                         TeamID: data.field.TeamID,
                         Sex: data.field.Sex,
@@ -493,7 +502,7 @@
                     singleSex = $("#SexSingle").val();
                     singleAgeGroup = $("#AgeGroupIDSingle").val();
                     singlePlayerIDOne = $("#PlayerIDOne").val();
-                    
+                    console.log('singlePlayerIDOne='+singlePlayerIDOne);
                     $('#SexSingle_s').append('<option value="' + singleSex + '">' + singleSex + '</option>');
                     $('#SexSingle_s').find("option").attr("selected", "selected");
                     $('#SexSingle_s').find("option").attr("class", "layui-this");
@@ -515,6 +524,7 @@
 
                     axios.get('../CTFCPlayer?all=1', {}).then(function (response) {
                         $.each(response.data.data, function (index, element) {
+                            console.log('singlePlayerIDOne='+singlePlayerIDOne);
                             if(singlePlayerIDOne == element.ID) {
                                 singlePlayerIDOneName = element.Name;
                                 $('#PlayerIDOne_s').append('<option value="' + singlePlayerIDOne + '">' + singlePlayerIDOneName + '</option>');
@@ -529,9 +539,9 @@
                         // console.log(currentseasonid + " and " + currentteamid)
                         getPlayerList(currentseasonid, currentteamid, function(currentPlayerList) {
                             // console.log(currentPlayerList);
-                            $('#PlayerIDOne_s').empty();
+                            // $('#PlayerIDOne_s').empty();
                             $.each(response.data.data, function (index, item) {
-                            if(currentPlayerList.includes(item.ID)) {
+                            if(currentPlayerList.includes(item.ID) & singlePlayerIDOne != item.ID) {
                                 // console.log(item.Name);
                                 $('#PlayerIDOne_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
                                 // $('#PlayerID1').append('<option value="' + item.ID + '">' + item.Name + '</option>');

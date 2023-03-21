@@ -111,7 +111,14 @@ class Ctfcitemplayer extends Base
         $itemplayer_data = array();
         $itemplayer_data['SeasonID'] = $data['SeasonID'];
         $itemplayer_data['TeamID'] = $data['TeamID'];
-        $itemplayer_data['ItemID'] = $data['ItemID'];
+        $itemplayer_data['Sex'] = $data['Sex'];
+        $itemplayer_data['AgeGroupID'] = $data['AgeGroupID'];
+        $itemplayer_data['PlayerID1'] = $data['PlayerID1'];
+        $itemplayer_data['PlayerID2'] = $data['PlayerID2'];
+        $itemplayer_data['PlayerID3'] = $data['PlayerID3'];
+        $itemplayer_data['PlayerID4'] = $data['PlayerID4'];
+        $itemplayer_data['PlayerID5'] = $data['PlayerID5'];
+        $itemplayer_data['PlayerID6'] = $data['PlayerID6'];
    
 
         $result = Db::name('ctfc_itemplayer')->where('ID', $id)->update($itemplayer_data);
