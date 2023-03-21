@@ -207,6 +207,13 @@
 \think\Route::get('ctfcseasonitem/:id', 'index/ctfcseasonitem/read', [], ['id' => '\d+']);
 \think\Route::get('ctfcseasonitem', 'index/ctfcseasonitem/lists');
 
+\think\Route::post('ctfcplayernumber/:seasonid/:teamid/:playerid', 'index/ctfcplayernumber/update', [], ['seasonid' => '\d+'],['teamid' => '\d+'],['playerid' => '\d+']);
+\think\Route::delete('ctfcplayernumber/:seasonid/:teamid/:playerid', 'index/ctfcplayernumber/delete', [], ['seasonid' => '\d+'],['teamid' => '\d+'],['playerid' => '\d+']);
+\think\Route::post('ctfcplayernumber', 'index/ctfcplayernumber/add');
+\think\Route::get('ctfcplayernumber/:id', 'index/ctfcplayernumber/read', [], ['id' => '\d+']);
+\think\Route::get('ctfcplayernumber', 'index/ctfcplayernumber/lists');
+
+
 return [
 
 //    '[bbcompetition]' => [
