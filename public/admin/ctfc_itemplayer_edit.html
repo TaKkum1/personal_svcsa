@@ -11,6 +11,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 90px;">赛季</label>
                     <div class="layui-input-inline" style="width: 380px;  height: auto;">
+                        <input id="ID" name="ID" type="hidden" value="">
                         <input id="SeasonID" type="hidden">
                         <select id="SeasonID_s" name="SeasonID" lay-verify="required" lay-filter="Season">
                             <option value="">选择赛季</option>
@@ -244,78 +245,95 @@
         var table = layui.table;
         var form = layui.form;
 
-        // form.on('select(ItemID)', function (data) {
-        //     // console.log('ItemID='+data.value);
+        form.on('select(ItemID)', function (data) {
+            // console.log('ItemID='+data.value);
             
-        //     xiangmu = data.value;
-        //     CheckIsSingle(xiangmu, function(currentIsSingleFlag) {
-        //         global_currentIsSingleFlag = currentIsSingleFlag;
-        //     });
-        // });
+            xiangmu = data.value;
+            CheckIsSingle(xiangmu, function(currentIsSingleFlag) {
+                global_currentIsSingleFlag = currentIsSingleFlag;
+            });
+        });
 
         form.on('submit(add)', function (data) {
-            // console.log('data.field='+data.field);
+            console.log('ID'+$('input[name="ID"]').val());
+
 
             xiangmu = document.getElementById('ItemID_s').value;
             var global_currentIsSingleFlag;
             CheckIsSingle(xiangmu, function(currentIsSingleFlag) {
                 global_currentIsSingleFlag = currentIsSingleFlag;
+
+                var index = parent.layer.getFrameIndex(window.name);
+                console.log('global_currentIsSingleFlag='+global_currentIsSingleFlag);
+
+                if(global_currentIsSingleFlag == 1) {
+                    console.log('data.field.SeasonID='+data.field.SeasonID);
+                    console.log('data.field.TeamID='+data.field.TeamID);
+                    console.log('data.field.SexSingle_s='+data.field.SexSingle_s);
+                    console.log('data.field.AgeGroupIDSingle='+data.field.AgeGroupIDSingle);
+                    console.log('data.field.ItemID='+data.field.ItemID);
+                    console.log('data.field.PlayerIDOne='+data.field.PlayerIDOne);
+                    
+                    axios.post('../CTFCItemplayer/'+ $('input[name="ID"]').val(), {
+                        SeasonID: data.field.SeasonID,
+                        TeamID: data.field.TeamID,
+                        Sex: data.field.SexSingle_s,
+                        AgeGroupID: data.field.AgeGroupIDSingle,
+                        ItemID: data.field.ItemID,
+                        PlayerID1: data.field.PlayerIDOne,
+                        PlayerID2: null,
+                        PlayerID3: null,
+                        PlayerID4: null,
+                        PlayerID5: null,
+                        PlayerID6: null,
+                    })
+                    .then(function (response) {
+                        layer.msg('添加成功', {
+                            icon: 1,
+                            time: 1500
+                        }, function () {
+                            parent.layer.close(index);
+                        });
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                } else {
+                 console.log('data.field='+data.field);
+
+                    axios.post('../CTFCItemplayer/', {
+                        SeasonID: data.field.SeasonID,
+                        TeamID: data.field.TeamID,
+                        Sex: data.field.Sex,
+                        AgeGroupID: data.field.AgeGroupID,
+                        ItemID: data.field.ItemID,
+                        PlayerID1: data.field.PlayerID1,
+                        PlayerID2: data.field.PlayerID2,
+                        PlayerID3: data.field.PlayerID3,
+                        PlayerID4: data.field.PlayerID4,
+                        PlayerID5: data.field.PlayerID5,
+                        PlayerID6: data.field.PlayerID6,
+                        
+                        
+                    })
+                    .then(function (response) {
+                        layer.msg('添加成功', {
+                            icon: 1,
+                            time: 1500
+                        }, function () {
+                            parent.layer.close(index);
+                        });
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                }  
+
             });
 
-            var index = parent.layer.getFrameIndex(window.name);
-            if(global_currentIsSingleFlag == 1) {
-                axios.post('../CTFCItemplayer/'+ $('input[name="ID"]').val(), {
-                    SeasonID: data.field.SeasonID,
-                    TeamID: data.field.TeamID,
-                    Sex: data.field.SexSingle_s,
-                    AgeGroupID: data.field.AgeGroupIDSingle_s,
-                    ItemID: data.field.ItemID,
-                    PlayerID1: data.field.PlayerIDOne_s,
-                    PlayerID2: null,
-                    PlayerID3: null,
-                    PlayerID4: null,
-                    PlayerID5: null,
-                    PlayerID6: null,
-                })
-                    .then(function (response) {
-                        layer.msg('添加成功', {
-                            icon: 1,
-                            time: 1500
-                        }, function () {
-                            parent.layer.close(index);
-                        });
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            } else {
-                axios.post('../CTFCItemplayer/', {
-                    SeasonID: data.field.SeasonID,
-                    TeamID: data.field.TeamID,
-                    Sex: data.field.Sex,
-                    AgeGroupID: data.field.AgeGroupID,
-                    ItemID: data.field.ItemID,
-                    PlayerID1: data.field.PlayerID1,
-                    PlayerID2: data.field.PlayerID2,
-                    PlayerID3: data.field.PlayerID3,
-                    PlayerID4: data.field.PlayerID4,
-                    PlayerID5: data.field.PlayerID5,
-                    PlayerID6: data.field.PlayerID6,
-                    
-                    
-                })
-                    .then(function (response) {
-                        layer.msg('添加成功', {
-                            icon: 1,
-                            time: 1500
-                        }, function () {
-                            parent.layer.close(index);
-                        });
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-            }
+            // 
+
+            
   
         });
 

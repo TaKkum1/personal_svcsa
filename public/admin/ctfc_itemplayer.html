@@ -191,6 +191,7 @@
                     success: function (layero, index) {
                         // layer.iframeAuto(index);
                         var body = layer.getChildFrame('body', index);
+                        body.find('#ID').val(data.ID)
                         body.find('#SeasonID').val(data.SeasonID)
                         body.find('#TeamID').val(data.TeamID)
                         body.find('#SexSingle').val(data.Sex)
