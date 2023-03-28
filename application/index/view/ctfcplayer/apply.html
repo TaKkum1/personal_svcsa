@@ -1,18 +1,18 @@
 <div class="inside-banner block img_1-banner">
-    <h3>申请加入</h3>
-    <p>一起奋斗一起拼搏一起奉献，没有自私，没有不信任，永不言弃、团结拼搏。</p>
+    <h3>申请成为运动员</h3>
+    <p>团结拼搏，一起奉献。</p>
 </div>
 <div class="site-box">
     <div class="block">
-        <span class="icon-home home_icon icon"></span><a href="">首页</a><span class="icon-arrow-right arrow_icon icon"></span><span class="active">申请加入</span>
+        <span class="icon-home home_icon icon"></span><a href="{:url('index/index/index')}">首页</a><span class="icon-arrow-right arrow_icon icon"></span><span class="active">申请加入</span>
     </div>
 </div>
 </div>
 <div class="link-wrap block clearfix">
     <div class="txt-box">
-        <h3>填写有关信息，成为选手/团队加入协会田径比赛</h3>
+        <h3>填写有关信息，成为田径运动员，加入SVCSA！</h3>
         <ul>
-            <li>确认个体参赛还是团队参赛</li>
+            <li>请填写正确姓名  </li>
             <li>填下正确的联系方式</li>
             <li>审核后将通过电子邮件通知结果</li>
         </ul>
@@ -20,44 +20,173 @@
     <form action="" id="apply-form" method="post" enctype="multipart/form-data">
     <div class="form-box" >
         <div class="input-box">
-            <input type="text" name="Name" placeholder="选手/团队名称">
+            <input type="text" name="Name" placeholder="姓名：">
         </div>
         <div class="input-box">
-            <input type="text" name="Leader" placeholder="团队负责人（团队参赛填写）">
-        </div>
-        <div class="input-box" style="border: none">
-            类型：
-            <input type="radio" name="Individual" value="1" placeholder="个人" style="width: 30px;height: 100%" checked>个人
-            <input type="radio" name="Individual" value="0" placeholder="团体" style="width: 30px;height: 100%">团体
+            <input type="text"onfocus="(this.type='date')" name="Birth" placeholder="生日:">
         </div>
         <div class="input-box">
             <input type="text" name="Email" placeholder="电子邮件：">
         </div>
-        <div class="input-box">
-            <input type="text" name="Tel" placeholder="电话：">
+        <div class="input-box" style="border: none">
+            性别：
+            <input type="radio" name="Sex" value="男" placeholder="男" style="width: 20px;height: 100%" checked> 男
+            <input type="radio" name="Sex" value="女" placeholder="女" style="width: 20px;height: 100%"> 女
         </div>
-        <div class="input-box">
-            <input type="text" name="Wechat" placeholder="微信：">
+        <div class="input-box" style="border: none">
         </div>
-
-
         <div class="input-box up_pic-box">
-            <p style="line-height: 30px; margin-left: 5px">上传合照</p>
-            <!--<div id="drop_area_2"></div>-->
-            <input type="file"  name="Photo" id="photofile" />
-        </div>
-
-        <div class="input-box textarea-box">
-            <textarea placeholder="简介：" name="Description"></textarea>
+            <p style="line-height: 30px; margin-left: 5px">上传头像</p>
+            <input type="file" name="PhotoSrc" id="logofile" />
         </div>
         <div class="sub">发送</div>
     </div>
-
+    <!-- Defined here, shown/hidden by javascript. -->
+    
     </form>
 
     <script type="text/javascript">
 
+        function DragImgUpload(id,options) {
+            this.me = $(id);
+            var defaultOpt = {
+                boxWidth:'150px',
+                boxHeight:'100px'
+            }
+            this.preview = $('<div id="preview"><img src="{$Think.config.public_assets}/images/add.png" class="img-responsive"  alt="" title=""> </div>');
+            this.opts=$.extend(true, defaultOpt,{
+            }, options);
+            this.init();
+            this.callback = this.opts.callback;
+            this.fileInput = this.opts.fileInput;
+        }
+
+        //定义原型方法
+        DragImgUpload.prototype = {
+            init:function () {
+                this.me.append(this.preview);
+                this.me.append(this.fileupload);
+                this.cssInit();
+                this.eventClickInit();
+            },
+            cssInit:function () {
+                this.me.css({
+                    'width':this.opts.boxWidth,
+                    'height':this.opts.boxHeight,
+                    'border':'1px solid #cccccc',
+                    'padding':'10px',
+                    'cursor':'pointer'
+                })
+                this.preview.css({
+                    'height':'100%',
+                    'overflow':'hidden'
+                })
+
+            },
+            onDragover:function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'copy';
+            },
+            onDrop:function (e) {
+                var self = this;
+                e.stopPropagation();
+                e.preventDefault();
+                var fileList = e.dataTransfer.files; //获取文件对象
+                // do something upload
+                if(fileList.length == 0){
+                    return false;
+                }
+                //检测文件是不是图片
+                if(fileList[0].type.indexOf('image') === -1){
+                    alert("您拖的不是图片！");
+                    return false;
+                }
+
+                //拖拉图片到浏览器，可以实现预览功能
+                var img = window.URL.createObjectURL(fileList[0]);
+                var filename = fileList[0].name; //图片名称
+                var filesize = Math.floor((fileList[0].size)/1024);
+                if(filesize>500){
+                    alert("上传大小不能超过500K.");
+                    return false;
+                }
+
+                self.me.find("img").attr("src",img);
+                self.me.find("img").attr("title",filename);
+                if(this.callback){
+                    this.callback(fileList);
+                }
+            },
+            eventClickInit:function () {
+                var self = this;
+                this.me.unbind().click(function () {
+                    self.createImageUploadDialog();
+                })
+                var dp = this.me[0];
+                dp.addEventListener('dragover', function(e) {
+                    self.onDragover(e);
+                });
+                dp.addEventListener("drop", function(e) {
+                    self.onDrop(e);
+                });
+
+
+            },
+            onChangeUploadFile:function () {
+
+                var fileInput = this.fileInput;
+                var files = fileInput.files;
+                var file = files[0];
+                var img = window.URL.createObjectURL(file);
+                var filename = file.name;
+                this.me.find("img").attr("src",img);
+                this.me.find("img").attr("title",filename);
+                if(this.callback){
+                    this.callback(files);
+                }
+            },
+            createImageUploadDialog:function () {
+                var fileInput = this.fileInput;
+ //               if (!fileInput) {
+ //                   //创建临时input元素
+                    fileInput = document.createElement('input');
+                    //设置input type为文件类型
+                    fileInput.type = 'file';
+                    //设置文件name
+ //                   fileInput.name = 'ime-images';
+                    //允许上传多个文件
+                    fileInput.multiple = true;
+                    fileInput.onchange  = this.onChangeUploadFile.bind(this);
+                    this.fileInput = fileInput;
+ //               }
+                //触发点击input点击事件，弹出选择文件对话框
+                fileInput.click();
+            }
+
+
+
+
+        }
+
+        // Apply button is clicked.
         $(".sub").click(function(){
+
+            if($('input[name=Name]').val()=="" ||
+                $('input[name=Birthday]').val()=="" ||
+                $('input[name=Email]').val()==""
+            )
+            {
+                alert('申请信息不完整，请检查。');
+                return false;
+            }
+
+            var reg1 = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)/;
+            if(reg1.test( $('input[name=Email]').val() ) == false) {
+                alert('邮箱格式不正确');
+                return false;
+            }
+            
             $("form").submit();
         });
     </script>

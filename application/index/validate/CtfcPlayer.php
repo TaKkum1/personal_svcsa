@@ -14,7 +14,6 @@ use think\Validate;
 class CtfcPlayer extends Validate
 {
     protected $rule = [
-        'Name'  => 'require',
-        'MatchID'  => 'require',
+        'Name'  => 'require'
     ];
 }
