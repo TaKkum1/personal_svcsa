@@ -291,6 +291,33 @@ class Bbplayer extends Base
         die;
     }
 
+    public function passApplication()
+    {
+        $this->checkauthorization();
+
+        $data = request()->only('PlayerIDs,Passed', 'post');
+        $playerIDs = urldecode($data['PlayerIDs']);
+        $passed = isset($data['Passed'])?boolval($data['Passed']):true;
+
+        $result = 0;
+        $playerIDsarr = explode(',',$playerIDs);
+
+        if($passed) {
+            foreach ($playerIDsarr as $playerID) {
+                $result += Db::name('bb_player')->where('ID', $playerID)
+                    ->update(['Approval'=>1]);
+            }
+        } 
+        else {
+            foreach ($playerIDsarr as $playerID) {
+                $result += Db::name('bb_player')->where('ID', $playerID)
+                    ->delete();
+            }
+        }
+
+        $this->affectedRowsResult($result);
+    }
+    
     public function getapply()
     {
         $this->headerAndFooter();

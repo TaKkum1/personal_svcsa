@@ -88,6 +88,7 @@
 \think\Route::delete('bbplayer/:id', 'index/bbplayer/delete', [], ['id' => '\d+']);
 \think\Route::get('bbplayer/:id', 'index/bbplayer/read', [], ['id' => '\d+']);
 \think\Route::get('bbplayer', 'index/bbplayer/lists');
+\think\Route::post('bbplayer/passapp', 'index/bbplayer/passApplication');
 \think\Route::post('bbplayer/apply', 'index/bbplayer/apply');
 \think\Route::get('bbplayer/apply', 'index/bbplayer/getapply');
 
@@ -155,6 +156,7 @@
 \think\Route::delete('ctfcplayer/:id', 'index/ctfcplayer/delete', [], ['id' => '\d+']);
 \think\Route::get('ctfcplayer/:id', 'index/ctfcplayer/read', [], ['id' => '\d+']);
 \think\Route::get('ctfcplayer', 'index/ctfcplayer/lists');
+\think\Route::post('ctfcplayer/passapp', 'index/ctfcplayer/passApplication');
 \think\Route::post('ctfcplayer/apply', 'index/ctfcplayer/apply');
 \think\Route::get('ctfcplayer/apply', 'index/ctfcplayer/getapply');
 
