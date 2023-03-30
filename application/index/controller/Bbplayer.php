@@ -49,10 +49,10 @@ class Bbplayer extends Base
         $data = request()->only(self::FIELD, 'post');
         $this->makeNull($data);
         $validator = validate('Bb_player');
-//        $result = $validator->check($data);
-//        if (!$result){
-//            $this->result(0);
-//        }
+        // $result = $validator->check($data);
+        // if (!$result){
+        //     $this->result(0);
+        // }
         if (!isset($data["PhotoSrc"]) || !$data["PhotoSrc"]) {
             $file = request()->file('file');
             if (!$file) $this->affectedRowsResult(0);
@@ -170,7 +170,7 @@ class Bbplayer extends Base
 
         $this->headerAndFooter('player');
 
-//        $playerage = getAge(strtotime($result['Birth']));
+        // $playerage = getAge(strtotime($result['Birth']));
 
         $seasonid = $result['SeasonID'];
         $seasonname = Db::name('bb_season')
@@ -188,10 +188,9 @@ class Bbplayer extends Base
         $this->view->assign('player_seasonname', $seasonname);
         //$this->view->assign('player_competitionname', $competitionname);
         $this->view->assign('player', $result);
-//        $this->view->assign('playerage',$playerage);
-      //  $this->view->assign('players', $players);
-
-      // Get player statistics.
+        // $this->view->assign('playerage',$playerage);
+        // $this->view->assign('players', $players);
+        //   Get player statistics.
       $playerstats = Db::name('bb_seasonplayerstatistics_view')
           ->where('seasonid', $seasonid)
           ->where('PlayerID', $id)
@@ -295,57 +294,7 @@ class Bbplayer extends Base
     public function getapply()
     {
         $this->headerAndFooter();
-
-        // $competitionseason = Db::name('bb_competitionseason_view')
-        //     ->where('SeasonID', $seasonid)->find();
-        // if (!$competitionseason) goto notfound;
-        // $competitionid = $competitionseason['CompetitionID'];
-        // $playersex = $competitionid == 2 ? '女' : '男';
-
-        // // Populate available players
-        // if ($competitionid == 1) {
-        //   // Men Open, not selected
-        //   $sql =
-        //       'select * '.
-        //       'from bb_player '.
-        //       'where bb_player.ID not in ('.
-        //           'select distinct bb_seasonteamplayer.PlayerID '.
-        //           'from bb_seasonteamplayer '.
-        //           'where bb_seasonteamplayer.SeasonID='.strval($seasonid).') '.
-        //       'order by Name asc';
-        // } elseif ($competitionid == 2) {
-        //   // Women Open, not selected + women players
-        //   $sql =
-        //       'select * '.
-        //       'from bb_player '.
-        //       'where (bb_player.ID not in ('.
-        //           'select distinct bb_seasonteamplayer.PlayerID '.
-        //           'from bb_seasonteamplayer '.
-        //           'where bb_seasonteamplayer.SeasonID='.strval($seasonid).') '.
-        //           'and bb_player.Sex="'.$playersex.'") '.
-        //       'order by Name asc';
-        // } elseif ($competitionid == 4) {
-        //   // Men Senior, not selected + birth < 1988/01/01
-        //   $sql =
-        //       'select * '.
-        //       'from bb_player '.
-        //       'where (bb_player.ID not in ('.
-        //           'select distinct bb_seasonteamplayer.PlayerID '.
-        //           'from bb_seasonteamplayer '.
-        //           'where bb_seasonteamplayer.SeasonID='.strval($seasonid).') '.
-        //           'and date(bb_player.Birth) < "1988-01-01") '.
-        //       'order by Name asc';
-        // }
-        // $available_players = Db::query($sql);
-
-        // $this->view->assign('available_players', $available_players);
-        // $this->view->assign('competitionseason', $competitionseason);
-
-        return $this->view->fetch('bbplayer/apply');
-
-        // notfound:
-        // header("HTTP/1.0 404 Not Found");
-        // die;
+        return $this->view->fetch('player/bbplayerApply');
     }
 
     public function apply()
@@ -378,37 +327,6 @@ class Bbplayer extends Base
 
         $player_result = Db::name('bb_player')->insert($player);
 
-        // // Update bb_seasonteam.
-        // // Get the TeamID just inserted.
-        // $seasonteam = array();
-        // $sql =
-        //     'select ID '.
-        //     'from bb_team '.
-        //     'where Name="'.$player["Name"].'" '.
-        //     'order by ID desc '.
-        //     'limit 1';
-        // $teamid = Db::query($sql)[0]["ID"];
-        // $seasonteam["TeamID"] =  $teamid;
-        // $seasonteam["SeasonID"] = $seasonid;
-        // $seasonteam["Approval"] = 0;
-        // $seasonteam["TimePreference"] = $data["TimePreference"];
-
-        // $seasonteam_result = Db::name('bb_seasonteam')->insert($seasonteam);
-
-        // // Update bb_seasonteamplayer
-        // $players = explode(",", $data["PlayerIDs"]);
-        // $numbers = explode(",", $data["PlayerNumbers"]);
-        // $seasonteamplayer_result = 0;
-        // $seasonteamplayer = array();
-        // for ($i = 0; $i < count($players); $i++) {
-        //   $seasonteamplayer["SeasonID"] = $seasonteam["SeasonID"];
-        //   $seasonteamplayer["TeamID"] = $seasonteam["TeamID"];
-        //   $seasonteamplayer["PlayerID"] = $players[$i];
-        //   $seasonteamplayer["PlayerNumber"] = $numbers[$i];
-        //   $seasonteamplayer_result += Db::name('bb_seasonteamplayer')->insert($seasonteamplayer);
-        // }
-        // if ($this->jsonRequest())
-        //     $this->affectedRowsResult($team_result + $seasonteam_result + $seasonteamplayer_result);
 
         // Jump to the apply result page.
         $this->headerAndFooter('competition');
@@ -417,6 +335,6 @@ class Bbplayer extends Base
         if ($player_result > 0)
           $applyresult = '您的球员申请已提交，审核后将会给您发邮箱或者短信通知，请关注！';
         $this->view->assign('applyresult', $applyresult);
-        return $this->view->fetch('bbplayer/applyres');
+        return $this->view->fetch('player/bbplayerApplyres');
     }
 }
