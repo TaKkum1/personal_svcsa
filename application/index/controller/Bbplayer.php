@@ -327,6 +327,8 @@ class Bbplayer extends Base
 
         $player_result = Db::name('bb_player')->insert($player);
 
+
+        // Jump to the apply result page.
         $this->headerAndFooter('competition');
 
         $applyresult = '';
