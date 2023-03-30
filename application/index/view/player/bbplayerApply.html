@@ -1,5 +1,5 @@
 <div class="inside-banner block img_1-banner">
-    <h3>申请成为运动员</h3>
+    <h3>申请成为球员</h3>
     <p>团结拼搏，一起奉献。</p>
 </div>
 <div class="site-box">
@@ -10,7 +10,7 @@
 </div>
 <div class="link-wrap block clearfix">
     <div class="txt-box">
-        <h3>填写有关信息，成为田径运动员，加入SVCSA！</h3>
+        <h3>填写有关信息，成为球员，加入SVCSA</h3>
         <ul>
             <li>请填写正确姓名  </li>
             <li>填下正确的联系方式</li>
@@ -23,22 +23,38 @@
             <input type="text" name="Name" placeholder="姓名：">
         </div>
         <div class="input-box">
-            <input type="text"onfocus="(this.type='date')" name="Birth" placeholder="生日:">
+            <input type="text" onfocus="(this.type='date')" name="Birth" placeholder="生日：">
+        </div>
+        <div class="input-box">
+            <input type="text" name="Height" placeholder="身高(cm)：">
+        </div>
+        <div class="input-box">
+            <input type="text" name="Weight" placeholder="体重(kg)：">
         </div>
         <div class="input-box">
             <input type="text" name="Email" placeholder="电子邮件：">
         </div>
         <div class="input-box" style="border: none">
             性别：
-            <input type="radio" name="Sex" value="男" placeholder="男" style="width: 20px;height: 100%" checked> 男
-            <input type="radio" name="Sex" value="女" placeholder="女" style="width: 20px;height: 100%"> 女
+            <input type="radio" name="Sex" value="男" placeholder="男" style="width: 25px;height: 100%" checked> 男
+            <input type="radio" name="Sex" value="女" placeholder="女" style="width: 25px;height: 100%"> 女
         </div>
         <div class="input-box" style="border: none">
         </div>
+        
         <div class="input-box up_pic-box">
             <p style="line-height: 30px; margin-left: 5px">上传头像</p>
             <input type="file" name="PhotoSrc" id="logofile" />
         </div>
+        
+        <!-- <div class="input-box select-input">
+            <span class="select-btn">选择球员</span><span class="nub">已选择<em>0</em>个球员</span>
+            <input type="hidden" name="PlayerNumbers" />
+            <input type="hidden" name="PlayerIDs" />
+        </div>
+        <div class="input-box textarea-box">
+            <textarea placeholder="简介：" name="Description"></textarea>
+        </div> -->
         <div class="sub">发送</div>
     </div>
     <!-- Defined here, shown/hidden by javascript. -->
@@ -169,11 +185,77 @@
 
         }
 
+        // var dragImgUpload = new DragImgUpload("#drop_area",{
+        //     callback:function (files) {
+        //         //回调函数，可以传递给后台等等
+        //         var file = files[0];
+        //         console.log(file.name);
+        //     },
+        //     fileInput:$('#logofile')
+        //
+        // })
+        // var dragImgUpload = new DragImgUpload("#drop_area_2",{
+        //     callback:function (files) {
+        //         //回调函数，可以传递给后台等等
+        //         var file = files[0];
+        //         console.log(file.name);
+        //     },
+        //     fileInput:$('#photofile')
+        //
+        // })
+
+
+        // $('.close-pop').click(function(){
+        //     $('.pop-box').hide();
+        // })
+        // Player selected.
+        // $('.show').click(function(){
+        //     $("input[name='PlayerNumbers']").val("");
+        //     $("input[name='PlayerIDs']").val("");
+        //     var checkboxes = $(".select-pop input[type='checkbox']:checked");
+        //     var endval= $(".select-pop input[type='checkbox']:checked:last").val();
+        //     var checkpass = true;
+        //     $.each(checkboxes,function(){
+        //         var numval = $("input[name='PlayerNumber_" + $(this).val() + "']").val();
+        //         var idsval = $(this).val();
+        //         if(isNaN(parseInt(numval))) {
+        //             window.alert('选择的球员没有填写号码。');
+        //             $("input[name='PlayerNumber_" + $(this).val() + "']").focus();
+        //             checkpass &= false;
+        //         }
+
+        //         numval = $("input[name='PlayerNumbers']").val() + numval;
+        //         idsval = $("input[name='PlayerIDs']").val() + idsval;
+
+        //         if($(this).val()!=endval) {
+        //             numval +=",";
+        //             idsval +=",";
+        //         }
+
+        //         console.log(numval);
+        //         console.log(idsval);
+
+        //         $("input[name='PlayerNumbers']").val(numval);
+        //         $("input[name='PlayerIDs']").val(idsval);
+
+        //     });
+
+        //     if(!checkpass) return;
+        //     $('.nub em').html($(".select-pop input[type='checkbox']:checked").length)
+        //     $('.pop-box').hide();
+        // })
+        // Show player selection pop box when select button is clicked.
+        // $('.select-btn').click(function(){
+        //     $('.pop-box').show();
+        // })
+
         // Apply button is clicked.
         $(".sub").click(function(){
 
             if($('input[name=Name]').val()=="" ||
-                $('input[name=Birthday]').val()=="" ||
+                $('input[name=Birth]').val()=="" ||
+                $('input[name=Height]').val()=="" ||
+                $('input[name=Weight]').val()=="" ||
                 $('input[name=Email]').val()==""
             )
             {
@@ -186,7 +268,10 @@
                 alert('邮箱格式不正确');
                 return false;
             }
-            
+
+
+
+
             $("form").submit();
         });
     </script>

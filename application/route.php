@@ -89,6 +89,8 @@
 \think\Route::get('bbplayer/:id', 'index/bbplayer/read', [], ['id' => '\d+']);
 \think\Route::get('bbplayer', 'index/bbplayer/lists');
 \think\Route::post('bbplayer/passapp', 'index/bbplayer/passApplication');
+\think\Route::post('bbplayer/apply', 'index/bbplayer/apply');
+\think\Route::get('bbplayer/apply', 'index/bbplayer/getapply');
 
 \think\Route::get('bbseason/:seasonid/bbteam', 'index/bbteam/lists', [], ['seasonid' => '\d+']);
 \think\Route::get('bbseason/:seasonid/bbteamrank', 'index/bbteam/rank', [], ['seasonid' => '\d+']);
@@ -147,6 +149,7 @@
 
 \think\Route::post('ctfcmatch/:matchid/apply', 'index/ctfcplayer/apply', [], ['matchid' => '\d+']);
 \think\Route::get('ctfcmatch/:matchid/apply', 'index/ctfcplayer/getapply', [], ['matchid' => '\d+']);
+
 \think\Route::post('ctfcplayer/passapp', 'index/ctfcplayer/passApplication');
 \think\Route::post('ctfcplayer/:id', 'index/ctfcplayer/update', [], ['id' => '\d+']);
 \think\Route::post('ctfcplayer', 'index/ctfcplayer/add');
@@ -154,6 +157,8 @@
 \think\Route::get('ctfcplayer/:id', 'index/ctfcplayer/read', [], ['id' => '\d+']);
 \think\Route::get('ctfcplayer', 'index/ctfcplayer/lists');
 \think\Route::post('ctfcplayer/passapp', 'index/ctfcplayer/passApplication');
+\think\Route::post('ctfcplayer/apply', 'index/ctfcplayer/apply');
+\think\Route::get('ctfcplayer/apply', 'index/ctfcplayer/getapply');
 
 # route for 田径运动队 
 \think\Route::post('ctfcteam/passapp', 'index/ctfcteam/passApplication');
@@ -206,6 +211,13 @@
 \think\Route::delete('ctfcseasonitem/:seasonid/:itemid/:sex', 'index/ctfcseasonitem/delete', [], ['seasonid' => '\d+'],['itemid' => '\d+'],['sex' => '\d+']);
 \think\Route::get('ctfcseasonitem/:id', 'index/ctfcseasonitem/read', [], ['id' => '\d+']);
 \think\Route::get('ctfcseasonitem', 'index/ctfcseasonitem/lists');
+
+\think\Route::post('ctfcplayernumber/:seasonid/:teamid/:playerid', 'index/ctfcplayernumber/update', [], ['seasonid' => '\d+'],['teamid' => '\d+'],['playerid' => '\d+']);
+\think\Route::delete('ctfcplayernumber/:seasonid/:teamid/:playerid', 'index/ctfcplayernumber/delete', [], ['seasonid' => '\d+'],['teamid' => '\d+'],['playerid' => '\d+']);
+\think\Route::post('ctfcplayernumber', 'index/ctfcplayernumber/add');
+\think\Route::get('ctfcplayernumber/:id', 'index/ctfcplayernumber/read', [], ['id' => '\d+']);
+\think\Route::get('ctfcplayernumber', 'index/ctfcplayernumber/lists');
+
 
 return [
 
