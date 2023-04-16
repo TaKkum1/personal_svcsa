@@ -148,25 +148,6 @@ class Ctfcitemplayer extends Base
         $this->jsonResult(0, ['affectedRows' => $list[0]]);
     }
 
-
-    public function YougetSeasonTeamPlayers()
-    {
-        
-        $this->checkauthorization();
-        $data = request()->only('SeasonID,TeamID', 'get');
-        $teamid = urldecode($data['TeamID']);
-        $seasonid = urldecode($data['SeasonID']);
-        
-        $aaa = Db::name('ctfc_playernumber')->where('SeasonID', $seasonid)->where('TeamID', $teamid);
-        $aaa = $aaa->select();
-        $list = array();
-        foreach ($aaa as $ctfc_itemplayer) {
-            $players = $ctfc_itemplayer['PlayerID'];
-            array_push($list, $players);
-        }
-        $this->jsonResult(0, ['affectedRows' => $list]);
-    }
-    
     function calculateAge($dateOfBirth) {
         $currentYear = date('Y');
         $birthYear = date('Y', strtotime($dateOfBirth));
@@ -176,6 +157,72 @@ class Ctfcitemplayer extends Base
         // }
         return $age;
     }
+
+    function InThisAgeGroupAndSex($agegroupid,$playerid,$playSex){        
+        
+        $player_db = Db::name('ctfc_player')->where('ID', $playerid);
+        $players = $player_db->select();
+        $birthdays = array();
+        $sex = array();
+
+        foreach ($players as $player) {
+            $player_birthday = $player['Birthday'];
+            $player_sex = $player['Sex'];
+
+            array_push($birthdays, $player_birthday);
+            array_push($sex, $player_sex);
+
+        }
+
+        $currentAge = $this->calculateAge($birthdays[0]);
+
+        $currentSex = $sex[0];
+
+        $agegroup_db = Db::name('ctfc_agegroup');
+        $agegroups = $agegroup_db->select();
+        $agegrouplist =array();
+        foreach ($agegroups as $agegroup) {
+            $agegroup_item =array();
+            $agegroup_item['ID'] = $agegroup['ID'];
+            $agegroup_item['MinAge'] = $agegroup['MinAge'];
+            $agegroup_item['MaxAge'] = $agegroup['MaxAge'];
+            array_push($agegrouplist, $agegroup_item);
+        }
+
+        $currentagegroup = $this->getAgeGroup($currentAge, $agegrouplist);
+
+
+        if($agegroupid == $currentagegroup && $playSex == $currentSex) {
+            return true;
+        }
+        return false;
+    }
+
+    public function YougetSeasonTeamPlayers()
+    {    
+        $this->checkauthorization();
+        $data = request()->only('SeasonID,TeamID,AgeGroupID', 'get');
+        $teamid = urldecode($data['TeamID']);
+        $seasonid = urldecode($data['SeasonID']);
+        $agegroupid = urldecode($data['AgeGroupID']);
+        $sex = urldecode($data['SelSex']);
+        
+        
+        
+        $aaa = Db::name('ctfc_playernumber')->where('SeasonID', $seasonid)->where('TeamID', $teamid);
+        $aaa = $aaa->select();
+        $list = array();
+        foreach ($aaa as $ctfc_itemplayer) {
+            $players_id = $ctfc_itemplayer['PlayerID'];
+            $IntheGroup = $this->InThisAgeGroupAndSex($agegroupid,$players_id, $sex);
+            if($IntheGroup) {
+                array_push($list, $players_id);
+            }
+        }
+        $this->jsonResult(0, ['affectedRows' => $list]);
+    }
+    
+
     function getAgeGroup($age, $agegroups) {
         foreach ($agegroups as $agegroup) {
             if ($age >= $agegroup['MinAge'] && $age <= $agegroup['MaxAge']) {
