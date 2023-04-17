@@ -221,7 +221,6 @@
 \think\Route::get('ctfcitemplayer/:id', 'index/ctfcitemplayer/read', [], ['id' => '\d+']);
 \think\Route::get('ctfcitemplayer', 'index/ctfcitemplayer/lists');
 \think\Route::get('ctfcitemplayer/getTypeOfItem', 'index/ctfcitemplayer/getItemType');
-\think\Route::get('ctfcitemplayer/getSeasonTeamPlayers', 'index/ctfcitemplayer/YougetSeasonTeamPlayers');
 \think\Route::get('ctfcitemplayer/getAgeSex', 'index/ctfcitemplayer/getPlayerAgeSex');
 
 
