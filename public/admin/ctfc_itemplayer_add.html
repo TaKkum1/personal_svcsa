@@ -397,8 +397,10 @@
 
             getPlayerList(currentseasonid, currentSex, currentAgeGroupid,currentAgeGroupid, currentteamid, function(currentPlayerList) {
                 console.log('PlayerList=' + currentPlayerList);
-                $('#PlayerIDOne').empty();
-                $('#PlayerIDOne').append('<option value="">' + "选择队员" + '</option>');
+                for (var i = 1; i < 7; i++) {
+                    $('#PlayerID' + i + "_s").empty();
+                    $('#PlayerID' + i + "_s").append('<option value="">' + "选择队员#1 (必填)" + '</option>');
+                }
 
                 axios.get('../CTFCPlayer?all=1', {}).then(function (response) {
                     $.each(response.data.data, function (index, item) {
