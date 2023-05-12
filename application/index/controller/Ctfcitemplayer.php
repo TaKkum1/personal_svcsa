@@ -112,6 +112,7 @@ class Ctfcitemplayer extends Base
         $itemplayer_data['SeasonID'] = $data['SeasonID'];
         $itemplayer_data['TeamID'] = $data['TeamID'];
         $itemplayer_data['Sex'] = $data['Sex'];
+        $itemplayer_data['ItemID'] = $data['ItemID'];
         $itemplayer_data['AgeGroupID'] = $data['AgeGroupID'];
         $itemplayer_data['PlayerID1'] = $data['PlayerID1'];
         $itemplayer_data['PlayerID2'] = $data['PlayerID2'];
@@ -206,6 +207,80 @@ class Ctfcitemplayer extends Base
         array_push($result, $sex[0]);
         
         $this->jsonResult(0, ['affectedRows' => $result]);
+    }
+
+    public function GetPlayersList()
+    {
+
+        $this->checkauthorization();
+        $data = request()->only('SiMinAG,SiMaxAG,SiID,SiSex,Tmid', 'get');
+        $SeasonitemMinAG= urldecode($data['SiMinAG']);
+        $SeasonitemMaxAG = urldecode($data['SiMaxAG']);
+        $SeasonitemID = urldecode($data['SiID']);
+        $SeasonitemSex = urldecode($data['SiSex']);
+        $CurrentSelectedTeamID = urldecode($data['Tmid']);
+
+        
+        $all_players = Db::name('ctfc_player');
+        $all_players = $all_players->select();
+
+        $agegroup_db = Db::name('ctfc_agegroup');
+        $agegroups = $agegroup_db->select();
+        $agegrouplist =array();
+        foreach ($agegroups as $agegroup) {
+            if($SeasonitemMinAG == $agegroup['ID']) {
+                $minAgeBondary = $agegroup['MinAge'];
+            }
+            if($SeasonitemMaxAG == $agegroup['ID']) {
+                $maxAgeBondary = $agegroup['MaxAge'];
+            }
+        }
+
+
+
+        // Create a list of player IDs within the age group and sex group
+        $list = array();
+        foreach ($all_players as $player) {
+            // SeasonitemSex can be M, F, or mix, when SeasonitemSex is mix, we can ignore M or F
+            if ($SeasonitemSex == "mix" || $SeasonitemSex == $player['Sex']) {
+                $currentPlayerAge = $this->calculateAge($player['Birthday']); //TODO (check if need put it into a list)
+                if($currentPlayerAge >= $minAgeBondary && $currentPlayerAge < $maxAgeBondary) {
+                    array_push($list, $player['ID']);
+                }
+            }
+        }
+
+        // Filter the list of player IDs that's not duplicated from other team.
+        foreach ($list as $player_id) {
+            $re = [];
+
+            for ($i = 1; $i <= 6; $i++) {
+                $re[$i] = Db::name('ctfc_itemplayer')->where("PlayerID{$i}", $player_id)->select();
+            }
+
+            if (!empty($re)) {
+
+                // Current player_id already registered, let check if it's in other team
+                foreach ($re as $player_results) {
+                    foreach ($player_results as $itemplayer) {
+                        if ($itemplayer['TeamID'] != $CurrentSelectedTeamID) {
+                            // This player is in another team, remove this one from the return list
+                            // Find the index of this player to be removed.
+                            $index = array_search($player_id, $list);
+                            // Remove the element if it exists in the array
+                            if ($index !== false) {
+                                unset($list[$index]);
+                            }
+                            // Re-index the array
+                            $list = array_values($list);
+                        }
+                    }
+                }
+            }
+
+        }
+
+        $this->jsonResult(0, ['affectedRows' => $list]);
     }
 }
 
