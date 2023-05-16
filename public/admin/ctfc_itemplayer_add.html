@@ -305,6 +305,54 @@
         
         form.on('select(TeamClick)', function (data) {
             currentteamid = data.value;
+            readseasonid = document.getElementById('SeasonID').value;
+            const parts = document.getElementById('ItemID').value.split("-");
+            if (parts.length === 2) {
+                xiangmu = parts[0];
+                xiangmuSex = parts[1];
+            }
+
+            axios.get('../CTFCseasonitem?seasonid=' + readseasonid, {}).then(function (response) {
+            $.each(response.data.data, function (index, item) {
+                if(item.ItemID == xiangmu && item.Sex == xiangmuSex) {
+                    seasonitemFiltersMinAG = item.MinAgeGroupID;
+                    seasonitemFiltersMaxAG = item.MaxAgeGroupID;
+                    SelectedTeamID = currentteamid;
+                    console.log("SelectedTeamID: " + SelectedTeamID);
+
+                    getPlayerList(xiangmu, xiangmuSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, function(currentPlayerList) {
+                        // console.log('PlayerList=' + currentPlayerList);
+                        $('#PlayerIDOne').empty();
+                        $('#PlayerIDOne').append('<option value="">' + "选择队员" + '</option>');
+
+                        axios.get('../CTFCPlayer?all=1', {}).then(function (response) {
+                            $.each(response.data.data, function (index, item) {
+                                if(currentPlayerList.includes(item.ID)) {
+                                    // console.log("found an ID: " + item.ID);
+
+                                    $('#PlayerIDOne').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                                    // $('#PlayerID1').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                                    // $('#PlayerID2').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                                    // $('#PlayerID3').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                                    // $('#PlayerID4').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                                    // $('#PlayerID5').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                                    // $('#PlayerID6').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                                }
+                            });
+                            form.render();
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                    });
+                
+                }
+            });
+            form.render();
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
         }); 
 
 
@@ -467,7 +515,9 @@
             '<option value=""></option>';//clear the element
             $('#AgeGroupIDSingle').empty();
             '<option value=""></option>';//clear the element
-            $('#SexSingle').exmpty();
+            $('#SexSingle').empty();
+            console.log("playerid is " +playerid);
+
             getPlayerAgeSex(playerid, function(playerAgeGroup, playerSex){
                 axios.get('../CTFCAgegroup', {}).then(function (response) {
                 // console.log(response);
