@@ -141,7 +141,7 @@
                 },
                 success: function (data) {
                     currentIsSingleFlag = data['affectedRows']
-                    // console.log('IsSingle=' + currentIsSingleFlag);
+                    console.log('IsSingle=' + currentIsSingleFlag);
                     
                     var dropdowns = document.getElementsByClassName('dropdown');
                     for (var j = 0; j < dropdowns.length; j++) {
@@ -155,6 +155,22 @@
                         AgeGroupIDSingle_bar.setAttribute("lay-verify", "required");
                         var SexSingle_bar = document.getElementById('SexSingle');
                         SexSingle_bar.setAttribute("lay-verify", "required");
+                        // remove these attr
+                        var PlayerID1_bar = document.getElementById('PlayerID1');
+                        PlayerID1_bar.removeAttribute("lay-verify");
+                        var PlayerID2_bar = document.getElementById('PlayerID2');
+                        PlayerID2_bar.removeAttribute("lay-verify");
+                        var PlayerID3_bar = document.getElementById('PlayerID3');
+                        PlayerID3_bar.removeAttribute("lay-verify");
+                        var PlayerID4_bar = document.getElementById('PlayerID4');
+                        PlayerID4_bar.removeAttribute("lay-verify");
+                        var AgeGroupID_bar = document.getElementById('AgeGroupID');
+                        AgeGroupID_bar.removeAttribute("lay-verify");
+                        var Sex_bar = document.getElementById('Sex');
+                        Sex_bar.removeAttribute("lay-verify");
+                        $('#Sex').empty();
+                        $('#Sex').append('<option value="' + sexId + '">' + sexId + '</option>');
+
                     }else {
                         var PlayerID1_bar = document.getElementById('PlayerID1');
                         PlayerID1_bar.setAttribute("lay-verify", "required");
@@ -171,6 +187,14 @@
                         $('#Sex').empty();
                         $('#Sex').append('<option value="' + sexId + '">' + sexId + '</option>');
 
+                        // remove these attr
+                        var PlayerIDOne_bar = document.getElementById('PlayerIDOne');
+                        PlayerIDOne_bar.removeAttribute("lay-verify");
+                        var AgeGroupIDSingle_bar = document.getElementById('AgeGroupIDSingle');
+                        AgeGroupIDSingle_bar.removeAttribute("lay-verify");
+                        var SexSingle_bar = document.getElementById('SexSingle');
+                        SexSingle_bar.removeAttribute("lay-verify");
+                   
                     }
                     
                     
@@ -305,6 +329,8 @@
         
         form.on('select(TeamClick)', function (data) {
             currentteamid = data.value;
+            var xiangmu;
+            var xiangmuSex;
             readseasonid = document.getElementById('SeasonID').value;
             const parts = document.getElementById('ItemID').value.split("-");
             if (parts.length === 2) {
@@ -396,15 +422,7 @@
                         axios.get('../CTFCPlayer?all=1', {}).then(function (response) {
                             $.each(response.data.data, function (index, item) {
                                 if(currentPlayerList.includes(item.ID)) {
-                                    // console.log("found an ID: " + item.ID);
-
                                     $('#PlayerIDOne').append('<option value="' + item.ID + '">' + item.Name + '</option>');
-                                    // $('#PlayerID1').append('<option value="' + item.ID + '">' + item.Name + '</option>');
-                                    // $('#PlayerID2').append('<option value="' + item.ID + '">' + item.Name + '</option>');
-                                    // $('#PlayerID3').append('<option value="' + item.ID + '">' + item.Name + '</option>');
-                                    // $('#PlayerID4').append('<option value="' + item.ID + '">' + item.Name + '</option>');
-                                    // $('#PlayerID5').append('<option value="' + item.ID + '">' + item.Name + '</option>');
-                                    // $('#PlayerID6').append('<option value="' + item.ID + '">' + item.Name + '</option>');
                                 }
                             });
                             form.render();
@@ -573,26 +591,6 @@
             // }
             console.log("selectedPlayersList: " + selectedPlayersList);
 
-        });
-
-        form.on('select(PlayerClick2)', function (data){
-            console.log("selectedPlayersList: " + selectedPlayersList);
-        });
-
-        form.on('select(PlayerClick3)', function (data){
-            console.log("selectedPlayersList: " + selectedPlayersList);
-        });
-
-        form.on('select(PlayerClick4)', function (data){
-            console.log("selectedPlayersList: " + selectedPlayersList);
-        });
-
-        form.on('select(PlayerClick5)', function (data){
-            console.log("selectedPlayersList: " + selectedPlayersList);
-        });
-
-        form.on('select(PlayerClick6)', function (data){
-            console.log("selectedPlayersList: " + selectedPlayersList);
         });
         
         axios.get('../CTFCAgegroup', {}).then(function (response) {
