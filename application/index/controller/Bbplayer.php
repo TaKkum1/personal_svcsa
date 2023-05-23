@@ -338,6 +338,21 @@ class Bbplayer extends Base
         $player["Email"] = $data["Email"];
         $player["Sex"] = $data["Sex"];
 
+        // Check if player with the same name and birthday already exists
+        $existingPlayer = Db::name('bb_player')
+            ->where('Name', $player["Name"])
+            ->where('Birth', $player["Birth"])
+            ->find();
+
+        if ($existingPlayer) {
+            // Player with the same name and birthday already exists
+            $this->headerAndFooter('competition');
+            $applyresult = '该用户已存在！如有误，请联系管理员(svcba.svcsa@gmail.com)修改。';
+            $this->view->assign('applyresult', $applyresult);
+            return $this->view->fetch('player/bbplayerApplyres');
+        }
+
+
         $validator = validate('Bb_player');
         $team_result = $validator->check($player);
         if (!$team_result) {
