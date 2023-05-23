@@ -8,8 +8,6 @@
 
 namespace app\index\controller;
 
-
-
 use think\Db;
 use think\Session;
 
@@ -56,6 +54,20 @@ class Ctfcplayer extends Base
         $player["Birthday"] = $data["Birthday"];
         $player["Email"] = $data["Email"];
         $player["Sex"] = $data["Sex"];
+
+        // Check if player with the same name and birthday already exists
+        $existingPlayer = Db::name('ctfc_player')
+        ->where('Name', $player["Name"])
+        ->where('Birthday', $player["Birthday"])
+        ->find();
+
+        if ($existingPlayer) {
+            // Player with the same name and birthday already exists
+            $this->headerAndFooter('ctfc');
+            $applyresult = '该用户已存在！如有误，请联系管理员(svcba.svcsa@gmail.com)修改。';
+            $this->view->assign('applyresult', $applyresult);
+            return $this->view->fetch('ctfcplayer/applyres');
+        }
 
         $validator = validate('ctfc_player');
         $result = $validator->check($player);
