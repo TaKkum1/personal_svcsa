@@ -154,7 +154,7 @@ class Ctfcitemplayer extends Base
         $birthYear = date('Y', strtotime($dateOfBirth));
         $age = $currentYear - $birthYear;
         // if (date('md') < date('md', strtotime($dateOfBirth))) {
-            $age--;
+            // $age--;
         // }
         return $age;
     }
