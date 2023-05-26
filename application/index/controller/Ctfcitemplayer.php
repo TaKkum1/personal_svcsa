@@ -226,7 +226,7 @@ class Ctfcitemplayer extends Base
         $data = request()->only('SiMinAG,SiMaxAG,SiID,SiSex,Tmid', 'get');
         $SeasonitemMinAG= urldecode($data['SiMinAG']);
         $SeasonitemMaxAG = urldecode($data['SiMaxAG']);
-        $SeasonitemID = urldecode($data['SiID']);
+        $CurrentSeasonID = urldecode($data['SiID']);
         $SeasonitemSex = urldecode($data['SiSex']);
         $CurrentSelectedTeamID = urldecode($data['Tmid']);
 
@@ -270,10 +270,11 @@ class Ctfcitemplayer extends Base
 
             if (!empty($re)) {
 
-                // Current player_id already registered, let check if it's in other team
+                // First check if current player_id already registered, let check if it's in other team
+                // Second check if curent player is in current season.
                 foreach ($re as $player_results) {
                     foreach ($player_results as $itemplayer) {
-                        if ($itemplayer['TeamID'] != $CurrentSelectedTeamID) {
+                        if (($itemplayer['TeamID'] != $CurrentSelectedTeamID) && ($itemplayer['SeasonID'] == $CurrentSeasonID)) {
                             // This player is in another team, remove this one from the return list
                             // Find the index of this player to be removed.
                             $index = array_search($player_id, $list);
@@ -290,10 +291,10 @@ class Ctfcitemplayer extends Base
 
         }
 
-        // Check if the player has 3 single items aleady
+        // Check if the player has 3 single items in the current season aleady.
         $final_list = $list;
         foreach ($list as $itemplayer_id) {
-            $data = Db::name('ctfc_itemplayer')->where("PlayerID1", $itemplayer_id)->select();
+            $data = Db::name('ctfc_itemplayer')->where("SeasonID", $CurrentSeasonID)->where("PlayerID1", $itemplayer_id)->select();
             
             $players_items_list = [];
             foreach($data as $one_data) {
