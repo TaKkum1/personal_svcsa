@@ -64,8 +64,24 @@ class Ctfcplayer extends Base
         if ($existingPlayer) {
             // Player with the same name and birthday already exists
             $this->headerAndFooter('ctfc');
-            $existingPlayerInfo = "<div class='card text-left'><div class='card-body text-left'><small><br>姓名: " . $existingPlayer["Name"] . "<br>生日: " . $existingPlayer["Birthday"] . "<br>Email: " . $existingPlayer["Email"]."</small></div></div>";
-            $applyresult = '该用户已存在！如有误，请联系管理员(svcba.svcsa@gmail.com)修改。<br>'.$existingPlayerInfo;
+            $existingPlayerInfo = "
+            <div class='card text-left'>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-sm-3'>
+                            <img src='" . config('public_assets') . "/uploads/" . $existingPlayer["PhotoSrc"] . "' alt='Player Photo' style='max-width: 100%; height: auto;'>
+                        </div>
+                        <div class='col-sm-9'>
+                            <small>
+                                <strong>姓名:</strong>". $existingPlayer["Name"]. "<br>
+                                <strong>生日:</strong>". $existingPlayer["Birthday"]. "<br>
+                                <strong>Email:</strong>". $existingPlayer["Email"]."
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>";
+            $applyresult = '该用户已存在！如有误，请联系管理员(svcba.svcsa@gmail.com)修改。<br><br>'.$existingPlayerInfo;
             $this->view->assign('applyresult', $applyresult);
             return $this->view->fetch('ctfcplayer/applyres');
         }
