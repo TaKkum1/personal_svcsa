@@ -21,6 +21,10 @@ SET time_zone = "+00:00";
 -- Database: `match`
 --
 
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `match` /*!40100 DEFAULT CHARACTER SET utf8 */;
+
+USE `match`;
+
 -- --------------------------------------------------------
 
 --
