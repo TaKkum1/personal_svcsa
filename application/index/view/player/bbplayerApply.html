@@ -26,10 +26,10 @@
             <input type="text" onfocus="(this.type='date')" name="Birth" placeholder="生日：">
         </div>
         <div class="input-box">
-            <input type="text" name="Height" placeholder="身高(cm)：">
+            <input type="text" name="Height" placeholder="身高(cm)：(可选)">
         </div>
         <div class="input-box">
-            <input type="text" name="Weight" placeholder="体重(kg)：">
+            <input type="text" name="Weight" placeholder="体重(kg)：(可选)">
         </div>
         <div class="input-box">
             <input type="text" name="Email" placeholder="电子邮件：">
@@ -254,8 +254,8 @@
 
             if($('input[name=Name]').val()=="" ||
                 $('input[name=Birth]').val()=="" ||
-                $('input[name=Height]').val()=="" ||
-                $('input[name=Weight]').val()=="" ||
+                // $('input[name=Height]').val()=="" ||
+                // $('input[name=Weight]').val()=="" ||
                 $('input[name=Email]').val()==""
             )
             {
