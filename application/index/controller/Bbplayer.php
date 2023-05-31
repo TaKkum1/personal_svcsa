@@ -337,6 +337,7 @@ class Bbplayer extends Base
         $player["Weight"] = $data["Weight"];
         $player["Email"] = $data["Email"];
         $player["Sex"] = $data["Sex"];
+        $player["Approved"] = 0;
 
         // Check if player with the same name and birthday already exists
         $existingPlayer = Db::name('bb_player')
