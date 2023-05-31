@@ -117,7 +117,7 @@
             console.log(error);
         });
 
-        axios.get('../CTFCPlayer?all=1', {}).then(function (response) {
+    axios.get('../CTFCPlayer?all=1', {}).then(function (response) {
         console.log(response);
         $.each(response.data.data, function (index, item) {
             $('#PlayerID').append('<option value="' + item.ID + '">' + item.Name + '</option>');

@@ -219,6 +219,17 @@
 \think\Route::get('ctfcplayernumber', 'index/ctfcplayernumber/lists');
 
 
+
+\think\Route::post('ctfcitemplayer/:id', 'index/ctfcitemplayer/update', [], ['id' => '\d+']);
+\think\Route::post('ctfcitemplayer', 'index/ctfcitemplayer/add');
+\think\Route::delete('ctfcitemplayer/:id', 'index/ctfcitemplayer/delete', [], ['id' => '\d+']);
+\think\Route::get('ctfcitemplayer/:id', 'index/ctfcitemplayer/read', [], ['id' => '\d+']);
+\think\Route::get('ctfcitemplayer', 'index/ctfcitemplayer/lists');
+\think\Route::get('ctfcitemplayer/getTypeOfItem', 'index/ctfcitemplayer/getItemType');
+\think\Route::get('ctfcitemplayer/getAgeSex', 'index/ctfcitemplayer/getPlayerAgeSex');
+\think\Route::get('ctfcitemplayer/getSeasonTeamPlayers', 'index/ctfcitemplayer/GetPlayersList');
+
+
 return [
 
 //    '[bbcompetition]' => [
