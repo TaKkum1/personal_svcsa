@@ -8,8 +8,6 @@
 
 namespace app\index\controller;
 
-
-
 use think\Db;
 use think\Session;
 
@@ -56,6 +54,38 @@ class Ctfcplayer extends Base
         $player["Birthday"] = $data["Birthday"];
         $player["Email"] = $data["Email"];
         $player["Sex"] = $data["Sex"];
+        $player["Approval"] = 0;
+
+        // Check if player with the same name and birthday already exists
+        $existingPlayer = Db::name('ctfc_player')
+        ->where('Name', $player["Name"])
+        ->where('Birthday', $player["Birthday"])
+        ->find();
+
+        if ($existingPlayer) {
+            // Player with the same name and birthday already exists
+            $this->headerAndFooter('ctfc');
+            $existingPlayerInfo = "
+            <div class='card text-left'>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-sm-3'>
+                            <img src='" . config('public_assets') . "/uploads/" . $existingPlayer["PhotoSrc"] . "' alt='Player Photo' style='max-width: 100%; height: auto;'>
+                        </div>
+                        <div class='col-sm-9'>
+                            <small>
+                                <strong>姓名:</strong>". $existingPlayer["Name"]. "<br>
+                                <strong>生日:</strong>". $existingPlayer["Birthday"]. "<br>
+                                <strong>Email:</strong>". $existingPlayer["Email"]."
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>";
+            $applyresult = '该用户已存在！如有误，请联系管理员(svcba.svcsa@gmail.com)修改。<br><br>'.$existingPlayerInfo;
+            $this->view->assign('applyresult', $applyresult);
+            return $this->view->fetch('ctfcplayer/applyres');
+        }
 
         $validator = validate('ctfc_player');
         $result = $validator->check($player);
