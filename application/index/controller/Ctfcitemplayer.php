@@ -223,13 +223,13 @@ class Ctfcitemplayer extends Base
     {
 
         $this->checkauthorization();
-        $data = request()->only('SiMinAG,SiMaxAG,SiID,SiSex,Tmid', 'get');
+        $data = request()->only('SiMinAG,SiMaxAG,SiID,SiSex,Tmid,SsID', 'get');
         $SeasonitemMinAG= urldecode($data['SiMinAG']);
         $SeasonitemMaxAG = urldecode($data['SiMaxAG']);
-        $CurrentSeasonID = urldecode($data['SiID']);
+        $CurrentSelecteditemID = urldecode($data['SiID']);
         $SeasonitemSex = urldecode($data['SiSex']);
         $CurrentSelectedTeamID = urldecode($data['Tmid']);
-
+        $CurrentSeasonID = urldecode($data['SsID']);
         
         $all_players = Db::name('ctfc_player');
         $all_players = $all_players->select();
@@ -260,8 +260,9 @@ class Ctfcitemplayer extends Base
             }
         }
 
+        $list_reference = $list;
         // Filter the list of player IDs that's not duplicated from other team.
-        foreach ($list as $player_id) {
+        foreach ($list_reference as $player_id) {
             $re = [];
 
             for ($i = 1; $i <= 6; $i++) {
@@ -281,6 +282,17 @@ class Ctfcitemplayer extends Base
                             // Remove the element if it exists in the array
                             if ($index !== false) {
                                 unset($list[$index]);
+                            }
+                            // Re-index the array
+                            $list = array_values($list);
+                        }
+
+                        if (($itemplayer['ItemID'] == $CurrentSelecteditemID) && ($itemplayer['Sex']== $SeasonitemSex) && ($itemplayer['SeasonID'] == $CurrentSeasonID)) {
+                            // This player has already registered the same item
+                            $index_b = array_search($player_id, $list);
+                            // Remove the element if it exists in the array
+                            if ($index_b !== false) {
+                                unset($list[$index_b]);
                             }
                             // Re-index the array
                             $list = array_values($list);
