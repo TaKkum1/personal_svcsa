@@ -11,7 +11,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 90px;">赛季</label>
                     <div class="layui-input-inline" style="width: 380px;  height: auto;">
-                        <select id="SeasonID" name="SeasonID" lay-verify="required" lay-filter="Season">
+                        <select id="SeasonID" name="SeasonID" lay-verify="required" lay-filter="SeasonClick">
                             <option value="">选择赛季</option>
                         </select>
                     </div>
@@ -307,7 +307,7 @@
 
         var currentseasonid;
         var currentteamid;
-        form.on('select(Season)', function (data) {
+        form.on('select(SeasonClick)', function (data) {
             currentseasonid = data.value;
             // Get Seasonteam
             axios.get('../CTFCSeasonteam?seasonid=' + data.value, {}).then(function (response) {

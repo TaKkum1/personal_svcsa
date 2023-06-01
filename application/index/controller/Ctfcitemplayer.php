@@ -133,7 +133,7 @@ class Ctfcitemplayer extends Base
 
         $result = Db::name('ctfc_itemplayer')->where('ID', $id)->delete();
         $this->affectedRowsResult($result);
-    }
+    }  
     public function getItemType()
     {
         $this->checkauthorization();
@@ -209,6 +209,16 @@ class Ctfcitemplayer extends Base
         $this->jsonResult(0, ['affectedRows' => $result]);
     }
 
+    function checkSignleItem($itemid) {
+
+        $item_is_single = Db::name('ctfc_item')->where('ID', $itemid)->find()['IsSingle'];
+        if($item_is_single == 1) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function GetPlayersList()
     {
 
@@ -216,7 +226,7 @@ class Ctfcitemplayer extends Base
         $data = request()->only('SiMinAG,SiMaxAG,SiID,SiSex,Tmid', 'get');
         $SeasonitemMinAG= urldecode($data['SiMinAG']);
         $SeasonitemMaxAG = urldecode($data['SiMaxAG']);
-        $SeasonitemID = urldecode($data['SiID']);
+        $CurrentSeasonID = urldecode($data['SiID']);
         $SeasonitemSex = urldecode($data['SiSex']);
         $CurrentSelectedTeamID = urldecode($data['Tmid']);
 
@@ -260,10 +270,11 @@ class Ctfcitemplayer extends Base
 
             if (!empty($re)) {
 
-                // Current player_id already registered, let check if it's in other team
+                // First check if current player_id already registered, let check if it's in other team
+                // Second check if curent player is in current season.
                 foreach ($re as $player_results) {
                     foreach ($player_results as $itemplayer) {
-                        if ($itemplayer['TeamID'] != $CurrentSelectedTeamID) {
+                        if (($itemplayer['TeamID'] != $CurrentSelectedTeamID) && ($itemplayer['SeasonID'] == $CurrentSeasonID)) {
                             // This player is in another team, remove this one from the return list
                             // Find the index of this player to be removed.
                             $index = array_search($player_id, $list);
@@ -275,12 +286,37 @@ class Ctfcitemplayer extends Base
                             $list = array_values($list);
                         }
                     }
-                }
+                }                
             }
 
         }
 
-        $this->jsonResult(0, ['affectedRows' => $list]);
+        // Check if the player has 3 single items in the current season aleady.
+        $final_list = $list;
+        foreach ($list as $itemplayer_id) {
+            $data = Db::name('ctfc_itemplayer')->where("SeasonID", $CurrentSeasonID)->where("PlayerID1", $itemplayer_id)->select();
+            
+            $players_items_list = [];
+            foreach($data as $one_data) {
+                if ($this->checkSignleItem($one_data['ItemID'])) {
+                    array_push($players_items_list, $one_data['ItemID']);
+                }
+            }
+
+            if(count($players_items_list) >=3) {
+                // Find the index of this player to be removed.
+                 $index = array_search($itemplayer_id, $final_list);
+                 // Remove the element if it exists in the array
+                 if ($index !== false) {
+                     unset($final_list[$index]);
+                 }
+                 // Re-index the array
+                 $final_list = array_values($final_list);
+            }
+
+        }
+
+        $this->jsonResult(0, ['affectedRows' => $final_list]);
     }
 }
 
