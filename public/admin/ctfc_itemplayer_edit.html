@@ -217,7 +217,7 @@
             });
             }
      
-        function getPlayerList(siID, siSex, siMinAG, siMaxAG, teamID, callback) {
+        function getPlayerList(sitemID, siSex, siMinAG, siMaxAG, teamID, SsID, callback) {
 
             let currentPlayerList = [];
             $.ajax({
@@ -227,9 +227,10 @@
                 data: {
                 SiMinAG: siMinAG,
                 SiMaxAG: siMaxAG,
-                SiID: siID,
+                SiID: sitemID,
                 SiSex: siSex,
-                Tmid: teamID
+                Tmid: teamID,
+                SsID,SsID
                 },
                 header: {
                 Accept: 'application/json'
@@ -268,15 +269,15 @@
         }
         
 
-        function updatePlayerList(currentseasonid, currentSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, form, clearoptions) {
+        function updatePlayerList(currentItemId, currentSex, seasonitemFiltersMinAG, seasonitemFiltersMaxAG, SelectedTeamID, currentseasonid, form, clearoptions) {
 
-            // console.log("currentseasonid: " + currentseasonid);
+            // console.log("currentItemId: " + currentItemId);
             // console.log("currentSex: " + currentSex);
             // console.log("SelectedTeamID: " + SelectedTeamID);
             // console.log("seasonitemFiltersMinAG: " + seasonitemFiltersMinAG);
             // console.log("seasonitemFiltersMaxAG: " + seasonitemFiltersMaxAG);
                     
-            getPlayerList(currentseasonid, currentSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, function(currentPlayerList) {
+            getPlayerList(currentItemId, currentSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, currentseasonid, function(currentPlayerList) {
                 // console.log('PlayerList=' + currentPlayerList);
                 
                 if(clearoptions) {
@@ -326,7 +327,7 @@
             for (j = 1; j < numbers.length; j++) {
             //console.log(numbers);
                 if ($(numbers[j]).val() == num) {
-                     console.log('ok');
+                    //  console.log('ok');
                         $(numbers[j]).attr("selected", "selected");
                         $(numbers[j]).attr("class", "layui-this");
                         form.render();
@@ -430,7 +431,7 @@
                 if(currentIsSingleFlag == 0) {
                     currentAgeID = document.getElementById('AgeGroupID_s').value;   
                     if(currentAgeID) {
-                        updatePlayerList(xiangmu, xiangmuSex, currentAgeID,currentAgeID, currentteamid, form, 1);
+                        updatePlayerList(xiangmu, xiangmuSex, currentAgeID,currentAgeID, currentteamid, readseasonid, form, 1);
                     }
                 } else {
                     axios.get('../CTFCseasonitem?seasonid=' + readseasonid, {}).then(function (response) {
@@ -439,7 +440,7 @@
                                 seasonitemFiltersMinAG = item.MinAgeGroupID;
                                 seasonitemFiltersMaxAG = item.MaxAgeGroupID;
                                 SelectedTeamID = currentteamid;
-                                updatePlayerList(xiangmu, xiangmuSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, form);
+                                updatePlayerList(xiangmu, xiangmuSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, readseasonid, form, 1);
                             
                             }
                         });
@@ -471,14 +472,15 @@
                 var currentAgeID = -1;
                 if(currentIsSingleFlag == 0) {
                     currentAgeID = document.getElementById('AgeGroupID_s').value;   
+                    readseasonid = document.getElementById('SeasonID_s').value;
+
                     if(currentAgeID) {
-                        updatePlayerList(xiangmu, xiangmuSex, currentAgeID,currentAgeID, SelectedTeamID, form, 1);
+                        updatePlayerList(xiangmu, xiangmuSex, currentAgeID,currentAgeID, SelectedTeamID, readseasonid, form, 1);
                     }
 
                     // update agegroup
                     $('#AgeGroupID_s').empty();
                     $('#AgeGroupID_s').append('<option value="">' + "选择年龄组" + '</option>');
-                    readseasonid = document.getElementById('SeasonID_s').value;
 
                     var seasonitemFiltersMinAG;
                     var seasonitemFiltersMaxAG;
@@ -507,14 +509,16 @@
                         console.log(error);
                     });
                 }else{
-                    axios.get('../CTFCseasonitem?seasonid=' + currentseasonid, {}).then(function (response) {
+                    readseasonid = document.getElementById('SeasonID_s').value;
+
+                    axios.get('../CTFCseasonitem?seasonid=' + readseasonid, {}).then(function (response) {
                         $.each(response.data.data, function (index, item) {
                             if(item.ItemID == xiangmu && item.Sex == xiangmuSex) {
                                 seasonitemFiltersMinAG = item.MinAgeGroupID;
                                 seasonitemFiltersMaxAG = item.MaxAgeGroupID;
                                 var SelectedTeamID_Bar = document.getElementById('TeamID_s');
                                 var SelectedTeamID = SelectedTeamID_Bar.value;
-                                updatePlayerList(xiangmu, xiangmuSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, form, 1);
+                                updatePlayerList(xiangmu, xiangmuSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, readseasonid, form, 1);
                             }
                         });
                         form.render();
@@ -561,7 +565,7 @@
    
         
         form.on('submit(add)', function (data) {
-            console.log('ID'+$('input[name="ID"]').val());
+            // console.log('ID'+$('input[name="ID"]').val());
 
             itemValues = document.getElementById('ItemID_s').value;
 
@@ -575,19 +579,19 @@
                 global_currentIsSingleFlag = currentIsSingleFlag;
             
                 var index = parent.layer.getFrameIndex(window.name);
-                console.log('global_currentIsSingleFlag='+global_currentIsSingleFlag);
+                // console.log('global_currentIsSingleFlag='+global_currentIsSingleFlag);
 
                 if(global_currentIsSingleFlag == 1) {
                     const parts = data.field.ItemID.split("-");
                     item_id = parts[0];
                     item_Sex = parts[1];
-                    console.log('data.field.SeasonID='+data.field.SeasonID);
-                    console.log('data.field.TeamID='+data.field.TeamID);
-                    console.log('data.field.SexSingle_s='+data.field.SexSingle_s);
-                    console.log('data.field.AgeGroupIDSingle='+data.field.AgeGroupIDSingle);
-                    console.log('data.field.ItemID[0]='+item_id);
-                    console.log('data.field.ItemID[1]='+item_Sex);
-                    console.log('data.field.PlayerIDOne='+data.field.PlayerIDOne);
+                    // console.log('data.field.SeasonID='+data.field.SeasonID);
+                    // console.log('data.field.TeamID='+data.field.TeamID);
+                    // console.log('data.field.SexSingle_s='+data.field.SexSingle_s);
+                    // console.log('data.field.AgeGroupIDSingle='+data.field.AgeGroupIDSingle);
+                    // console.log('data.field.ItemID[0]='+item_id);
+                    // console.log('data.field.ItemID[1]='+item_Sex);
+                    // console.log('data.field.PlayerIDOne='+data.field.PlayerIDOne);
                     
                     axios.post('../CTFCItemplayer/'+ $('input[name="ID"]').val(), {
                         SeasonID: data.field.SeasonID,
@@ -614,17 +618,17 @@
                         console.log(error);
                     });
                 } else {
-                    console.log('data.field.SeasonID='+data.field.SeasonID);
-                    console.log('data.field.TeamID='+data.field.TeamID);
-                    console.log('data.field.Sex='+data.field.Sex);
-                    console.log('data.field.AgeGroupID='+data.field.AgeGroupID);
-                    console.log('data.field.ItemID='+data.field.ItemID);
-                    console.log('data.field.PlayerID1='+data.field.PlayerID1);
-                    console.log('data.field.PlayerID2='+data.field.PlayerID2);
-                    console.log('data.field.PlayerID3='+data.field.PlayerID3);
-                    console.log('data.field.PlayerID4='+data.field.PlayerID4);
-                    console.log('data.field.PlayerID5='+data.field.PlayerID5);
-                    console.log('data.field.PlayerID6='+data.field.PlayerID6);
+                    // console.log('data.field.SeasonID='+data.field.SeasonID);
+                    // console.log('data.field.TeamID='+data.field.TeamID);
+                    // console.log('data.field.Sex='+data.field.Sex);
+                    // console.log('data.field.AgeGroupID='+data.field.AgeGroupID);
+                    // console.log('data.field.ItemID='+data.field.ItemID);
+                    // console.log('data.field.PlayerID1='+data.field.PlayerID1);
+                    // console.log('data.field.PlayerID2='+data.field.PlayerID2);
+                    // console.log('data.field.PlayerID3='+data.field.PlayerID3);
+                    // console.log('data.field.PlayerID4='+data.field.PlayerID4);
+                    // console.log('data.field.PlayerID5='+data.field.PlayerID5);
+                    // console.log('data.field.PlayerID6='+data.field.PlayerID6);
                     const parts = data.field.ItemID.split("-");
                     item_id = parts[0];
                     item_Sex = parts[1];
@@ -658,12 +662,14 @@
 
         });
 
-
         // Prefill the selected options
         axios.get('../CTFCseasonitem', {}).then(function (response) {
-            // console.log(response);
+            console.log(response);
+            var currentseasonid = $("#SeasonID").val();
             $.each(response.data.data, function (index, element) {
-                $('#ItemID_s').append('<option value="' + element.ItemID + '-' + element.Sex + '">' + element.Sex + " - " + element.ItemName +  '</option>');
+                if(element.SeasonID == currentseasonid) {
+                    $('#ItemID_s').append('<option value="' + element.ItemID + '-' + element.Sex + '">' + element.Sex + " - " + element.ItemName +  '</option>');
+                }
             });
             form.render();
 
@@ -724,9 +730,11 @@
                                 form.render();
                             }
                         });
+                        var readseasonid = document.getElementById('SeasonID_s').value;
+                        // console.log("readseasonid="+readseasonid);
 
                         var currentteamid = document.getElementById('TeamID_s').value;
-                        updatePlayerList(ItemIDVal, ItemIDSex, singleAgeGroup,singleAgeGroup, currentteamid, form, 0);
+                        updatePlayerList(ItemIDVal, ItemIDSex, singleAgeGroup,singleAgeGroup, currentteamid, readseasonid, form, 0);
 
                         // $.each(response.data.data, function (index, item) {
                         //         $('#PlayerIDOne_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
@@ -856,7 +864,7 @@
                         currentseasonid = document.getElementById('SeasonID_s').value;
                         currentteamid = document.getElementById('TeamID_s').value;
                         currentAgeID = $("#AgeGroupID").val();
-                        updatePlayerList(ItemIDVal, ItemIDSex, currentAgeID,currentAgeID, currentteamid, form, 0);
+                        updatePlayerList(ItemIDVal, ItemIDSex, currentAgeID,currentAgeID, currentteamid, currentseasonid, form, 0);
                         form.render();
 
                     })                    
@@ -873,17 +881,19 @@
         // Select AgeGroup for multiple players
         form.on('select(AgeGroupIDClick)', function (data) {
             currentAgeGroupid = data.value;   
-            console.log('currentseasonid=' + currentseasonid);
-            console.log('currentteamid=' + currentteamid);
-            console.log('currentAgeGroupid=' + currentAgeGroupid);
+            // console.log('currentseasonid=' + currentseasonid);
+            // console.log('currentteamid=' + currentteamid);
+            // console.log('currentAgeGroupid=' + currentAgeGroupid);
             const parts = document.getElementById('ItemID_s').value.split("-");
             if (parts.length === 2) {
                 xiangmu = parts[0];
                 xiangmuSex = parts[1];
             }
             var currentSex = xiangmuSex;
-            console.log('currentSex=' + currentSex);
-            updatePlayerList(currentseasonid, currentSex, currentAgeGroupid,currentAgeGroupid, currentteamid, form, 0);
+            var currentseasonid = document.getElementById('SeasonID_s').value;
+
+            // console.log('currentSex=' + currentSex);
+            updatePlayerList(xiangmu, currentSex, currentAgeGroupid,currentAgeGroupid, currentteamid, form, currentseasonid, 0);
         });  
     });
 </script>
