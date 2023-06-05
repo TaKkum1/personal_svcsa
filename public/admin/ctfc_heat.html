@@ -18,6 +18,13 @@
                     <button id="add" class="layui-btn layui-btn-normal">新增分配</button>
                 </div>
             </div>
+            <div class="layui-input-inline">
+                <form class="layui-form" action="">
+                    <select id="Item" name="Item" lay-verify="" lay-filter="ItemClick">
+                        <option value="">选择项目</option>
+                    </select>
+                </form>
+            </div>
             <table class="layui-hide" id="test" lay-filter="test"></table>
             <script type="text/html" id="toolbarDemo">
             </script>
@@ -37,7 +44,7 @@
         var form = layui.form;
         table.render({
             elem: '#test',
-            url: '../ctfcheat',
+            url: '../ctfcheatview',
             parseData: function (res) {
                 return {
                     "code": 0, //解析接口状态
@@ -241,6 +248,26 @@
         //         });
         //     }
         // });
+
+    // 项目item options : all the data are from ctfc_heat_view
+    axios.get('../CTFCheatview', {}).then(function (response) {
+            $.each(response.data.data, function (index, elem) {
+                $('#Item').append('<option value="' + elem.ItemID + '">' + elem.ItemName + '</option>');
+            });
+            form.render();
+           })
+            .catch(function (error) {
+                console.log(error);
+            });
+    // 项目的filter
+    form.on('select(ItemClick)', function (data) {
+            
+            table.reload('test', {
+                url: '../CTFCheatview?itemid=' + data.value,
+                
+            });
+        });
+
 
     });
 </script>

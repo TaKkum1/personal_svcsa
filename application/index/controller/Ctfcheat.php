@@ -11,9 +11,13 @@ use think\Db\Expression;
 
 class Ctfcheat extends Base
 {
-    const FIELD = 'ID,EventID,HeatNumber,LaneNumber,TeamName,ItemAgeGroupSex,Player1,Player2,Player3,Player4,Player5,Player6,Result,Note';
-    public function lists(){
-        $list = Db::name('ctfc_heat_view')->paginate(input('pagesize'));
+    const FIELD = 'ID,EventID,HeatNumber,LaneNumber,TeamName,ItemAgeGroupSex,Player1,Player2,Player3,Player4,Player5,Player6,Result,Note,IsSingle,HeatSize,ItemName,Gender,AgeGroupNumber,ItemPlayerID,ItemID';
+    public function lists($itemid = null){
+        if($itemid) {
+            $list = Db::name('ctfc_heat_view')->where('ItemID', $itemid)->paginate(input('pagesize'));
+        }else {
+            $list = Db::name('ctfc_heat_view')->paginate(input('pagesize'));
+        }
         $this->paginatedResult(
             $list->total(),
             $list->listRows(),

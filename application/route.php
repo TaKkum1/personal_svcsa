@@ -230,8 +230,8 @@
 \think\Route::get('ctfcitemplayer/getSeasonTeamPlayers', 'index/ctfcitemplayer/GetPlayersList');
 
 
-
-\think\Route::get('ctfcheat', 'index/ctfcheat/lists');
+// ctfc_heat_view
+\think\Route::get('ctfcheatview', 'index/ctfcheat/lists');
 
 return [
 
