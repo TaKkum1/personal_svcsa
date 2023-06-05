@@ -11,9 +11,9 @@ use think\Db\Expression;
 
 class Ctfcheat extends Base
 {
-    const FIELD = 'ItemPlayer,LaneNumber,Result,Note';
+    const FIELD = 'ID,EventID,HeatNumber,LaneNumber,TeamName,ItemAgeGroupSex,Player1,Player2,Player3,Player4,Player5,Player6,Result,Note';
     public function lists(){
-        $list = Db::name('ctfc_heat')->paginate(input('pagesize'));
+        $list = Db::name('ctfc_heat_view')->paginate(input('pagesize'));
         $this->paginatedResult(
             $list->total(),
             $list->listRows(),
