@@ -152,9 +152,9 @@ notfound:
         $this->headerAndFooter('Team');
 
         $teamtitle = '';
-        $CompetitionName = Db::name('ctfc_competition')
-            ->where('ID', $competitionid)
-            ->find()['Name'];
+        // $CompetitionName = Db::name('ctfc_competition')
+        //     ->where('ID', $competitionid)
+        //     ->find()['Name'];
         if ($seasonid && count($list->items())>0) {
             $teamtitle = $list->items()[0]['SeasonName'];
           }
@@ -166,12 +166,12 @@ notfound:
           $playertitle = '优秀';
 
         $this->view->assign('teamtitle', $teamtitle);
-        $this->view->assign('CompetitionName', $CompetitionName);
+        // $this->view->assign('CompetitionName', $CompetitionName);
         $this->view->assign('SeasonID', $seasonid);
         $this->view->assign('pagerender', $list->render());
         $this->view->assign('team', $list->items());
 
-        return $this->view->fetch('team/lists');
+        return $this->view->fetch('ctfcteam/lists');
 
 
         notfound:
