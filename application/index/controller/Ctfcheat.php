@@ -11,11 +11,14 @@ use think\Db\Expression;
 
 class Ctfcheat extends Base
 {
-    const FIELD = 'ID,EventID,HeatID,LaneNumber,TeamName,ItemAgeGroupSex,Player1,Player2,Player3,Player4,Player5,Player6,Result,Note,IsSingle,HeatSize,ItemName,Gender,AgeGroupNumber,ItemPlayerID,ItemID';
-    public function lists($itemid = null){
+    const FIELD = 'ID,EventID,HeatID,LaneNumber,TeamName,ItemAgeGroupSex,Player1,Player2,Player3,Player4,Player5,Player6,Result,Note,IsSingle,HeatSize,ItemName,Gender,AgeGroupNumber,ItemPlayerID,TeamID,ItemID';
+    public function lists($itemid = null, $teamid = null){
         if($itemid) {
             $list = Db::name('ctfc_heat_view')->where('ItemID', $itemid)->paginate(input('pagesize'));
-        }else {
+        }elseif($teamid){
+            $list = Db::name('ctfc_heat_view')->where('TeamID', $teamid)->paginate(input('pagesize'));
+        }
+        else {
             $list = Db::name('ctfc_heat_view')->paginate(input('pagesize'));
         }
 
@@ -46,6 +49,9 @@ class Ctfcheat extends Base
             // passing data for 项目 filter 
             $newTable['ItemID'] = $heateachrow['ItemID'];
             $newTable['ItemName'] = $heateachrow['ItemName'];
+            // passing data for 队伍 filter
+            $newTable['TeamID'] = $heateachrow['TeamID'];
+     
             $modifiedList[] = $newTable;
         }
 

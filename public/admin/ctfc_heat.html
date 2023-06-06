@@ -14,7 +14,14 @@
             <div class="layui-input-inline">
                 <form class="layui-form" action="">
                     <select id="Item" name="Item" lay-verify="" lay-filter="ItemClick">
-                        <option value="">选择项目</option>
+                        <option value="">查看项目</option>
+                    </select>
+                </form>
+            </div>
+            <div class="layui-input-inline">
+                <form class="layui-form" action="">
+                    <select id="Team" name="Team" lay-verify="" lay-filter="TeamClick">
+                        <option value="">查看队伍</option>
                     </select>
                 </form>
             </div>
@@ -38,7 +45,6 @@
             elem: '#test',
             url: '../ctfcheatview',
             parseData: function (res) {
-                console.log(res.data);
                 return {
                     "code": 0, //解析接口状态
                     "msg": '', //解析提示文本
@@ -223,6 +229,25 @@
         //     }
         // });
 
+    // team options : all the data are from ctfc_heat_view
+    axios.get('../CTFCheatview', {}).then(function (response) {
+        console.log(response.data.data)
+            $.each(response.data.data, function (index, elem) {
+                $('#Team').append('<option value="' + elem.TeamID + '">' + elem.TeamName + '</option>');
+            });
+            form.render();
+           })
+            .catch(function (error) {
+                console.log(error);
+            });
+    // Team 的filter
+    form.on('select(TeamClick)', function (data) {
+            
+            table.reload('test', {
+                url: '../CTFCheatview?teamid=' + data.value,
+                
+            });
+        });
     // 项目item options : all the data are from ctfc_heat_view
     axios.get('../CTFCheatview', {}).then(function (response) {
         console.log(response.data.data)
@@ -242,7 +267,6 @@
                 
             });
         });
-
 
     });
 </script>
