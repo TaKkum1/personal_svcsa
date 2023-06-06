@@ -84,7 +84,7 @@ class Ctfcteam extends Base
             $team["PhotoSrc"] = $infophotofile->move(__DIR__ . $assetUrl)
                 ->getSaveName();
 
-        $check_duplicates = Db::name('ctfc_team')->where("CaptainName", $team["CaptainName"])->find();
+        $check_duplicates = Db::name('ctfc_team')->where("Name", $team["Name"])->find();
         if ($check_duplicates > 0) {
             goto duplicates;
         }
@@ -118,7 +118,7 @@ class Ctfcteam extends Base
         return $this->view->fetch('ctfcteam/applyres');
 
     duplicates:
-        $applyresult = '您已组建过队伍，无法再组建新队伍';
+        $applyresult = '队伍已經存在，无法组建队伍';
         $this->view->assign('applyresult',$applyresult);
         return $this->view->fetch('ctfcteam/applyres');
         
