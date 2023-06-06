@@ -43,6 +43,9 @@ class Ctfcheat extends Base
             $newTable['Result'] = $heateachrow['Result'];
             $newTable['Note'] = $heateachrow['Note'];
 
+            // passing data for 项目 filter 
+            $newTable['ItemID'] = $heateachrow['ItemID'];
+            $newTable['ItemName'] = $heateachrow['ItemName'];
             $modifiedList[] = $newTable;
         }
 

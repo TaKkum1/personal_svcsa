@@ -64,21 +64,21 @@
                 {
                     field: 'EventID',
                     title: 'EventID',
-                    width: 150,
+                    width: 100,
                     sort: true,
                 },
            
                 {
                     field: 'HeatID',
                     title: 'HeatID',
-                    width: 150,
+                    width: 100,
                     sort: true,
                 },
         
                 {
                     field: 'LaneNumber',
                     title: '道次',
-                    width: 150,
+                    width: 80,
                     sort: true,
                 },
                 {
@@ -225,6 +225,7 @@
 
     // 项目item options : all the data are from ctfc_heat_view
     axios.get('../CTFCheatview', {}).then(function (response) {
+        console.log(response.data.data)
             $.each(response.data.data, function (index, elem) {
                 $('#Item').append('<option value="' + elem.ItemID + '">' + elem.ItemName + '</option>');
             });
