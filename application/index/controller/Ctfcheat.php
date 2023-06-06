@@ -26,6 +26,7 @@ class Ctfcheat extends Base
 
         foreach ($list as $heateachrow) {
             $newTable = [];
+            $newTable['ID'] = $heateachrow['ID'];
             $newTable['EventID'] = $heateachrow['EventID'];
             $newTable['HeatID'] = $heateachrow['HeatID'];
             $newTable['LaneNumber'] = $heateachrow['LaneNumber'];
