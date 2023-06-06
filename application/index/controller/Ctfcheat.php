@@ -18,12 +18,35 @@ class Ctfcheat extends Base
         }else {
             $list = Db::name('ctfc_heat_view')->paginate(input('pagesize'));
         }
-        $this->paginatedResult(
-            $list->total(),
-            $list->listRows(),
-            $list->currentPage(),
-            $list->items()
-        );
+
+
+        // Modify the player1-6 fields to combine them into a single column
+
+        $modifiedList = [];
+
+        foreach ($list as $heateachrow) {
+            $newTable = [];
+            $newTable['EventID'] = $heateachrow['EventID'];
+            $newTable['HeatID'] = $heateachrow['HeatID'];
+            $newTable['LaneNumber'] = $heateachrow['LaneNumber'];
+            $newTable['TeamName'] = $heateachrow['TeamName'];
+            $newTable['ItemAgeGroupSex'] = $heateachrow['ItemAgeGroupSex'];
+
+            $players = [];
+            for ($i = 1; $i <= 6; $i++) {
+                if ($heateachrow["Player{$i}"]) {
+                    $players[] = $heateachrow["Player{$i}"];
+                }
+            }
+            $newTable['Players'] = implode(' , ', $players);
+            $newTable['Result'] = $heateachrow['Result'];
+            $newTable['Note'] = $heateachrow['Note'];
+
+            $modifiedList[] = $newTable;
+        }
+
+        $this->dataResult($modifiedList);
+
     }
 
     // public function add()
