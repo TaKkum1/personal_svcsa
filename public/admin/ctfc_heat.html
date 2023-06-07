@@ -14,14 +14,17 @@
             <div class="layui-input-inline">
                 <form class="layui-form" action="">
                     <select id="Item" name="Item" lay-verify="" lay-filter="ItemClick">
-                        <option value="">查看项目</option>
+                        <option value="">查看项目组别</option>
                     </select>
                 </form>
             </div>
             <div class="layui-input-inline">
                 <form class="layui-form" action="">
-                    <select id="Team" name="Team" lay-verify="" lay-filter="TeamClick">
-                        <option value="">查看队伍</option>
+                    <select id="IsSingle" name="IsSingle" lay-verify="" lay-filter="IsSingleClick">
+                        <option value="">查看单项接力</option>
+                        <option value="1">单项</option>
+                        <option value="0">接力</option>
+                        
                     </select>
                 </form>
             </div>
@@ -187,43 +190,37 @@
         //     } 
         // });
 
-    // team options : all the data are from ctfc_heat_view
-    axios.get('../CTFCheatview', {}).then(function (response) {
-        console.log(response.data.data)
-            $.each(response.data.data, function (index, elem) {
-                $('#Team').append('<option value="' + elem.TeamID + '">' + elem.TeamName + '</option>');
-            });
+
+        // IsSingle的filter
+        form.on('select(IsSingleClick)', function (data) {
+            // Reset the select element to its initial state
+            var selectElement = document.getElementById("Item");
+            selectElement.selectedIndex = 0;
             form.render();
-           })
-            .catch(function (error) {
-                console.log(error);
-            });
-    // Team 的filter
-    form.on('select(TeamClick)', function (data) {
-            
+
             table.reload('test', {
-                url: '../CTFCheatview?teamid=' + data.value,
-                
+                url: '../CTFCheatview?IsSingle=' + data.value,
             });
         });
 
-
-    // 项目item options : all the data are from ctfc_heat_view
-    axios.get('../CTFCheatview', {}).then(function (response) {
-        console.log(response.data.data)
+        // 项目item options : all the data are from ctfc_heat_view
+        axios.get('../CTFCheatview', {}).then(function (response) {
             $.each(response.data.data, function (index, elem) {
-                $('#Item').append('<option value="' + elem.ItemID + '">' + elem.ItemName + '</option>');
+                $('#Item').append('<option value="' + elem.ID + '">' + elem.ItemAgeGroupSex + '</option>');
             });
             form.render();
-           })
-            .catch(function (error) {
-                console.log(error);
-            });
-    // 项目的filter
-    form.on('select(ItemClick)', function (data) {
-            
+        }).catch(function (error) {
+        console.log(error);
+        });
+
+        // 项目的filter
+        form.on('select(ItemClick)', function (data) {
+            // Reset the select element to its initial state
+            var selectElement = document.getElementById("IsSingle");
+            selectElement.selectedIndex = 0;
+            form.render();
             table.reload('test', {
-                url: '../CTFCheatview?itemid=' + data.value,
+                url: '../CTFCheatview?id=' + data.value,
                 
             });
         });
