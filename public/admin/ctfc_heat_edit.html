@@ -11,11 +11,6 @@
 <div>
     <div class="layui-tab">
         <div class="layui-tab-content">
-            <div class="layui-input-inline" style="">
-                <div class="layui-input-inline">
-                    <button id="edit" class="layui-btn layui-btn-normal">分配赛道/结果录入</button>
-                </div>
-            </div>
             <div class="layui-input-inline">
                 <form class="layui-form" action="">
                     <select id="Item" name="Item" lay-verify="" lay-filter="ItemClick">
@@ -34,6 +29,11 @@
                 </form>
             </div>
    
+            <div class="layui-input-inline" style="">
+                <div class="layui-input-inline">
+                    <button id="submit" class="layui-btn layui-btn-success">确认修改</button>
+                </div>
+            </div>
             <table class="layui-hide" id="test" lay-filter="test"></table>
             <script type="text/html" id="toolbarDemo">
             </script>
@@ -50,6 +50,14 @@
     layui.use(['table', 'form'], function () {
         var table = layui.table;
         var form = layui.form;
+
+        var util = layui.util;
+        // 根据返回数据中某个字段来判断开启该行的编辑
+        var editable = function(d){
+            if(d.editable) return 'text'; // 这里假设以 editable 字段为判断依据
+        };
+
+
         table.render({
             elem: '#test',
             url: '../ctfcheatview',
@@ -75,54 +83,64 @@
                     fixed: 'left',
                     unresize: true,
                     sort: true,
+                    fixed: true,
                 }, 
                 {
                     field: 'EventID',
                     title: 'EventID',
                     width: 100,
                     sort: true,
-                },
-           
+                    edit: editable,
+                    templet: function(d){
+                    return `<span style="color: #16B777">${d.EventID}</span>`;
+                    }
+                },       
                 {
                     field: 'HeatID',
                     title: 'HeatID',
                     width: 100,
                     sort: true,
+                    edit: editable,
                 },
-        
                 {
                     field: 'LaneNumber',
                     title: '道次',
                     width: 80,
                     sort: true,
+                    edit: editable,
                 },
                 {
                     field: 'TeamName',
                     title: '队伍名称',
                     width: 150,
                     sort: true,
+                    fixed: true,
                 },
                 {
                     field: 'ItemAgeGroupSex',
                     title: '组别',
                     width: 200,
                     sort: true,
+                    fixed: true,
                 },
                 {
                     field: 'Players',
                     title: '参赛运动员',
                     width: 450,
+                    fixed: true,
                 },
                 {
                     field: 'Result',
                     title: '成绩',
                     width: 150,
                     sort: true,
+                    edit: editable,
                 }, 
                 {
                     field: 'Note',
                     title: '备注',
                     width: 150,
+                    edit: editable,
                 }, 
                 {
                     title: '操作',
@@ -141,30 +159,6 @@
             }
         });
 
-
-        $("#edit").click(function () {
-            var index=layer.open({
-                type: 2,
-                title: '分配赛道/结果录入',
-                shadeClose: true,
-                shade: 0.8,
-                offset: '0px',
-                area: ['100%', '100%'],
-                content: 'ctfc_heat_edit.html',
-                success: function (layero, index) {
-                    // layer.iframeAuto(index);
-                },
-                end: function () {
-                    location.reload();
-                }
-            });
-            layer.full(index);
-            window.sessionStorage.setItem("ctfc_heat_index", index);
-            //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
-            $(window).on("resize", function () {
-                layer.full(window.sessionStorage.getItem("ctfc_heat_index"));
-            })
-        })
 
         // table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
         //     var data = obj.data; //获得当前行数据
