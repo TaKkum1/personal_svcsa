@@ -42,7 +42,9 @@
                         <dl>
                             <dt>其他赛会</dt>
                             
-                            <dd><a href="#">赛事xxx<span class="icon-chevron-right2 icon"></a></dd>
+                            {volist name="otherseasons" id="otherseason"  empty='暂没其他赛季信息！'}
+                            <dd><a href="{:url('index/ctfcseason/read',['id'=>$otherseason['ID']])}">{$otherseason['Name']}<span class="icon-chevron-right2 icon"></a></dd>
+                            {/volist}
                                 
                         </dl>
                     </li>
