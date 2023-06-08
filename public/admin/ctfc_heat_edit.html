@@ -89,6 +89,9 @@
                     width: 100,
                     sort: true,
                     edit: editable,
+                    templet: function(d){
+                    return `<span style="color: #16B777">${d.EventID}</span>`;
+                    }
                 },
            
                 {
@@ -97,6 +100,9 @@
                     width: 100,
                     sort: true,
                     edit: editable,
+                    templet: function(d){
+                    return `<span style="color: #16B777">${d.HeatID}</span>`;
+                    }
                 },
         
                 {
@@ -105,6 +111,9 @@
                     width: 80,
                     sort: true,
                     edit: editable,
+                    templet: function(d){
+                    return `<span style="color: #16B777">${d.LaneNumber}</span>`;
+                    }
                 },
                 {
                     field: 'TeamName',
@@ -129,6 +138,9 @@
                     width: 150,
                     sort: true,
                     edit: editable,
+                    templet: function(d){
+                    return `<span style="color: #16B777">${d.Result}</span>`;
+                    }
                
                 }, 
                 {
@@ -136,6 +148,9 @@
                     title: '备注',
                     width: 150,
                     edit: editable,
+                    templet: function(d){
+                    return `<span style="color: #16B777">${d.Note}</span>`;
+                    }
                 }, 
                 {
                     title: '操作',
