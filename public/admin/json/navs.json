@@ -102,6 +102,12 @@
 					"icon": "icon-text",
 					"href": "ctfc_itemplayer.html",
 					"spread": false
+				},
+				{
+					"title": "赛道分配",
+					"icon": "icon-text",
+					"href": "ctfc_heat.html",
+					"spread": false
 				}
 			]
 		}

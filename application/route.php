@@ -230,6 +230,9 @@
 \think\Route::get('ctfcitemplayer/getSeasonTeamPlayers', 'index/ctfcitemplayer/GetPlayersList');
 
 
+// ctfc_heat_view
+\think\Route::get('ctfcheatview', 'index/ctfcheat/lists');
+
 return [
 
 //    '[bbcompetition]' => [
