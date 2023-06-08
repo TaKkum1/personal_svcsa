@@ -22,24 +22,7 @@
                     <th>比赛结果</th>
                 </tr>
                 </thead>
-                <tbody>
-                {volist name='matches' id='match'}
-                <tr>
-                    <td>{$match['StartTime']|strtotime|date='m/d G:i',###}</td>
-                    <td>{$match.EventName}</td>
-                    <td>{if condition="$match['State'] eq -1"}
-                        未开赛
-                        {elseif condition="$match['State'] eq 0" /}
-                        正在进行..
-                        {else /}
-                        完赛
-                        {/if}</td>
-                    <td><a href="{:url('index/ctfcmatch/read',['matchid'=>$match['MatchID']])}">查看</a></td>
-                    <td><a href="{:url('index/ctfcpicture/lists') . '?matchid='. $match['MatchID']}">图集</a></td>
-                    <td><a href="{:url('index/ctfcstatistics/lists') . '?matchid='. $match['MatchID']}">赛果</a></td>
-                </tr>
-                {/volist}
-                </tbody>
+
             </table>
         </div>
         <div class="public-right">
@@ -54,23 +37,32 @@
                         {:url('index/ctfcseason/read',['id'=>$thisseason['ID']])}
                         {/if}"><span class="icon-chevron-right2 icon"></span>比赛列表</a></li>
                     <li><a href="{:url('index/ctfcplayer/lists')}?seasonid={$thisseason['ID']}"><span class="icon-chevron-right2 icon"></span>选手团队</a></li>
-                    <li><a href="{:url('index/ctfcstatistics/lists').'?eventid='.$recenteventid}"><span class="icon-chevron-right2 icon"></span>项目记录</a></li>
+                    <li><a href="#"><span class="icon-chevron-right2 icon"></span>项目记录</a></li>
                     <li>
                         <dl>
                             <dt>其他赛会</dt>
-                            {volist name='otherseasons' id='season'}
-                            <dd><a href="{:url('index/ctfcseason/read',['id'=>$season['ID']])}">{$season.Name}<span class="icon-chevron-right2 icon"></a></dd>
-                            {/volist}
+                            
+                            <dd><a href="#">赛事xxx<span class="icon-chevron-right2 icon"></a></dd>
+                                
                         </dl>
                     </li>
-                    <li><a href="{:url('index/ctfcplayer/apply',['matchid'=>$season['ID']])}"><span class="icon-chevron-right2 icon"></span>加入比赛</a></li>
+                    <li>
+                        <dl>
+                            <dt>加入赛事</dt>
+                            
+                            <dd><a href="{:url('index/ctfcteam/getapply',['seasonid'=>$thisseason['ID']])}">田径队注册<span class="icon-chevron-right2 icon"></a></dd>
+                            <dd><a href="{:url('index/ctfcplayer/getapply',[])}">运动员注册<span class="icon-chevron-right2 icon"></a></dd>
+                        </dl>
+                        
+                    </li>
+                    
                 </ul>
             </div>
             <div class="show-box">
                 <div class="img-box"><img src="images/icon_10.png" alt=""></div>
                 <h3>NEWSLETTER SIGNUP</h3>
                 <p>FOR THE LATEST  NEWS & FREE GIVEAWAYS!</p>
-                <a href="{:url('index/ctfcplayer/apply',['matchid'=>$season['ID']])}">加入赛事<span class="icon-chevron-right icon"></span></a>
+                <a href="#">加入赛事<span class="icon-chevron-right icon"></span></a>
             </div>
         </div>
     </div>

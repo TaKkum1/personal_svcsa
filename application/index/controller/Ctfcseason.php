@@ -85,7 +85,7 @@ class Ctfcseason extends Base
     public function readRecent(){
 
         $result = Db::name('ctfc_season')
-            // ->order('StartTime desc')
+            ->order('Date')
             ->select();
 
 
@@ -94,17 +94,17 @@ class Ctfcseason extends Base
         } else if(count($result)>0){
             $this->headerAndFooter('ctfc');
 
-            $otherseasons = array_slice($result,1);
+            // $otherseasons = array_slice($result,1);
 
-            $matches = Db::name('ctfc_matchevent')->where('SeasonID', $result[0]['ID'])
-                // ->order('StartTime','desc')
-                ->select();
+            // $matches = Db::name('ctfc_seasonitem')->where('SeasonID', $result[0]['ID'])
+            //     // ->order('Date','desc')
+            //     ->select();
 
-            $events= Db::name('ctfc_event')->select();
-            $this->view->assign('recenteventid',$events[0]['ID']);
-            $this->view->assign('matches',$matches);
+            // $events= Db::name('ctfc_event')->select();
+            // $this->view->assign('recenteventid',$events[0]['ID']);
+            // $this->view->assign('matches',$matches);
             $this->view->assign('thisseason',$result[0]);
-            $this->view->assign('otherseasons',$otherseasons);
+            // $this->view->assign('otherseasons',$otherseasons);
             return $this->view->fetch('ctfcseason/read');
         } else {
             header("HTTP/1.0 404 Not Found");
