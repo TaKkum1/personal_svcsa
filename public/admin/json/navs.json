@@ -62,12 +62,6 @@
 					"spread": false
 				},
 				{
-					"title": "田径比赛",
-					"icon": "icon-text",
-					"href": "ctfc_match.html",
-					"spread": false
-				},
-				{
 					"title": "田径选手",
 					"icon": "icon-text",
 					"href": "ctfc_player.html",
