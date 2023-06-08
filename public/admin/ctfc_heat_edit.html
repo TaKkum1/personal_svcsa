@@ -50,7 +50,6 @@
     layui.use(['table', 'form'], function () {
         var table = layui.table;
         var form = layui.form;
-
         var util = layui.util;
         // 根据返回数据中某个字段来判断开启该行的编辑
         var editable = function(d){
@@ -83,7 +82,6 @@
                     fixed: 'left',
                     unresize: true,
                     sort: true,
-                    fixed: true,
                 }, 
                 {
                     field: 'EventID',
@@ -91,10 +89,8 @@
                     width: 100,
                     sort: true,
                     edit: editable,
-                    templet: function(d){
-                    return `<span style="color: #16B777">${d.EventID}</span>`;
-                    }
-                },       
+                },
+           
                 {
                     field: 'HeatID',
                     title: 'HeatID',
@@ -102,6 +98,7 @@
                     sort: true,
                     edit: editable,
                 },
+        
                 {
                     field: 'LaneNumber',
                     title: '道次',
@@ -114,20 +111,17 @@
                     title: '队伍名称',
                     width: 150,
                     sort: true,
-                    fixed: true,
                 },
                 {
                     field: 'ItemAgeGroupSex',
                     title: '组别',
                     width: 200,
                     sort: true,
-                    fixed: true,
                 },
                 {
                     field: 'Players',
                     title: '参赛运动员',
                     width: 450,
-                    fixed: true,
                 },
                 {
                     field: 'Result',
@@ -135,6 +129,7 @@
                     width: 150,
                     sort: true,
                     edit: editable,
+               
                 }, 
                 {
                     field: 'Note',
