@@ -14,6 +14,5 @@ class CtfcTeam extends Validate
 {
     protected $rule = [
         'Name'  => 'require',
-        'MatchID'  => 'require',
     ];
 }
