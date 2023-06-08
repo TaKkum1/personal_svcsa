@@ -36,29 +36,14 @@
                     <input id="Birthday" type="text" name="Birthday" class="layui-input" placeholder="YYYY-MM-dd" lay-verify="chkbirth">
                 </div>
             </div>
-        </div>
-        <!--
-        <div class="layui-form-item">
-            <label class="layui-form-label">赛季</label>
-            <div class="layui-input-block" style="width: 250px">
-                <input id="SeasonID" type="hidden" name="" value="">
-                <select id="SeasonID_s" lay-verify="required" name="SeasonID" lay-filter="myselect">
-                    <option value="0">未指定</option>
-                </select>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 90px;">审核状态</label>
+                    <div class="layui-input-block">
+                        <input type="radio" id="Approval" name="Approval" value="1" title="通过" checked>
+                        <input type="radio" id="Approval" name="Approval" value="0" title="待通过">
+                    </div>
             </div>
         </div>
-        -->
-        <!--
-                     <div class="layui-form-item">
-                        <label class="layui-form-label">球队</label>
-                        <div class="layui-input-block">
-                            <input id="TeamID" type="hidden" name="" value="">
-                            <select id="TeamID_s" lay-verify="required" name="TeamID" lay-filter="myselect">
-                                <option value="">请选择</option>
-                            </select>
-                        </div>
-                    </div>
-                    -->
 
         <div class="layui-form-item">
           <div class="layui-inline">
@@ -92,11 +77,6 @@
         var $ = layui.jquery;
         var upload = layui.upload;
         var laydate = layui.laydate;
-        // laydate.render({
-        //     elem: '#Birthday',
-        //     type: 'datetime',
-        //     format: 'MM-dd'
-        // });
         var uploadInst = upload.render({
             elem: '#test1',
             url: '../CTFCPlayer',
@@ -110,11 +90,9 @@
                     Name: $('input[name="Name"]').val(),
                     Sex: $('input[name="Sex"]').val(),
                     Birthday: $('input[name="Birthday"]').val(),
-//                PhotoSrc: $("#img_url").val(),
-    //                PhotoSrc: $('input[name="PhotoSrc"]').val(),
                     Email: $('input[name="Email"]').val(),
-//                SeasonID: data.field.SeasonID,
-//                        TeamID: data.field.TeamID,
+                    Approval:  $('input[name="Approval"]').val()
+
                 }
 
             },
@@ -175,11 +153,9 @@
                 Name: $('input[name="Name"]').val(),
                 Sex: $('input[name="Sex"]').val(),
                 Birthday: $('input[name="Birthday"]').val(),
-//                PhotoSrc: $("#img_url").val(),
                 PhotoSrc: $('input[name="PhotoSrc"]').val(),
                 Email: $('input[name="Email"]').val(),
-//                SeasonID: data.field.SeasonID,
-//                        TeamID: data.field.TeamID,
+                Approval:  $('input[name="Approval"]').val()
 
             })
                 .then(function (response) {
@@ -215,29 +191,6 @@
             }
         })
 
-        // axios.get('../CTFCTeam', {}).then(function (response) {
-        //     console.log(response);
-        //     $.each(response.data.data, function (index, item) {
-        //         $('#TeamID_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
-        //     });
-        //     form.render();
-        //     var num = $("#TeamID").val();
-        //     var numbers = $("#TeamID_s").find("option"); //获取select下拉框的所有值
-        //     console.log(numbers);
-        //     for (var j = 1; j < numbers.length; j++) {
-        //         console.log(numbers);
-        //         if ($(numbers[j]).val() == num) {
-        //             console.log('ok');
-        //             $(numbers[j]).attr("selected", "selected");
-        //             $(numbers[j]).attr("class", "layui-this");
-        //             form.render();
-        //         }
-        //     }
-        // })
-
-        //     .catch(function (error) {
-        //         console.log(error);
-        //     });
     });
 </script>
 
