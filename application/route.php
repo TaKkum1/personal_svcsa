@@ -175,6 +175,12 @@
 \think\Route::get('ctfcmatch/:matchid', 'index/ctfcmatch/read', [], ['matchid' => '\d+']);
 \think\Route::get('ctfcmatch', 'index/ctfcmatch/lists');
 
+\think\Route::post('ctfcseason/:id', 'index/ctfcseason/update', [], ['id' => '\d+']);
+\think\Route::post('ctfcseason', 'index/ctfcseason/add');
+\think\Route::delete('ctfcseason/:id', 'index/ctfcseason/delete', [], ['id' => '\d+']);
+\think\Route::get('ctfcseason/:id', 'index/ctfcseason/read', [], ['id' => '\d+']);
+\think\Route::get('ctfcseason', 'index/ctfcseason/lists');
+
 \think\Route::post('ctfcstatistics/:id', 'index/ctfcstatistics/update', [], ['id' => '\d+']);
 \think\Route::post('ctfcstatistics', 'index/ctfcstatistics/add');
 \think\Route::delete('ctfcstatistics/:id', 'index/ctfcstatistics/delete', [], ['id' => '\d+']);
