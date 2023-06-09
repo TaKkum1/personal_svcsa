@@ -31,7 +31,7 @@
    
             <div class="layui-input-inline" style="">
                 <div class="layui-input-inline">
-                    <button id="submit" class="layui-btn layui-btn-success">确认修改</button>
+                    <button id="edit-all" class="layui-btn layui-btn-success">确认修改</button>
                 </div>
             </div>
             <table class="layui-hide" id="test" lay-filter="test"></table>
@@ -170,59 +170,65 @@
         });
 
 
-        // table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
-        //     var data = obj.data; //获得当前行数据
-        //     var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
-        //     var tr = obj.tr; //获得当前行 tr 的DOM对象
-        //     console.log(data.ID);
+        table.on('edit(test)', function (obj) {
+            var rowIndex = obj.tr.data('index'); // Get the index of the edited row
+            var rowData = table.cache.test[rowIndex]; // Get the corresponding row data
+            rowData.edited = true; // Set the "edited" property to true
+        });
+        $('#edit-all').click(function () {
+        var tableData = table.cache.test; // Retrieve the modified data from the table
+        //console.log(tableData);
+        
+        // Create an array to store the modified data
+        var modifiedData = [];
+        
+        // Iterate over each row in the tableData
+        for (var i = 0; i < tableData.length; i++) {
 
-        //     if (layEvent === 'edit') { //查看
-        //         console.log(obj.data);
-        //         var index = layer.open({
-        //             type: 2,
-        //             title: '赛道分配与结果录入',
-        //             shadeClose: true,
-        //             shade: 0.8,
-        //             offset: '0px',
-        //             area: ['100%', '100%'],
-        //             content: 'ctfc_heat_edit.html',
-        //             success: function (layero, index) {
-        //                 layer.iframeAuto(index);
-        //                 var body = layer.getChildFrame('body', index);
-        //                 body.find('#Name').val(obj.data.Name)
-        //                 body.find('#HeatSize').val(obj.data.HeatSize)
-        //                 body.find('#ID').val(obj.data.ID)
-        //                 if (data.IsSingle == "1") {
-        //                     // console.log("IsSingle");
-        //                     body.find('#IsSingle').attr("checked", true);
-        //                     body.find('#IsNotSingle').attr("checked", false);
-        //                 } else {
-        //                     // console.log("IsNotSingle");
-        //                     body.find('#IsSingle').attr("checked", false);
-        //                     body.find('#IsNotSingle').attr("checked", true);                        
-        //                 }
-        //                 if (data.IsTrack == "1") {
-        //                     // console.log("IsTrack");
-        //                     body.find('#IsTrack').attr("checked", true);
-        //                     body.find('#IsNotTrack').attr("checked", false);
-        //                 } else {
-        //                     // console.log("IsNotTrack");
-        //                     body.find('#IsTrack').attr("checked", false);
-        //                     body.find('#IsNotTrack').attr("checked", true);                        
-        //                 }                    },
-        //             end: function () {
-        //                 location.reload();
-        //             }
-        //         });
-        //         layer.full(index);
-        //         window.sessionStorage.setItem("ctfc_event_index", index);
-        //         //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
-        //         $(window).on("resize", function () {
-        //             layer.full(window.sessionStorage.getItem("ctfc_event_index"));
-        //         })
-        //     } 
-        // });
+            var rowData = tableData[i];
+        
+            // Check if the row has been edited
+            if (rowData.edited) {
+                // console.log(rowData.edited)
+                var modifiedRow = {
+                    ID: rowData.ID,
+                    EventID: rowData.EventID,
+                    HeatID: rowData.HeatID,
+                    LaneNumber: rowData.LaneNumber,
+                    Result: rowData.Result,
+                    Note: rowData.Note
+                };
 
+                // Add the modified row to the modifiedData array
+                modifiedData.push(modifiedRow);
+            }
+        }
+
+        for (var i = 0; i < modifiedData.length; i++) {
+            var rowData = modifiedData[i];
+            //console.log(rowData);
+
+            // Send the modified data to the server using Axios or any other method
+            axios.post('../ctfcheat/' + rowData.ID, {
+                ID: rowData.ID,
+                EventID: rowData.EventID,
+                HeatID: rowData.HeatID,
+                LaneNumber: rowData.LaneNumber,
+                Result: rowData.Result,
+                Note: rowData.Note
+            })
+            .then(function (response) {
+                // Handle the response from the server
+                console.log(response.data);
+                // Refresh the table or take any other necessary action
+            })
+            .catch(function (error) {
+                // Handle errors
+                console.error(error);
+            });
+        }
+                });
+                
 
         // IsSingle的filter
         form.on('select(IsSingleClick)', function (data) {
