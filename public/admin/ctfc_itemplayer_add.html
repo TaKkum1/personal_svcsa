@@ -422,7 +422,7 @@
                             $.each(response.data.data, function (index, element) {
                                 // console.log("element.ID: " + element.ID);
                                 if (element.ID >=  seasonitemFiltersMinAG && element.ID <=seasonitemFiltersMaxAG ) {
-                                    $('#AgeGroupID').append('<option value="' + element.ID + '">' + element.Name + '</option>');
+                                    $('#AgeGroupID').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
                                 } 
                             });
                             form.render();
@@ -496,7 +496,7 @@
                 // console.log(response);
                 $.each(response.data.data, function (index, element) {
                     if(playerAgeGroup == element.ID) {
-                        $('#AgeGroupIDSingle').append('<option value="' + element.ID + '">' + element.Name + '</option>');
+                        $('#AgeGroupIDSingle').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
                     }
                 });
                 form.render();
@@ -515,7 +515,7 @@
         axios.get('../CTFCAgegroup', {}).then(function (response) {
             // console.log(response);
             $.each(response.data.data, function (index, element) {
-                $('#AgeGroupID').append('<option value="' + element.ID + '">' + element.Name + '</option>');
+                $('#AgeGroupID').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
             });
             form.render();
             }).catch(function (error) {
