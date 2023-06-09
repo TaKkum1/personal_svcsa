@@ -237,7 +237,9 @@
                     message += 'ID: ' + modifiedRow.ID + ', EventID: ' + modifiedRow.EventID + ', HeatID: ' + modifiedRow.HeatID + ', 赛道: ' + modifiedRow.LaneNumber +  ', 成绩: ' + modifiedRow.Result + ', 备注: ' + modifiedRow.Note +'<br>';
                 }
 
-                layer.msg(message);
+                layer.msg(message, {
+                    area: ['500px', 'auto']
+                });
             }
            // layer.alert('修改成功，请返回查看');
         
