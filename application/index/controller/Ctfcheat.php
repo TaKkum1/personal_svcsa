@@ -59,12 +59,12 @@ class Ctfcheat extends Base
 
     }
 
-    // public function update($id){
-    //     $this->checkauthorization();
+    public function update($id){
+        $this->checkauthorization();
 
-    //     $data = request()->only(self::FIELD, 'post');
-    //     $this->makeNull($data);
-    //     $result = Db::name('ctfc_agegroup')->where('ID', $id)->update($data);
-    //     $this->affectedRowsResult($result);
-    // }
+        $data = request()->only(self::FIELD, 'post');
+        $this->makeNull($data);
+        $result = Db::name('ctfc_heat')->where('ID', $id)->update($data);
+        $this->affectedRowsResult($result);
+    }
 }
