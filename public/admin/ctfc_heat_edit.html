@@ -202,8 +202,10 @@
                 // Add the modified row to the modifiedData array
                 modifiedData.push(modifiedRow); 
                 
-            }
+            }else{
+            layer.alert('无任何修改，请返回重试完成修改后提交！')
         }
+        } 
 
         for (var i = 0; i < modifiedData.length; i++) {
             var rowData = modifiedData[i];
@@ -240,10 +242,11 @@
                 layer.msg(message, {
                     area: ['500px', 'auto']
                 });
-            }
+            } 
            // layer.alert('修改成功，请返回查看');
         
         }
+        
                 });
                 
 
