@@ -841,6 +841,14 @@
   border-radius: 4px;
   width: 500px;
 }
+.link-wrap .form-box .radio-box {
+  width: 237px;
+  float: left;
+  height: 40px;
+  border: 1px solid transparent ;
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
 .link-wrap .form-box .input-box {
   width: 237px;
   float: left;
@@ -1195,4 +1203,12 @@
 .team_des-wrap .des-box .right-box p {
   text-indent: 2em;
 }
+
+.icon-requirement{
+  
+  font-size: 12px;
+  
+}
+
+
 /*# sourceMappingURL=style.css.map */
