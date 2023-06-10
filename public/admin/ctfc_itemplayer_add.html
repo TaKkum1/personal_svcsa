@@ -413,7 +413,7 @@
                         $.each(response.data.data, function (index, item) {
                             if(item.ItemID == xiangmu && item.Sex == xiangmuSex) {
                                 seasonitemFiltersMinA = item.MinAgeGroupMinAge;
-                                seasonitemFiltersMaxA = item.MaxAgeGroupMaaAge;                            
+                                seasonitemFiltersMaxA = item.MaxAgeGroupMaxAge;                            
                             }
                         });
 
@@ -427,17 +427,9 @@
 
                         // TODO: fix the ID check: element.ID >=  seasonitemFiltersMinAG
                         axios.get('../CTFCAgegroup', {}).then(function (response) {
-                            // console.log("seasonitemFiltersMinAG: " + seasonitemFiltersMinAG);
-                            // console.log("seasonitemFiltersMaxAG: " + seasonitemFiltersMaxAG);              
-                            // $.each(response.data.data, function (index, element) {
-                            //     // console.log("element.ID: " + element.ID);
-                            //     if (element.ID >=  seasonitemFiltersMinAG && element.ID <=seasonitemFiltersMaxAG ) {
-                            //         $('#AgeGroupID').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
-                            //     } 
-                            // });
                             var newArray = [];
                             $.each(response.data.data, function (index, element) {
-                                newArray.push([element.ID, [element.MinAge, element.MaxAge]]);
+                                newArray.push([element.ID, [element.MinAge, element.MaxAge, element.Name]]);
                             });
                             console.log(newArray); 
 
@@ -445,9 +437,12 @@
                                 var element = newArray[i];
                                 var minAge = element[1][0];
                                 var maxAge = element[1][1];
+                                var AgeGroupName = element[1][2];
 
                                 if (minAge >= seasonitemFiltersMinA && maxAge <= seasonitemFiltersMaxA) {
                                     console.log('ID ' + element[0] + ' falls within the range.');
+                                    $('#AgeGroupID').append('<option value="' + element[0] + '">' + AgeGroupName + ' ' + minAge + '-' + maxAge + '</option>');
+
                                 }
                             }
                             form.render();
