@@ -95,6 +95,13 @@ class Ctfcitemplayer extends Base
 
     public function listview($seasonid = null) 
     {
+        $list = Db::name('ctfc_seasonitem_agegroup_view')->paginate(input('pagesize'));
+        $this->paginatedResult(
+            $list->total(),
+            $list->listRows(),
+            $list->currentPage(),
+            $list->items()
+        );
 
     }
 
