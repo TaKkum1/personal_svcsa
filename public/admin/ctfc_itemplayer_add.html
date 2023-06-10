@@ -407,24 +407,49 @@
                     $('#AgeGroupID').empty();
                     $('#AgeGroupID').append('<option value="">' + "选择年龄组" + '</option>');
 
-                    var seasonitemFiltersMinAG;
-                    var seasonitemFiltersMaxAG;
-                    axios.get('../CTFCseasonitem?seasonid=' + readseasonid, {}).then(function (response) {
+                    var seasonitemFiltersMinA;
+                    var seasonitemFiltersMaxA;
+                    axios.get('../ctfcitemseasonitemagegroupview?seasonid=' + readseasonid, {}).then(function (response) {
                         $.each(response.data.data, function (index, item) {
                             if(item.ItemID == xiangmu && item.Sex == xiangmuSex) {
-                                seasonitemFiltersMinAG = item.MinAgeGroupID;
-                                seasonitemFiltersMaxAG = item.MaxAgeGroupID;                            
+                                seasonitemFiltersMinA = item.MinAgeGroupMinAge;
+                                seasonitemFiltersMaxA = item.MaxAgeGroupMaaAge;                            
                             }
                         });
+
+
+                        //age 4-100
+
+
+                        // [ [1,[13,18]],[2,[4,12]],[3,[19,35]],[4,[36,55]],[5,[56,100]],[6,[5,100]] ]
+
+
+
+                        // TODO: fix the ID check: element.ID >=  seasonitemFiltersMinAG
                         axios.get('../CTFCAgegroup', {}).then(function (response) {
                             // console.log("seasonitemFiltersMinAG: " + seasonitemFiltersMinAG);
                             // console.log("seasonitemFiltersMaxAG: " + seasonitemFiltersMaxAG);              
+                            // $.each(response.data.data, function (index, element) {
+                            //     // console.log("element.ID: " + element.ID);
+                            //     if (element.ID >=  seasonitemFiltersMinAG && element.ID <=seasonitemFiltersMaxAG ) {
+                            //         $('#AgeGroupID').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
+                            //     } 
+                            // });
+                            var newArray = [];
                             $.each(response.data.data, function (index, element) {
-                                // console.log("element.ID: " + element.ID);
-                                if (element.ID >=  seasonitemFiltersMinAG && element.ID <=seasonitemFiltersMaxAG ) {
-                                    $('#AgeGroupID').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
-                                } 
+                                newArray.push([element.ID, [element.MinAge, element.MaxAge]]);
                             });
+                            console.log(newArray); 
+
+                            for (var i = 0; i < newArray.length; i++) {
+                                var element = newArray[i];
+                                var minAge = element[1][0];
+                                var maxAge = element[1][1];
+
+                                if (minAge >= seasonitemFiltersMinA && maxAge <= seasonitemFiltersMaxA) {
+                                    console.log('ID ' + element[0] + ' falls within the range.');
+                                }
+                            }
                             form.render();
                         }).catch(function (error) {
                             console.log(error);

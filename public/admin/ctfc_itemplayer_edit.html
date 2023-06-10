@@ -434,7 +434,10 @@
                         updatePlayerList(xiangmu, xiangmuSex, currentAgeID,currentAgeID, currentteamid, readseasonid, form, 1);
                     }
                 } else {
-                    axios.get('../CTFCseasonitem?seasonid=' + readseasonid, {}).then(function (response) {
+                    // axios.get('../CTFCseasonitem?seasonid=' + readseasonid, {}).then(function (response) {
+                    axios.get('../ctfc_seasonitem_agegroup_view?seasonid=' + readseasonid, {}).then(function (response) {
+
+                            
                         $.each(response.data.data, function (index, item) {
                             if(item.ItemID == xiangmu && item.Sex == xiangmuSex) {
                                 seasonitemFiltersMinAG = item.MinAgeGroupID;

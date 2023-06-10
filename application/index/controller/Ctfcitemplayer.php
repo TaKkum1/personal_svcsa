@@ -93,6 +93,10 @@ class Ctfcitemplayer extends Base
         } 
     }
 
+    public function listview($seasonid = null) 
+    {
+
+    }
 
     public function add()
     {
@@ -127,8 +131,8 @@ class Ctfcitemplayer extends Base
         $this->affectedRowsResult($result);
     }
 
-
-    public function delete($id){
+    public function delete($id)
+    {
         $this->checkauthorization();
 
         $result = Db::name('ctfc_itemplayer')->where('ID', $id)->delete();
@@ -149,7 +153,8 @@ class Ctfcitemplayer extends Base
         $this->jsonResult(0, ['affectedRows' => $list[0]]);
     }
 
-    function calculateAge($dateOfBirth) {
+    function calculateAge($dateOfBirth) 
+    {
         $currentYear = date('Y');
         $birthYear = date('Y', strtotime($dateOfBirth));
         $age = $currentYear - $birthYear;
@@ -160,7 +165,8 @@ class Ctfcitemplayer extends Base
     }
    
 
-    function getAgeGroup($age, $agegroups) {
+    function getAgeGroup($age, $agegroups) 
+    {
         foreach ($agegroups as $agegroup) {
             if ($age >= $agegroup['MinAge'] && $age <= $agegroup['MaxAge']) {
                 return $agegroup['ID'];
@@ -170,7 +176,8 @@ class Ctfcitemplayer extends Base
         return null;
     }
 
-    public function getPlayerAgeSex() {
+    public function getPlayerAgeSex() 
+    {
         $this->checkauthorization();
         $data = request()->only('PlayerID', 'get');
         $playerid = urldecode($data['PlayerID']);
@@ -209,8 +216,8 @@ class Ctfcitemplayer extends Base
         $this->jsonResult(0, ['affectedRows' => $result]);
     }
 
-    function checkSignleItem($itemid) {
-
+    function checkSignleItem($itemid) 
+    {
         $item_is_single = Db::name('ctfc_item')->where('ID', $itemid)->find()['IsSingle'];
         if($item_is_single == 1) {
             return true;
@@ -221,7 +228,6 @@ class Ctfcitemplayer extends Base
 
     public function GetPlayersList()
     {
-
         $this->checkauthorization();
         $data = request()->only('SiMinAG,SiMaxAG,SiID,SiSex,Tmid,SsID', 'get');
         $SeasonitemMinAG= urldecode($data['SiMinAG']);
@@ -234,17 +240,19 @@ class Ctfcitemplayer extends Base
         $all_players = Db::name('ctfc_player');
         $all_players = $all_players->select();
 
-        $agegroup_db = Db::name('ctfc_agegroup');
-        $agegroups = $agegroup_db->select();
-        $agegrouplist =array();
-        foreach ($agegroups as $agegroup) {
-            if($SeasonitemMinAG == $agegroup['ID']) {
-                $minAgeBondary = $agegroup['MinAge'];
-            }
-            if($SeasonitemMaxAG == $agegroup['ID']) {
-                $maxAgeBondary = $agegroup['MaxAge'];
-            }
-        }
+        $minAgeBondary=$SeasonitemMinAG;
+        $maxAgeBondary=$SeasonitemMaxAG;
+        // $agegroup_db = Db::name('ctfc_agegroup');
+        // $agegroups = $agegroup_db->select();
+        // $agegrouplist =array();
+        // foreach ($agegroups as $agegroup) {
+        //     if($SeasonitemMinAG == $agegroup['ID']) {
+        //         $minAgeBondary = $agegroup['MinAge'];
+        //     }
+        //     if($SeasonitemMaxAG == $agegroup['ID']) {
+        //         $maxAgeBondary = $agegroup['MaxAge'];
+        //     }
+        // }
 
 
 
