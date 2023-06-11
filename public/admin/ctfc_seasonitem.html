@@ -1,34 +1,53 @@
 <!-- 内容主体区域 -->
 <link rel="stylesheet" href="layui/css/layui.css">
-<div>
+<style>
+    .layui-table-cell .layui-form-checkbox[lay-skin="primary"]{
+        top: 50%;
+        transform: translateY(-50%);
+    }
+</style>
+<div style="padding: 15px;">
     <div class="layui-tab">
         <div class="layui-tab-content">
+
             <div class="layui-input-inline" style="">
                 <div class="layui-input-inline">
-                    <button id="add" class="layui-btn layui-btn-normal">新建田径赛季</button>
+                    <button id="add" class="layui-btn layui-btn-normal">新建赛季项目</button>
                 </div>
             </div>
+
+            <div class="layui-input-inline">
+                <form class="layui-form" action="">
+                    <select id="Season" name="Season" lay-verify="" lay-filter="Season">
+                        <option value="">选择赛季</option>
+                    </select>
+                </form>
+            </div>
+
             <table class="layui-hide" id="test" lay-filter="test"></table>
             <script type="text/html" id="toolbarDemo">
             </script>
+            
+
             <script type="text/html" id="barDemo">
                 <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
                 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
             </script>
+
         </div>
     </div>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="layui/layui.js"></script>
 <script>
+
     layui.use(['table', 'form'], function () {
         var table = layui.table;
         var form = layui.form;
         table.render({
             elem: '#test',
-            url: '../CTFCSeason',
+            url: '../CTFCSeasonitem',
             parseData: function (res) {
                 return {
                     "code": 0, //解析接口状态
@@ -45,29 +64,34 @@
             title: '用户数据表',
             cols: [
                 [{
-                    field: 'ID',
-                    title: 'ID',
-                    width: 100,
-                    fixed: 'left',
-                    unresize: true,
-                    sort: true,
-                }, {
-                    field: 'Name',
-                    title: '赛季名称',
+                    field: 'SeasonName',
+                    title: '赛季',
                     width: 200,
-                }, {
-                    field: 'Date',
-                    title: '比赛时间',
-                    sort: true,
+                },
+                {
+                    field: 'ItemName',
+                    title: '项目名称',
                     width: 200,
-                }, {
-                    field: 'Venue',
-                    title: '比赛地点',
-                    sort: true,
+                }, 
+                {
+                    field: 'Sex',
+                    title: '性别',
+                    width: 130,
+                }, 
+                {
+                    field: 'MinAgeGroupName',
+                    title: '最小年龄组',
                     width: 200,
-                }, {
+                },
+                {
+                    field: 'MaxAgeGroupName',
+                    title: '最大年龄组',
+                    width: 200,
+                },
+                {
                     title: '操作',
-                    width: 150,
+                    fixed: 'right',
+                    width: 122,
                     toolbar: '#barDemo'
                 }]
             ],
@@ -82,78 +106,86 @@
             }
         });
         $("#add").click(function () {
-            var index=layer.open({
+            var ctfc_index = layer.open({
                 type: 2,
-                title: '添加田径赛季',
+                title: '新建赛季项目',
                 shadeClose: true,
                 shade: 0.8,
-                offset: '0px',
                 area: ['100%', '100%'],
-                content: 'ctfc_season_add.html',
+                content: 'ctfc_seasonitem_add.html',
                 success: function (layero, index) {
+                    // layer.iframeAuto(index);
                 },
                 end: function () {
                     location.reload();
                 }
             });
-            layer.full(index);
-            window.sessionStorage.setItem("ctfc_season_index", index);
+            layer.full(ctfc_index);
+            window.sessionStorage.setItem("ctfc_index", ctfc_index);
             //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
             $(window).on("resize", function () {
-                layer.full(window.sessionStorage.getItem("ctfc_season_index"));
+                layer.full(window.sessionStorage.getItem("ctfc_index"));
             })
         })
         table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
             var data = obj.data; //获得当前行数据
             var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
             var tr = obj.tr; //获得当前行 tr 的DOM对象
-            console.log(data.ID);
 
             if (layEvent === 'edit') { //查看
-                console.log(obj.data);
-                
-                if(obj.data.ID!=null){
-                    title='修改田径赛季'
-                }
-
-                var index = layer.open({
+                layer.open({
                     type: 2,
-                    title: '修改田径赛季',
+                    title: '修改赛季队伍',
                     shadeClose: true,
                     shade: 0.8,
-                    offset: '0px',
+                    offset: '50px',
                     area: ['100%', '100%'],
-                    content: 'ctfc_season_edit.html',
-                    success: function(layero, index) {
+                    content: 'ctfc_seasonitem_edit.html',
+                    success: function (layero, index) {
                         layer.iframeAuto(index);
                         var body = layer.getChildFrame('body', index);
-                        body.find('#Name').val(obj.data.Name)
-                        body.find('#Date').val(obj.data.Date)
-                        body.find('#ID').val(obj.data.ID)
-                        body.find('#Venue').val(obj.data.Venue)
+                        body.find('#SeasonID').val(data.SeasonID)
+                        body.find('#ItemID').val(data.ItemID)
+                        body.find('#Sex').val(data.Sex)
+                        body.find('#MinAgeGroupID').val(data.MinAgeGroupID)
+                        body.find('#MaxAgeGroupID').val(data.MaxAgeGroupID)
+                        if (data.Sex == "F") {
+                            console.log("Female");
+                            body.find('#SexF').attr("checked", true);
+                            body.find('#SexM').attr("checked", false);
+                        } else {
+                            console.log("Male");
+                            body.find('#SexF').attr("checked", false);
+                            body.find('#SexM').attr("checked", true);                        
+                        }
                     },
                     end: function () {
                         location.reload();
                     }
                 });
-                layer.full(index);
-                window.sessionStorage.setItem("ctfc_season_index", index);
+                window.sessionStorage.setItem("ctfc_seasonitem_index", index);
                 //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
                 $(window).on("resize", function () {
-                    layer.full(window.sessionStorage.getItem("ctfc_season_index"));
+                    layer.full(window.sessionStorage.getItem("ctfc_seasonitem_index"));
                 })
-            } else if (layEvent === 'del') {
+            }  else if (layEvent === 'del') {
                 layer.confirm('确认删除', {
-                    btn: ['确认', '取消'],
-                    offset: ['100px']//按钮
+                    btn: ['确认', '取消'] //按钮
                 }, function () {
-                    axios.delete('../CTFCSeason/' + data.ID, {})
-                        .then(function (response) {
-                            console.log(response);
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
+                    $.ajax({
+                        url: '../CTFCseasonitem/' + data.SeasonID + '/' + data.ItemID + '/' + data.Sex,
+                        type: 'delete',
+                        dataType: 'json',
+                        header: {
+                            Accept: 'application/json'
+                        },
+                        success: function (data) {
+                        },
+                        error: function (xhr) {
+                            if (xhr.status == 401)
+							top.location.href = 'login.html';
+                        }
+                    });
                     layer.msg('删除成功', {
                         icon: 1,
                         time: 1200
@@ -164,5 +196,23 @@
                 });
             }
         });
+        axios.get('../CTFCSeason', {}).then(function (response) {
+            $.each(response.data.data, function (index, item) {
+                $('#Season').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+            });
+            form.render();
+        })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        form.on('select(Season)', function (data) {
+            
+            table.reload('test', {
+                url: '../CTFCseasonitem?seasonid=' + data.value,
+                
+            });
+        });
+
     });
 </script>

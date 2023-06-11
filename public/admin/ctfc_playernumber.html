@@ -5,8 +5,15 @@
         <div class="layui-tab-content">
             <div class="layui-input-inline" style="">
                 <div class="layui-input-inline">
-                    <button id="add" class="layui-btn layui-btn-normal">新建田径赛季</button>
+                    <button id="add" class="layui-btn layui-btn-normal">新建号码牌分配</button>
                 </div>
+            </div>
+            <div class="layui-input-inline">
+                <form class="layui-form" action="">
+                    <select id="Team" name="Team" lay-verify="" lay-filter="Team">
+                        <option value="">选择队伍</option>
+                    </select>
+                </form>
             </div>
             <table class="layui-hide" id="test" lay-filter="test"></table>
             <script type="text/html" id="toolbarDemo">
@@ -28,7 +35,7 @@
         var form = layui.form;
         table.render({
             elem: '#test',
-            url: '../CTFCSeason',
+            url: '../ctfcplayernumber',
             parseData: function (res) {
                 return {
                     "code": 0, //解析接口状态
@@ -45,24 +52,25 @@
             title: '用户数据表',
             cols: [
                 [{
-                    field: 'ID',
-                    title: 'ID',
-                    width: 100,
+                    field: 'SeasonName',
+                    title: '当前赛季',
+                    width: 200,
                     fixed: 'left',
+                    sort: true,
+                }, {
+                    field: 'TeamName',
+                    title: '队伍名称',
+                    width: 200,
+                    sort: true,
+                }, {
+                    field: 'PlayerName',
+                    title: '运动员姓名',
+                    sort: true,
+                    width: 200,
                     unresize: true,
-                    sort: true,
                 }, {
-                    field: 'Name',
-                    title: '赛季名称',
-                    width: 200,
-                }, {
-                    field: 'Date',
-                    title: '比赛时间',
-                    sort: true,
-                    width: 200,
-                }, {
-                    field: 'Venue',
-                    title: '比赛地点',
+                    field: 'PlayerNumber',
+                    title: '参赛号码',
                     sort: true,
                     width: 200,
                 }, {
@@ -84,12 +92,12 @@
         $("#add").click(function () {
             var index=layer.open({
                 type: 2,
-                title: '添加田径赛季',
+                title: '添加号码牌',
                 shadeClose: true,
                 shade: 0.8,
                 offset: '0px',
                 area: ['100%', '100%'],
-                content: 'ctfc_season_add.html',
+                content: 'ctfc_playernumber_add.html',
                 success: function (layero, index) {
                 },
                 end: function () {
@@ -97,63 +105,71 @@
                 }
             });
             layer.full(index);
-            window.sessionStorage.setItem("ctfc_season_index", index);
-            //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
-            $(window).on("resize", function () {
-                layer.full(window.sessionStorage.getItem("ctfc_season_index"));
-            })
+            // window.sessionStorage.setItem("ctfc_season_index", index);
+            // //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+            // $(window).on("resize", function () {
+            //     layer.full(window.sessionStorage.getItem("ctfc_season_index"));
+            // })
         })
         table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
             var data = obj.data; //获得当前行数据
             var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
             var tr = obj.tr; //获得当前行 tr 的DOM对象
+            var maxseasonid = obj.data.SeasonID;
+            
             console.log(data.ID);
 
             if (layEvent === 'edit') { //查看
                 console.log(obj.data);
                 
                 if(obj.data.ID!=null){
-                    title='修改田径赛季'
+                    title='修改号码牌'
                 }
 
                 var index = layer.open({
                     type: 2,
-                    title: '修改田径赛季',
+                    title: '修改号码牌',
                     shadeClose: true,
                     shade: 0.8,
                     offset: '0px',
                     area: ['100%', '100%'],
-                    content: 'ctfc_season_edit.html',
+                    content: 'ctfc_playernumber_edit.html',
                     success: function(layero, index) {
                         layer.iframeAuto(index);
                         var body = layer.getChildFrame('body', index);
-                        body.find('#Name').val(obj.data.Name)
-                        body.find('#Date').val(obj.data.Date)
-                        body.find('#ID').val(obj.data.ID)
-                        body.find('#Venue').val(obj.data.Venue)
+                        body.find('#SeasonID').val(obj.data.SeasonID)
+                        body.find('#TeamID').val(obj.data.TeamID)
+                        body.find('#PlayerID').val(obj.data.PlayerID)
+                        body.find('#PlayerNumber').val(obj.data.PlayerNumber)
                     },
                     end: function () {
                         location.reload();
                     }
                 });
                 layer.full(index);
-                window.sessionStorage.setItem("ctfc_season_index", index);
-                //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
-                $(window).on("resize", function () {
-                    layer.full(window.sessionStorage.getItem("ctfc_season_index"));
-                })
+                // window.sessionStorage.setItem("ctfc_season_index", index);
+                // //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+                // $(window).on("resize", function () {
+                //     layer.full(window.sessionStorage.getItem("ctfc_season_index"));
+                // })
             } else if (layEvent === 'del') {
                 layer.confirm('确认删除', {
-                    btn: ['确认', '取消'],
-                    offset: ['100px']//按钮
+                    btn: ['确认', '取消'] //按钮
                 }, function () {
-                    axios.delete('../CTFCSeason/' + data.ID, {})
-                        .then(function (response) {
-                            console.log(response);
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
+                    $.ajax({
+                        url: '../CTFCplayernumber/' + data.SeasonID + '/' + data.TeamID  + '/' + data.PlayerID,
+                        type: 'delete',
+                        dataType: 'json',
+                        header: {
+                            Accept: 'application/json'
+                        },
+                        success: function (data) {
+                        },
+                        error: function (xhr) {
+                            if (xhr.status == 401)
+							top.location.href = 'login.html';
+                        }
+                    });
                     layer.msg('删除成功', {
                         icon: 1,
                         time: 1200
@@ -163,6 +179,31 @@
                 }, function () {
                 });
             }
+    
+        });
+
+
+        axios.get('../CTFCSeasonteam', {}).then(function (response) {
+            const data = response.data.data;
+            const maxseasonid = data.reduce((max, item)=>{
+                return item.SeasonID > max ? item.SeasonID : max; 
+            }, 0 )
+            const filterData = data.filter(team=> team.SeasonID === maxseasonid);
+            $.each(filterData, function (index, item) {
+            $('#Team').append('<option value="' + item.TeamID + '">' + item.TeamName + '</option>');
+            });
+            form.render();
+        })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        form.on('select(Team)', function (data) {
+            console.log(data);
+            table.reload('test', {
+                url: '../CTFCplayernumber?teamid=' + data.value,
+                
+            });
         });
     });
 </script>

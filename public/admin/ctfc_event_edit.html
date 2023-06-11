@@ -4,36 +4,41 @@
 
     <div style="padding: 15px;">
         <form class="layui-form" action="">
+
             <div class="layui-form-item">
                 <label class="layui-form-label">项目名称</label>
                 <div class="layui-input-block">
-                             <input id="ID" name="ID" type="hidden"  value="">
-                    <input type="text" id="name" name="Name" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                    <input id="ID" name="ID" type="hidden"  value="">
+                    <input type="text" id="Name" name="Name" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
                 </div>
             </div>
+
             <div class="layui-form-item">
                 <label class="layui-form-label">项目类型</label>
                 <div class="layui-input-block">
-                    <input type="radio" name="IsSingle" value="1" title="单项">
-                    <input type="radio" name="IsSingle" value="0" title="接力">
+                    <input type="radio" id="IsSingle" name="IsSingle" value="1" title="单项">
+                    <input type="radio" id="IsNotSingle" name="IsSingle" value="0" title="接力">
                 </div>
             </div>
+
             <div class="layui-form-item">
                 <label class="layui-form-label">田径类型</label>
                 <div class="layui-input-block">
-                        <input type="radio" name="IsTrack" value="1" title="径赛项目">
-                        <input type="radio" name="IsTrack" value="0" title="田赛项目">
+                        <input type="radio" id="IsTrack" name="IsTrack" value="1" title="径赛项目">
+                        <input type="radio" id="IsNotTrack" name="IsTrack" value="0" title="田赛项目">
                 </div>
             </div>
+
             <div class="layui-form-item">
                 <label class="layui-form-label">最大单枪人数</label>
                 <div class="layui-input-inline">
                     <input type="text" id="HeatSize" name="HeatSize" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
                 </div>
             </div>
+
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即添加</button>
+                    <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即修改</button>
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                 </div>
             </div>
@@ -43,25 +48,27 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
     <script src="layui/layui.js"></script>
     <script>
-
+    
         layui.use(['table', 'form'], function () {
             var table = layui.table;
             var form = layui.form;
             var $ = layui.jquery;
-
-
-            form.on('submit(add)', function (data) {
+            // console.log(IsSingle);
+            // console.log(IsNotSingle);
+            // console.log(IsTrack);
+            // console.log(IsNotTrack);
+    
+            form.on('submit(add)', function (data) {   
 
                 var index = parent.layer.getFrameIndex(window.name);
-                axios.post('../ctfcevent/', {
-                        Name: $('input[name="Name"]').val(),
-                        IsSingle: data.field.IsSingle,
-                        IsTrack: data.field.IsTrack,
-                        HeatSize: $('input[name="HeatSize"]').val(),
-
+                axios.post('../ctfcevent/' + $('input[name="ID"]').val(), {
+                    Name: $('input[name="Name"]').val(),
+                    IsSingle: data.field.IsSingle,
+                    IsTrack: data.field.IsTrack,
+                    HeatSize: $('input[name="HeatSize"]').val(),
                 })
                     .then(function (response) {
-                        layer.msg('添加成功', {
+                        layer.msg('修改成功', {
                             icon: 1,
                             time: 1500
                         }, function () {
@@ -72,7 +79,7 @@
                         console.log(error);
                     });
             });
-    });
-</script>
+        });
+    </script>
 
 </body>

@@ -5,7 +5,7 @@
         <div class="layui-tab-content">
             <div class="layui-input-inline" style="">
                 <div class="layui-input-inline">
-                    <button id="add" class="layui-btn layui-btn-normal">新建田径赛季</button>
+                    <button id="add" class="layui-btn layui-btn-normal">新建年龄组</button>
                 </div>
             </div>
             <table class="layui-hide" id="test" lay-filter="test"></table>
@@ -28,7 +28,7 @@
         var form = layui.form;
         table.render({
             elem: '#test',
-            url: '../CTFCSeason',
+            url: '../ctfcagegroup',
             parseData: function (res) {
                 return {
                     "code": 0, //解析接口状态
@@ -53,16 +53,16 @@
                     sort: true,
                 }, {
                     field: 'Name',
-                    title: '赛季名称',
+                    title: '年龄组名称',
                     width: 200,
                 }, {
-                    field: 'Date',
-                    title: '比赛时间',
+                    field: 'MinAge',
+                    title: '最小年龄',
                     sort: true,
                     width: 200,
                 }, {
-                    field: 'Venue',
-                    title: '比赛地点',
+                    field: 'MaxAge',
+                    title: '最大年龄',
                     sort: true,
                     width: 200,
                 }, {
@@ -84,12 +84,12 @@
         $("#add").click(function () {
             var index=layer.open({
                 type: 2,
-                title: '添加田径赛季',
+                title: '添加年龄组',
                 shadeClose: true,
                 shade: 0.8,
                 offset: '0px',
                 area: ['100%', '100%'],
-                content: 'ctfc_season_add.html',
+                content: 'ctfc_agegroup_add.html',
                 success: function (layero, index) {
                 },
                 end: function () {
@@ -97,11 +97,11 @@
                 }
             });
             layer.full(index);
-            window.sessionStorage.setItem("ctfc_season_index", index);
-            //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
-            $(window).on("resize", function () {
-                layer.full(window.sessionStorage.getItem("ctfc_season_index"));
-            })
+            // window.sessionStorage.setItem("ctfc_season_index", index);
+            // //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+            // $(window).on("resize", function () {
+            //     layer.full(window.sessionStorage.getItem("ctfc_season_index"));
+            // })
         })
         table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
             var data = obj.data; //获得当前行数据
@@ -113,41 +113,41 @@
                 console.log(obj.data);
                 
                 if(obj.data.ID!=null){
-                    title='修改田径赛季'
+                    title='修改年龄组'
                 }
 
                 var index = layer.open({
                     type: 2,
-                    title: '修改田径赛季',
+                    title: '修改年龄组',
                     shadeClose: true,
                     shade: 0.8,
                     offset: '0px',
                     area: ['100%', '100%'],
-                    content: 'ctfc_season_edit.html',
+                    content: 'ctfc_agegroup_edit.html',
                     success: function(layero, index) {
                         layer.iframeAuto(index);
                         var body = layer.getChildFrame('body', index);
-                        body.find('#Name').val(obj.data.Name)
-                        body.find('#Date').val(obj.data.Date)
                         body.find('#ID').val(obj.data.ID)
-                        body.find('#Venue').val(obj.data.Venue)
+                        body.find('#Name').val(obj.data.Name)
+                        body.find('#MinAge').val(obj.data.MinAge)
+                        body.find('#MaxAge').val(obj.data.MaxAge)
                     },
                     end: function () {
                         location.reload();
                     }
                 });
                 layer.full(index);
-                window.sessionStorage.setItem("ctfc_season_index", index);
-                //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
-                $(window).on("resize", function () {
-                    layer.full(window.sessionStorage.getItem("ctfc_season_index"));
-                })
+                // window.sessionStorage.setItem("ctfc_season_index", index);
+                // //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+                // $(window).on("resize", function () {
+                //     layer.full(window.sessionStorage.getItem("ctfc_season_index"));
+                // })
             } else if (layEvent === 'del') {
                 layer.confirm('确认删除', {
                     btn: ['确认', '取消'],
                     offset: ['100px']//按钮
                 }, function () {
-                    axios.delete('../CTFCSeason/' + data.ID, {})
+                    axios.delete('../ctfcagegroup/' + data.ID, {})
                         .then(function (response) {
                             console.log(response);
                         })

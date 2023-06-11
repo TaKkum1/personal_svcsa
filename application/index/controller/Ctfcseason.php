@@ -17,7 +17,7 @@ use think\Db\Expression;
 
 class Ctfcseason extends Base
 {
-    const FIELD = 'Name,StartTime';
+    const FIELD = 'Name,Date,Venue';
 
     public function add()
     {
@@ -25,11 +25,11 @@ class Ctfcseason extends Base
 
         $data = request()->only(self::FIELD, 'post');
         $this->makeNull($data);
-        $validator = validate('Ctfc_season');
-        $result = $validator->check($data);
-        if (!$result){
-            $this->affectedRowsResult(0);
-        }
+        // $validator = validate('Ctfc_season');
+        // $result = $validator->check($data);
+        // if (!$result){
+        //     $this->affectedRowsResult(0);
+        // }
         $result = Db::name('ctfc_season')->insert($data);
         $this->affectedRowsResult($result);
     }
@@ -45,7 +45,8 @@ class Ctfcseason extends Base
 
         $exp = new Expression('field(ID,'.$id.'),StartTime DESC');
         $result = Db::name('ctfc_season')
-            ->order($exp)->select();
+            // ->order($exp)
+            ->select();
         $result = array_reverse($result);
 
 
@@ -57,7 +58,8 @@ class Ctfcseason extends Base
             $otherseasons = array_slice($result,1);
 
             $matches = Db::name('ctfc_matchevent')->where('SeasonID', $result[0]['ID'])
-                ->order('StartTime','desc')->select();
+                // ->order('StartTime','desc')
+                ->select();
 
             $this->view->assign('matches',$matches);
             $this->view->assign('thisseason',$result[0]);
@@ -83,7 +85,8 @@ class Ctfcseason extends Base
     public function readRecent(){
 
         $result = Db::name('ctfc_season')
-            ->order('StartTime desc')->select();
+            // ->order('StartTime desc')
+            ->select();
 
 
         if($this->jsonRequest()) {
@@ -94,7 +97,8 @@ class Ctfcseason extends Base
             $otherseasons = array_slice($result,1);
 
             $matches = Db::name('ctfc_matchevent')->where('SeasonID', $result[0]['ID'])
-                ->order('StartTime','desc')->select();
+                // ->order('StartTime','desc')
+                ->select();
 
             $events= Db::name('ctfc_event')->select();
             $this->view->assign('recenteventid',$events[0]['ID']);

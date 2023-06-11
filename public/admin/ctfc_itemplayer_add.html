@@ -1,0 +1,602 @@
+<link rel="stylesheet" href="layui/css/layui.css">
+
+<style>
+    .dropdown { display: none; }
+</style>
+<body class="childrenBody">
+    <div style="padding: 25px;" class="layui-layout-body" >
+        <form class="layui-form" action="" style= "height:800;">
+
+       
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 90px;">赛季</label>
+                    <div class="layui-input-inline" style="width: 380px;  height: auto;">
+                        <select id="SeasonID" name="SeasonID" lay-verify="required" lay-filter="SeasonClick">
+                            <option value="">选择赛季</option>
+                        </select>
+                    </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 90px;">队伍</label>
+                    <div class="layui-input-inline" style="width: 380px; height: auto;">
+                        <select id="TeamID" name="TeamID" lay-verify="required" lay-filter="TeamClick">
+                            <option value="">选择队伍</option>
+                        </select>
+                    </div>
+            </div>
+
+
+
+            <div class="layui-form-item">
+ 
+                <label class="layui-form-label" style="width: 90px;">项目</label>
+                <div class="layui-input-inline" style="width: 380px; height: auto;">
+                    <select id="ItemID" name="ItemID" lay-verify="required" lay-filter="ItemIDClick">
+                        <option value="">选择项目</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div id="0-dropdown" class="dropdown">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 90px;">性别/组别</label>
+                        <div class="layui-input-inline" style="width: 380px; height: auto;">
+                            <select id="Sex" name="Sex" lay-filter="SexClick">
+                                <option value="">选择性别/组别</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 90px;">年龄组</label>
+                        <div class="layui-input-inline" style="width: 380px; height: auto;">
+                            <select id="AgeGroupID" name="AgeGroupID" lay-filter="AgeGroupIDClick">
+                                <option value="">选择年龄组</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <label class="layui-form-label" style="width: 90px;">接力队员</label>
+                    <div class="layui-input-inline" style="width: 380px; height: auto;">
+                        <select id="PlayerID1" name="PlayerID1" lay-filter="PlayerClick1">
+                            <option value="">选择队员#1 (必填)</option>
+                        </select>
+                        <select id="PlayerID2" name="PlayerID2" lay-filter="PlayerClick2">
+                            <option value="">选择队员#2 (必填)</option>
+                        </select>
+                        <select id="PlayerID3" name="PlayerID3" lay-filter="PlayerClick3">
+                            <option value="">选择队员#3 (必填)</option>
+                        </select>
+                        <select id="PlayerID4" name="PlayerID4" lay-filter="PlayerClick4">
+                            <option value="">选择队员#4 (必填)</option>
+                        </select>
+                        <select id="PlayerID5" name="PlayerID5" lay-filter="PlayerClick5">
+                            <option value="">选择队员#5 (选填)</option>
+                        </select>
+                        <select id="PlayerID6" name="PlayerID6" lay-filter="PlayerClick6">
+                            <option value="">选择队员#6 (选填)</option>
+                        </select>
+                    </div>
+                    
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <div id="1-dropdown" class="dropdown">
+                    <label class="layui-form-label" style="width: 90px;">队员</label>
+                    <div class="layui-input-inline" style="width: 380px; height: auto;">
+                        <select id="PlayerIDOne" name="PlayerIDOne" lay-filter="PlayerClick">
+                            <option value="">选择队员 (必填)</option>
+                        </select>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label" style="width: 90px;">所属年龄组</label>
+                        <div class="layui-input-inline" style="width: 380px; height: auto;">
+                            <select readonly id="AgeGroupIDSingle" name="AgeGroupIDSingle" lay-filter="AgeGroupIDSingleClick">
+                                <option value="">选择年龄组</option>
+                            </select>
+                        </div>
+                   
+                    </div>
+                    <div class="layui-form-item">
+         
+                        <label class="layui-form-label" style="width: 90px;">性别/组别</label>
+                        <div class="layui-input-inline" style="width: 380px; height: auto;">
+                            <select readonly id="SexSingle" name="SexSingle" lay-filter="SexSingleClick">
+                                <option value="">选择性别/组别</option>
+                            </select>
+                        </div>
+                    </div>
+               
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即添加</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </div>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="layui/layui.js"></script>
+
+    <script>
+        var currentIsSingleFlag;
+        function CheckIsSingle(OneId, sexId, callback) {
+            $.ajax({
+                url: '../ctfcitemplayer/getTypeOfItem',
+                type: 'Get',
+                dataType: 'json',
+                data: {
+                    ItemID: OneId,
+                },
+                header: {
+                    Accept: 'application/json'
+                },
+                success: function (data) {
+                    currentIsSingleFlag = data['affectedRows']
+                    console.log('IsSingle=' + currentIsSingleFlag);
+                    
+                    var dropdowns = document.getElementsByClassName('dropdown');
+                    for (var j = 0; j < dropdowns.length; j++) {
+                        dropdowns[j].style.display = 'none';
+                    }
+                    document.getElementById(currentIsSingleFlag + '-dropdown').style.display = 'block';
+                    if(currentIsSingleFlag == 1) {
+                        var PlayerIDOne_bar = document.getElementById('PlayerIDOne');
+                        PlayerIDOne_bar.setAttribute("lay-verify", "required");
+                        var AgeGroupIDSingle_bar = document.getElementById('AgeGroupIDSingle');
+                        AgeGroupIDSingle_bar.setAttribute("lay-verify", "required");
+                        var SexSingle_bar = document.getElementById('SexSingle');
+                        SexSingle_bar.setAttribute("lay-verify", "required");
+                        // remove these attr
+                        var PlayerID1_bar = document.getElementById('PlayerID1');
+                        PlayerID1_bar.removeAttribute("lay-verify");
+                        var PlayerID2_bar = document.getElementById('PlayerID2');
+                        PlayerID2_bar.removeAttribute("lay-verify");
+                        var PlayerID3_bar = document.getElementById('PlayerID3');
+                        PlayerID3_bar.removeAttribute("lay-verify");
+                        var PlayerID4_bar = document.getElementById('PlayerID4');
+                        PlayerID4_bar.removeAttribute("lay-verify");
+                        var AgeGroupID_bar = document.getElementById('AgeGroupID');
+                        AgeGroupID_bar.removeAttribute("lay-verify");
+                        var Sex_bar = document.getElementById('Sex');
+                        Sex_bar.removeAttribute("lay-verify");
+                        $('#Sex').empty();
+                        $('#Sex').append('<option value="' + sexId + '">' + sexId + '</option>');
+
+                    }else {
+                        var PlayerID1_bar = document.getElementById('PlayerID1');
+                        PlayerID1_bar.setAttribute("lay-verify", "required");
+                        var PlayerID2_bar = document.getElementById('PlayerID2');
+                        PlayerID2_bar.setAttribute("lay-verify", "required");
+                        var PlayerID3_bar = document.getElementById('PlayerID3');
+                        PlayerID3_bar.setAttribute("lay-verify", "required");
+                        var PlayerID4_bar = document.getElementById('PlayerID4');
+                        PlayerID4_bar.setAttribute("lay-verify", "required");
+                        var AgeGroupID_bar = document.getElementById('AgeGroupID');
+                        AgeGroupID_bar.setAttribute("lay-verify", "required");
+                        var Sex_bar = document.getElementById('Sex');
+                        Sex_bar.setAttribute("lay-verify", "required");
+                        $('#Sex').empty();
+                        $('#Sex').append('<option value="' + sexId + '">' + sexId + '</option>');
+
+                        // remove these attr
+                        var PlayerIDOne_bar = document.getElementById('PlayerIDOne');
+                        PlayerIDOne_bar.removeAttribute("lay-verify");
+                        var AgeGroupIDSingle_bar = document.getElementById('AgeGroupIDSingle');
+                        AgeGroupIDSingle_bar.removeAttribute("lay-verify");
+                        var SexSingle_bar = document.getElementById('SexSingle');
+                        SexSingle_bar.removeAttribute("lay-verify");
+                   
+                    }
+                    
+                    
+                    callback(currentIsSingleFlag);
+                }
+            });
+            }
+        
+        function getPlayerAgeSex(playerid, callback) {
+            $.ajax({
+                url: '../ctfcitemplayer/getAgeSex',
+                type: 'Get',
+                dataType: 'json',
+                data: {
+                PlayerID: playerid
+                },
+                header: {
+                Accept: 'application/json'
+                },
+                success: function (data) {
+                playerAgeAndSex = data['affectedRows'];
+                callback(playerAgeAndSex[0], playerAgeAndSex[1]);
+                },
+                error: function (xhr) {
+                console.log(xhr.status);
+                }
+            });
+
+        }
+        
+        function getPlayerList(sitemID, siSex, siMinAG, siMaxAG, teamID, SsID, callback) {
+
+            let currentPlayerList = [];
+            $.ajax({
+                url: '../ctfcitemplayer/getSeasonTeamPlayers',
+                type: 'Get',
+                dataType: 'json',
+                data: {
+                SiMinAG: siMinAG,
+                SiMaxAG: siMaxAG,
+                SiID: sitemID,
+                SiSex: siSex,
+                Tmid: teamID,
+                SsID,SsID
+                },
+                header: {
+                Accept: 'application/json'
+                },
+                success: function (data) {
+                currentPlayerList = data['affectedRows'];
+                // console.log('PlayerList=' + currentPlayerList);
+                callback(currentPlayerList); // Call the callback function with the currentPlayerList
+                },
+                error: function (xhr) {
+                console.log(xhr.status);
+                }
+            });
+        }
+
+        function updatePlayerList(currentItemid, currentSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, CurrentSeasonID, form) {
+            console.log("CurrentSeasonID: " + CurrentSeasonID);
+            console.log("currentItemid: " + currentItemid);
+            console.log("currentSex: " + currentSex);
+            console.log("SelectedTeamID: " + SelectedTeamID);
+            console.log("seasonitemFiltersMinAG: " + seasonitemFiltersMinAG);
+            console.log("seasonitemFiltersMaxAG: " + seasonitemFiltersMaxAG);
+                    
+            getPlayerList(currentItemid, currentSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, CurrentSeasonID, function(currentPlayerList) {
+                console.log('PlayerList=' + currentPlayerList);
+                for (var i = 1; i < 7; i++) {
+                    $('#PlayerID' + i).empty();
+                    $('#PlayerID' + i).append('<option value="">' + "选择队员 (必填)" + '</option>');
+                }
+                $('#PlayerIDOne').empty();
+                $('#PlayerIDOne').append('<option value="">' + "选择队员" + '</option>');
+                
+                axios.get('../CTFCPlayer?all=1', {}).then(function (response) {
+                    $.each(response.data.data, function (index, item) {
+                        if(currentPlayerList.includes(item.ID)) {
+                            $('#PlayerIDOne').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+
+                            $('#PlayerID1').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                            $('#PlayerID2').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                            $('#PlayerID3').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                            $('#PlayerID4').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                            $('#PlayerID5').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                            $('#PlayerID6').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                        }
+                    });
+                    form.render();
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            });
+        }
+
+        layui.use(['table', 'form'], function () {
+        var table = layui.table;
+        var form = layui.form;
+
+        axios.get('../CTFCSeason', {}).then(function (response) {
+            // console.log(response);
+            const data = response.data.data;
+        $.each(data, function (index, item) {
+        $('#SeasonID').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+        });
+            form.render();
+        })
+            .catch(function (error) {
+                console.log(error);
+        });
+
+        var currentseasonid;
+        var currentteamid;
+        form.on('select(SeasonClick)', function (data) {
+            currentseasonid = data.value;
+            // Get Seasonteam
+            axios.get('../CTFCSeasonteam?seasonid=' + data.value, {}).then(function (response) {
+            // console.log(response);
+            const data = response.data.data; 
+
+            $('#TeamID').empty();
+            $('#TeamID').append('<option value="">' + "选择队伍" + '</option>');
+
+            if(data.length != 0) {
+                $.each(response.data.data, function (index, item) {
+                    $('#TeamID').append('<option value="' + item.TeamID + '">' + item.TeamName + '</option>');
+                });
+            }
+            form.render();
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+            // Get Seasonitem
+            axios.get('../CTFCseasonitem?seasonid=' + data.value, {}).then(function (response) {
+            // console.log(response);
+            const data = response.data.data; 
+
+            $('#ItemID').empty();
+            $('#ItemID').append('<option value="">' + "选择项目" + '</option>');
+            if(data.length != 0) {
+                $.each(response.data.data, function (index, item) {
+                    $('#ItemID').append('<option value="' + item.ItemID + '-' + item.Sex + '">' + item.Sex + " - " + item.ItemName +  '</option>');
+                });
+            }
+            form.render();
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        });        
+        
+        // Update playerlist on this click
+        form.on('select(TeamClick)', function (data) {
+            currentteamid = data.value;
+            var xiangmu;
+            var xiangmuSex;
+            readseasonid = document.getElementById('SeasonID').value;
+            const parts = document.getElementById('ItemID').value.split("-");
+            if (parts.length === 2) {
+                xiangmu = parts[0];
+                xiangmuSex = parts[1];
+            }
+
+            axios.get('../CTFCseasonitem?seasonid=' + readseasonid, {}).then(function (response) {
+            $.each(response.data.data, function (index, item) {
+                if(item.ItemID == xiangmu && item.Sex == xiangmuSex) {
+                    seasonitemFiltersMinAG = item.MinAgeGroupID;
+                    seasonitemFiltersMaxAG = item.MaxAgeGroupID;
+                    SelectedTeamID = currentteamid;
+                    console.log("SelectedTeamID: " + SelectedTeamID);
+                    updatePlayerList(xiangmu, xiangmuSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, readseasonid, form);
+       
+                }
+            });
+            form.render();
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }); 
+
+        var global_currentIsSingleFlag;
+        // update playerlist and agegrouplist on this click
+        form.on('select(ItemIDClick)', function (data) {
+            const parts = data.value.split("-");
+            if (parts.length === 2) {
+                xiangmu = parts[0];
+                xiangmuSex = parts[1];
+            }
+
+            console.log("ItemIDClick: " + data.value);
+            CheckIsSingle(xiangmu, xiangmuSex, function(currentIsSingleFlag) {
+                console.log("currentIsSingleFlag: " + currentIsSingleFlag);
+                var SelectedTeamID = document.getElementById('TeamID').value;
+                var currentAgeID = -1;
+                readseasonid = document.getElementById('SeasonID').value;
+
+                // Multiple player item
+                if(currentIsSingleFlag == 0) {
+                    // Only update player lists when AgeGroupID is present
+                    currentAgeID = document.getElementById('AgeGroupID').value;   
+                    if(currentAgeID) {
+                        updatePlayerList(xiangmu, xiangmuSex, currentAgeID,currentAgeID, SelectedTeamID, readseasonid, form);
+                    }
+
+                    // update agegroup
+                    $('#AgeGroupID').empty();
+                    $('#AgeGroupID').append('<option value="">' + "选择年龄组" + '</option>');
+
+                    var seasonitemFiltersMinAG;
+                    var seasonitemFiltersMaxAG;
+                    axios.get('../CTFCseasonitem?seasonid=' + readseasonid, {}).then(function (response) {
+                        $.each(response.data.data, function (index, item) {
+                            if(item.ItemID == xiangmu && item.Sex == xiangmuSex) {
+                                seasonitemFiltersMinAG = item.MinAgeGroupID;
+                                seasonitemFiltersMaxAG = item.MaxAgeGroupID;                            
+                            }
+                        });
+                        axios.get('../CTFCAgegroup', {}).then(function (response) {
+                            // console.log("seasonitemFiltersMinAG: " + seasonitemFiltersMinAG);
+                            // console.log("seasonitemFiltersMaxAG: " + seasonitemFiltersMaxAG);              
+                            $.each(response.data.data, function (index, element) {
+                                // console.log("element.ID: " + element.ID);
+                                if (element.ID >=  seasonitemFiltersMinAG && element.ID <=seasonitemFiltersMaxAG ) {
+                                    $('#AgeGroupID').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
+                                } 
+                            });
+                            form.render();
+                        }).catch(function (error) {
+                            console.log(error);
+                        });
+                    form.render();            
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                } else {
+                    // single player only update playerlist
+                    axios.get('../CTFCseasonitem?seasonid=' + currentseasonid, {}).then(function (response) {
+                        $.each(response.data.data, function (index, item) {
+                            if(item.ItemID == xiangmu && item.Sex == xiangmuSex) {
+                                seasonitemFiltersMinAG = item.MinAgeGroupID;
+                                seasonitemFiltersMaxAG = item.MaxAgeGroupID;
+                                var SelectedTeamID = document.getElementById('TeamID').value;
+                                updatePlayerList(xiangmu, xiangmuSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, currentseasonid, form);
+                            }
+                        });
+                        form.render();
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                }
+                form.render();
+            });
+
+        });
+
+        var currentAgeGroupid;
+        var currentSex;
+        // need update playerlist on this click
+        // Select AgeGroup for multiple players
+        form.on('select(AgeGroupIDClick)', function (data) {
+            currentAgeGroupid = data.value;   
+            console.log('currentseasonid=' + currentseasonid);
+            console.log('currentteamid=' + currentteamid);
+            console.log('currentAgeGroupid=' + currentAgeGroupid);
+            var currentSexBar = document.getElementById('Sex');
+            var currentSex = currentSexBar.value;
+            var readseasonid = document.getElementById('SeasonID').value;
+
+            console.log('currentSex=' + currentSex);
+            const parts = document.getElementById('ItemID').value.split("-");
+            if (parts.length === 2) {
+                xiangmu = parts[0];
+                xiangmuSex = parts[1];
+            }
+
+            for (var i = 1; i < 7; i++) {
+                $('#PlayerID' + i).empty();
+                $('#PlayerID' + i).append('<option value="">' + "选择队员# (必填)" + '</option>');
+            }
+
+            updatePlayerList(xiangmu, currentSex, currentAgeGroupid,currentAgeGroupid, currentteamid, readseasonid, form);
+        });
+
+        // Single player option button
+        form.on('select(PlayerClick)', function (data){
+            var playerid = document.getElementById('PlayerIDOne').value;
+            '<option value=""></option>';//clear the element
+            $('#AgeGroupIDSingle').empty();
+            '<option value=""></option>';//clear the element
+            $('#SexSingle').empty();
+            console.log("playerid is " +playerid);
+
+            getPlayerAgeSex(playerid, function(playerAgeGroup, playerSex){
+                axios.get('../CTFCAgegroup', {}).then(function (response) {
+                // console.log(response);
+                $.each(response.data.data, function (index, element) {
+                    if(playerAgeGroup == element.ID) {
+                        $('#AgeGroupIDSingle').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
+                    }
+                });
+                form.render();
+                })
+                //get Sex option from seasonitem option
+                const parts = document.getElementById('ItemID').value.split("-");
+                if (parts.length === 2) {
+                    xiangmu = parts[0];
+                    xiangmuSex = parts[1];
+                }
+                $('#SexSingle').append('<option value="' + xiangmuSex + '">' + xiangmuSex + '</option>');
+                form.render();
+            });
+        });
+        
+        axios.get('../CTFCAgegroup', {}).then(function (response) {
+            // console.log(response);
+            $.each(response.data.data, function (index, element) {
+                $('#AgeGroupID').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
+            });
+            form.render();
+            }).catch(function (error) {
+            console.log(error);
+        });
+
+        form.on('submit(add)', function (data) {
+
+            var index = parent.layer.getFrameIndex(window.name);
+
+            CheckIsSingle(xiangmu, xiangmuSex, function(currentIsSingleFlag) {
+                global_currentIsSingleFlag = currentIsSingleFlag;
+
+                if(global_currentIsSingleFlag == 1) {
+                    const parts = data.field.ItemID.split("-");
+                    item_id = parts[0];
+                    item_Sex = parts[1];
+                    console.log(data.field.AgeGroupIDSingle+ '<-data.field.AgeGroupIDSingle');
+                    console.log(data.field.PlayerIDOne+ '<- data.field.PlayerIDOne');
+
+                    axios.post('../CTFCItemplayer/', {
+                        SeasonID: data.field.SeasonID,
+                        TeamID: data.field.TeamID,
+                        Sex: data.field.SexSingle,
+                        AgeGroupID: data.field.AgeGroupIDSingle,
+                        ItemID: item_id,
+                        PlayerID1: data.field.PlayerIDOne,
+                        PlayerID2: null,
+                        PlayerID3: null,
+                        PlayerID4: null,
+                        PlayerID5: null,
+                        PlayerID6: null,
+                    })
+                        .then(function (response) {
+                            layer.msg('添加成功', {
+                                icon: 1,
+                                time: 1500
+                            }, function () {
+                                parent.layer.close(index);
+                            });
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                } else {
+                    const parts = data.field.ItemID.split("-");
+                    item_id = parts[0];
+                    item_Sex = parts[1];
+
+                    axios.post('../CTFCItemplayer/', {
+                        SeasonID: data.field.SeasonID,
+                        TeamID: data.field.TeamID,
+                        Sex: data.field.Sex,
+                        AgeGroupID: data.field.AgeGroupID,
+                        ItemID: item_id,
+                        PlayerID1: data.field.PlayerID1,
+                        PlayerID2: data.field.PlayerID2,
+                        PlayerID3: data.field.PlayerID3,
+                        PlayerID4: data.field.PlayerID4,
+                        PlayerID5: data.field.PlayerID5,
+                        PlayerID6: data.field.PlayerID6,
+                        
+                        
+                    })
+                        .then(function (response) {
+                            layer.msg('添加成功', {
+                                icon: 1,
+                                time: 1500
+                            }, function () {
+                                parent.layer.close(index);
+                            });
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                }
+        });
+  
+        });
+        
+    });
+</script>
+
+</body>

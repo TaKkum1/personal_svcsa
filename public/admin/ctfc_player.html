@@ -1,15 +1,19 @@
 <!-- 内容主体区域 -->
 <link rel="stylesheet" href="layui/css/layui.css">
-<style>
-    .layui-table-cell .layui-form-checkbox[lay-skin="primary"]{
-        top: 50%;
-        transform: translateY(-50%);
-    }
-</style>
-<div style="padding: 15px;">
+<style>.layui-table-cell {
+    height: 80px;
+    /* line-height: 80px; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.layui-table-cell img {
+    max-height: 70px;
+}</style>
+<div>
     <div class="layui-tab">
         <div class="layui-tab-content">
-
             <div class="layui-input-inline" style="">
                 <div class="layui-input-inline">
                     <button id="tongguoAll" class="layui-btn layui-btn-normal">审核通过</button>
@@ -24,43 +28,32 @@
             <script type="text/html" id="toolbarDemo">
             </script>
             <script type="text/html" id="show-img">
-                <img src="http://svcsa.org/uploads/{{d.PhotoSrc}}" alt="图片名">
+                <img src="../uploads/{{d.PlayerPhotoSrc}}" alt="图片名">
             </script>
             <script type="text/html" id="barDemo">
                 <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
                 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
             </script>
-            <script type="text/html" id="orderListBar">
-                {{#  if(d.Individual==0){ }}
-                集体项目
-                {{#  } else { }}
-                个人项目
-                {{#  } }}
-            </script>
             <script type="text/html" id="shenhe">
-                {{#  if(d.Flag==0){ }}
+                {{#  if(d.Approval==0){ }}
                 <a class="layui-btn layui-btn layui-btn-xs" lay-event="tongguo">通过</a>
                 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="bohui">驳回</a>
                 {{#  } else { }}
                 <a class="layui-btn layui-btn-disabled layui-btn-xs">已通过</a>
                 {{#  } }}
             </script>
-            <script type="text/html" id="Flag">
-                {{#  if(d.Flag==0){ }}
-                申请中
-                {{#  } else { }}
-                通过申请
-                {{#  } }}
-            </script>
         </div>
     </div>
 </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="layui/layui.js"></script>
 <script>
     function tongguo(ids, passed) {
+      console.log(ids);
+      console.log(passed);
         $.ajax({
-            url: 'http://svcsa.org/ctfcplayer/passapp',
+            url: '../ctfcplayer/passapp',
             type: 'Post',
             dataType: 'json',
             data: {
@@ -71,12 +64,12 @@
                 Accept: 'application/json'
             },
             success: function (data) {
-                layer.msg('操作成功', {
-                    icon: 1,
-                    time: 1200
-                }, function () {
-                    location.reload();
-                });
+                    layer.msg('成功审核通过' + data['affectedRows']  + '个运动员，发送了' + data['affectedEmails'] +'个邮件', {
+                        icon: 1,
+                        time: 1200
+                    }, function () {
+                        location.reload();
+                    });
             },
             error: function (xhr) {
                 if (xhr.status == 401)
@@ -90,7 +83,7 @@
         var form = layui.form;
         table.render({
             elem: '#test',
-            url: 'http://svcsa.org/CTFCPlayer',
+            url: '../CTFCPlayer?all=1',
             parseData: function (res) {
                 return {
                     "code": 0, //解析接口状态
@@ -108,75 +101,49 @@
             cols: [
                 [{
                     type: 'checkbox',
-                    fixed: 'left',
+                    fixed: 'center',
                     width: 90
                 }, {
                     field: 'ID',
                     title: 'ID',
-                    width: 80,
+                    width: 60,
                     fixed: 'left',
                     unresize: true,
                     sort: true,
                 }, {
                     field: 'Name',
-                    title: '选手/团队名称',
-                    width: 150,
+                    title: '姓名',
+                    width: 200,
                 }, {
-                    field: 'Leader',
-                    title: '负责人姓名',
-                    // sort: true,
-                    width: 120,
+                    field: 'Sex',
+                    title: '性别',
+                    width: 60,
                 },
-                //     {
-                //     field: 'PhotoSrc',
-                //     title: '选手照片',
-                //     templet: '#show-img',
-                //     width: 150,
-                // },
-                    {
-                    field: 'Individual',
-                    title: '项目类型',
-                    templet: '#orderListBar',
-                    width: 120,
-                },
-                //     {
-                //     field: 'Email',
-                //     title: '联系方式-电子邮箱',
-                //     width: 160,
-                // },
-                    {
-                    field: 'Tel',
-                    title: '联系方式-手机',
-                    width: 120,
+                {
+                    field: 'Birthday',
+                    title: '出生月日',
+                    width: 90,
                 }, {
-                    field: 'Wechat',
-                    title: '联系方式-微信',
-                    width: 120,
-                }, {
-                    field: 'Track',
-                    title: '赛道',
+                    field: 'PhotoSrc',
+                    title: '头像',
+                    templet: '#show-img',
                     width: 100,
                 }, {
-                    field: 'MatchName',
-                    title: '田径项目',
-                    width: 200,
-                }
-                    , {
-                    field: 'Flag',
-                    title: '申请比赛',
-                    templet: '#Flag',
-                    width: 150,
+                    field: 'Email',
+                    title: '电子邮件',
+                    width: 250,
                 }, {
+                    field: 'Approval',
                     title: '审核',
                     width: 130,
                     toolbar: '#shenhe'
                 }, {
                     title: '操作',
-                    width: 130,
+                    fixed: 'right',
+                    width: 122,
                     toolbar: '#barDemo'
                 }]
-            ],
-            limit: 20,
+            ], limit: 20,
             page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
                 layout: ['count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
                 //,curr: 5 //设定初始在第 5 页
@@ -184,14 +151,37 @@
                 , first: false //不显示首页
                 , last: false //不显示尾页
 
-            },
+            }
         });
+        $('#tongguoAll').click(function () {
+            var mycars = ''
+            var data = table.checkStatus('test').data; //idTest 即为基础参数 id 对应的值
+            mycars = '';
+            if (data.length === 0) {
+                layer.alert('请至少选择一个项目')
+            } else {
+                for (var i = 0; i < data.length; i++) {
+                    if (i === data.length - 1) {
+                        if (data[i].Approval === 0) {
+                            mycars += data[i].ID
+                        }
+                    } else {
+                        if (data[i].Approval === 0) {
+                            mycars += data[i].ID + ','
+                        }
+                    }
+                }
+                tongguo(mycars, 1)
+            }
+
+        })
         $("#add").click(function () {
-            var vv = layer.open({
+            var index=layer.open({
                 type: 2,
                 title: '新建田径选手',
                 shadeClose: true,
                 shade: 0.8,
+                offset: '0px',
                 area: ['100%', '100%'],
                 content: 'ctfc_player_add.html',
                 success: function (layero, index) {
@@ -201,101 +191,82 @@
                     location.reload();
                 }
             });
-            layer.full(vv)
-        })
-        $('#tongguoAll').click(function () {
-            var mycars = ''
-            var data = table.checkStatus('test').data; //idTest 即为基础参数 id 对应的值
-            if (data.length === 0) {
-                layer.alert('请至少选择一名运动员')
-            } else {
-                for (var i = 0; i < data.length; i++) {
-                    if (i === data.length - 1) {
-                        if (data[i].Flag === 0) {
-                            mycars += data[i].ID
-                        }
-                    } else {
-                        if (data[i].Flag === 0) {
-                            mycars += data[i].ID + ','
-                        }
-                    }
-                }
-            }
-            tongguo(mycars, 1)
+            layer.full(index);
+            window.sessionStorage.setItem("ctfc_player_index", index);
+            //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+            $(window).on("resize", function () {
+                layer.full(window.sessionStorage.getItem("ctfc_player_index"));
+            })
         })
         table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
             var data = obj.data; //获得当前行数据
             var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
             var tr = obj.tr; //获得当前行 tr 的DOM对象
+            console.log(data.ID);
 
             if (layEvent === 'edit') { //查看
                 console.log(obj.data);
-                var title = "修改田径选手"
-                if (data.ID != null) {
-                    title = "修改田径选手"
-                }
-                var vv = layer.open({
+                var index = layer.open({
                     type: 2,
-                    title: title,
+                    title: '修改田径选手',
                     shadeClose: true,
                     shade: 0.8,
+                    offset: '0px',
                     area: ['100%', '100%'],
-                    content: 'ctfc_player_add.html',
+                    content: 'ctfc_player_edit.html',
                     success: function (layero, index) {
                         // layer.iframeAuto(index);
                         var body = layer.getChildFrame('body', index);
                         body.find('#Name').val(data.Name)
-                        body.find('#Leader').val(data.Leader)
-                        body.find('#Individual').val(data.Individual)
-                        body.find('#Email').val(data.Email)
-                        body.find('#Tel').val(data.Tel)
-                        body.find('#Wechat').val(data.Wechat)
-                        body.find('#Track').val(data.Track)
-                        body.find('#ID').val(data.ID)
-                        body.find('#EventID').val(data.MatchID)
-//                        body.find('#Flag').val(data.Flag)
-                        body.find('#PhotoSrc').val(data.PhotoSrc)
-                        body.find('#demo1').attr("src", "http://svcsa.org/uploads/" + data.PhotoSrc)
-                        body.find('#img_url').val(data.PhotoSrc)
+                        body.find('#Sex').val(data.Sex)
+                        //body.find('#Number').val(data.Number)
+                        body.find('#Birthday').val(data.Birthday)
 
+                        body.find('#PhotoSrc').val(data.PhotoSrc)
+                        body.find('#Email').val(data.Email)
+//                        body.find('#TeamID').val(data.TeamID)
+                  //      body.find('#SeasonID').attr("value", data.SeasonID)
+
+                        body.find('#demo1').attr("src", "../uploads/" + data.PhotoSrc)
+                        body.find('#ID').val(data.ID)
+
+//                        body.find('#TeamID').attr("value", data.TeamID)
                     },
                     end: function () {
                         location.reload();
                     }
                 });
-                layer.full(vv)
+                layer.full(index);
+                window.sessionStorage.setItem("ctfc_player_index", index);
+                //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+                $(window).on("resize", function () {
+                    layer.full(window.sessionStorage.getItem("ctfc_player_index"));
+                })
             } else if (layEvent === 'del') {
                 layer.confirm('确认删除', {
-                    btn: ['确认', '取消'] //按钮
+                    btn: ['确认', '取消'],
+                    offset: ['100px']//按钮
                 }, function () {
-                    $.ajax({
-                        url: 'http://svcsa.org/CTFCPlayer/' + data.ID,
-                        //url:"http://svcsa.org/bbcompetition",
-                        type: 'delete',
-                        dataType: 'json',
-                        header: {
-                            Accept: 'application/json'
-                        },
-                        success: function (data) {
-                            layer.msg('删除成功', {
-                                icon: 1,
-                                time: 1200
-                            }, function () {
-                                location.reload();
-                            });
-                        },
-                        error: function (xhr) {
-                            if (xhr.status == 401)
-							top.location.href = 'login.html';
-                        }
+                    axios.delete('../CTFCPlayer/' + data.ID, {})
+                        .then(function (response) {
+                            console.log(response);
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                    layer.msg('删除成功', {
+                        icon: 1,
+                        time: 1200
+                    }, function () {
+                        location.reload();
                     });
-
                 }, function () {
                 });
             } else if (layEvent === 'tongguo') {
                 layer.confirm('确认要审核通过吗？', {
                     btn: ['确认', '取消'] //按钮
                 }, function () {
+                    layer.msg('正在通过...', {icon: 7});
                     tongguo(data.ID, 1)
                 }, function () {
                 });
@@ -303,10 +274,56 @@
                 layer.confirm('确认要驳回吗？', {
                     btn: ['确认', '取消'] //按钮
                 }, function () {
+                    layer.msg('正在驳回...', {icon: 7});
                     tongguo(data.ID, 0)
                 }, function () {
                 });
             }
         });
+        // axios.get('../CTFCSeason', {}).then(function (response) {
+        //     console.log(response);
+        //     $.each(response.data.data, function (index, item) {
+        //         $('#Season').append('<option value="' + item.SeasonID + '">' + item.SeasonName + '</option>');
+        //     });
+        //     form.render();
+        // })
+        //     .catch(function (error) {
+        //         console.log(error);
+        //     });
+        // axios.get('../CTFCTeam', {}).then(function (response) {
+        //     console.log(response);
+        //     $.each(response.data.data, function (index, item) {
+        //         $('#Team').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+        //     });
+        //     form.render();
+        // })
+        //     .catch(function (error) {
+        //         console.log(error);
+        //     });
+        // form.on('select(Season)', function (data) {
+        //     table.reload('test', {
+        //         // where: { //设定异步数据接口的额外参数，任意设
+        //         //     // SeasonID: data.value,
+        //         //     url: '../ctfcseason/' + data.value + '/ctfcplayer',
+        //         // },
+        //         url: '../ctfcseason/' + data.value + '/ctfcplayer',
+        //         page: {
+        //             curr: 1 //重新从第 1 页开始
+        //         }
+        //     });
+        // });
+        // form.on('select(Team)', function (data) {
+        //     table.reload('test', {
+        //         // where: { //设定异步数据接口的额外参数，任意设
+        //         //     // SeasonID: data.value,
+        //         //     url: '../ctfcseason/' + data.value + '/ctfcplayer',
+        //         // },
+        //         url: '../ctfcteam/' + data.value + '/ctfcplayer',
+        //         page: {
+        //             curr: 1 //重新从第 1 页开始
+        //         }
+        //     });
+        // })
+
     });
 </script>

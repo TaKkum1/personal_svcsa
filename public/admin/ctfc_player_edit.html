@@ -3,30 +3,30 @@
 <body class="layui-layout-body">
 
 <div style="padding: 15px;">
-    <form class="layui-form" action="" id="form1">
+    <form class="layui-form" action="">
         <div class="layui-form-item">
             <div class="layui-inline">
                 <label class="layui-form-label">姓名</label>
                 <div class="layui-input-block">
+                          <input id="ID" name="ID" type="hidden" value="">
                     <input id="Name" type="text" name="Name" lay-verify="required" autocomplete="off" placeholder="请输入"
                            class="layui-input">
                 </div>
             </div>
             <div class="layui-inline">
                 <label class="layui-form-label">性别</label>
-                <div class="layui-input-inline">
+                <div class="layui-input-block">
                     <input id="Sex" type="text" name="Sex" lay-verify="required" autocomplete="on"
                            placeholder="请输入" class="layui-input">
                 </div>
             </div>
         </div>
 
-
         <div class="layui-form-item">
             <div class="layui-inline">
                 <label class="layui-form-label">电子邮件</label>
                 <div class="layui-input-block">
-                    <input id="Email" type="text" name="Email" lay-verify="required" autocomplete="off"
+                    <input id="Email" type="text" name="Email" autocomplete="off"
                            placeholder="请输入" class="layui-input">
                 </div>
             </div>
@@ -45,26 +45,28 @@
             </div>
         </div>
 
+
         <div class="layui-form-item">
-          <div class="layui-inline">
-              <label class="layui-form-label">Logo</label>
-              <div class="layui-input-block">
-                  <button type="button" class="layui-btn" id="test1">上传图片</button>
-                  <input type="hidden" id="PhotoSrc" name="PhotoSrc" value=""/>
-                  <div class="layui-upload-list">
-                      <img class="layui-upload-img" width="100px" height="80px" id="demo1"/>
-                      <p id="demoText"></p>
-                  </div>
-              </div>
-          </div>
-        </div>
-        <div class="layui-form-item">
-            <div class="layui-input-block">
-                <button class="layui-btn" type="button" lay-submit="" lay-filter="add" id="commit">立即添加</button>
-                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            <div class="layui-inline">
+                <label class="layui-form-label">Logo</label>
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" id="test1">上传图片</button>
+                    <input type="hidden" id="PhotoSrc" name="PhotoSrc" value=""/>
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" width="100px" height="80px" id="demo1"/>
+                        <p id="demoText"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" type="button" lay-submit="" lay-filter="add" id="commit">立即修改</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
             </div>
         </div>
     </form>
+
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
@@ -77,9 +79,10 @@
         var $ = layui.jquery;
         var upload = layui.upload;
         var laydate = layui.laydate;
+        var apiurl = '../ctfcplayer/' + $('input[name="ID"]').val();
         var uploadInst = upload.render({
             elem: '#test1',
-            url: '../CTFCPlayer',
+            url: apiurl,
             acceptMime: 'image/*',
             auto:false,
             bindAction:'',
@@ -91,8 +94,7 @@
                     Sex: $('input[name="Sex"]').val(),
                     Birthday: $('input[name="Birthday"]').val(),
                     Email: $('input[name="Email"]').val(),
-                    Approval:  $('input[name="Approval"]').val()
-
+                    Approval: $('input[name="Approval"]').val()
                 }
 
             },
@@ -108,12 +110,12 @@
 
                 //如果上传失败
                 if (res.status == '0') {
-                    return layer.msg('上传失败');
+                    return layer.msg('上传图片失败，请检查网络。');
                 }
                 //上传成功
                 console.log(res);
-    //            picture = res.data.savename;
-    //            $("#img_url").attr("value", picture)
+                //            picture = res.data.savename;
+                //            $("#img_url").attr("value", picture)
                 layer.msg('添加成功', {
                     icon: 1,
                     time: 1500
@@ -124,7 +126,7 @@
             },
             error: function (index,upload) {
 
-                return layer.msg('网络异常，新增失败。可能需要重新登录。');
+                return layer.msg('网络异常，更新失败。可能需要重新登录。');
             }
         });
 
@@ -139,7 +141,6 @@
             }
         });
 
-
         form.on('submit(add)', function (data) {
             if ($('input[name="file"]').val()!="") {
                 uploadInst.upload();
@@ -149,17 +150,18 @@
             if(!form.verify()) return;
 
             var index = parent.layer.getFrameIndex(window.name);
-            axios.post('../CTFCPlayer/', {
+            axios.post('../ctfcplayer/' + $('input[name="ID"]').val(), {
                 Name: $('input[name="Name"]').val(),
                 Sex: $('input[name="Sex"]').val(),
                 Birthday: $('input[name="Birthday"]').val(),
                 PhotoSrc: $('input[name="PhotoSrc"]').val(),
                 Email: $('input[name="Email"]').val(),
-                Approval:  $('input[name="Approval"]').val()
+                Approval: $('input[name="Approval"]').val()
+
 
             })
                 .then(function (response) {
-                    layer.msg('添加成功', {
+                    layer.msg('修改成功', {
                         icon: 1,
                         time: 1500
                     }, function () {
@@ -170,27 +172,6 @@
                     console.log(error);
                 });
         });
-
-        axios.get('../CTFCSeason', {}).then(function (response) {
-            console.log(response);
-            $.each(response.data.data, function (index, item) {
-                $('#SeasonID_s').append('<option value="' + item.SeasonID + '">' + item.SeasonName + '</option>');
-            });
-            form.render();
-            var num = $("#SeasonID").val();
-            var numbers = $("#SeasonID_s").find("option"); //获取select下拉框的所有值
-            console.log(numbers);
-            for (var j = 1; j < numbers.length; j++) {
-                console.log(numbers);
-                if ($(numbers[j]).val() == num) {
-                    console.log('ok');
-                    $(numbers[j]).attr("selected", "selected");
-                    $(numbers[j]).attr("class", "layui-this");
-                    form.render();
-                }
-            }
-        })
-
     });
 </script>
 

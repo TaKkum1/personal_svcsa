@@ -16,6 +16,7 @@ use think\Session;
 
 class Bbplayer extends Base
 {
+    const APPLY_PLAYER_FIELD = 'Name,Birth,Height,Weight,Email,Sex,PhotoSrc';
     const FIELD = 'Name,Birth,Height,Weight,PhotoSrc,Email,Sex';
 
     public function add($seasonid = null)
@@ -48,10 +49,10 @@ class Bbplayer extends Base
         $data = request()->only(self::FIELD, 'post');
         $this->makeNull($data);
         $validator = validate('Bb_player');
-//        $result = $validator->check($data);
-//        if (!$result){
-//            $this->result(0);
-//        }
+        // $result = $validator->check($data);
+        // if (!$result){
+        //     $this->result(0);
+        // }
         if (!isset($data["PhotoSrc"]) || !$data["PhotoSrc"]) {
             $file = request()->file('file');
             if (!$file) $this->affectedRowsResult(0);
@@ -169,7 +170,7 @@ class Bbplayer extends Base
 
         $this->headerAndFooter('player');
 
-//        $playerage = getAge(strtotime($result['Birth']));
+        // $playerage = getAge(strtotime($result['Birth']));
 
         $seasonid = $result['SeasonID'];
         $seasonname = Db::name('bb_season')
@@ -187,10 +188,9 @@ class Bbplayer extends Base
         $this->view->assign('player_seasonname', $seasonname);
         //$this->view->assign('player_competitionname', $competitionname);
         $this->view->assign('player', $result);
-//        $this->view->assign('playerage',$playerage);
-      //  $this->view->assign('players', $players);
-
-      // Get player statistics.
+        // $this->view->assign('playerage',$playerage);
+        // $this->view->assign('players', $players);
+        //   Get player statistics.
       $playerstats = Db::name('bb_seasonplayerstatistics_view')
           ->where('seasonid', $seasonid)
           ->where('PlayerID', $id)
@@ -289,5 +289,119 @@ class Bbplayer extends Base
         notfound:
         header("HTTP/1.0 404 Not Found");
         die;
+    }
+
+    public function passApplication()
+    {
+        $this->checkauthorization();
+
+        $data = request()->only('PlayerIDs,Passed', 'post');
+        $playerIDs = urldecode($data['PlayerIDs']);
+        $passed = isset($data['Passed'])?boolval($data['Passed']):true;
+
+        $result = 0;
+        $playerIDsarr = explode(',',$playerIDs);
+
+        if($passed) {
+            foreach ($playerIDsarr as $playerID) {
+                $result += Db::name('bb_player')->where('ID', $playerID)
+                    ->update(['Approval'=>1]);
+            }
+        } 
+        else {
+            foreach ($playerIDsarr as $playerID) {
+                $result += Db::name('bb_player')->where('ID', $playerID)
+                    ->delete();
+            }
+        }
+
+        $this->affectedRowsResult($result);
+    }
+    
+    public function getapply()
+    {
+        $this->headerAndFooter();
+        return $this->view->fetch('player/bbplayerApply');
+    }
+
+    public function apply()
+    {
+        $data = request()->only(self::APPLY_PLAYER_FIELD, 'post');  // ???
+        $this->makeNull($data);
+
+        // Updated bb_team.
+        $player = array();
+        $player["Name"] = $data["Name"];
+        $player["Birth"] = $data["Birth"];
+        $player["Height"] = $data["Height"];
+        $player["Weight"] = $data["Weight"];
+        $player["Email"] = $data["Email"];
+        $player["Sex"] = $data["Sex"];
+        $player["Approval"] = 0;
+
+        // Check if player with the same name and birthday already exists
+        $existingPlayer = Db::name('bb_player')
+            ->where('Name', $player["Name"])
+            ->where('Birth', $player["Birth"])
+            ->find();
+
+        if ($existingPlayer) {
+            // Player with the same name and birthday already exists
+            $this->headerAndFooter('competition');
+            $photoSrc = $existingPlayer["PhotoSrc"];
+            $playerName = $existingPlayer["Name"];
+            $birthday = $existingPlayer["Birth"];
+            $email = $existingPlayer["Email"];
+            // $existingPlayerInfo = "<div class='card text-left'><div class='card-body text-left'><small><br>姓名: " . $existingPlayer["Name"] . "<br>生日: " . $existingPlayer["Birth"] . "<br>Email: " . $existingPlayer["Email"]."</small></div></div>";
+            
+            $existingPlayerInfo = "
+            <div class='card text-left'>
+                <div class='card-body'>
+                    <div class='row'>
+                        <div class='col-sm-3'>
+                            <img src='" . config('public_assets') . "/uploads/" . $photoSrc . "' alt='Player Photo' style='max-width: 100%; height: auto;'>
+                        </div>
+                        <div class='col-sm-9'>
+                            <small>
+                                <strong>姓名:</strong> $playerName<br>
+                                <strong>生日:</strong> $birthday<br>
+                                <strong>Email:</strong> $email
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>";
+            
+            $applyresult = '该用户已存在！如有误，请联系管理员(svcba.svcsa@gmail.com)修改。<br><br>'.$existingPlayerInfo;
+            $this->view->assign('applyresult', $applyresult);
+            return $this->view->fetch('player/bbplayerApplyres');
+        }
+
+
+        $validator = validate('Bb_player');
+        $team_result = $validator->check($player);
+        if (!$team_result) {
+          $this->affectedRowsResult(0);
+        }
+
+        $player["PhotoSrc"] = "";
+        $assetUrl = getAssetUploadUrl();
+        $infophotofile = request()->file('Photo');
+
+        if($infophotofile)
+            $player["PhotoSrc"] = $infophotofile->move(__DIR__ . $assetUrl)
+                ->getSaveName();
+
+        $player_result = Db::name('bb_player')->insert($player);
+
+
+        // Jump to the apply result page.
+        $this->headerAndFooter('competition');
+
+        $applyresult = '';
+        if ($player_result > 0)
+          $applyresult = '您的球员申请已提交，审核后将会给您发邮箱或者短信通知，请关注！';
+        $this->view->assign('applyresult', $applyresult);
+        return $this->view->fetch('player/bbplayerApplyres');
     }
 }

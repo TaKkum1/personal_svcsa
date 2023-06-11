@@ -50,7 +50,7 @@
 			"spread": false,
 			"children": [
 				{
-					"title": "田径赛会",
+					"title": "田径赛季",
 					"icon": "icon-text",
 					"href": "ctfc_season.html",
 					"spread": false
@@ -62,15 +62,51 @@
 					"spread": false
 				},
 				{
-					"title": "田径比赛",
-					"icon": "icon-text",
-					"href": "ctfc_match.html",
-					"spread": false
-				},
-				{
 					"title": "田径选手",
 					"icon": "icon-text",
 					"href": "ctfc_player.html",
+					"spread": false
+				},
+				{
+					"title": "田径队伍",  
+					"icon": "icon-text",
+					"href": "ctfc_team.html",
+					"spread": false
+				},
+				{
+					"title": "赛季运动队",  
+					"icon": "icon-text",
+					"href": "ctfc_seasonteam.html",
+					"spread": false
+				},
+				{
+					"title": "年龄组",
+					"icon": "icon-text",
+					"href": "ctfc_agegroup.html",
+					"spread": false	
+				},
+				{
+					"title": "号码牌分配",
+					"icon": "icon-text",
+					"href": "ctfc_playernumber.html",
+					"spread": false
+				},
+				{
+					"title": "赛季项目",
+					"icon": "icon-text",
+					"href": "ctfc_seasonitem.html",
+					"spread": false	
+				},
+				{
+					"title": "报名项目",
+					"icon": "icon-text",
+					"href": "ctfc_itemplayer.html",
+					"spread": false
+				},
+				{
+					"title": "赛道分配",
+					"icon": "icon-text",
+					"href": "ctfc_heat.html",
 					"spread": false
 				}
 			]
