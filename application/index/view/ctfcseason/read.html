@@ -14,15 +14,57 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th>时间</th>
-                    <th>项目</th>
-                    <th>状态</th>
-                    <th>战报/前瞻</th>
-                    <th>图集</th>
-                    <th>比赛结果</th>
+                    <th>Event ID</th>
+                    <th>Heat ID</th>
+                    <th>性别</th>
+                    <th>项目名称</th>
+                    <th>年龄组</th>
+                    <th>运动员-号码牌</th>
+                    <th>道次</th>
+                    <th>成绩</th>
+                    <th>备注</th>
                 </tr>
                 </thead>
+                <tbody>
+                    {if condition="!$matches"}
+                    <tr>
+                        <td>赛程暂时为空！</td>
+                    </tr>
+                    {/if}
+                    {volist name="matches" id="match" }
+                    <tr>
+                        <td>{$match['EventID']}</td>
+                        <td>{$match['HeatID']}</td>
+                        <td>{$match['Gender']}</td>
+                        <td>{$match['ItemName']}</td>
+                        <td>{$match['AgeGroupName']}</td>
+                        <td>
+                            <!-- show non-null player -->
+                            {$match['Player1']}
+                            {if condition="$match['Player2'] neq ''"}
+                            , {$match['Player2']}
+                            {/if}
+                            {if condition="$match['Player3'] neq ''"}
+                            ,<br/> {$match['Player3']}
+                            {/if}
+                            {if condition="$match['Player4'] neq ''"}
+                            , {$match['Player4']}
+                            {/if}
+                            {if condition="$match['Player5'] neq ''"}
+                            ,<br/> {$match['Player5']}
+                            {/if}
+                            {if condition="$match['Player6'] neq ''"}
+                            , {$match['Player6']}
+                            {/if}
 
+                        </td>
+                        <td>{$match['LaneNumber']}</td>
+                        <td>{$match['Result']}</td>
+                        <td>{$match['Note']}</td>
+
+                    </tr>
+                    {/volist}
+                    </tbody>
             </table>
         </div>
         <div class="public-right">
@@ -40,7 +82,7 @@
                     <li><a href="#"><span class="icon-chevron-right2 icon"></span>项目记录</a></li>
                     <li>
                         <dl>
-                            <dt>其他赛会</dt>
+                            <dt>其他赛季</dt>
                             
                             {volist name="otherseasons" id="otherseason"  empty='暂没其他赛季信息！'}
                             <dd><a href="{:url('index/ctfcseason/read',['id'=>$otherseason['ID']])}">{$otherseason['Name']}<span class="icon-chevron-right2 icon"></a></dd>
