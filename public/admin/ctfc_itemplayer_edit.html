@@ -497,7 +497,7 @@
                             $.each(response.data.data, function (index, element) {
                                 // console.log("element.ID: " + element.ID);
                                 if (element.ID >=  seasonitemFiltersMinAG && element.ID <=seasonitemFiltersMaxAG ) {
-                                    $('#AgeGroupID_s').append('<option value="' + element.ID + '">' + element.Name + '</option>');
+                                    $('#AgeGroupID_s').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
                                 } 
                             });
                             form.render();
@@ -547,7 +547,8 @@
                 $.each(response.data.data, function (index, element) {
                     // console.log("index is " +index + "; element id is " + element.ID + "; name is " + element.Name);                    
                     if(playerAgeGroup == element.ID) {
-                        $('#AgeGroupIDSingle_s').append('<option value="' + element.ID + '">' + element.Name + '</option>');
+                        $('#AgeGroupIDSingle_s').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
+
                     }
                 });
                 form.render();
@@ -708,7 +709,7 @@
                         $.each(response.data.data, function (index, element) {
                             if(singleAgeGroup == element.ID) {
                                 singleAgeGroupName = element.Name;
-                                $('#AgeGroupIDSingle_s').append('<option value="' + singleAgeGroup + '">' + singleAgeGroupName + '</option>');
+                                $('#AgeGroupIDSingle_s').append('<option value="' + singleAgeGroup + '">' + singleAgeGroupName  + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
                                 $('#AgeGroupIDSingle_s').find("option").attr("selected", "selected");
                                 $('#AgeGroupIDSingle_s').find("option").attr("class", "layui-this");
                                 form.render();
@@ -807,7 +808,7 @@
                         axios.get('../CTFCAgegroup', {}).then(function (response) {
                             $.each(response.data.data, function (index, element) {
                                 if (element.ID >=  seasonitemFiltersMinAG && element.ID <=seasonitemFiltersMaxAG ) {
-                                    $('#AgeGroupID_s').append('<option value="' + element.ID + '">' + element.Name + '</option>');
+                                    $('#AgeGroupID_s').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
                                 } 
                                 if(relayAgeGroup == element.ID) {
                                     $('#AgeGroupID_s').find("option").attr("selected", "selected");
@@ -881,9 +882,6 @@
         // Select AgeGroup for multiple players
         form.on('select(AgeGroupIDClick)', function (data) {
             currentAgeGroupid = data.value;   
-            // console.log('currentseasonid=' + currentseasonid);
-            // console.log('currentteamid=' + currentteamid);
-            // console.log('currentAgeGroupid=' + currentAgeGroupid);
             const parts = document.getElementById('ItemID_s').value.split("-");
             if (parts.length === 2) {
                 xiangmu = parts[0];
@@ -891,9 +889,13 @@
             }
             var currentSex = xiangmuSex;
             var currentseasonid = document.getElementById('SeasonID_s').value;
-
+            // console.log('xiangmu=' + xiangmu);
             // console.log('currentSex=' + currentSex);
-            updatePlayerList(xiangmu, currentSex, currentAgeGroupid,currentAgeGroupid, currentteamid, form, currentseasonid, 0);
+            // console.log('currentAgeGroupid=' + currentAgeGroupid);            
+            // console.log('currentteamid=' + currentteamid);
+            // console.log('currentseasonid=' + currentseasonid);
+
+            updatePlayerList(xiangmu, currentSex, currentAgeGroupid,currentAgeGroupid, currentteamid, currentseasonid, form, 1);
         });  
     });
 </script>
