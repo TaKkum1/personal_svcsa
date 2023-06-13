@@ -11,11 +11,6 @@
 <div>
     <div class="layui-tab">
         <div class="layui-tab-content">
-            <div class="layui-input-inline" style="">
-                <div class="layui-input-inline">
-                    <button id="edit" class="layui-btn layui-btn-normal">分配赛道/结果录入</button>
-                </div>
-            </div>
             <div class="layui-input-inline">
                 <form class="layui-form" action="">
                     <select id="Item" name="Item" lay-verify="" lay-filter="ItemClick">
@@ -34,11 +29,16 @@
                 </form>
             </div>
    
+            <div class="layui-input-inline">
+                <div class="layui-input-inline">
+                    <button id="edit-all" class="layui-btn layui-btn-success">确认修改</button>
+                </div>
+            </div>
             <table class="layui-hide" id="test" lay-filter="test"></table>
             <script type="text/html" id="toolbarDemo">
             </script>
             <script type="text/html" id="barDemo">
-                <a class="layui-btn layui-btn-xs" lay-event="edit-slrow">赛道分配</a>
+                <a class="layui-btn layui-btn-xs" lay-event="edit">赛道分配</a>
             </script>
         </div>
     </div>
@@ -50,6 +50,13 @@
     layui.use(['table', 'form'], function () {
         var table = layui.table;
         var form = layui.form;
+        var util = layui.util;
+        // 根据返回数据中某个字段来判断开启该行的编辑
+        var editable = function(d){
+            if(d.editable) return 'text'; // 这里假设以 editable 字段为判断依据
+        };
+
+
         table.render({
             elem: '#test',
             url: '../ctfcheatview',
@@ -81,6 +88,10 @@
                     title: 'EventID',
                     width: 100,
                     sort: true,
+                    edit: editable,
+                    templet: function(d){
+                    return `<span style="color: #16B777">${d.EventID}</span>`;
+                    }
                 },
            
                 {
@@ -88,6 +99,10 @@
                     title: 'HeatID',
                     width: 100,
                     sort: true,
+                    edit: editable,
+                    templet: function(d){
+                    return `<span style="color: #16B777">${d.HeatID}</span>`;
+                    }
                 },
         
                 {
@@ -95,6 +110,10 @@
                     title: '道次',
                     width: 80,
                     sort: true,
+                    edit: editable,
+                    templet: function(d){
+                    return `<span style="color: #16B777">${d.LaneNumber}</span>`;
+                    }
                 },
                 {
                     field: 'TeamName',
@@ -118,11 +137,20 @@
                     title: '成绩',
                     width: 150,
                     sort: true,
+                    edit: editable,
+                    templet: function(d){
+                    return `<span style="color: #16B777">${d.Result}</span>`;
+                    }
+               
                 }, 
                 {
                     field: 'Note',
                     title: '备注',
                     width: 150,
+                    edit: editable,
+                    templet: function(d){
+                    return `<span style="color: #16B777">${d.Note}</span>`;
+                    }
                 }, 
                 {
                     title: '操作',
@@ -142,75 +170,85 @@
         });
 
 
-        $("#edit").click(function () {
-            var index=layer.open({
-                type: 2,
-                title: '分配赛道/结果录入',
-                shadeClose: true,
-                shade: 0.8,
-                offset: '0px',
-                area: ['100%', '100%'],
-                content: 'ctfc_heat_edit.html',
-                success: function (layero, index) {
-                    // layer.iframeAuto(index);
-                },
-                end: function () {
-                    location.reload();
-                }
-            });
-            layer.full(index);
-            window.sessionStorage.setItem("ctfc_heat_index", index);
-            //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
-            $(window).on("resize", function () {
-                layer.full(window.sessionStorage.getItem("ctfc_heat_index"));
-            })
-        
-        })
-
-
-
-        table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
-            var data = obj.data; //获得当前行数据
-            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
-            var tr = obj.tr; //获得当前行 tr 的DOM对象
-            console.log(data.ID);
-
-            if (layEvent === 'edit-slrow') { //查看
-                console.log(obj.data);
-                var index = layer.open({
-                    type: 2,
-                    title: '赛道分配与结果录入',
-                    shadeClose: true,
-                    shade: 0.8,
-                    offset: '0px',
-                    area: ['100%', '100%'],
-                    content: 'ctfc_heat_slrow_edit.html',
-                    success: function (layero, index) {
-                        layer.iframeAuto(index);
-                        var body = layer.getChildFrame('body', index);
-                        body.find('#EventID').val(obj.data.EventID);
-                        body.find('#HeatID').val(obj.data.HeatID);
-                        body.find('#ID').val(obj.data.ID);
-                        body.find('#LaneNumber').val(obj.data.LaneNumber);
-                        body.find('#Result').val(obj.data.Result);
-                        body.find('#Note').val(obj.data.Note);
-                        body.find('#ItemAgeGroupSex').val(obj.data.ItemAgeGroupSex);
-                        body.find('#Players').val(obj.data.Players);
-                        body.find('#TeamName').val(obj.data.TeamName);
-                        },
-                    end: function () {
-                        location.reload();
-                    }
-                });
-                layer.full(index);
-                window.sessionStorage.setItem("ctfc_heat_index", index);
-                //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
-                $(window).on("resize", function () {
-                    layer.full(window.sessionStorage.getItem("ctfc_heat_index"));
-                })
-            } 
+        table.on('edit(test)', function (obj) {
+            var rowIndex = obj.tr.data('index'); // Get the index of the edited row
+            var rowData = table.cache.test[rowIndex]; // Get the corresponding row data
+            rowData.edited = true; // Set the "edited" property to true
         });
+        $('#edit-all').click(function () {
+        var tableData = table.cache.test; // Retrieve the modified data from the table
+        //console.log(tableData);
+        
+        // Create an array to store the modified data
+        var modifiedData = [];
+        
+        // Iterate over each row in the tableData
+        for (var i = 0; i < tableData.length; i++) {
 
+            var rowData = tableData[i];
+        
+            // Check if the row has been edited
+            if (rowData.edited) {
+                // console.log(rowData.edited)
+                var modifiedRow = {
+                    ID: rowData.ID,
+                    EventID: rowData.EventID,
+                    HeatID: rowData.HeatID,
+                    LaneNumber: rowData.LaneNumber,
+                    Result: rowData.Result,
+                    Note: rowData.Note
+                };
+
+                // Add the modified row to the modifiedData array
+                modifiedData.push(modifiedRow); 
+                
+            }else{
+            layer.alert('无任何修改，请返回重试完成修改后提交！')
+        }
+        } 
+
+        for (var i = 0; i < modifiedData.length; i++) {
+            var rowData = modifiedData[i];
+            //console.log(rowData);
+
+            // Send the modified data to the server using Axios or any other method
+            axios.post('../ctfcheat/' + rowData.ID, {
+                ID: rowData.ID,
+                EventID: rowData.EventID,
+                HeatID: rowData.HeatID,
+                LaneNumber: rowData.LaneNumber,
+                Result: rowData.Result,
+                Note: rowData.Note
+            })
+            .then(function (response) {
+                // Handle the response from the server
+                console.log(response.data);
+                // Refresh the table or take any other necessary action
+            })
+            .catch(function (error) {
+                // Handle errors
+                console.error(error);
+            });
+            
+           // Notify the user about the modified data
+            if (modifiedData.length > 0) {
+                var message = '字段更改值为:<br>';
+
+                for (var i = 0; i < modifiedData.length; i++) {
+                    var modifiedRow = modifiedData[i];
+                    message += 'ID: ' + modifiedRow.ID + ', EventID: ' + modifiedRow.EventID + ', HeatID: ' + modifiedRow.HeatID + ', 赛道: ' + modifiedRow.LaneNumber +  ', 成绩: ' + modifiedRow.Result + ', 备注: ' + modifiedRow.Note +'<br>';
+                }
+
+                layer.msg(message, {
+                    area: ['500px', 'auto']
+                });
+            } 
+           // layer.alert('修改成功，请返回查看');
+        
+        }
+        
+                });
+                
 
         // IsSingle的filter
         form.on('select(IsSingleClick)', function (data) {
