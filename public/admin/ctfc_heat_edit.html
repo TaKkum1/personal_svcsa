@@ -264,9 +264,13 @@
 
         // 项目item options : all the data are from ctfc_heat_view
         axios.get('../CTFCheatview', {}).then(function (response) {
+            var uniqueValues = []; // Array to store unique ItemAgeGroupSex values
             $.each(response.data.data, function (index, elem) {
-                $('#Item').append('<option value="' + elem.ID + '">' + elem.ItemAgeGroupSex + '</option>');
-            });
+                if (!uniqueValues.includes(elem.ItemAgeGroupSex)) {
+                    uniqueValues.push(elem.ItemAgeGroupSex);
+                    $('#Item').append('<option value="' + elem.ItemAgeGroupSex + '">' + elem.ItemAgeGroupSex + '</option>');
+                }
+        });
             form.render();
         }).catch(function (error) {
         console.log(error);
@@ -279,7 +283,7 @@
             selectElement.selectedIndex = 0;
             form.render();
             table.reload('test', {
-                url: '../CTFCheatview?id=' + data.value,
+                url: '../CTFCheatview?IAGSid=' + data.value,
                 
             });
         });
