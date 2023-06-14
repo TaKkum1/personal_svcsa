@@ -18,7 +18,7 @@ Please review and check off the following items before submitting the pull reque
 - [ ] Any database view change? If yes, check out TBA
 - [ ] Documentation has been updated to reflect the changes (if applicable)
 - [ ] Any codes that you don't want to commit?  (for potential performance and security issues)
-- [ ] Any temp codes that you dorget to remove?
+- [ ] Any temp codes that you forget to remove?
 - [ ] The commit messages are clear and descriptive
 
 ### Additional Notes
