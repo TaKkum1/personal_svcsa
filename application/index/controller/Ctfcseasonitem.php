@@ -40,7 +40,6 @@ class Ctfcseasonitem extends Base
               $itemname = Db::name('ctfc_item')->where('ID', $itemid)->find()['Name'];
               $seasonid = $seasonitem['SeasonID'];
               $seasonname = Db::name('ctfc_season')->where('ID', $seasonid)->find()['Name'];
-              $element['ID'] = $seasonid."-".$seasonid;
               $element['SeasonID'] = $seasonid;
               $element['SeasonName'] = $seasonname;
               $element['ItemID'] = $itemid;
@@ -82,7 +81,7 @@ class Ctfcseasonitem extends Base
         $seasonitem_data['MinAgeGroupID'] = $data['MinAgeGroupID'];
         $seasonitem_data['MaxAgeGroupID'] = $data['MaxAgeGroupID'];
 
-        $result = Db::name('ctfc_seasonitem')->where('SeasonID', $seasonid)->where('ItemID', $itemid)->update($seasonitem_data);
+        $result = Db::name('ctfc_seasonitem')->where('SeasonID', $seasonid)->where('ItemID', $itemid)->where('Sex', $sex)->update($seasonitem_data);
       
         $this->affectedRowsResult($result);
     }
