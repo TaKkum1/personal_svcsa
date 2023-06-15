@@ -175,6 +175,8 @@
 \think\Route::get('ctfcmatch/:matchid', 'index/ctfcmatch/read', [], ['matchid' => '\d+']);
 \think\Route::get('ctfcmatch', 'index/ctfcmatch/lists');
 
+\think\Route::post('ctfcseason/:seasonid/apply', 'index/ctfcteam/apply', [], ['seasonid' => '\d+']);
+\think\Route::get('ctfcseason/:seasonid/apply', 'index/ctfcteam/getapply', [], ['seasonid' => '\d+']);
 \think\Route::post('ctfcseason/:id', 'index/ctfcseason/update', [], ['id' => '\d+']);
 \think\Route::post('ctfcseason', 'index/ctfcseason/add');
 \think\Route::delete('ctfcseason/:id', 'index/ctfcseason/delete', [], ['id' => '\d+']);
@@ -231,8 +233,6 @@
 // \think\Route::get('ctfcseason/:seasonid/ctfcteamrank', 'index/ctfcteam/rank', [], ['seasonid' => '\d+']);
 // \think\Route::get('ctfcseason/:seasonid/ctfcteamrankplayoff', 'index/ctfcteam/rankplayoff', [], ['seasonid' => '\d+']);
 // \think\Route::post('ctfcseason/:seasonid/ctfcteam', 'index/ctfcteam/add', [], ['seasonid' => '\d+']);
-\think\Route::post('ctfcseason/:seasonid/apply', 'index/ctfcteam/apply', [], ['seasonid' => '\d+']);
-\think\Route::get('ctfcseason/:seasonid/apply', 'index/ctfcteam/getapply', [], ['seasonid' => '\d+']);
 // \think\Route::get('ctfcseason/:id/playoff', 'index/ctfcseason/playoff', [], ['id' => '\d+']);
 
 // \think\Route::post('ctfcteam/passapp', 'index/ctfcteam/passApplication');
