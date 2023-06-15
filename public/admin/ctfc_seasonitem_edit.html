@@ -1,5 +1,9 @@
 <link rel="stylesheet" href="layui/css/layui.css">
 
+<style>
+    .dropdown-0 { display: none; }
+</style>
+
 <body class="childrenBody">
 
     <div style="padding: 25px;" class="layui-layout-body" >
@@ -19,18 +23,28 @@
                 <label class="layui-form-label" style="width: 90px;">项目</label>
                     <div class="layui-input-inline" style="width: 380px; height: auto;">
                         <input id="ItemID" type="hidden">
-                        <select id="ItemID_s" name="ItemID" lay-verify="required" lay-filter="myselect">
+                        <select id="ItemID_s" name="ItemID" lay-verify="required" lay-filter="ItemIDselect">
                             <option value="">选择项目</option>
                         </select>
                     </div>
             </div>
             
             <div class="layui-form-item">
+                <input id="Sex" type="hidden">
                 <label class="layui-form-label" style="width: 90px;">性别</label>
-                    <div class="layui-input-block">
-                        <input id="Sex" type="hidden">
-                        <input type="radio" id="SexM" name="Sex" value="M" title="男">
-                        <input type="radio" id="SexF" name="Sex" value="F" title="女">
+                    <div id="0-dropdown" class="dropdown-0">
+                        <div class="layui-input-block">
+                            <input type="radio" id="SexM0" name="Sex" value="M" title="男">
+                            <input type="radio" id="SexF0" name="Sex" value="F" title="女">    
+                            <input type="radio" id="SexMix0" name="Sex" value="Mix" title="混合">    
+                        </div>
+                    </div>
+
+                    <div id="1-dropdown" class="dropdown-1">
+                        <div class="layui-input-block">
+                            <input type="radio" id="SexM1" name="Sex" value="M" title="男">
+                            <input type="radio" id="SexF1" name="Sex" value="F" title="女">    
+                        </div>
                     </div>
             </div>
             
@@ -68,9 +82,44 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
     <script src="layui/layui.js"></script>
     <script>
+
+    function CheckIsSingle(OneId,form) {
+            $.ajax({
+                url: '../ctfcitemplayer/getTypeOfItem',
+                type: 'Get',
+                dataType: 'json',
+                data: {
+                    ItemID: OneId,
+                },
+                header: {
+                    Accept: 'application/json'
+                },
+                success: function (data) {
+                    currentIsSingleFlag = data['affectedRows']
+                    var dropdown0 = document.getElementsByClassName('dropdown-0');
+                    var dropdown1 = document.getElementsByClassName('dropdown-1');                    
+                    if(currentIsSingleFlag == 1) {
+                        dropdown0[0].style.display = 'none';
+                        dropdown1[0].style.display = 'none';
+                        document.getElementById('1-dropdown').style.display = 'block';
+                    }else {
+                        dropdown0[0].style.display = 'none';
+                        dropdown1[0].style.display = 'none';
+                        document.getElementById('0-dropdown').style.display = 'block';
+                    }
+                    form.render();
+                }
+            });
+        }
+
         layui.use(['table', 'form'], function () {
         var table = layui.table;
         var form = layui.form;
+
+        form.on('select(ItemIDselect)', function (data) {
+            console.log("ItemIDselect: " + data.value);
+            CheckIsSingle(data.value, form);
+        });
 
         form.on('submit(add)', function (data) {
             var index = parent.layer.getFrameIndex(window.name);
@@ -122,12 +171,14 @@
 
         axios.get('../ctfcevent', {}).then(function (response) {
             //console.log(response);
-          $.each(response.data.data, function (index, element) {
+            $.each(response.data.data, function (index, element) {
                 $('#ItemID_s').append('<option value="' + element.ID + '">' + element.Name + '</option>');
             });
             form.render();
             num = $("#ItemID").val();
             numbers = $("#ItemID_s").find("option"); //获取select下拉框的所有值
+
+            CheckIsSingle(num, form);
             //console.log(numbers);
             for (j = 1; j < numbers.length; j++) {
             //console.log(numbers);
@@ -136,10 +187,11 @@
                         $(numbers[j]).attr("selected", "selected");
                         $(numbers[j]).attr("class", "layui-this");
                         form.render();
-        }}})
-            .catch(function (error) {
-                console.log(error);
-            });
+                }
+            }
+        }).catch(function (error) {
+            console.log(error);
+        });
 
         axios.get('../ctfcAgegroup', {}).then(function (response) {
           $.each(response.data.data, function (index, element) {
