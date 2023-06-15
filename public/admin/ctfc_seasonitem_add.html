@@ -1,5 +1,9 @@
 <link rel="stylesheet" href="layui/css/layui.css">
 
+<style>
+    .dropdown-0 { display: none; }
+</style>
+
 <body class="childrenBody">
 
     <div style="padding: 25px;" class="layui-layout-body" >
@@ -8,7 +12,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 90px;">赛季</label>
                     <div class="layui-input-inline" style="width: 380px;  height: auto;">
-                        <select id="SeasonID" name="SeasonID" lay-verify="required" lay-filter="myselect">
+                        <select id="SeasonID" name="SeasonID" lay-verify="required">
                             <option value="">选择赛季</option>
                         </select>
                     </div>
@@ -17,7 +21,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 90px;">项目</label>
                     <div class="layui-input-inline" style="width: 380px; height: auto;">
-                        <select id="ItemID" name="ItemID" lay-verify="required" lay-filter="myselect">
+                        <select id="ItemID" name="ItemID" lay-verify="required" lay-filter="ItemIDselect">
                             <option value="">选择项目</option>
                         </select>
                     </div>
@@ -25,16 +29,26 @@
             
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 90px;">性别</label>
-                    <div class="layui-input-block">
-                        <input type="radio" id="Sex" name="Sex" value="M" title="男">
-                        <input type="radio" id="Sex" name="Sex" value="F" title="女">
+                    <div id="0-dropdown" class="dropdown-0">
+                        <div class="layui-input-block">
+                            <input type="radio" id="Sex" name="Sex" value="M" title="男">
+                            <input type="radio" id="Sex" name="Sex" value="F" title="女">
+                            <input type="radio" id="Sex" name="Sex" value="Mix" title="混合">
+                        </div>
+                    </div>
+
+                    <div id="1-dropdown" class="dropdown-1">
+                        <div class="layui-input-block">
+                            <input type="radio" id="Sex" name="Sex" value="M" title="男">
+                            <input type="radio" id="Sex" name="Sex" value="F" title="女">
+                        </div>
                     </div>
             </div>
             
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 90px;">最小年龄组</label>
                     <div class="layui-input-inline" style="width: 380px;  height: auto;">
-                        <select id="MinAgeGroupID" name="MinAgeGroupID" lay-verify="required" lay-filter="myselect">
+                        <select id="MinAgeGroupID" name="MinAgeGroupID" lay-verify="required">
                             <option value="">选择年龄组</option>
                         </select>
                     </div>
@@ -43,7 +57,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label" style="width: 90px;">最大年龄组</label>
                     <div class="layui-input-inline" style="width: 380px;  height: auto;">
-                        <select id="MaxAgeGroupID" name="MaxAgeGroupID" lay-verify="required" lay-filter="myselect">
+                        <select id="MaxAgeGroupID" name="MaxAgeGroupID" lay-verify="required">
                             <option value="">选择年龄组</option>
                         </select>
                     </div>
@@ -63,9 +77,43 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
     <script src="layui/layui.js"></script>
     <script>
+
+    function CheckIsSingle(OneId) {
+            $.ajax({
+                url: '../ctfcitemplayer/getTypeOfItem',
+                type: 'Get',
+                dataType: 'json',
+                data: {
+                    ItemID: OneId,
+                },
+                header: {
+                    Accept: 'application/json'
+                },
+                success: function (data) {
+                    currentIsSingleFlag = data['affectedRows']
+                    var dropdown0 = document.getElementsByClassName('dropdown-0');
+                    var dropdown1 = document.getElementsByClassName('dropdown-1');                    
+                    if(currentIsSingleFlag == 1) {
+                        dropdown0[0].style.display = 'none';
+                        dropdown1[0].style.display = 'none';
+                        document.getElementById('1-dropdown').style.display = 'block';
+                    }else {
+                        dropdown0[0].style.display = 'none';
+                        dropdown1[0].style.display = 'none';
+                        document.getElementById('0-dropdown').style.display = 'block';
+                    }
+                }
+            });
+        }      
+
         layui.use(['table', 'form'], function () {
         var table = layui.table;
         var form = layui.form;
+
+        form.on('select(ItemIDselect)', function (data) {
+            console.log("ItemIDselect: " + data.value);
+            CheckIsSingle(data.value);
+        });
 
         form.on('submit(add)', function (data) {
             var index = parent.layer.getFrameIndex(window.name);
