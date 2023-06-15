@@ -97,7 +97,7 @@ class Ctfcseason extends Base
             $otherseasons = array_slice($result,1);
 
             $matches = Db::name('ctfc_heat_view')->where('SeasonID', $result[0]['ID'])
-                // ->order('Date','desc')
+                ->order(['EventID', 'HeatID','LaneNumber'])
                 ->select();
 
             // $events= Db::name('ctfc_event')->select();

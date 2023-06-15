@@ -39,24 +39,23 @@
                         <td>{$match['ItemName']}</td>
                         <td>{$match['AgeGroupName']}</td>
                         <td>
-                            <!-- show non-null player -->
+                            <!-- always show Player1 -->
                             {$match['Player1']}
-                            {if condition="$match['Player2'] neq ''"}
-                            , {$match['Player2']}
-                            {/if}
-                            {if condition="$match['Player3'] neq ''"}
-                            ,<br/> {$match['Player3']}
-                            {/if}
-                            {if condition="$match['Player4'] neq ''"}
-                            , {$match['Player4']}
-                            {/if}
-                            {if condition="$match['Player5'] neq ''"}
-                            ,<br/> {$match['Player5']}
-                            {/if}
-                            {if condition="$match['Player6'] neq ''"}
-                            , {$match['Player6']}
-                            {/if}
-
+                            <!-- For Player 2~6, show only if exists -->
+                            {for start="2" end="7"}
+                                {if condition="$match['Player' . $i] neq ''"}
+                                    <!-- add a comma before every second player -->
+                                    {if condition="$i % 2 eq 0"}
+                                    , 
+                                    {/if}
+                                    <!-- show the Player i -->
+                                    {$match['Player' . $i]}
+                                    <!-- add a line break after every second player -->
+                                    {if condition="$i % 2 eq 0"}
+                                    <br/>
+                                    {/if}
+                                {/if}
+                            {/for}
                         </td>
                         <td>{$match['LaneNumber']}</td>
                         <td>{$match['Result']}</td>
@@ -78,8 +77,8 @@
                         {else/}
                         {:url('index/ctfcseason/read',['id'=>$thisseason['ID']])}
                         {/if}"><span class="icon-chevron-right2 icon"></span>比赛列表</a></li>
-                    <li><a href="{:url('index/ctfcplayer/lists')}?seasonid={$thisseason['ID']}"><span class="icon-chevron-right2 icon"></span>选手团队</a></li>
-                    <li><a href="#"><span class="icon-chevron-right2 icon"></span>项目记录</a></li>
+                    <li><a href="#"><span class="icon-chevron-right2 icon"></span>田径团队</a></li>
+                    <li><a href="#"><span class="icon-chevron-right2 icon"></span>田径队员</a></li>
                     <li>
                         <dl>
                             <dt>其他赛季</dt>

@@ -230,7 +230,7 @@
 \think\Route::get('ctfcitemplayer/getSeasonTeamPlayers', 'index/ctfcitemplayer/GetPlayersList');
 \think\Route::get('ctfcitemseasonitemagegroupview', 'index/ctfcitemplayer/listview');
 
-// \think\Route::get('ctfcseason/:seasonid/ctfcteam', 'index/ctfcteam/lists', [], ['seasonid' => '\d+']);
+\think\Route::get('ctfcseason/:seasonid/ctfcteam', 'index/ctfcteam/lists', [], ['seasonid' => '\d+']);
 // \think\Route::get('ctfcseason/:seasonid/ctfcteamrank', 'index/ctfcteam/rank', [], ['seasonid' => '\d+']);
 // \think\Route::get('ctfcseason/:seasonid/ctfcteamrankplayoff', 'index/ctfcteam/rankplayoff', [], ['seasonid' => '\d+']);
 // \think\Route::post('ctfcseason/:seasonid/ctfcteam', 'index/ctfcteam/add', [], ['seasonid' => '\d+']);
