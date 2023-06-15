@@ -64,7 +64,13 @@ class Ctfcheat extends Base
 
         $data = request()->only(self::FIELD, 'post');
         $this->makeNull($data);
-        $result = Db::name('ctfc_heat')->where('ID', $id)->update($data);
+        $count = Db::name('ctfc_heat')->where('ID', $id)->count();
+
+        if($count>0) {
+            $result = Db::name('ctfc_heat')->where('ID', $id)->update($data);           
+        } else {
+            $result = Db::name('ctfc_heat')->where('ID', $id)->insert($data);
+        }
         $this->affectedRowsResult($result);
     }
 }

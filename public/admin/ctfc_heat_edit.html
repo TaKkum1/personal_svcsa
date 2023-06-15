@@ -209,13 +209,14 @@
 
         for (var i = 0; i < modifiedData.length; i++) {
             var rowData = modifiedData[i];
-            //console.log(rowData);
+            // console.log(rowData);
 
             // Send the modified data to the server using Axios or any other method
             axios.post('../ctfcheat/' + rowData.ID, {
                 ID: rowData.ID,
                 EventID: rowData.EventID,
                 HeatID: rowData.HeatID,
+                ItemPlayerID: rowData.ID,
                 LaneNumber: rowData.LaneNumber,
                 Result: rowData.Result,
                 Note: rowData.Note
@@ -229,9 +230,10 @@
                 // Handle errors
                 console.error(error);
             });
-            
-           // Notify the user about the modified data
-            if (modifiedData.length > 0) {
+        }
+        
+        // Notify the user about the modified data
+        if (modifiedData.length > 0) {
                 var message = '字段更改值为:<br>';
 
                 for (var i = 0; i < modifiedData.length; i++) {
@@ -244,10 +246,7 @@
                 });
             } 
            // layer.alert('修改成功，请返回查看');
-        
-        }
-        
-                });
+        });
                 
 
         // IsSingle的filter
