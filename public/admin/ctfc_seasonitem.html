@@ -133,7 +133,7 @@
             var tr = obj.tr; //获得当前行 tr 的DOM对象
 
             if (layEvent === 'edit') { //查看
-                layer.open({
+                var index = layer.open({
                     type: 2,
                     title: '修改赛季队伍',
                     shadeClose: true,
@@ -163,6 +163,7 @@
                         location.reload();
                     }
                 });
+                layer.full(index);
                 window.sessionStorage.setItem("ctfc_seasonitem_index", index);
                 //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
                 $(window).on("resize", function () {
