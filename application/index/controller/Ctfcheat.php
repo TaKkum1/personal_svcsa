@@ -12,9 +12,9 @@ use think\Db\Expression;
 class Ctfcheat extends Base
 {
     const FIELD = 'ID,EventID,HeatID,LaneNumber,TeamName,ItemAgeGroupSex,Player1,Player2,Player3,Player4,Player5,Player6,Result,Note,IsSingle,HeatSize,ItemName,Gender,AgeGroupNumber,ItemPlayerID,TeamID,ItemID';
-    public function lists($id = null, $IsSingle = null){
-        if($id) {
-            $list = Db::name('ctfc_heat_view')->where('ID', $id)->paginate(input('pagesize'));
+    public function lists($IAGSid = null, $IsSingle = null){
+        if($IAGSid) {
+            $list = Db::name('ctfc_heat_view')->where('ItemAgeGroupSex', $IAGSid)->paginate(input('pagesize'));
         }elseif($IsSingle != null){
                 $list = Db::name('ctfc_heat_view')->where('IsSingle', $IsSingle)->paginate(input('pagesize'));
         }
@@ -59,12 +59,18 @@ class Ctfcheat extends Base
 
     }
 
-    // public function update($id){
-    //     $this->checkauthorization();
+    public function update($id){
+        $this->checkauthorization();
 
-    //     $data = request()->only(self::FIELD, 'post');
-    //     $this->makeNull($data);
-    //     $result = Db::name('ctfc_agegroup')->where('ID', $id)->update($data);
-    //     $this->affectedRowsResult($result);
-    // }
+        $data = request()->only(self::FIELD, 'post');
+        $this->makeNull($data);
+        $count = Db::name('ctfc_heat')->where('ID', $id)->count();
+
+        if($count>0) {
+            $result = Db::name('ctfc_heat')->where('ID', $id)->update($data);           
+        } else {
+            $result = Db::name('ctfc_heat')->where('ID', $id)->insert($data);
+        }
+        $this->affectedRowsResult($result);
+    }
 }

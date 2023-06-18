@@ -1,0 +1,47 @@
+<div class="inside-banner img_3-banner block">
+    <p>查看{$thisseason['Name']}的所有田径队</p>
+</div>
+<div class="team-wrap block">
+    <div class="input-box">
+        <label>选择赛季</label>
+        <select id="selectseason">
+            <option value="{:url('index/ctfcteam/lists',['seasonid'=>$thisseason['ID']])}" selected>{$thisseason['Name']}</option>
+            {volist name="otherseasons" id="otherseason" empty='暂没其他赛季信息！'}
+            <option value="{:url('index/ctfcteam/lists',['seasonid'=>$otherseason['ID']])}">{$otherseason['Name']}</option>
+            {/volist}
+        </select>
+
+        <script>
+            $(function (){
+                $('#selectseason').on('change',function(){
+                    var selectseason = $('#selectseason option:selected');
+                    window.location.href=selectseason.val();
+                });
+            });
+        </script>
+
+    </div>
+
+    <div class="list-box">
+        <div class="row clearfix">
+            {volist name="ctfcteams" id="ctfcteam" empty='暂没球队信息！'}
+              <div class="col-md-2">
+                  <a href="{:url('index/ctfcteam/read',['id'=>$ctfcteam['ID']])}">
+                      <div class="item-box">
+                          <div class="img-box">
+                              {if condition="$ctfcteam['LogoSrc'] eq ''"}
+                              <img src="{$Think.config.public_assets}/images/teamlogo.jpg">
+                              {else /}
+                              <img src="{$Think.config.public_assets}/uploads/{$ctfcteam['LogoSrc']}">
+                              {/if}
+                          </div>
+                          <div class="txt-box">
+                              {$ctfcteam['ShortName']}
+                          </div>
+                      </div>
+                  </a>
+              </div>
+            {/volist}
+        </div>
+    </div>
+</div>

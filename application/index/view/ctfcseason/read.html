@@ -14,32 +14,56 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th>时间</th>
-                    <th>项目</th>
-                    <th>状态</th>
-                    <th>战报/前瞻</th>
-                    <th>图集</th>
-                    <th>比赛结果</th>
+                    <th>Event ID</th>
+                    <th>Heat ID</th>
+                    <th>性别</th>
+                    <th>项目名称</th>
+                    <th>年龄组</th>
+                    <th>运动员-号码牌</th>
+                    <th>道次</th>
+                    <th>成绩</th>
+                    <th>备注</th>
                 </tr>
                 </thead>
                 <tbody>
-                {volist name='matches' id='match'}
-                <tr>
-                    <td>{$match['StartTime']|strtotime|date='m/d G:i',###}</td>
-                    <td>{$match.EventName}</td>
-                    <td>{if condition="$match['State'] eq -1"}
-                        未开赛
-                        {elseif condition="$match['State'] eq 0" /}
-                        正在进行..
-                        {else /}
-                        完赛
-                        {/if}</td>
-                    <td><a href="{:url('index/ctfcmatch/read',['matchid'=>$match['MatchID']])}">查看</a></td>
-                    <td><a href="{:url('index/ctfcpicture/lists') . '?matchid='. $match['MatchID']}">图集</a></td>
-                    <td><a href="{:url('index/ctfcstatistics/lists') . '?matchid='. $match['MatchID']}">赛果</a></td>
-                </tr>
-                {/volist}
-                </tbody>
+                    {if condition="!$matches"}
+                    <tr>
+                        <td>赛程暂时为空！</td>
+                    </tr>
+                    {/if}
+                    {volist name="matches" id="match" }
+                    <tr>
+                        <td>{$match['EventID']}</td>
+                        <td>{$match['HeatID']}</td>
+                        <td>{$match['Gender']}</td>
+                        <td>{$match['ItemName']}</td>
+                        <td>{$match['AgeGroupName']}</td>
+                        <td>
+                            <!-- always show Player1 -->
+                            {$match['Player1']}
+                            <!-- For Player 2~6, show only if exists -->
+                            {for start="2" end="7"}
+                                {if condition="$match['Player' . $i] neq ''"}
+                                    <!-- add a comma before every second player -->
+                                    {if condition="$i % 2 eq 0"}
+                                    , 
+                                    {/if}
+                                    <!-- show the Player i -->
+                                    {$match['Player' . $i]}
+                                    <!-- add a line break after every second player -->
+                                    {if condition="$i % 2 eq 0"}
+                                    <br/>
+                                    {/if}
+                                {/if}
+                            {/for}
+                        </td>
+                        <td>{$match['LaneNumber']}</td>
+                        <td>{$match['Result']}</td>
+                        <td>{$match['Note']}</td>
+
+                    </tr>
+                    {/volist}
+                    </tbody>
             </table>
         </div>
         <div class="public-right">
@@ -53,24 +77,35 @@
                         {else/}
                         {:url('index/ctfcseason/read',['id'=>$thisseason['ID']])}
                         {/if}"><span class="icon-chevron-right2 icon"></span>比赛列表</a></li>
-                    <li><a href="{:url('index/ctfcplayer/lists')}?seasonid={$thisseason['ID']}"><span class="icon-chevron-right2 icon"></span>选手团队</a></li>
-                    <li><a href="{:url('index/ctfcstatistics/lists').'?eventid='.$recenteventid}"><span class="icon-chevron-right2 icon"></span>项目记录</a></li>
+                    <li><a href="#"><span class="icon-chevron-right2 icon"></span>田径团队</a></li>
+                    <li><a href="#"><span class="icon-chevron-right2 icon"></span>田径队员</a></li>
                     <li>
                         <dl>
-                            <dt>其他赛会</dt>
-                            {volist name='otherseasons' id='season'}
-                            <dd><a href="{:url('index/ctfcseason/read',['id'=>$season['ID']])}">{$season.Name}<span class="icon-chevron-right2 icon"></a></dd>
+                            <dt>其他赛季</dt>
+                            
+                            {volist name="otherseasons" id="otherseason"  empty='暂没其他赛季信息！'}
+                            <dd><a href="{:url('index/ctfcseason/read',['id'=>$otherseason['ID']])}">{$otherseason['Name']}<span class="icon-chevron-right2 icon"></a></dd>
                             {/volist}
+                                
                         </dl>
                     </li>
-                    <li><a href="{:url('index/ctfcplayer/apply',['matchid'=>$season['ID']])}"><span class="icon-chevron-right2 icon"></span>加入比赛</a></li>
+                    <li>
+                        <dl>
+                            <dt>加入赛事</dt>
+                            
+                            <dd><a href="{:url('index/ctfcteam/getapply',['seasonid'=>$thisseason['ID']])}">田径队注册<span class="icon-chevron-right2 icon"></a></dd>
+                            <dd><a href="{:url('index/ctfcplayer/getapply',[])}">运动员注册<span class="icon-chevron-right2 icon"></a></dd>
+                        </dl>
+                        
+                    </li>
+                    
                 </ul>
             </div>
             <div class="show-box">
                 <div class="img-box"><img src="images/icon_10.png" alt=""></div>
                 <h3>NEWSLETTER SIGNUP</h3>
                 <p>FOR THE LATEST  NEWS & FREE GIVEAWAYS!</p>
-                <a href="{:url('index/ctfcplayer/apply',['matchid'=>$season['ID']])}">加入赛事<span class="icon-chevron-right icon"></span></a>
+                <a href="#">加入赛事<span class="icon-chevron-right icon"></span></a>
             </div>
         </div>
     </div>

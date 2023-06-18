@@ -43,9 +43,9 @@ class Ctfcseason extends Base
 
     public function read($id){
 
-        $exp = new Expression('field(ID,'.$id.'),StartTime DESC');
+        $exp = new Expression('field(ID,'.$id.'),Date DESC');
         $result = Db::name('ctfc_season')
-            // ->order($exp)
+            ->order($exp)
             ->select();
         $result = array_reverse($result);
 
@@ -57,7 +57,7 @@ class Ctfcseason extends Base
 
             $otherseasons = array_slice($result,1);
 
-            $matches = Db::name('ctfc_matchevent')->where('SeasonID', $result[0]['ID'])
+            $matches = Db::name('ctfc_heat_view')->where('SeasonID', $result[0]['ID'])
                 // ->order('StartTime','desc')
                 ->select();
 
@@ -85,7 +85,7 @@ class Ctfcseason extends Base
     public function readRecent(){
 
         $result = Db::name('ctfc_season')
-            // ->order('StartTime desc')
+            ->order('Date','desc')
             ->select();
 
 
@@ -96,12 +96,12 @@ class Ctfcseason extends Base
 
             $otherseasons = array_slice($result,1);
 
-            $matches = Db::name('ctfc_matchevent')->where('SeasonID', $result[0]['ID'])
-                // ->order('StartTime','desc')
+            $matches = Db::name('ctfc_heat_view')->where('SeasonID', $result[0]['ID'])
+                ->order(['EventID', 'HeatID','LaneNumber'])
                 ->select();
 
-            $events= Db::name('ctfc_event')->select();
-            $this->view->assign('recenteventid',$events[0]['ID']);
+            // $events= Db::name('ctfc_event')->select();
+            // $this->view->assign('recenteventid',$events[0]['ID']);
             $this->view->assign('matches',$matches);
             $this->view->assign('thisseason',$result[0]);
             $this->view->assign('otherseasons',$otherseasons);

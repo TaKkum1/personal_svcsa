@@ -36,8 +36,9 @@ class Ctfcagegroup extends Base
         $this->affectedRowsResult($result);
     }
 
-    public function lists(){
+    public function lists($id=null){
         $list = Db::name('ctfc_agegroup')->paginate(input('pagesize'));
+        if($id) $list = Db::name('ctfc_agegroup')->where('ID', $id)->paginate(input('pagesize'));
         $this->paginatedResult(
             $list->total(),
             $list->listRows(),
