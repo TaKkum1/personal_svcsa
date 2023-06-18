@@ -144,7 +144,8 @@ class Ctfcitemplayer extends Base
 
         $result = Db::name('ctfc_itemplayer')->where('ID', $id)->delete();
         $this->affectedRowsResult($result);
-    }  
+    }
+
     public function getItemType()
     {
         $this->checkauthorization();
@@ -233,6 +234,52 @@ class Ctfcitemplayer extends Base
         }
     }
 
+    public function getAgeRange() {
+        $this->checkauthorization();
+        $data = request()->only('SiAgeGroupID', 'get');
+        $seasonagegroupID = urldecode($data['SiAgeGroupID']);
+        
+        $agegroup_ordered_list = Db::name('ctfc_agegroup')->order('MinAge')->select();
+
+        $list = array();
+        $length_of_agegroup_ordered_list = count($agegroup_ordered_list);
+        $boundary = -1;
+        $seasonagegroupID_index_order = -1;
+        for($index = 0; $index < $length_of_agegroup_ordered_list; $index++) {
+            if($agegroup_ordered_list[$index]['MinAge'] == 19 && $agegroup_ordered_list[$index]['MaxAge'] == 35) {
+                $boundary = $agegroup_ordered_list[$index]['ID'];   
+                $boundary_index = $index;   
+            }
+            // Get $seasonagegroupID's index in the agegroup_ordered_list.
+            if($agegroup_ordered_list[$index]['ID'] == $seasonagegroupID) {
+                $seasonagegroupID_index_order = $index;
+            }
+        }
+        
+        if($seasonagegroupID == $boundary) {
+            // return full age range from 0's MinAge to n's MaxAge
+            $list = [$agegroup_ordered_list[0]['MinAge'], $agegroup_ordered_list[$length_of_agegroup_ordered_list - 1]['MaxAge']];
+        } else if($seasonagegroupID_index_order > $boundary_index) {
+            // return age range between seasonagegroupID to n
+            for($i = 0; $i < $length_of_agegroup_ordered_list; $i++){
+                if($agegroup_ordered_list[$i]['ID'] == $seasonagegroupID){
+                    $list = [$agegroup_ordered_list[$i]['MinAge'], $agegroup_ordered_list[$length_of_agegroup_ordered_list - 1]['MaxAge']];
+                    break;
+                }
+            }
+        } else if($seasonagegroupID_index_order < $boundary_index) {
+                // return age range between 0 to seasonagegroupID
+            for($i = 0; $i < $length_of_agegroup_ordered_list; $i++){
+                if($agegroup_ordered_list[$i]['ID'] == $seasonagegroupID){
+                    $list = [$agegroup_ordered_list[0]['MinAge'], $agegroup_ordered_list[$i]['MaxAge']];
+                    break;
+                }
+            }
+        } 
+        $this->jsonResult(0, ['affectedRows' => $list]);
+    }
+    
+
     public function GetPlayersList()
     {
         $this->checkauthorization();
@@ -249,17 +296,6 @@ class Ctfcitemplayer extends Base
 
         $minAgeBondary=$SeasonitemMinAG;
         $maxAgeBondary=$SeasonitemMaxAG;
-        // $agegroup_db = Db::name('ctfc_agegroup');
-        // $agegroups = $agegroup_db->select();
-        // $agegrouplist =array();
-        // foreach ($agegroups as $agegroup) {
-        //     if($SeasonitemMinAG == $agegroup['ID']) {
-        //         $minAgeBondary = $agegroup['MinAge'];
-        //     }
-        //     if($SeasonitemMaxAG == $agegroup['ID']) {
-        //         $maxAgeBondary = $agegroup['MaxAge'];
-        //     }
-        // }
 
 
 
@@ -267,7 +303,7 @@ class Ctfcitemplayer extends Base
         $list = array();
         foreach ($all_players as $player) {
             // SeasonitemSex can be M, F, or mix, when SeasonitemSex is mix, we can ignore M or F
-            if ($SeasonitemSex == "mix" || $SeasonitemSex == $player['Sex']) {
+            if (strtolower($SeasonitemSex) == "mix" || strtolower($SeasonitemSex) == strtolower($player['Sex'])) {
                 $currentPlayerAge = $this->calculateAge($player['Birthday']); //TODO (check if need put it into a list)
                 if($currentPlayerAge >= $minAgeBondary && $currentPlayerAge < $maxAgeBondary) {
                     array_push($list, $player['ID']);
@@ -285,7 +321,6 @@ class Ctfcitemplayer extends Base
             }
 
             if (!empty($re)) {
-
                 // First check if current player_id already registered, let check if it's in other team
                 // Second check if curent player is in current season.
                 foreach ($re as $player_results) {
@@ -302,7 +337,7 @@ class Ctfcitemplayer extends Base
                             $list = array_values($list);
                         }
 
-                        if (($itemplayer['ItemID'] == $CurrentSelecteditemID) && ($itemplayer['Sex']== $SeasonitemSex) && ($itemplayer['SeasonID'] == $CurrentSeasonID)) {
+                        if (($itemplayer['ItemID'] == $CurrentSelecteditemID) && (strtolower($itemplayer['Sex']) == strtolower($SeasonitemSex)) && ($itemplayer['SeasonID'] == $CurrentSeasonID)) {
                             // This player has already registered the same item
                             $index_b = array_search($player_id, $list);
                             // Remove the element if it exists in the array
@@ -315,14 +350,15 @@ class Ctfcitemplayer extends Base
                     }
                 }                
             }
-
         }
 
         // Check if the player has 3 single items in the current season aleady.
         $final_list = $list;
         foreach ($list as $itemplayer_id) {
+            //get all ctfc_itemplayer of one single player.
             $data = Db::name('ctfc_itemplayer')->where("SeasonID", $CurrentSeasonID)->where("PlayerID1", $itemplayer_id)->select();
             
+            // Add all singleitem to an array for this player.
             $players_items_list = [];
             foreach($data as $one_data) {
                 if ($this->checkSignleItem($one_data['ItemID'])) {
@@ -330,6 +366,7 @@ class Ctfcitemplayer extends Base
                 }
             }
 
+            // count how many singleitems for this player, skip this player if >=3.
             if(count($players_items_list) >=3) {
                 // Find the index of this player to be removed.
                  $index = array_search($itemplayer_id, $final_list);
