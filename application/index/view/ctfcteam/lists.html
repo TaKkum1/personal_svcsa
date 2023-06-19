@@ -26,7 +26,7 @@
         <div class="row clearfix">
             {volist name="ctfcteams" id="ctfcteam" empty='暂没球队信息！'}
               <div class="col-md-2">
-                  <a href="{:url('index/ctfcteam/read',['id'=>$ctfcteam['ID']])}">
+                  <a href="{:url('index/ctfcteam/read',['id'=>$ctfcteam['TeamID']])}">
                       <div class="item-box">
                           <div class="img-box">
                               {if condition="$ctfcteam['LogoSrc'] eq ''"}

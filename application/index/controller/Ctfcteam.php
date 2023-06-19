@@ -134,7 +134,7 @@ class Ctfcteam extends Base
         $this->headerAndFooter('team');
 
 
-        $seasonid = $result['SeasonID'];
+        $seasonid = $result['ID'];
 
         $teams = Db::name('ctfc_team')
             ->where('ID', $id)->order('ID desc')
@@ -143,7 +143,7 @@ class Ctfcteam extends Base
         $this->view->assign('team',$result);
         $this->view->assign('teams',$teams);
 
-        return $this->view->fetch('team/ctfcread');
+        return $this->view->fetch('ctfcteam/read');
 
     notfound:
         header("HTTP/1.0 404 Not Found");
@@ -156,14 +156,14 @@ class Ctfcteam extends Base
         $pagesize = (!input('pagesize')) ? 100 : input('pagesize');
         if (!$seasonid && input('seasonid')) $seasonid = input('seasonid');
         if (!$teamid && input('teamid')) $teamid = input('teamid');
-        if (!$competitionid && input('competitionid')) {
-          $competitionid = input('CompetitionID');
-        }
+        // if (!$competitionid && input('competitionid')) {
+        //   $competitionid = input('CompetitionID');
+        // }
         if (input('freeagant')) {
           // List all the free agents for a particular season.
           $sql =
               'select * '.
-              'from ctfc_team '.
+              'from ctfc_team'.
               'where ctfc_team.ID not in ('.
                   'select distinct ctfc_team.TeamID '.
                   'from ctfc_seasonteam '.
@@ -181,9 +181,9 @@ class Ctfcteam extends Base
           if ($this->jsonRequest())
             $this->paginatedResult($list->total(), $pagesize, $list->currentPage(), $list->items());
         } else {
-          $list = Db::name('ctfc_team');    // TODO: change to ctfc_seasonteam_view
+          $list = Db::name('ctfc_seasonteam_view');   
 
-          if ($competitionid and $seasonid)
+          if ($seasonid)
               $list = $list->where('seasonid', $seasonid);
           else if ($teamid)
               $list = $list->where('teamid', $teamid);
@@ -206,7 +206,7 @@ class Ctfcteam extends Base
         //     ->where('ID', $competitionid)
         //     ->find()['Name'];
         if ($seasonid && count($list->items())>0) {
-            $teamtitle = $list->items()[0]['Name'];
+            $teamtitle = $list->items()[0]['TeamName'];
           }
         else if ($teamid && count($list->items())>0) {
             $teamtitle = Db::name('ctfc_team')
@@ -216,9 +216,10 @@ class Ctfcteam extends Base
           $playertitle = '优秀';
 
         // Get the seasons for the dropdown.
+        $exp = new \think\Db\Expression('field(ID,' . $seasonid . '),Date desc');
         $seasons = Db::name('ctfc_season')
-          ->order('ID desc')->select();
-        // $seasons = array_reverse($seasons);
+          ->order($exp)->select();
+        $seasons = array_reverse($seasons);
         $otherseasons = array_slice($seasons, 1);
 
 
