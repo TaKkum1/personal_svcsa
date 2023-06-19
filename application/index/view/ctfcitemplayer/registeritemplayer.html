@@ -15,7 +15,7 @@
 
 <div class="link-wrap block clearfix">
     <div class="txt-box">
-        <h3>填写有关信息，成为华锦赛运动员报名项目！</h3>
+        <h3>填写/选择有关信息，为华锦赛运动员报名项目！</h3>
         <ul>
             <li>要求/说明</li>
             <li>要求/说明</li>
@@ -29,7 +29,7 @@
             <div class="shared">
                 <div class="input-box mb-5">
                     <label for="SeasonID" style="width: 70px;"><b>赛季：</b></label>        
-                    <select  name="SeasonID" id="SeasonID" style="width: 240px;">
+                    <select  name="SeasonID" id="SeasonID" lay-filter="SeasonClick" style="width: 240px;">
                         <option value="">选择赛季</option>
                     </select>
                 </div>
@@ -107,11 +107,25 @@
         
         </div>
         
-       
-
-            
-  
-
     </form>
 
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<script src="layui/layui.js"></script>
+
+<script>
+    // getting select options for season. 
+    axios.get('/CTFCSeason', {}).then(function (response) {
+             console.log(response);
+            const data = response.data.data;
+        $.each(data, function (index, item) {
+        $('#SeasonID').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+        });
+            form.render();
+        })
+            .catch(function (error) {
+                console.log(error);
+        });
+</script>
