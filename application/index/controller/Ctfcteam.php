@@ -181,7 +181,7 @@ class Ctfcteam extends Base
           if ($this->jsonRequest())
             $this->paginatedResult($list->total(), $pagesize, $list->currentPage(), $list->items());
         } else {
-          $list = Db::name('ctfc_team');
+          $list = Db::name('ctfc_team');    // TODO: change to ctfc_seasonteam_view
 
           if ($competitionid and $seasonid)
               $list = $list->where('seasonid', $seasonid);
@@ -206,7 +206,7 @@ class Ctfcteam extends Base
         //     ->where('ID', $competitionid)
         //     ->find()['Name'];
         if ($seasonid && count($list->items())>0) {
-            $teamtitle = $list->items()[0]['SeasonName'];
+            $teamtitle = $list->items()[0]['Name'];
           }
         else if ($teamid && count($list->items())>0) {
             $teamtitle = Db::name('ctfc_team')
@@ -215,11 +215,20 @@ class Ctfcteam extends Base
         }
           $playertitle = '优秀';
 
+        // Get the seasons for the dropdown.
+        $seasons = Db::name('ctfc_season')
+          ->order('ID desc')->select();
+        // $seasons = array_reverse($seasons);
+        $otherseasons = array_slice($seasons, 1);
+
+
+        $this->view->assign('thisseason', $seasons[0]);
+        $this->view->assign('otherseasons', $otherseasons);
         $this->view->assign('teamtitle', $teamtitle);
         // $this->view->assign('CompetitionName', $CompetitionName);
         $this->view->assign('SeasonID', $seasonid);
         $this->view->assign('pagerender', $list->render());
-        $this->view->assign('team', $list->items());
+        $this->view->assign('ctfcteams', $list->items());
 
         return $this->view->fetch('ctfcteam/lists');
 
