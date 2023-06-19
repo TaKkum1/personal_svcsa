@@ -382,6 +382,28 @@ class Ctfcitemplayer extends Base
 
         $this->jsonResult(0, ['affectedRows' => $final_list]);
     }
+
+    public function registeritemplayer($seasonid)
+    {
+        $this->headerAndFooter('ctfc');
+
+        $season = Db::name('ctfc_season')
+            ->where('ID', $seasonid)->find(); 
+        if (!$season) goto notfound;
+        
+        $this->view->assign('season', $season);
+        return $this->view->fetch('ctfcitemplayer/registeritemplayer');
+
+        notfound:
+        header("HTTP/1.0 404 Not Found");
+        die;
+
+    }
+
+    public function apply($seasonid)
+    {
+
+    }
 }
 
 
