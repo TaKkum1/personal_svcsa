@@ -113,12 +113,12 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
-<script src="layui/layui.js"></script>
+<script src="public/layui/layui.js"></script>
 
 <script>
     // getting select options for season. 
     axios.get('/CTFCSeason', {}).then(function (response) {
-             console.log(response);
+            console.log(response);
             const data = response.data.data;
         $.each(data, function (index, item) {
         $('#SeasonID').append('<option value="' + item.ID + '">' + item.Name + '</option>');
@@ -128,4 +128,33 @@
             .catch(function (error) {
                 console.log(error);
         });
+
+
+    // Event listener for the SeasonID select change
+    $('#SeasonID').on('change', function () {
+        var selectedSeasonID = $(this).val();
+        if (!selectedSeasonID) {
+        // Empty the TeamID select options
+        $('#TeamID').empty();
+        $('#TeamID').append('<option value="">' + "选择队伍" + '</option>');
+        return;
+    }
+        // Get Seasonteam
+        axios.get('/CTFCSeasonteam?seasonid=' + selectedSeasonID, {}).then(function (response) {
+        // console.log(response);
+        const data = response.data.data;
+
+        // $('#TeamID').empty();
+        // $('#TeamID').append('<option value="">' + "选择队伍" + '</option>');
+
+        if (data.length !== 0) {
+            $.each(data, function (index, item) {
+              $('#TeamID').append('<option value="' + item.TeamID + '">' + item.TeamName + '</option>');
+         });
+         }
+        }).catch(function (error) {
+             console.log(error);
+        });
+    });
+
 </script>
