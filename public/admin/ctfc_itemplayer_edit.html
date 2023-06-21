@@ -269,6 +269,64 @@
         }
         
 
+        function getAgeRange(seasonAgeGroupID, callback) {
+            $.ajax({
+                url: '../ctfcitemplayer/getAgeRangeSeasonItem',
+                type: 'Get',
+                dataType: 'json',
+                data: {
+                SiAgeGroupID: seasonAgeGroupID,
+                },
+                header: {
+                Accept: 'application/json'
+                },
+                success: function (data) {
+                    ageRange = data['affectedRows'];
+                console.log('ageRange=' + ageRange);
+                callback(ageRange); // Call the callback function with the ageRange
+                },
+                error: function (xhr) {
+                console.log(xhr.status);
+                }
+            });
+        }
+
+        function updatePlayerListForRelay(currentItemId, currentSex, seasonAgeGroupID, SelectedTeamID, currentseasonid, form, clearoptions) {
+
+            // console.log("currentItemId: " + currentItemId);
+            // console.log("currentSex: " + currentSex);
+            // console.log("SelectedTeamID: " + SelectedTeamID);
+            // console.log("seasonAgeGroupID: " + seasonAgeGroupID);
+                
+            getAgeRange(seasonAgeGroupID, function(ageRange){
+                console.log('in getAgeRange() ageRange=' + ageRange);
+                getPlayerList(currentItemId, currentSex, ageRange[0],ageRange[1], SelectedTeamID, currentseasonid, function(currentPlayerList) {
+                    if(clearoptions) {
+                        for (var i = 1; i < 7; i++) {
+                            $('#PlayerID' + i + "_s").empty();
+                            $('#PlayerID' + i + "_s").append('<option value="">' + "选择队员 (必填)" + '</option>');
+                        }
+                    }
+                    axios.get('../CTFCPlayer?all=1', {}).then(function (response) {
+                        $.each(response.data.data, function (index, item) {
+                            if(currentPlayerList.includes(item.ID)) {
+
+                                $('#PlayerID1_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                                $('#PlayerID2_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                                $('#PlayerID3_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                                $('#PlayerID4_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                                $('#PlayerID5_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                                $('#PlayerID6_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                            }
+                        });
+                        form.render();
+                    }).catch(function (error) {
+                        console.log(error);
+                    });
+                });
+            });
+        }
+
         function updatePlayerList(currentItemId, currentSex, seasonitemFiltersMinAG, seasonitemFiltersMaxAG, SelectedTeamID, currentseasonid, form, clearoptions) {
 
             // console.log("currentItemId: " + currentItemId);
@@ -278,13 +336,7 @@
             // console.log("seasonitemFiltersMaxAG: " + seasonitemFiltersMaxAG);
                     
             getPlayerList(currentItemId, currentSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, currentseasonid, function(currentPlayerList) {
-                // console.log('PlayerList=' + currentPlayerList);
-                
                 if(clearoptions) {
-                    for (var i = 1; i < 7; i++) {
-                        $('#PlayerID' + i + "_s").empty();
-                        $('#PlayerID' + i + "_s").append('<option value="">' + "选择队员 (必填)" + '</option>');
-                    }
                     $('#PlayerIDOne_s').empty();
                     $('#PlayerIDOne_s').append('<option value="">' + "选择队员" + '</option>');
                 }
@@ -292,13 +344,6 @@
                     $.each(response.data.data, function (index, item) {
                         if(currentPlayerList.includes(item.ID)) {
                             $('#PlayerIDOne_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
-
-                            $('#PlayerID1_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
-                            $('#PlayerID2_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
-                            $('#PlayerID3_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
-                            $('#PlayerID4_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
-                            $('#PlayerID5_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
-                            $('#PlayerID6_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
                         }
                     });
                     form.render();
@@ -432,14 +477,12 @@
                     currentAgeID = document.getElementById('AgeGroupID_s').value;   
                     if(currentAgeID) {
                         axios.get('../CTFCAgegroup?id=' +currentAgeID, {}).then(function (response) {
-                            var checkMinAge;
-                            var checkMaxAge;
+                            var checkAgegroupid;
                             $.each(response.data.data, function (index, element) {
-                                console.log(element.ID + "-" +element.MinAge +  "-" +element.MaxAge );
-                                checkMinAge = element.MinAge;
-                                checkMaxAge = element.MaxAge;
+                                // console.log(element.ID + "-" +element.MinAge +  "-" +element.MaxAge );
+                                checkAgegroupid = element.ID;
                             });
-                            updatePlayerList(xiangmu, xiangmuSex, checkMinAge,checkMaxAge, currentteamid, readseasonid, form, 1);
+                            updatePlayerListForRelay(xiangmu, xiangmuSex, checkAgegroupid, currentteamid, readseasonid, form, 1);
 
                             form.render();
                         }).catch(function (error) {
@@ -488,14 +531,13 @@
 
                     if(currentAgeID) {
                         axios.get('../CTFCAgegroup?id=' +currentAgeID, {}).then(function (response) {
-                            var checkMinAge;
+                            var checkAgegroupid;
                             var checkMaxAge;
                             $.each(response.data.data, function (index, element) {
                                 console.log(element.ID + "-" +element.MinAge +  "-" +element.MaxAge );
-                                checkMinAge = element.MinAge;
-                                checkMaxAge = element.MaxAge;
+                                checkAgegroupid = element.ID;
                             });
-                            updatePlayerList(xiangmu, xiangmuSex, checkMinAge,checkMaxAge, SelectedTeamID, readseasonid, form, 1);
+                            updatePlayerListForRelay(xiangmu, xiangmuSex, checkAgegroupid, SelectedTeamID, readseasonid, form, 1);
 
                             form.render();
                         }).catch(function (error) {
@@ -919,14 +961,12 @@
                         currentteamid = document.getElementById('TeamID_s').value;
                         currentAgeID = $("#AgeGroupID").val();
                         axios.get('../CTFCAgegroup?id=' +currentAgeID, {}).then(function (response) {
-                            var checkMinAge;
-                            var checkMaxAge;
+                            var checagegroupid;
                             $.each(response.data.data, function (index, element) {
                                 console.log(element.ID + "-" +element.MinAge +  "-" +element.MaxAge );
-                                checkMinAge = element.MinAge;
-                                checkMaxAge = element.MaxAge;
+                                checagegroupid = element.ID;
                             });
-                            updatePlayerList(ItemIDVal, ItemIDSex, checkMinAge,checkMaxAge, currentteamid, currentseasonid, form, 0);
+                            updatePlayerListForRelay(ItemIDVal, ItemIDSex, checagegroupid, currentteamid, currentseasonid, form, 0);
 
                             form.render();
                         }).catch(function (error) {
@@ -961,14 +1001,12 @@
             // console.log('currentteamid=' + currentteamid);
             // console.log('currentseasonid=' + currentseasonid);
             axios.get('../CTFCAgegroup?id=' +currentAgeGroupid, {}).then(function (response) {
-                var checkMinAge;
-                var checkMaxAge;
+                var checagegroupid;
                 $.each(response.data.data, function (index, element) {
                     console.log(element.ID + "-" +element.MinAge +  "-" +element.MaxAge );
-                    checkMinAge = element.MinAge;
-                    checkMaxAge = element.MaxAge;
+                    checagegroupid = element.ID;
                 });
-                updatePlayerList(xiangmu, currentSex, checkMinAge,checkMaxAge, currentteamid, currentseasonid, form, 1);
+                updatePlayerListForRelay(xiangmu, currentSex, checagegroupid, currentteamid, currentseasonid, form, 1);
 
                 form.render();
             }).catch(function (error) {
