@@ -6,6 +6,7 @@
 <style>
     .dropdown { display: none; }
 </style>
+
 <div class="site-box">
     <div class="block">
         <span class="icon-home home_icon icon"></span><a href="{:url('index/index/index')}">首页</a><span class="icon-arrow-right arrow_icon icon"></span><span class="active">项目报名</span>
@@ -123,57 +124,60 @@
         $.each(data, function (index, item) {
         $('#SeasonID').append('<option value="' + item.ID + '">' + item.Name + '</option>');
         });
-            form.render();
-        })
-            .catch(function (error) {
-                console.log(error);
-        });
+        form.render();
+    })
+        .catch(function (error) {
+            console.log(error);
+    });
 
 
     // Event listener for the SeasonID select change
     $('#SeasonID').on('change', function () {
         var selectedSeasonID = $(this).val();
         if (!selectedSeasonID) {
-        // Empty the TeamID select options
+            // Empty the TeamID select options
+            $('#TeamID').empty();
+            $('#TeamID').append('<option value="">' + "选择队伍" + '</option>');
+            $('#ItemID').empty();
+            $('#ItemID').append('<option value="">' + "选择项目" + '</option>');
+            return;
+        }
+
+        // Get Seasonteam
+        axios.get('/CTFCSeasonteam?seasonid=' + selectedSeasonID, {}).then(function (response) {
+        // console.log(response);
+            const data = response.data.data;
+
         $('#TeamID').empty();
         $('#TeamID').append('<option value="">' + "选择队伍" + '</option>');
+
+        if (data.length !== 0) {
+            $.each(data, function (index, item) {
+                $('#TeamID').append('<option value="' + item.TeamID + '">' + item.TeamName + '</option>');
+            });
+            }
+        }).catch(function (error) {
+                console.log(error);
+        });
+
+        // Get Seasonitem
+        axios.get('/CTFCSeasonitem?seasonid=' + selectedSeasonID, {}).then(function (response) {
+        // console.log(response);
+            const data = response.data.data;
+
         $('#ItemID').empty();
-        $('#ItemID').append('<option value="">' + "选择项目" + '</option>');
-        return;
-    }
-    // Get Seasonteam
-    axios.get('/CTFCSeasonteam?seasonid=' + selectedSeasonID, {}).then(function (response) {
-    // console.log(response);
-        const data = response.data.data;
+        $('#ItemID').append('<option value="">' + "选择队伍" + '</option>');
 
-    // $('#TeamID').empty();
-    // $('#TeamID').append('<option value="">' + "选择队伍" + '</option>');
+        if (data.length !== 0) {
+            $.each(data, function (index, item) {
+                // $('#ItemID').append('<option value="' + item.ItemID + '">' + item.ItemName + '</option>');
+                $('#ItemID').append('<option value="' + item.ItemID + '-' + item.Sex + '">' + item.Sex + " - " + item.ItemName +  '</option>');
 
-    if (data.length !== 0) {
-        $.each(data, function (index, item) {
-            $('#TeamID').append('<option value="' + item.TeamID + '">' + item.TeamName + '</option>');
+            });
+            }
+        }).catch(function (error) {
+                console.log(error);
         });
-        }
-    }).catch(function (error) {
-            console.log(error);
-    });
-
-    // Get Seasonitem
-    axios.get('/CTFCSeasonitem?seasonid=' + selectedSeasonID, {}).then(function (response) {
-    // console.log(response);
-        const data = response.data.data;
-
-    // $('#TeamID').empty();
-    // $('#TeamID').append('<option value="">' + "选择队伍" + '</option>');
-
-    if (data.length !== 0) {
-        $.each(data, function (index, item) {
-            $('#ItemID').append('<option value="' + item.ItemID + '">' + item.ItemName + '</option>');
-        });
-        }
-    }).catch(function (error) {
-            console.log(error);
-    });
 
     });
 
