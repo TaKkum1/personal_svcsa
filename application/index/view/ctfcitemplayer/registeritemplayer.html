@@ -42,7 +42,7 @@
                 </div>
                 <div class="input-box mb-5">
                     <label for="ItemID" style="width: 70px;"><b>项目: </b></label>        
-                    <select name="ItemID" id="ItemID" style="width: 240px;">
+                    <select name="ItemID" id="ItemID" style="width: 240px;" lay-verify="required" lay-filter="ItemIDClick">
                         <option value="">选择项目</option>
                     </select>
                 </div>
@@ -117,6 +117,35 @@
 <script src="public/layui/layui.js"></script>
 
 <script>
+
+
+
+    function CheckIsSingle(OneId, sexId, callback) {
+        $.ajax({
+            url: '/ctfcitemplayer/getTypeOfItem',
+            type: 'Get',
+            dataType: 'json',
+            data: {
+                ItemID: OneId,
+            },
+            header: {
+                Accept: 'application/json'
+            },
+            success: function (data) {
+                currentIsSingleFlag = data['affectedRows']
+                console.log('IsSingle=' + currentIsSingleFlag);
+                
+                var dropdowns = document.getElementsByClassName('dropdown');
+                for (var j = 0; j < dropdowns.length; j++) {
+                    dropdowns[j].style.display = 'none';
+                }
+                document.getElementById(currentIsSingleFlag + '-dropdown').style.display = 'block';
+                
+                callback(currentIsSingleFlag);
+            }
+        });
+    }
+
     // getting select options for season. 
     axios.get('/CTFCSeason', {}).then(function (response) {
             console.log(response);
@@ -125,8 +154,7 @@
         $('#SeasonID').append('<option value="' + item.ID + '">' + item.Name + '</option>');
         });
         form.render();
-    })
-        .catch(function (error) {
+    }).catch(function (error) {
             console.log(error);
     });
 
@@ -170,7 +198,6 @@
 
         if (data.length !== 0) {
             $.each(data, function (index, item) {
-                // $('#ItemID').append('<option value="' + item.ItemID + '">' + item.ItemName + '</option>');
                 $('#ItemID').append('<option value="' + item.ItemID + '-' + item.Sex + '">' + item.Sex + " - " + item.ItemName +  '</option>');
 
             });
@@ -180,5 +207,41 @@
         });
 
     });
+
+
+    $('#ItemID').on('change', function () {
+            var parts = $(this).val().split("-");;
+            if (parts.length === 2) {
+                xiangmu = parts[0];
+                xiangmuSex = parts[1];
+            }
+            CheckIsSingle(xiangmu, xiangmuSex, function(currentIsSingleFlag) {
+                console.log("CheckIsSingle:"+currentIsSingleFlag);
+                
+                // if(currentIsSingleFlag == 0) {
+                //     // Multiple player item
+                //     // Update AgeGroup option feild
+                //     // Update playerlist
+
+                // } else {
+                //     // single player only update playerlist
+                //     axios.get('../ctfcitemseasonitemagegroupview?seasonid=' + readseasonid, {}).then(function (response) {
+                //         $.each(response.data.data, function (index, item) {
+                //             if(item.ItemID == xiangmu && item.Sex == xiangmuSex) {
+                //                 seasonitemFiltersMinAG = item.MinAgeGroupMinAge;
+                //                 seasonitemFiltersMaxAG = item.MaxAgeGroupMaxAge;
+                //                 var SelectedTeamID = document.getElementById('TeamID').value;
+                //                 updatePlayerList(xiangmu, xiangmuSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, currentseasonid, form);
+                //             }
+                //         });
+                //         form.render();
+                //     }).catch(function (error) {
+                //         console.log(error);
+                //     });
+                // }
+            });
+    });
+
+
 
 </script>
