@@ -92,14 +92,14 @@
                 </div>
                 <div class="input-box mb-5">
                     <label for="Sex" style="width: 70px;"><b>性别组: </b></label>        
-                    <select name="Sex" id="Sex" style="width: 240px;">
+                    <select name="Sex" id="SexSingle" style="width: 240px;">
                         <option value="">选择性别组</option>
                     </select>
                 </div>
     
                 <div class="input-box mb-5">
                     <label for="AgeGroupID" style="width: 70px;"><b>年龄组: </b></label>        
-                    <select name="AgeGroupID" id="AgeGroupID" style="width: 240px;">
+                    <select name="AgeGroupID" id="AgeGroupIDSingle" style="width: 240px;">
                         <option value="">选择年龄组</option>
                     </select>
                 </div>
@@ -133,7 +133,7 @@
             },
             success: function (data) {
                 currentIsSingleFlag = data['affectedRows']
-                console.log('IsSingle=' + currentIsSingleFlag);
+                // console.log('IsSingle=' + currentIsSingleFlag);
                 
                 var dropdowns = document.getElementsByClassName('dropdown');
                 for (var j = 0; j < dropdowns.length; j++) {
@@ -146,6 +146,81 @@
         });
     }
 
+    function getPlayerList(sitemID, siSex, siMinAG, siMaxAG, teamID, SsID, callback) {
+
+        let currentPlayerList = [];
+        $.ajax({
+            url: '/ctfcitemplayer/getSeasonTeamPlayers',
+            type: 'Get',
+            dataType: 'json',
+            data: {
+            SiMinAG: siMinAG,
+            SiMaxAG: siMaxAG,
+            SiID: sitemID,
+            SiSex: siSex,
+            Tmid: teamID,
+            SsID,SsID
+            },
+            header: {
+            Accept: 'application/json'
+            },
+            success: function (data) {
+            currentPlayerList = data['affectedRows'];
+            // console.log('PlayerList=' + currentPlayerList);
+            callback(currentPlayerList);
+            },
+            error: function (xhr) {
+            console.log(xhr.status);
+            }
+        });
+    }
+
+    function updatePlayerList(currentItemid, currentSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, SelectedSeasonID) {
+        // console.log("SelectedSeasonID: " + SelectedSeasonID);
+        // console.log("currentItemid: " + currentItemid);
+        // console.log("currentSex: " + currentSex);
+        // console.log("SelectedTeamID: " + SelectedTeamID);
+        // console.log("seasonitemFiltersMin Age: " + seasonitemFiltersMinAG);
+        // console.log("seasonitemFiltersMax Age: " + seasonitemFiltersMaxAG);
+                
+        getPlayerList(currentItemid, currentSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, SelectedSeasonID, function(currentPlayerList) {
+            // console.log('PlayerList=' + currentPlayerList);
+            $('#PlayerID').empty();
+            $('#PlayerID').append('<option value="">' + "选择队员" + '</option>');
+            
+            axios.get('/CTFCPlayer?all=1', {}).then(function (response) {
+                $.each(response.data.data, function (index, item) {
+                    if(currentPlayerList.includes(item.ID)) {
+                        $('#PlayerID').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                    }
+                });
+            }).catch(function (error) {
+                console.log(error);
+            });
+        });
+    }
+
+    function getPlayerAgeSex(playerid, callback) {
+        $.ajax({
+            url: '/ctfcitemplayer/getAgeSex',
+            type: 'Get',
+            dataType: 'json',
+            data: {
+            PlayerID: playerid
+            },
+            header: {
+            Accept: 'application/json'
+            },
+            success: function (data) {
+            playerAgeAndSex = data['affectedRows'];
+            callback(playerAgeAndSex[0], playerAgeAndSex[1]);
+            },
+            error: function (xhr) {
+            console.log(xhr.status);
+            }
+        });
+
+    }
     // getting select options for season. 
     axios.get('/CTFCSeason', {}).then(function (response) {
             console.log(response);
@@ -153,7 +228,6 @@
         $.each(data, function (index, item) {
         $('#SeasonID').append('<option value="' + item.ID + '">' + item.Name + '</option>');
         });
-        form.render();
     }).catch(function (error) {
             console.log(error);
     });
@@ -194,7 +268,7 @@
             const data = response.data.data;
 
         $('#ItemID').empty();
-        $('#ItemID').append('<option value="">' + "选择队伍" + '</option>');
+        $('#ItemID').append('<option value="">' + "选择项目" + '</option>');
 
         if (data.length !== 0) {
             $.each(data, function (index, item) {
@@ -210,37 +284,61 @@
 
 
     $('#ItemID').on('change', function () {
-            var parts = $(this).val().split("-");;
-            if (parts.length === 2) {
+        var selectedItemSex = $(this).val().split("-");;
+        var xiangmu = selectedItemSex[0];
+        var xiangmuSex = selectedItemSex[1];
+        var SelectedTeamID = document.getElementById('TeamID').value;
+        var SelectedSeasonID = document.getElementById('SeasonID').value;
+        CheckIsSingle(xiangmu, xiangmuSex, function(currentIsSingleFlag) {
+            if(currentIsSingleFlag == 0) {
+                // Multiple player item
+                // Update AgeGroup option feild
+                // Update playerlist
+
+            } else {
+                // console.log("CheckIsSingle:"+currentIsSingleFlag);
+
+                // single player only update playerlist
+                axios.get('/ctfcitemseasonitemagegroupview?seasonid=' + SelectedSeasonID, {}).then(function (response) {
+                    const data = response.data.data;
+                    $.each(response.data.data, function (index, item) {
+                        if(item.ItemID == xiangmu && item.Sex == xiangmuSex) {
+                            seasonitemFiltersMinAG = item.MinAgeGroupMinAge;
+                            seasonitemFiltersMaxAG = item.MaxAgeGroupMaxAge;
+
+                            updatePlayerList(xiangmu, xiangmuSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, SelectedSeasonID);
+                        }
+                    });
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            }
+        });
+    });
+
+    // Single player option button
+    $('#PlayerID').on('change', function () {
+        var playerid = document.getElementById('PlayerID').value;
+            $('#AgeGroupIDSingle').empty();
+            $('#SexSingle').empty();
+
+            getPlayerAgeSex(playerid, function(playerAgeGroup, playerSex){
+                axios.get('/CTFCAgegroup', {}).then(function (response) {
+                    // console.log(response);
+                    $.each(response.data.data, function (index, element) {
+                        if(playerAgeGroup == element.ID) {
+                            $('#AgeGroupIDSingle').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
+                        }
+                    });
+                })
+                //get Sex option from seasonitem option
+                const parts = document.getElementById('ItemID').value.split("-");
                 xiangmu = parts[0];
                 xiangmuSex = parts[1];
-            }
-            CheckIsSingle(xiangmu, xiangmuSex, function(currentIsSingleFlag) {
-                console.log("CheckIsSingle:"+currentIsSingleFlag);
-                
-                // if(currentIsSingleFlag == 0) {
-                //     // Multiple player item
-                //     // Update AgeGroup option feild
-                //     // Update playerlist
-
-                // } else {
-                //     // single player only update playerlist
-                //     axios.get('../ctfcitemseasonitemagegroupview?seasonid=' + readseasonid, {}).then(function (response) {
-                //         $.each(response.data.data, function (index, item) {
-                //             if(item.ItemID == xiangmu && item.Sex == xiangmuSex) {
-                //                 seasonitemFiltersMinAG = item.MinAgeGroupMinAge;
-                //                 seasonitemFiltersMaxAG = item.MaxAgeGroupMaxAge;
-                //                 var SelectedTeamID = document.getElementById('TeamID').value;
-                //                 updatePlayerList(xiangmu, xiangmuSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, currentseasonid, form);
-                //             }
-                //         });
-                //         form.render();
-                //     }).catch(function (error) {
-                //         console.log(error);
-                //     });
-                // }
-            });
+                $('#SexSingle').append('<option value="' + xiangmuSex + '">' + xiangmuSex + '</option>');
+        });
     });
+
 
 
 
