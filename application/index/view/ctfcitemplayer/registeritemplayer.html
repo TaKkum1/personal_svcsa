@@ -3,8 +3,15 @@
     <p>团结拼搏，一起奉献。</p>
 </div>
 
+
 <style>
-    .dropdown { display: none; }
+    .dropdown { 
+        display: none;
+    }
+
+    .input-box {
+        margin-left: 20px;
+    }
 </style>
 
 <div class="site-box">
@@ -18,50 +25,48 @@
     <div class="txt-box">
         <h3>填写/选择有关信息，为华锦赛运动员报名项目！</h3>
         <ul>
-            <li>要求/说明</li>
-            <li>要求/说明</li>
-            <li>要求/说明</li>
-            <li>要求/说明</li>
+            <li>说明1: 报名单人项目时，一次可报名最多六人。</li>
+            <li>要求/说明2</li>
+            <li>要求/说明3</li>
+            <li>要求/说明4</li>
         </ul>
     </div>
 
     <form action="" id="apply-form" method="post" >
-        <div class="form-box" style="height: 300px;" >
-            <div class="shared">
-                <div class="input-box mb-5">
-                    <label for="SeasonID" style="width: 70px;"><b>赛季：</b></label>        
-                    <select  name="SeasonID" id="SeasonID" lay-filter="SeasonClick" style="width: 240px;">
-                        <option value="">选择赛季</option>
-                    </select>
-                </div>
-                <div class="input-box mb-5">
-                    <label for="TeamID" style="width: 70px;"><b>队伍：</b></label>        
-                    <select name="TeamID" id="TeamID" style="width: 240px;">
-                        <option value="">选择队伍</option>
-                    </select>
-                </div>
-                <div class="input-box mb-5">
-                    <label for="ItemID" style="width: 70px;"><b>项目: </b></label>        
-                    <select name="ItemID" id="ItemID" style="width: 240px;" lay-verify="required" lay-filter="ItemIDClick">
-                        <option value="">选择项目</option>
-                    </select>
-                </div>
+        <div class="form-box" style="height: 350px; width: 800px" >
+              <div class="input-box" style="width:240px;border:0px;">
+                <label for="SeasonID" style="width: 70px;"><b>赛季：</b></label>        
+                <select  name="SeasonID" id="SeasonID" style="width: 240px;">
+                    <option value="">选择赛季</option>
+                </select>
+            </div>
+              <div class="input-box"  style="width:240px;border:0px;">
+                <label for="TeamID" style="width: 70px;"><b>队伍：</b></label>        
+                <select name="TeamID" id="TeamID" style="width: 240px;">
+                    <option value="">选择队伍</option>
+                </select>
+            </div>
+            <div class="input-box"  style="width:240;border:0px">
+                <label for="ItemID" style="width: 70px;"><b>项目: </b></label>        
+                <select name="ItemID" id="ItemID" style="width: 240px;">
+                    <option value="">选择项目</option>
+                </select>
             </div>
             
             <div class="dropdown" id="0-dropdown">
-                <div class="input-box mb-5">
+                <div class="input-box" style="width:240px;border:0px">
                     <label for="Sex" style="width: 70px;"><b>性别组: </b></label>        
                     <select name="Sex" id="Sex" style="width: 240px;">
                         <option value="">选择性别组</option>
                     </select>
                 </div>
-                <div class="input-box mb-5">
+                <div class="input-box" style="width:240px;border:0px">
                     <label for="AgeGroupID" style="width: 70px;"><b>年龄组: </b></label>        
                     <select name="AgeGroupID" id="AgeGroupID" style="width: 240px;">
                         <option value="">选择年龄组</option>
                     </select>
                 </div>
-                <div class="input-box mb-5">
+                <div class="input-box" style="width:240px;border:0px">
                     <label for="PlayerID" style="width: 70px;"><b>接力队员: </b></label>        
                     <select name="PlayerID1" id="PlayerID1" style="width: 240px;" lay-filter="PlayerClick1">
                         <option value="">选择队员#1 (必填)</option>
@@ -83,31 +88,51 @@
                     </select>
                 </div>
             </div>
+
             <div class="dropdown" id="1-dropdown">
-                <div class="input-box mb-5">
-                    <label for="PlayerID" style="width: 70px;"><b>参赛队员: </b></label>        
-                    <select name="PlayerID" id="PlayerID" style="width: 240px;">
+                <div class="input-box" style="width:240px;border:0px">
+                    <label for="PlayerIDSet1" style="width: 70px;"><b>参赛队员: </b></label>        
+                    <select name="PlayerIDSet1" id="PlayerIDSet1" style="width: 240px;">
                         <option value="">选择参赛队员</option>
                     </select>
                 </div>
-                <div class="input-box mb-5">
-                    <label for="Sex" style="width: 70px;"><b>性别组: </b></label>        
-                    <select name="Sex" id="SexSingle" style="width: 240px;">
-                        <option value="">选择性别组</option>
+                <div class="input-box" style="width:240px;border:0px">
+                    <label for="PlayerIDSet2" style="width: 70px;"><b>参赛队员: </b></label>        
+                    <select name="PlayerIDSet2" id="PlayerIDSet2" style="width: 240px;">
+                        <option value="">选择参赛队员</option>
                     </select>
                 </div>
-    
-                <div class="input-box mb-5">
-                    <label for="AgeGroupID" style="width: 70px;"><b>年龄组: </b></label>        
-                    <select name="AgeGroupID" id="AgeGroupIDSingle" style="width: 240px;">
-                        <option value="">选择年龄组</option>
+
+                <div class="input-box" style="width:240px;border:0px">
+                    <label for="PlayerIDSet3" style="width: 70px;"><b>参赛队员: </b></label>        
+                    <select name="PlayerIDSet3" id="PlayerIDSet3" style="width: 240px;">
+                        <option value="">选择参赛队员</option>
                     </select>
                 </div>
+                <div class="input-box" style="width:240px;border:0px">
+                    <label for="PlayerIDSet4" style="width: 70px;"><b>参赛队员: </b></label>        
+                    <select name="PlayerIDSet1" id="PlayerIDSet1" style="width: 240px;">
+                        <option value="">选择参赛队员</option>
+                    </select>
+                </div>
+                <div class="input-box" style="width:240px;border:0px">
+                    <label for="PlayerIDSet5" style="width: 70px;"><b>参赛队员: </b></label>        
+                    <select name="PlayerIDSet2" id="PlayerIDSet2" style="width: 240px;">
+                        <option value="">选择参赛队员</option>
+                    </select>
+                </div>
+                <div class="input-box" style="width:240px;border:0px">
+                    <label for="PlayerIDSet6" style="width: 70px;"><b>参赛队员: </b></label>        
+                    <select name="PlayerIDSet3" id="PlayerIDSet3" style="width: 240px;">
+                        <option value="">选择参赛队员</option>
+                    </select>
+                </div>
+
             </div>
+
             <div class="sub">发送</div>
         
-        </div>
-        
+        </div>       
     </form>
 
 </div>
@@ -185,13 +210,29 @@
                 
         getPlayerList(currentItemid, currentSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, SelectedSeasonID, function(currentPlayerList) {
             // console.log('PlayerList=' + currentPlayerList);
-            $('#PlayerID').empty();
-            $('#PlayerID').append('<option value="">' + "选择队员" + '</option>');
+            $('#PlayerIDSet1').empty();
+            $('#PlayerIDSet1').append('<option value="">' + "选择参赛队员" + '</option>');
+            $('#PlayerIDSet2').empty();
+            $('#PlayerIDSet2').append('<option value="">' + "选择参赛队员" + '</option>');
+            $('#PlayerIDSet3').empty();
+            $('#PlayerIDSet3').append('<option value="">' + "选择参赛队员" + '</option>');
+            
+            $('#PlayerIDSet4').empty();
+            $('#PlayerIDSet4').append('<option value="">' + "选择参赛队员" + '</option>');
+            $('#PlayerIDSet5').empty();
+            $('#PlayerIDSet5').append('<option value="">' + "选择参赛队员" + '</option>');
+            $('#PlayerIDSet6').empty();
+            $('#PlayerIDSet6').append('<option value="">' + "选择参赛队员" + '</option>');
             
             axios.get('/CTFCPlayer?all=1', {}).then(function (response) {
                 $.each(response.data.data, function (index, item) {
                     if(currentPlayerList.includes(item.ID)) {
-                        $('#PlayerID').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                        $('#PlayerIDSet1').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                        $('#PlayerIDSet2').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                        $('#PlayerIDSet3').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                        $('#PlayerIDSet4').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                        $('#PlayerIDSet5').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                        $('#PlayerIDSet6').append('<option value="' + item.ID + '">' + item.Name + '</option>');
                     }
                 });
             }).catch(function (error) {
@@ -317,27 +358,27 @@
     });
 
     // Single player option button
-    $('#PlayerID').on('change', function () {
-        var playerid = document.getElementById('PlayerID').value;
-            $('#AgeGroupIDSingle').empty();
-            $('#SexSingle').empty();
+    // $('#PlayerID').on('change', function () {
+    //     var playerid = document.getElementById('PlayerID').value;
+    //         $('#AgeGroupIDSingle').empty();
+    //         $('#SexSingle').empty();
 
-            getPlayerAgeSex(playerid, function(playerAgeGroup, playerSex){
-                axios.get('/CTFCAgegroup', {}).then(function (response) {
-                    // console.log(response);
-                    $.each(response.data.data, function (index, element) {
-                        if(playerAgeGroup == element.ID) {
-                            $('#AgeGroupIDSingle').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
-                        }
-                    });
-                })
-                //get Sex option from seasonitem option
-                const parts = document.getElementById('ItemID').value.split("-");
-                xiangmu = parts[0];
-                xiangmuSex = parts[1];
-                $('#SexSingle').append('<option value="' + xiangmuSex + '">' + xiangmuSex + '</option>');
-        });
-    });
+    //         getPlayerAgeSex(playerid, function(playerAgeGroup, playerSex){
+    //             axios.get('/CTFCAgegroup', {}).then(function (response) {
+    //                 // console.log(response);
+    //                 $.each(response.data.data, function (index, element) {
+    //                     if(playerAgeGroup == element.ID) {
+    //                         $('#AgeGroupIDSingle').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
+    //                     }
+    //                 });
+    //             })
+    //             //get Sex option from seasonitem option
+    //             const parts = document.getElementById('ItemID').value.split("-");
+    //             xiangmu = parts[0];
+    //             xiangmuSex = parts[1];
+    //             $('#SexSingle').append('<option value="' + xiangmuSex + '">' + xiangmuSex + '</option>');
+    //     });
+    // });
 
 
 
