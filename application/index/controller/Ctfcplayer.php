@@ -104,24 +104,13 @@ class Ctfcplayer extends Base
     }
 
     public function read($id){
-        $result = Db::name('ctfc_playermatch')->where('ID', $id)->find();
+        $result = Db::name('ctfc_player')->where('ID', $id)->find();
         if ($this->jsonRequest())
             $this->dataResult($result);
 
         if(!$result) goto notfound;
-
-        $this->headerAndFooter('player');
-
-
-        $seasonid = $result['SeasonID'];
-
-        $players = Db::name('ctfc_playermatch')
-            ->where('SeasonID', $seasonid)->order('ID desc')
-            ->limit(0,10)->select();
-
+        $this->headerAndFooter('ctfc');
         $this->view->assign('player',$result);
-        $this->view->assign('players',$players);
-
         return $this->view->fetch('player/ctfcread');
 
         notfound:
@@ -129,83 +118,87 @@ class Ctfcplayer extends Base
         die;
     }
 
-    public function lists($seasonid = null, $teamid = null, $competitionid = null)
+    public function lists($teamid = null)
     {
         // Get some basic info from input.
         $pagesize = (!input('pagesize')) ? 100 : input('pagesize');
-        if (!$seasonid && input('seasonid')) $seasonid = input('seasonid');
+        // if (!$seasonid && input('seasonid')) $seasonid = input('seasonid');
         if (!$teamid && input('teamid')) $teamid = input('teamid');
-        if (!$competitionid && input('competitionid')) {
-          $competitionid = input('CompetitionID');
-        }
-        if (input('freeagant')) {
-          // List all the free agents for a particular season.
-          $sql =
-              'select * '.
-              'from ctfc_player '.
-              'where ctfc_player.ID not in ('.
-                  'select distinct ctfc_seasonteamplayer.PlayerID '.
-                  'from ctfc_seasonteamplayer '.
-                  'where ctfc_seasonteamplayer.SeasonID='.strval($seasonid).')'.
-              'order by Name asc';
-          $list = Db::query($sql);
-          if ($this->jsonRequest())
-            $this->dataResult($list);
-          //$list = Db::name('ctfc_player')->order('Name asc');
-        } else if (input('all')) {
+        // if (!$competitionid && input('competitionid')) {
+        //   $competitionid = input('CompetitionID');
+        // }
+        // if (input('freeagant')) {
+        //   // List all the free agents for a particular season.
+        //   $sql =
+        //       'select * '.
+        //       'from ctfc_player '.
+        //       'where ctfc_player.ID not in ('.
+        //           'select distinct ctfc_seasonteamplayer.PlayerID '.
+        //           'from ctfc_seasonteamplayer '.
+        //           'where ctfc_seasonteamplayer.SeasonID='.strval($seasonid).')'.
+        //       'order by Name asc';
+        //   $list = Db::query($sql);
+        //   if ($this->jsonRequest())
+        //     $this->dataResult($list);
+        //   //$list = Db::name('ctfc_player')->order('Name asc');
+        // } else 
+        // if (input('all')) {
           // List all players in the database.
-          $list = Db::name('ctfc_player');
+          $list = Db::name('ctfc_player') -> where('Approval', 1);
           $list = $list->paginate($pagesize, false, [
             'query' => input('param.'),
           ]);
           if ($this->jsonRequest())
             $this->paginatedResult($list->total(), $pagesize, $list->currentPage(), $list->items());
-        } else {
-          // List players of a particular season.
-          $list = Db::name('ctfc_seasonplayer_view')->order('PlayerName asc');
+        // } else {
+        //   // List players of a particular season.
+        //   $list = Db::name('ctfc_seasonplayer_view')->order('PlayerName asc');
 
-          if ($competitionid and $seasonid)
-              $list = $list->where('seasonid', $seasonid);
-          else if ($teamid)
-              $list = $list->where('teamid', $teamid);
-          else if ($competitionid)
-              $list = $list->where('CompetitionID', $competitionid);
-          else if (input('playerids'))
-              $list = $list->whereIn('PlayerID',
-                  explode(',', input('playerids')));
+        // //   if ($competitionid and $seasonid)
+        // //       $list = $list->where('seasonid', $seasonid);
+        // //   else 
+        //   if ($teamid)
+        //       $list = $list->where('teamid', $teamid);
+        // //   else if ($competitionid)
+        // //       $list = $list->where('CompetitionID', $competitionid);
+        //   else if (input('playerids'))
+        //       $list = $list->whereIn('PlayerID',
+        //           explode(',', input('playerids')));
 
-          $list = $list->paginate($pagesize, false, [
-            'query' => input('param.'),
-          ]);
+        //   $list = $list->paginate($pagesize, false, [
+        //     'query' => input('param.'),
+        //   ]);
 
-          if ($this->jsonRequest())
-            $this->paginatedResult($list->total(), $pagesize, $list->currentPage(), $list->items());
-        }
+        //   if ($this->jsonRequest())
+        //     $this->paginatedResult($list->total(), $pagesize, $list->currentPage(), $list->items());
+        // }
 
         $this->headerAndFooter('player');
 
         $playertitle = '';
-        $CompetitionName = Db::name('ctfc_competition')
-            ->where('ID', $competitionid)
-            ->find()['Name'];
-        if ($seasonid && count($list->items())>0) {
-            $playertitle = $list->items()[0]['SeasonName'];
-          }
-        else if ($teamid && count($list->items())>0) {
+        // $CompetitionName = Db::name('ctfc_competition')
+        //     ->where('ID', $competitionid)
+        //     ->find()['Name'];
+        // if ($seasonid && count($list->items())>0) {
+        //     $playertitle = $list->items()[0]['SeasonName'];
+        //   }
+        // else 
+        if ($teamid && count($list->items())>0) {
             $playertitle = Db::name('ctfc_team')
                 ->where('ID', $teamid)
-                ->find()['Name'];
+                ->find()['Name'].'的';
         }
         else
-            $playertitle = '优秀';
+            $playertitle = '';
 
         $this->view->assign('playertitle', $playertitle);
-        $this->view->assign('CompetitionName', $CompetitionName);
-        $this->view->assign('SeasonID', $seasonid);
+        // $this->view->assign('CompetitionName', $CompetitionName);
+        // $this->view->assign('SeasonID', $seasonid);
         $this->view->assign('pagerender', $list->render());
         $this->view->assign('players', $list->items());
+        $this->headerAndFooter('ctfc');
 
-        return $this->view->fetch('player/lists');
+        return $this->view->fetch('ctfcplayer/lists');
 
 
         notfound:
