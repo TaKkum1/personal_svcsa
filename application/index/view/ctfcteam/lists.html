@@ -1,4 +1,4 @@
-<div class="inside-banner img_3-banner block">
+<div class="inside-banner track-banner block">
     <p>查看{$thisseason['Name']}的所有田径队</p>
 </div>
 <div class="team-wrap block">
@@ -24,7 +24,7 @@
 
     <div class="list-box">
         <div class="row clearfix">
-            {volist name="ctfcteams" id="ctfcteam" empty='暂没球队信息！'}
+            {volist name="ctfcteams" id="ctfcteam" empty='暂没田径队信息！'}
               <div class="col-md-2">
                   <a href="{:url('index/ctfcteam/read',['id'=>$ctfcteam['TeamID']])}">
                       <div class="item-box">

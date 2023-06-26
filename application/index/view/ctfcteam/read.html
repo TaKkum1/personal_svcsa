@@ -9,21 +9,21 @@
         </div></h3>
         <div class="other-info clearfix">
             <dl>
-                <dt><i class="icon-profile"> </i>球队简称</dt>
+                <dt><i class="icon-profile"> </i>队伍简称</dt>
                 <dd>{$team['ShortName']}</dd>
             </dl>
             <dl>
-                <dt><i class="icon-user"> </i>球队队长</dt>
+                <dt><i class="icon-user"> </i>队长</dt>
                 <dd>{$team['CaptainName']}</dd>
             </dl>
             
             <dl>
                 <dt><i class="icon-tree"> </i>所属赛季</dt>
-                <dd>{$thisseason['SeasonName']}</dd>
+                <dd>{$thisseason['Name']}</dd>
             </dl>
             <dl>
-                <dt><i class="icon-earth"> </i>球员数量</dt>
-                <dd>{$playercount}名<span><a href="{:url('index/bbplayer/lists',['teamid'=>$team['ID'],'seasonid'=>$thisseason['SeasonID']])}">查看球员>>>></a></span></dd>
+                <dt><i class="icon-earth"> </i>队员数量</dt>
+                <dd>{$playercount}名<span><a href="{:url('index/ctfcplayer/lists',['teamid'=>$team['ID'],'seasonid'=>$thisseason['ID']])}">查看球员>>>></a></span></dd>
             </dl>
         </div>
     </div>
@@ -39,24 +39,17 @@
 <div class="team_des-wrap block">
     <div class="des-box clearfix">
         <div class="left-box">
-            <h3>球队联系方式</h3>
+            <h3>队伍联系方式</h3>
             <dl>
                 <dt><span class="icon-phone"></span> 电话</dt>
                 <dl>
-                    <p>{$team['Tel']}</p>
+                    <p>{$team['CaptainPhone']}</p>
                 </dl>
             </dl>
             <dl>
                 <dt><span class="icon-envelop"></span> E-mail</dt>
                 <dl>
-                    <p>{$team['Email']}</p>
-                </dl>
-            </dl>
-
-            <dl>
-                <dt><span class="icon-wechat"></span> Wechat</dt>
-                <dl>
-                    <p>{$team['Wechat']}</p>
+                    <p>{$team['CaptainEmail']}</p>
                 </dl>
             </dl>
         </div>
@@ -65,97 +58,4 @@
         </div>
     </div>
 </div>
-<div class="pro-wrap">
-    <div class="clearfix block">
-        <div class="public-left">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>比赛时间</th>
-                    <th>场地</th>
-                    <th>对阵</th>
-                    <th>比分</th>
-                    <th>文字直播</th>
-                    <th>技术统计</th>
-                </tr>
-                </thead>
-                <tbody>
-                {if condition="!$matches"}
-                <tr>
-                    <td>赛程暂时为空！</td>
-                </tr>
-                {/if}
-                {volist name="matches" id="match" }
-                <tr>
-                    <td>{$match['StartTime']|strtotime|date='m/d G:i',###}</td>
-                    <td>{$match['Court']}</td>
-                    <td><a href="{:url('index/bbteam/read', ['id'=>$match['TeamAID']])}">{$match['TeamAShortName']}</a> (主) vs <a href="{:url('index/bbteam/read', ['id'=>$match['TeamBID']])}">{$match['TeamBShortName']}</a> (客)</td>
-                    <td>{if condition="$match['State'] eq -1"}
-                        未开赛
-                        {elseif condition="$match['State'] eq 0" /}
-                        正在进行..
-                        {else /}
-                        {$match['ScoreTeamA']}:{$match['ScoreTeamB']}
-                        {/if}</td>
-                    <td><a href="{:url('index/bbmatch/read',['id'=>$match['MatchID']])}">文字直播</a></td>
-                    <td><a href="{:url('index/bbstatistics/lists') . '?matchid='. $match['MatchID']}">技术统计</a></td>
-                </tr>
-                {/volist}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-<div class="pro-wrap">
-    <div class="clearfix block">
-        <div class="public-left">
-            <div class="title-box">
-                {$team['Name']} - 技术统计
-            </div>
 
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>序号</th>
-                        <th>球员</th>
-                        <th>球队</th>
-                        <th>得分</th>
-                        <th>篮板</th>
-                        <th>助攻</th>
-                        <th>抢断</th>
-                        <th>盖帽</th>
-                        <th>投篮</th>
-                        <th>3分</th>
-                        <th>罚球</th>
-                        <th>失误</th>
-                        <th>犯规</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {if condition="!$teamstats"}
-                        <tr>
-                            <td>暂没有可用排行！</td>
-                        </tr>
-                    {/if}
-                    {volist name="teamstats" id="stats"}
-                        <tr>
-                            <td>{$i}</td>
-                                <td><a href="{:url('index/bbplayer/read', ['id'=>$stats['PlayerID'],'season'=>$thisseason['SeasonID']])}">{$stats['PlayerName']}</td>
-                                <td><a href="{:url('index/bbteam/read', ['id'=>$stats['TeamID']])}">{$stats['TeamShortName']}</td>
-                                <td>{$stats['Points']|number_format=###,1,'.',''}</td>
-                                <td>{$stats['Rebound']|number_format=###,1,'.',''}</td>
-                                <td>{$stats['Assist']|number_format=###,1,'.',''}</td>
-                                <td>{$stats['Steal']|number_format=###,1,'.',''}</td>
-                                <td>{$stats['Block']|number_format=###,1,'.',''}</td>
-                                <td>{$stats['FGP']|number_format=###*100,1,'.',''}%</td>
-                                <td>{$stats['3GP']|number_format=###*100,1,'.',''}%</td>
-                                <td>{$stats['FTP']|number_format=###*100,1,'.',''}%</td>
-                                <td>{$stats['Turnover']|number_format=###,1,'.',''}</td>
-                                <td>{$stats['Foul']|number_format=###,1,'.',''}</td>
-                        </tr>
-                    {/volist}
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>

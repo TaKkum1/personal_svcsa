@@ -125,23 +125,36 @@ class Ctfcteam extends Base
     }
 
     public function read($id){
-        $result = Db::name('ctfc_team')->where('ID', $id)->find();
-        if ($this->jsonRequest())
+        $result = Db::name('ctfc_seasonteam')->where('TeamID', $id)->find();
+        if ($this->jsonRequest()) {
+
             $this->dataResult($result);
+        }
 
-        if(!$result) goto notfound;
+        $seasonid = $result['SeasonID'];
 
-        $this->headerAndFooter('team');
+        $thisseason = Db::name('ctfc_season')
+            ->where('ID', $seasonid)
+            ->find();
+
+        $this->headerAndFooter('competition');
 
 
-        $seasonid = $result['ID'];
+        $team = Db::name('ctfc_team')->where('ID', $id)->find();
+        
+        $playercount = Db::name('ctfc_playernumber')
+            ->where('SeasonID', $seasonid)
+            ->where('TeamID', $id)
+            ->count();
+        $this->view->assign('playercount', $playercount);
 
-        $teams = Db::name('ctfc_team')
-            ->where('ID', $id)->order('ID desc')
-            ->limit(0,10)->select();
-
-        $this->view->assign('team',$result);
-        $this->view->assign('teams',$teams);
+        $this->view->assign('thisseason', $thisseason);
+        $this->view->assign('team', $team);
+        $team_info = Db::name('bb_seasonteam')
+            ->where('SeasonID', $seasonid)
+            ->where('TeamID', $id)
+            ->where('Approval', 1)
+            ->find();
 
         return $this->view->fetch('ctfcteam/read');
 
@@ -156,9 +169,7 @@ class Ctfcteam extends Base
         $pagesize = (!input('pagesize')) ? 100 : input('pagesize');
         if (!$seasonid && input('seasonid')) $seasonid = input('seasonid');
         if (!$teamid && input('teamid')) $teamid = input('teamid');
-        // if (!$competitionid && input('competitionid')) {
-        //   $competitionid = input('CompetitionID');
-        // }
+
         if (input('freeagant')) {
           // List all the free agents for a particular season.
           $sql =
@@ -184,7 +195,8 @@ class Ctfcteam extends Base
           $list = Db::name('ctfc_seasonteam_view');   
 
           if ($seasonid)
-              $list = $list->where('seasonid', $seasonid);
+              $list = $list->where('seasonid', $seasonid)
+                        ->where('Approve', 1);
           else if ($teamid)
               $list = $list->where('teamid', $teamid);
           else if (input('teamids'))
@@ -202,9 +214,7 @@ class Ctfcteam extends Base
         $this->headerAndFooter('Team');
 
         $teamtitle = '';
-        // $CompetitionName = Db::name('ctfc_competition')
-        //     ->where('ID', $competitionid)
-        //     ->find()['Name'];
+
         if ($seasonid && count($list->items())>0) {
             $teamtitle = $list->items()[0]['TeamName'];
           }
@@ -226,7 +236,6 @@ class Ctfcteam extends Base
         $this->view->assign('thisseason', $seasons[0]);
         $this->view->assign('otherseasons', $otherseasons);
         $this->view->assign('teamtitle', $teamtitle);
-        // $this->view->assign('CompetitionName', $CompetitionName);
         $this->view->assign('SeasonID', $seasonid);
         $this->view->assign('pagerender', $list->render());
         $this->view->assign('ctfcteams', $list->items());
