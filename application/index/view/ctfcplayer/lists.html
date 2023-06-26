@@ -15,13 +15,26 @@
                 <div class="row clearfix">
                     {volist name="players" id="player"  empty='暂没队员信息！'}
                     <div class="col-md-2">
-                      <a href="{:url('index/ctfcplayer/read',['id'=>$player.PlayerID])}">
+                        {if condition="$showNumber eq 'true'"}
+                            <!-- show players of a team or season -->
+                            <a href="{:url('index/ctfcplayer/read',['id'=>$player.PlayerID])}">
+                        {else /}
+                             <!-- show all players -->
+                            <a href="{:url('index/ctfcplayer/read',['id'=>$player.ID])}">
+                        {/if}         
+                     
                             <div class="item-box">
                                 <div class="img-box">
                                   <img src="{$Think.config.public_assets}/uploads/{$player.PhotoSrc}">
                                 </div>
                                 <div class="txt-box">
-                                  {$player.PlayerNumber}号 {$player.PlayerName}
+                                    {if condition="$showNumber eq 'true'"}
+                                        <!-- show players of a team or season -->
+                                        {$player.PlayerNumber}号 {$player.PlayerName}
+                                    {else /}
+                                        <!-- show all players -->
+                                        {$player.Name}
+                                    {/if}                  
                                 </div>
                             </div>
                         </a>
