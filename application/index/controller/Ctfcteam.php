@@ -156,6 +156,11 @@ class Ctfcteam extends Base
             ->where('Approval', 1)
             ->find();
 
+        $matches = Db::name('ctfc_heat_view')->where('TeamID', $id)
+            ->select();
+
+        $this->view->assign('matches', $matches);
+
         return $this->view->fetch('ctfcteam/read');
 
     notfound:
@@ -231,7 +236,6 @@ class Ctfcteam extends Base
           ->order($exp)->select();
         $seasons = array_reverse($seasons);
         $otherseasons = array_slice($seasons, 1);
-
 
         $this->view->assign('thisseason', $seasons[0]);
         $this->view->assign('otherseasons', $otherseasons);
