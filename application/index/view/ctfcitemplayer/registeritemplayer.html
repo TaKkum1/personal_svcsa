@@ -3,7 +3,7 @@
     <p>团结拼搏，一起奉献。</p>
 </div>
 
-
+<link rel="stylesheet" href="layui/css/layui.css">
 <style>
     .dropdown { 
         display: none;
@@ -95,12 +95,14 @@
                     <select name="PlayerIDSet1" id="PlayerIDSet1" style="width: 240px;">
                         <option value="">选择参赛队员</option>
                     </select>
+                    <input id="AgeGroupIDSet1" name="AgeGroupIDSet1" type="hidden" value="">
                 </div>
                 <div class="input-box" style="width:240px;border:0px">
                     <label for="PlayerIDSet2" style="width: 70px;"><b>参赛队员: </b></label>        
                     <select name="PlayerIDSet2" id="PlayerIDSet2" style="width: 240px;">
                         <option value="">选择参赛队员</option>
                     </select>
+                    <input id="AgeGroupIDSet2" name="AgeGroupIDSet2" type="hidden" value="">
                 </div>
 
                 <div class="input-box" style="width:240px;border:0px">
@@ -108,24 +110,28 @@
                     <select name="PlayerIDSet3" id="PlayerIDSet3" style="width: 240px;">
                         <option value="">选择参赛队员</option>
                     </select>
+                    <input id="AgeGroupIDSet3" name="AgeGroupIDSet3" type="hidden" value="">
                 </div>
                 <div class="input-box" style="width:240px;border:0px">
                     <label for="PlayerIDSet4" style="width: 70px;"><b>参赛队员: </b></label>        
-                    <select name="PlayerIDSet1" id="PlayerIDSet1" style="width: 240px;">
+                    <select name="PlayerIDSet4" id="PlayerIDSet4" style="width: 240px;">
                         <option value="">选择参赛队员</option>
                     </select>
+                    <input id="AgeGroupIDSet4" name="AgeGroupIDSet4" type="hidden" value="">
                 </div>
                 <div class="input-box" style="width:240px;border:0px">
                     <label for="PlayerIDSet5" style="width: 70px;"><b>参赛队员: </b></label>        
-                    <select name="PlayerIDSet2" id="PlayerIDSet2" style="width: 240px;">
+                    <select name="PlayerIDSet5" id="PlayerIDSet5" style="width: 240px;">
                         <option value="">选择参赛队员</option>
                     </select>
+                    <input id="AgeGroupIDSet5" name="AgeGroupIDSet5" type="hidden" value="">
                 </div>
                 <div class="input-box" style="width:240px;border:0px">
                     <label for="PlayerIDSet6" style="width: 70px;"><b>参赛队员: </b></label>        
-                    <select name="PlayerIDSet3" id="PlayerIDSet3" style="width: 240px;">
+                    <select name="PlayerIDSet6" id="PlayerIDSet6" style="width: 240px;">
                         <option value="">选择参赛队员</option>
                     </select>
+                    <input id="AgeGroupIDSet6" name="AgeGroupIDSet6" type="hidden" value="">
                 </div>
 
             </div>
@@ -326,15 +332,14 @@
 
     // getting select options for season. 
     axios.get('/CTFCSeason', {}).then(function (response) {
-            console.log(response);
-            const data = response.data.data;
+        console.log(response);
+        const data = response.data.data;
         $.each(data, function (index, item) {
         $('#SeasonID').append('<option value="' + item.ID + '">' + item.Name + '</option>');
         });
     }).catch(function (error) {
-            console.log(error);
+        console.log(error);
     });
-
 
     // Event listener for the SeasonID select change
     $('#SeasonID').on('change', function () {
@@ -487,30 +492,209 @@
 
     });
 
+
     // Single player option button
-    // $('#PlayerID').on('change', function () {
-    //     var playerid = document.getElementById('PlayerID').value;
-    //         $('#AgeGroupIDSingle').empty();
-    //         $('#SexSingle').empty();
+    $('#PlayerIDSet1').on('change', function () {
+        var playerid = document.getElementById('PlayerIDSet1').value;
+            $('#AgeGroupIDSet1').empty();
+            // $('#SexSingle').empty();
 
-    //         getPlayerAgeSex(playerid, function(playerAgeGroup, playerSex){
-    //             axios.get('/CTFCAgegroup', {}).then(function (response) {
-    //                 // console.log(response);
-    //                 $.each(response.data.data, function (index, element) {
-    //                     if(playerAgeGroup == element.ID) {
-    //                         $('#AgeGroupIDSingle').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
-    //                     }
-    //                 });
-    //             })
-    //             //get Sex option from seasonitem option
-    //             const parts = document.getElementById('ItemID').value.split("-");
-    //             xiangmu = parts[0];
-    //             xiangmuSex = parts[1];
-    //             $('#SexSingle').append('<option value="' + xiangmuSex + '">' + xiangmuSex + '</option>');
-    //     });
-    // });
+            getPlayerAgeSex(playerid, function(playerAgeGroup, playerSex){
+                axios.get('/CTFCAgegroup', {}).then(function (response) {
+                    $.each(response.data.data, function (index, element) {
+                        if(playerAgeGroup == element.ID) {
+                            // $('#AgeGroupIDSingle').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
+                            $('#AgeGroupIDSet1').val(element.ID);
+                        }
+                    });
+                })
+        });
+    });
 
+    $('#PlayerIDSet2').on('change', function () {
+        var playerid = document.getElementById('PlayerIDSet2').value;
+            $('#AgeGroupIDSet2').empty();
+            // $('#SexSingle').empty();
 
+            getPlayerAgeSex(playerid, function(playerAgeGroup, playerSex){
+                axios.get('/CTFCAgegroup', {}).then(function (response) {
+                    $.each(response.data.data, function (index, element) {
+                        if(playerAgeGroup == element.ID) {
+                            // $('#AgeGroupIDSingle').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
+                            $('#AgeGroupIDSet2').val(element.ID);
+                        }
+                    });
+                })
+        });
+    });
+
+    $('#PlayerIDSet3').on('change', function () {
+        var playerid = document.getElementById('PlayerIDSet3').value;
+            $('#AgeGroupIDSet3').empty();
+            // $('#SexSingle').empty();
+
+            getPlayerAgeSex(playerid, function(playerAgeGroup, playerSex){
+                axios.get('/CTFCAgegroup', {}).then(function (response) {
+                    $.each(response.data.data, function (index, element) {
+                        if(playerAgeGroup == element.ID) {
+                            // $('#AgeGroupIDSingle').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
+                            $('#AgeGroupIDSet3').val(element.ID);
+                        }
+                    });
+                })
+        });
+    });
+
+    $('#PlayerIDSet4').on('change', function () {
+        var playerid = document.getElementById('PlayerIDSet4').value;
+            $('#AgeGroupIDSet4').empty();
+            // $('#SexSingle').empty();
+
+            getPlayerAgeSex(playerid, function(playerAgeGroup, playerSex){
+                axios.get('/CTFCAgegroup', {}).then(function (response) {
+                    $.each(response.data.data, function (index, element) {
+                        if(playerAgeGroup == element.ID) {
+                            // $('#AgeGroupIDSingle').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
+                            $('#AgeGroupIDSet4').val(element.ID);
+                        }
+                    });
+                })
+        });
+    });
+
+    $('#PlayerIDSet5').on('change', function () {
+        var playerid = document.getElementById('PlayerIDSet5').value;
+            $('#AgeGroupIDSet5').empty();
+            // $('#SexSingle').empty();
+
+            getPlayerAgeSex(playerid, function(playerAgeGroup, playerSex){
+                axios.get('/CTFCAgegroup', {}).then(function (response) {
+                    $.each(response.data.data, function (index, element) {
+                        if(playerAgeGroup == element.ID) {
+                            // $('#AgeGroupIDSingle').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
+                            $('#AgeGroupIDSet5').val(element.ID);
+                        }
+                    });
+                })
+        });
+    });
+
+    $('#PlayerIDSet6').on('change', function () {
+        var playerid = document.getElementById('PlayerIDSet6').value;
+            $('#AgeGroupIDSet6').empty();
+            // $('#SexSingle').empty();
+
+            getPlayerAgeSex(playerid, function(playerAgeGroup, playerSex){
+                axios.get('/CTFCAgegroup', {}).then(function (response) {
+                    $.each(response.data.data, function (index, element) {
+                        if(playerAgeGroup == element.ID) {
+                            // $('#AgeGroupIDSingle').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
+                            $('#AgeGroupIDSet6').val(element.ID);
+                        }
+                    });
+                })
+        });
+    });
+
+    function postData(SeasonIDNumber, TeamIDNumber, xiangmuSex, AgeGroupIDNumber, xiangmu, PlayerSetNumber) {
+        return axios.post('/CTFCItemplayer/', {
+            SeasonID: SeasonIDNumber,
+            TeamID: TeamIDNumber,
+            Sex: xiangmuSex,
+            AgeGroupID: AgeGroupIDNumber,
+            ItemID: xiangmu,
+            PlayerID1: PlayerSetNumber,
+            PlayerID2: null,
+            PlayerID3: null,
+            PlayerID4: null,
+            PlayerID5: null,
+            PlayerID6: null,
+        }).catch(function (error) {
+            console.log(error);
+        });
+    }
+
+    $(".sub").click(function(){
+        var selectedItemSex = $('select[name=ItemID]').val().split("-");
+        xiangmu = selectedItemSex[0];
+        xiangmuSex = selectedItemSex[1];
+        CheckIsSingle(xiangmu, xiangmuSex, function(currentIsSingleFlag) {
+            if(currentIsSingleFlag == 1) {
+                console.log("SeasonID: " + $('select[name=SeasonID]').val());
+                console.log("TeamID: " + $('select[name=TeamID]').val());
+                console.log("Sex: " + xiangmuSex);
+                console.log("AgeGroupID: " + $('input[name=AgeGroupIDSet1]').val());
+                console.log("ItemID: " + xiangmu);
+                SeasonIDNumber=$('select[name=SeasonID]').val();
+                TeamIDNumber =$('select[name=TeamID]').val();
+                
+                AgeGroupIDNumber1=$('input[name=AgeGroupIDSet1]').val();
+                AgeGroupIDNumber2=$('input[name=AgeGroupIDSet2]').val();
+                AgeGroupIDNumber3=$('input[name=AgeGroupIDSet3]').val();
+                AgeGroupIDNumber4=$('input[name=AgeGroupIDSet4]').val();
+                AgeGroupIDNumber5=$('input[name=AgeGroupIDSet5]').val();
+                AgeGroupIDNumber6=$('input[name=AgeGroupIDSet6]').val();
+
+                PlayerSetNumber1=$('select[name=PlayerIDSet1]').val();  
+                PlayerSetNumber2=$('select[name=PlayerIDSet2]').val();  
+                PlayerSetNumber3=$('select[name=PlayerIDSet3]').val();  
+                PlayerSetNumber4=$('select[name=PlayerIDSet4]').val();  
+                PlayerSetNumber5=$('select[name=PlayerIDSet5]').val();  
+                PlayerSetNumber6=$('select[name=PlayerIDSet6]').val();  
+                
+                // console.log("PlayerIDSet1: " + PlayerSetNumber1);
+                // console.log("PlayerIDSet2: " + PlayerSetNumber2);
+                // console.log("PlayerIDSet3: " + PlayerSetNumber3);
+                // console.log("PlayerIDSet4: " + PlayerSetNumber4);
+                // console.log("PlayerIDSet5: " + PlayerSetNumber5);
+                // console.log("PlayerIDSet6: " + PlayerSetNumber6);
+                let promises = [];
+
+                if(PlayerSetNumber1) {
+                    promises.push(postData(SeasonIDNumber, TeamIDNumber, xiangmuSex, AgeGroupIDNumber1, xiangmu, PlayerSetNumber1));
+                }
+                if(PlayerSetNumber2) {
+                    promises.push(postData(SeasonIDNumber, TeamIDNumber, xiangmuSex, AgeGroupIDNumber2, xiangmu, PlayerSetNumber2));
+                }
+                if(PlayerSetNumber3) {
+                    promises.push(postData(SeasonIDNumber, TeamIDNumber, xiangmuSex, AgeGroupIDNumber3, xiangmu, PlayerSetNumber3));
+                }
+                if(PlayerSetNumber4) {
+                    promises.push(postData(SeasonIDNumber, TeamIDNumber, xiangmuSex, AgeGroupIDNumber4, xiangmu, PlayerSetNumber4));
+                }
+                if(PlayerSetNumber5) {
+                    promises.push(postData(SeasonIDNumber, TeamIDNumber, xiangmuSex, AgeGroupIDNumber5, xiangmu, PlayerSetNumber5));
+                }
+                if(PlayerSetNumber6) {
+                    promises.push(postData(SeasonIDNumber, TeamIDNumber, xiangmuSex, AgeGroupIDNumber6, xiangmu, PlayerSetNumber6));
+                }
+
+                Promise.all(promises).then(function() {
+                    alert('添加成功');
+                    location.reload();
+                });
+            } else {
+                axios.post('/CTFCItemplayer/', {
+                    SeasonID:$('select[name=SeasonID]').val(),
+                    TeamID: $('select[name=TeamID]').val(),
+                    Sex: xiangmuSex,
+                    AgeGroupID: $('select[name=AgeGroupID]').val(),
+                    ItemID: xiangmu,
+                    PlayerID1: $('select[name=PlayerID1]').val(),
+                    PlayerID2: $('select[name=PlayerID2]').val(),
+                    PlayerID3: $('select[name=PlayerID3]').val(),
+                    PlayerID4: $('select[name=PlayerID4]').val(),
+                    PlayerID5: $('select[name=PlayerID5]').val(),
+                    PlayerID6: $('select[name=PlayerID6]').val(),
+                       
+                }).then(function (response) {
+                    layer.alert('添加成功');
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            }
+        });
+    });
 
 
 </script>
