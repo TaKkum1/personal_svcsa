@@ -3,9 +3,9 @@
 <div>
     <div class="layui-tab">
         <div class="layui-tab-content">
-            <div class="layui-input-inline" style="background-color: red;">
+            <div class="layui-input-inline">
                 <div class="layui-input-inline">
-                    <button id="reassignAll" class="layui-btn layui-btn-normal">自动重新分配全部号码</button>
+                    <button id="reassign" class="layui-btn layui-btn-normal">自动重新分配全部号码</button>
                 </div>
             </div>
             <div class="layui-input-inline" style="">
@@ -116,12 +116,12 @@
             //     layer.full(window.sessionStorage.getItem("ctfc_season_index"));
             // })
         })
-        $("#reassignAll").click(function() {
+        $("#reassign").click(function() {
             layer.confirm('确认重新分配全部号码吗？', {
                 btn: ['确认', '取消'] //按钮
-            }, function () {       
+            }, function () {    
                 $.ajax({
-                    url: '../CTFCplayernumber',
+                    url: '../ctfcplayernumber/reassign',
                     type: 'post',
                     dataType: 'json',
                     header: {
@@ -132,8 +132,15 @@
                     },
                     error: function (xhr) {
                         console.log(xhr);
-                    }
+                    } 
                 });
+                layer.msg('重新分配成功', {
+                        icon: 1,
+                        time: 1200
+                    }, function () {
+                        location.reload();
+                });
+            }, function () {
             });
         })
 
