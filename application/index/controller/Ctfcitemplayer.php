@@ -53,32 +53,32 @@ class Ctfcitemplayer extends Base
 
    
               $playerid1 = $itemplayer['PlayerID1'];
-              $playername1 = Db::name('ctfc_player')->where('ID', $playerid1)->find()['Name'];
+              $playername1 = Db::name('ctfc_player')->where('ID', $playerid1)->order('Name')->find()['Name'];
               $col['PlayerID1']= $playerid1;
               $col['PlayerName1'] = $playername1;
     
               $playerid2 = $itemplayer['PlayerID2'];
-              $playername2 = Db::name('ctfc_player')->where('ID', $playerid2)->find()['Name'];
+              $playername2 = Db::name('ctfc_player')->where('ID', $playerid2)->order('Name')->find()['Name'];
               $col['PlayerID2']= $playerid2;
               $col['PlayerName2'] = $playername2;
     
               $playerid3 = $itemplayer['PlayerID3'];
-              $playername3 = Db::name('ctfc_player')->where('ID', $playerid3)->find()['Name'];
+              $playername3 = Db::name('ctfc_player')->where('ID', $playerid3)->order('Name')->find()['Name'];
               $col['PlayerID3']= $playerid3;
               $col['PlayerName3'] = $playername3;
     
               $playerid4 = $itemplayer['PlayerID4'];
-              $playername4 = Db::name('ctfc_player')->where('ID', $playerid4)->find()['Name'];
+              $playername4 = Db::name('ctfc_player')->where('ID', $playerid4)->order('Name')->find()['Name'];
               $col['PlayerID4']= $playerid4;
               $col['PlayerName4'] = $playername4;
     
               $playerid5 = $itemplayer['PlayerID5'];
-              $playername5 = Db::name('ctfc_player')->where('ID', $playerid5)->find()['Name'];
+              $playername5 = Db::name('ctfc_player')->where('ID', $playerid5)->order('Name')->find()['Name'];
               $col['PlayerID5']= $playerid5;
               $col['PlayerName5'] = $playername5;
 
               $playerid6 = $itemplayer['PlayerID6'];
-              $playername6 = Db::name('ctfc_player')->where('ID', $playerid6)->find()['Name'];
+              $playername6 = Db::name('ctfc_player')->where('ID', $playerid6)->order('Name')->find()['Name'];
               $col['PlayerID6']= $playerid6;
               $col['PlayerName6'] = $playername6;
 
@@ -191,7 +191,7 @@ class Ctfcitemplayer extends Base
         $playerid = urldecode($data['PlayerID']);
         
         
-        $player_db = Db::name('ctfc_player')->where('ID', $playerid);
+        $player_db = Db::name('ctfc_player')->where('ID', $playerid)->order('Name');
         $players = $player_db->select();
         $birthdays = array();
         $sex = array();
@@ -291,7 +291,7 @@ class Ctfcitemplayer extends Base
         $CurrentSelectedTeamID = urldecode($data['Tmid']);
         $CurrentSeasonID = urldecode($data['SsID']);
         
-        $all_players = Db::name('ctfc_player');
+        $all_players = Db::name('ctfc_player')->order('Name');
         $all_players = $all_players->select();
 
         $minAgeBondary=$SeasonitemMinAG;
