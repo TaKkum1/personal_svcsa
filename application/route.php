@@ -219,6 +219,7 @@
 \think\Route::post('ctfcplayernumber', 'index/ctfcplayernumber/add');
 \think\Route::get('ctfcplayernumber/:id', 'index/ctfcplayernumber/read', [], ['id' => '\d+']);
 \think\Route::get('ctfcplayernumber', 'index/ctfcplayernumber/lists');
+\think\Route::post('ctfcplayernumber/reassign', 'index/ctfcplayernumber/reassignAll');
 
 \think\Route::post('ctfcitemplayer/:id', 'index/ctfcitemplayer/update', [], ['id' => '\d+']);
 \think\Route::post('ctfcitemplayer', 'index/ctfcitemplayer/add');
