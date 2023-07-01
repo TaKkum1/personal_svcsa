@@ -230,7 +230,7 @@
 \think\Route::get('ctfcitemplayer/getSeasonTeamPlayers', 'index/ctfcitemplayer/GetPlayersList');
 \think\Route::get('ctfcitemseasonitemagegroupview', 'index/ctfcitemplayer/listview');
 \think\Route::get('ctfcitemplayer/getAgeRangeSeasonItem', 'index/ctfcitemplayer/getAgeRange');
-// \think\Route::get('ctfcitemplayer/itemplayerregister', 'index/ctfcitemplayer/registeritemplayer');
+
 
 
 \think\Route::get('ctfcseason/:seasonid/ctfcteam', 'index/ctfcteam/lists', [], ['seasonid' => '\d+']);
