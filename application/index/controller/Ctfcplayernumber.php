@@ -118,9 +118,9 @@ class Ctfcplayernumber extends Base
     // 每行两个数，表示可用号码的范围，如[400, 401]表示可用号码为400和401
     // 行数可以任意增减
     $availableNumerRange = [
-      [400, 401],
-      [450, 450],
-      [460, 470]
+      [100, 200],
+      [260, 280],
+      [400, 800]
     ];
 
     // generate the list of available player numbers
