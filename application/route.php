@@ -232,6 +232,7 @@
 \think\Route::get('ctfcitemplayer/getAgeRangeSeasonItem', 'index/ctfcitemplayer/getAgeRange');
 
 
+
 \think\Route::get('ctfcseason/:seasonid/ctfcteam', 'index/ctfcteam/lists', [], ['seasonid' => '\d+']);
 // \think\Route::get('ctfcseason/:seasonid/ctfcteamrank', 'index/ctfcteam/rank', [], ['seasonid' => '\d+']);
 // \think\Route::get('ctfcseason/:seasonid/ctfcteamrankplayoff', 'index/ctfcteam/rankplayoff', [], ['seasonid' => '\d+']);

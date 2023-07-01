@@ -617,11 +617,12 @@
         form.on('submit(add)', function (data) {
 
             var index = parent.layer.getFrameIndex(window.name);
-
+            const parts = data.field.ItemID.split("-");
+            xiangmu = parts[0];
+            xiangmuSex = parts[1];
             CheckIsSingle(xiangmu, xiangmuSex, function(currentIsSingleFlag) {
-                global_currentIsSingleFlag = currentIsSingleFlag;
 
-                if(global_currentIsSingleFlag == 1) {
+                if(currentIsSingleFlag == 1) {
                     const parts = data.field.ItemID.split("-");
                     item_id = parts[0];
                     item_Sex = parts[1];
@@ -684,7 +685,7 @@
                             console.log(error);
                         });
                 }
-        });
+            });
   
         });
         
