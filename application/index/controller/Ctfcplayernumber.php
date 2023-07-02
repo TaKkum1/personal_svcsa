@@ -133,9 +133,12 @@ class Ctfcplayernumber extends Base
       }
     }
 
-    $count = 0;
+    // delete all existing records
+    Db::name('ctfc_playernumber')->where('SeasonID', $maxseasonID)->delete();
+
     // assign number to players
     $playerNumber = 0;
+    $rows = array();
     foreach ($teamPlayerMap as $teamID => $playerIDs) {    
       foreach ($playerIDs as $playerID) {
         $data = array();
@@ -144,28 +147,12 @@ class Ctfcplayernumber extends Base
         $data['PlayerID'] = $playerID;
         $data['PlayerNumber'] = $availableNumbers[$playerNumber];
 
-        // find existing record
-        $existingRecord = Db::name('ctfc_playernumber')
-          ->where('SeasonID', $maxseasonID)
-          ->where('TeamID', $teamID)
-          ->where('PlayerID', $playerID)
-          ->find();
-
-        // if existing record, update it
-        if ($existingRecord) {
-          $result = Db::name('ctfc_playernumber')
-            ->where('SeasonID', $maxseasonID)
-            ->where('TeamID', $teamID)
-            ->where('PlayerID', $playerID)
-            ->update($data);
-        } else {
-          // if not existing record, insert it
-          $result = Db::name('ctfc_playernumber')->insert($data);
-        }
-        $count++;
+        // add one row to the table
+        $rows[] = $data;
         $playerNumber++;
       }
     }
-    $this->dataResult($count);
+    $result = Db::name('ctfc_playernumber')->insertAll($rows);
+    $this->dataResult($result);
   }
 }
