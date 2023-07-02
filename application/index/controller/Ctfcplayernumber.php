@@ -106,7 +106,14 @@ class Ctfcplayernumber extends Base
       // add the playerID 1 - 6 to the set (if not 0)
       for ($i = 1; $i <= 6; $i++) {
         $playerColumnName = "PlayerID" . $i;
+        console.log("existing players");
+        console.log(playerIDs);
+        if ($itemPlayer[$playerColumnName]) {
+          console.log("player to be checked");
+          console.log($itemPlayer[$playerColumnName]);
+        }
         if ($itemPlayer[$playerColumnName] && !isset($playerIDs[$itemPlayer[$playerColumnName]])) {
+          console.log("player not existed, added to the list.");
           $playerIDs[] = $itemPlayer[$playerColumnName];
         }
       }
