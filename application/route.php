@@ -219,6 +219,7 @@
 \think\Route::post('ctfcplayernumber', 'index/ctfcplayernumber/add');
 \think\Route::get('ctfcplayernumber/:id', 'index/ctfcplayernumber/read', [], ['id' => '\d+']);
 \think\Route::get('ctfcplayernumber', 'index/ctfcplayernumber/lists');
+\think\Route::post('ctfcplayernumber/reassign', 'index/ctfcplayernumber/reassign');
 
 \think\Route::post('ctfcitemplayer/:id', 'index/ctfcitemplayer/update', [], ['id' => '\d+']);
 \think\Route::post('ctfcitemplayer', 'index/ctfcitemplayer/add');
@@ -230,6 +231,7 @@
 \think\Route::get('ctfcitemplayer/getSeasonTeamPlayers', 'index/ctfcitemplayer/GetPlayersList');
 \think\Route::get('ctfcitemseasonitemagegroupview', 'index/ctfcitemplayer/listview');
 \think\Route::get('ctfcitemplayer/getAgeRangeSeasonItem', 'index/ctfcitemplayer/getAgeRange');
+
 
 
 \think\Route::get('ctfcseason/:seasonid/ctfcteam', 'index/ctfcteam/lists', [], ['seasonid' => '\d+']);

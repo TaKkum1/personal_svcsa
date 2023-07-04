@@ -1,0 +1,121 @@
+<div class="inside-banner block team_des-banner clearfix">
+    <div class="txt-box">
+        <h3>{$team['Name']} <div class="logo">
+            {if condition="$team['LogoSrc'] eq ''"}
+            <img src="{$Think.config.public_assets}/images/teamlogo.jpg">
+            {else /}
+            <img src="{$Think.config.public_assets}/uploads/{$team['LogoSrc']}">
+            {/if}
+        </div></h3>
+        <div class="other-info clearfix">
+            <dl>
+                <dt><i class="icon-profile"> </i>队伍简称</dt>
+                <dd>{$team['ShortName']}</dd>
+            </dl>
+            <dl>
+                <dt><i class="icon-user"> </i>队长</dt>
+                <dd>{$team['CaptainName']}</dd>
+            </dl>
+            
+            <dl>
+                <dt><i class="icon-tree"> </i>所属赛季</dt>
+                <dd>{$thisseason['Name']}</dd>
+            </dl>
+            <dl>
+                <dt><i class="icon-earth"> </i>队员数量</dt>
+                <dd>{$playercount}名<span><a href="{:url('index/ctfcplayer/lists',['teamid'=>$team['ID'],'seasonid'=>$thisseason['ID']])}">查看球员>>>></a></span></dd>
+            </dl>
+        </div>
+    </div>
+    <div class="img-box">
+        {if condition="$team['PhotoSrc'] eq ''"}
+        <img src="{$Think.config.public_assets}/images/teamstaff.jpg">
+        {else /}
+        <img src="{$Think.config.public_assets}/uploads/{$team['PhotoSrc']}">
+        {/if}
+    </div>
+</div>
+</div>
+<div class="team_des-wrap block">
+    <div class="des-box clearfix">
+        <div class="left-box">
+            <h3>队伍联系方式</h3>
+            <dl>
+                <dt><span class="icon-phone"></span> 电话</dt>
+                <dl>
+                    <p>{$team['CaptainPhone']}</p>
+                </dl>
+            </dl>
+            <dl>
+                <dt><span class="icon-envelop"></span> E-mail</dt>
+                <dl>
+                    <p>{$team['CaptainEmail']}</p>
+                </dl>
+            </dl>
+        </div>
+        <div class="right-box">
+            <p>{$team['Description']}</p>
+        </div>
+    </div>
+</div>
+
+<div class="pro-wrap">
+    <div class="clearfix block">
+        <div class="public-left">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Event ID</th>
+                    <th>Heat ID</th>
+                    <th>性别</th>
+                    <th>项目名称</th>
+                    <th>年龄组</th>
+                    <th>运动员-号码牌</th>
+                    <th>道次</th>
+                    <th>成绩</th>
+                    <th>备注</th>
+                </tr>
+                </thead>
+                <tbody>
+                    {if condition="!$matches"}
+                    <tr>
+                        <td>赛程暂时为空！</td>
+                    </tr>
+                    {/if}
+                    {volist name="matches" id="match" }
+                    <tr>
+                        <td>{$match['EventID']}</td>
+                        <td>{$match['HeatID']}</td>
+                        <td>{$match['Gender']}</td>
+                        <td>{$match['ItemName']}</td>
+                        <td>{$match['AgeGroupName']}</td>
+                        <td>
+                            <!-- always show Player1 -->
+                            {$match['Player1']}
+                            <!-- For Player 2~6, show only if exists -->
+                            {for start="2" end="7"}
+                                {if condition="$match['Player' . $i] neq ''"}
+                                    <!-- add a comma before every second player -->
+                                    {if condition="$i % 2 eq 0"}
+                                    , 
+                                    {/if}
+                                    <!-- show the Player i -->
+                                    {$match['Player' . $i]}
+                                    <!-- add a line break after every second player -->
+                                    {if condition="$i % 2 eq 0"}
+                                    <br/>
+                                    {/if}
+                                {/if}
+                            {/for}
+                        </td>
+                        <td>{$match['LaneNumber']}</td>
+                        <td>{$match['Result']}</td>
+                        <td>{$match['Note']}</td>
+
+                    </tr>
+                    {/volist}
+                    </tbody>
+            </table>
+        </div>
+    </div>
+</div>

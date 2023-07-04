@@ -77,7 +77,7 @@
                         {else/}
                         {:url('index/ctfcseason/read',['id'=>$thisseason['ID']])}
                         {/if}"><span class="icon-chevron-right2 icon"></span>比赛列表</a></li>
-                    <li><a href="#"><span class="icon-chevron-right2 icon"></span>田径团队</a></li>
+                    <li><a href="{:url('index/ctfcteam/lists',['seasonid'=>$thisseason['ID']])}"><span class="icon-chevron-right2 icon"></span>田径团队</a></li>
                     <li><a href="{:url('index/Ctfcplayer/lists')}"><span class="icon-chevron-right2 icon"></span>田径队员</a></li>
                     <li>
                         <dl>
@@ -95,7 +95,8 @@
                             
                             <dd><a href="{:url('index/ctfcteam/getapply',['seasonid'=>$thisseason['ID']])}">田径队注册<span class="icon-chevron-right2 icon"></a></dd>
                             <dd><a href="{:url('index/ctfcplayer/getapply',[])}">运动员注册<span class="icon-chevron-right2 icon"></a></dd>
-                        </dl>
+                            <dd><a href="{:url('index/ctfcitemplayer/registeritemplayer',['seasonid'=>$thisseason['ID']])}">报名项目<span class="icon-chevron-right2 icon"></a></dd>
+                            </dl>
                         
                     </li>
                     
