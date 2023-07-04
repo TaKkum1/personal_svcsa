@@ -42,24 +42,6 @@
 <script src="layui/layui.js"></script>
 <script>
 
-function CheckIsSingle(OneId, callback) {
-            $.ajax({
-                url: '../ctfcitemplayer/getTypeOfItem',
-                type: 'Get',
-                dataType: 'json',
-                data: {
-                    ItemID: OneId,
-                },
-                header: {
-                    Accept: 'application/json'
-                },
-                success: function (data) {
-                    currentIsSingleFlag = data['affectedRows']
-                    console.log(currentIsSingleFlag);
-                    callback(currentIsSingleFlag);
-                }
-            });
-        }
     layui.use(['table', 'form'], function () {
         var table = layui.table;
         var form = layui.form;
@@ -167,40 +149,23 @@ function CheckIsSingle(OneId, callback) {
                         body.find('#Sex').val(data.Sex)
                         body.find('#MinAgeGroupID').val(data.MinAgeGroupID)
                         body.find('#MaxAgeGroupID').val(data.MaxAgeGroupID)
-                        //check item type
-                        CheckIsSingle(data.ItemID, function(currentIsSingleFlag) {
-               
-                            if(currentIsSingleFlag == 1) {
-                                if (data.Sex == "F") {
-                                    // console.log("Female");
-                                    body.find('#SexF1').attr("checked", true);
-                                    body.find('#SexM1').attr("checked", false);
-                                }else if (data.Sex == "M") {
-                                    console.log("Male");
-                                    body.find('#SexF1').attr("checked", false);
-                                    body.find('#SexM1').attr("checked", true);                        
-                                } 
-                            } else {
-                                if (data.Sex == "F") {
-                                    // console.log("Female");
-                                    body.find('#SexF0').attr("checked", true);
-                                    body.find('#SexM0').attr("checked", false);
-                                    body.find('#SexMIX0').attr("checked", false);
-                                }else if (data.Sex == "M") {
-                                    // console.log("Male");
-                                    body.find('#SexF0').attr("checked", false);
-                                    body.find('#SexM0').attr("checked", true);                        
-                                    body.find('#SexMix0').attr("checked", false);                        
-                                } else {
-                                    // console.log("Mix");
-                                    body.find('#SexF0').attr("checked", false);
-                                    body.find('#SexM0').attr("checked", false);  
-                                    body.find('#SexMix0').attr("checked", true);  
-                                }
-                            }
-                        
-                        });
 
+                        if (data.Sex == "F") {
+                            // console.log("Female");
+                            body.find('#SexF').attr("checked", true);
+                            body.find('#SexM').attr("checked", false);
+                            body.find('#SexMix').attr("checked", false);
+                        } else if (data.Sex == "M") {
+                            // console.log("Male");
+                            body.find('#SexF').attr("checked", false);
+                            body.find('#SexM').attr("checked", true);
+                            body.find('#SexMix').attr("checked", false);
+                        } else {
+                            // console.log("Mix");
+                            body.find('#SexF').attr("checked", false);
+                            body.find('#SexM').attr("checked", false);
+                            body.find('#SexMix').attr("checked", true);
+                        }
                     },
                     end: function () {
                         location.reload();

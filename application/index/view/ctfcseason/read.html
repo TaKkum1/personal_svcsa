@@ -20,6 +20,7 @@
                     <th>项目名称</th>
                     <th>年龄组</th>
                     <th>运动员-号码牌</th>
+                    <th>队名</th>
                     <th>道次</th>
                     <th>成绩</th>
                     <th>备注</th>
@@ -57,6 +58,7 @@
                                 {/if}
                             {/for}
                         </td>
+                        <td>{$match['TeamName']}</td>
                         <td>{$match['LaneNumber']}</td>
                         <td>{$match['Result']}</td>
                         <td>{$match['Note']}</td>

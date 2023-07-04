@@ -1,9 +1,5 @@
 <link rel="stylesheet" href="layui/css/layui.css">
 
-<style>
-    .dropdown-0 { display: none; }
-</style>
-
 <body class="childrenBody">
 
     <div style="padding: 25px;" class="layui-layout-body" >
@@ -34,13 +30,6 @@
                             <input type="radio" id="Sex" name="Sex" value="M" title="男">
                             <input type="radio" id="Sex" name="Sex" value="F" title="女">
                             <input type="radio" id="Sex" name="Sex" value="Mix" title="混合">
-                        </div>
-                    </div>
-
-                    <div id="1-dropdown" class="dropdown-1">
-                        <div class="layui-input-block">
-                            <input type="radio" id="Sex" name="Sex" value="M" title="男">
-                            <input type="radio" id="Sex" name="Sex" value="F" title="女">
                         </div>
                     </div>
             </div>
@@ -78,42 +67,9 @@
     <script src="layui/layui.js"></script>
     <script>
 
-    function CheckIsSingle(OneId) {
-            $.ajax({
-                url: '../ctfcitemplayer/getTypeOfItem',
-                type: 'Get',
-                dataType: 'json',
-                data: {
-                    ItemID: OneId,
-                },
-                header: {
-                    Accept: 'application/json'
-                },
-                success: function (data) {
-                    currentIsSingleFlag = data['affectedRows']
-                    var dropdown0 = document.getElementsByClassName('dropdown-0');
-                    var dropdown1 = document.getElementsByClassName('dropdown-1');                    
-                    if(currentIsSingleFlag == 1) {
-                        dropdown0[0].style.display = 'none';
-                        dropdown1[0].style.display = 'none';
-                        document.getElementById('1-dropdown').style.display = 'block';
-                    }else {
-                        dropdown0[0].style.display = 'none';
-                        dropdown1[0].style.display = 'none';
-                        document.getElementById('0-dropdown').style.display = 'block';
-                    }
-                }
-            });
-        }      
-
         layui.use(['table', 'form'], function () {
         var table = layui.table;
         var form = layui.form;
-
-        form.on('select(ItemIDselect)', function (data) {
-            console.log("ItemIDselect: " + data.value);
-            CheckIsSingle(data.value);
-        });
 
         form.on('submit(add)', function (data) {
             var index = parent.layer.getFrameIndex(window.name);
