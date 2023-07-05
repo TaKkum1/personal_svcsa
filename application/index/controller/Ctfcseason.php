@@ -126,4 +126,36 @@ class Ctfcseason extends Base
         $result = Db::name('ctfc_season')->where('ID', $id)->update($data);
         $this->affectedRowsResult($result);
     }
+
+    public function filter(){
+
+        $result = Db::name('ctfc_season')
+        ->order('Date','desc')
+        ->select();
+
+        $itemName = input('get.itemName');
+        $gender = input('get.gender');
+        $ageGroupName = input('get.ageGroupName');
+    
+        // If all inputs are empty, simply return the 'read' view without modifying the 'matches' variable.
+        if (empty($itemName) && empty($gender) && empty($ageGroupName)) {
+            return $this->view->fetch('ctfcseason/read');
+        }
+    
+        // If at least one filter field is filled, perform the database query.
+        $matches = Db::name('ctfc_heat_view')
+                    ->where('SeasonID', $result[0]['ID']) // Assuming you have a way to get the current season id
+                    ->where('ItemName', 'like', "%$itemName%")
+                    ->where('Gender', 'like', "%$gender%")
+                    ->where('AgeGroupName', 'like', "%$ageGroupName%")
+                    ->order(['EventID', 'HeatID','LaneNumber'])
+                    ->select();
+    
+        // Assign the filtered matches to the view
+        $this->view->assign('matches', $matches);
+    
+        // Render the same 'read' view
+        return $this->view->fetch('ctfcseason/read');
+    }
+
 }
