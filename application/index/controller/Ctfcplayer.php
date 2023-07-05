@@ -142,17 +142,16 @@ class Ctfcplayer extends Base
         //     $this->dataResult($list);
         //   //$list = Db::name('ctfc_player')->order('Name asc');
         // } else 
-        // if (input('all')) {
-        // //   List all players in the database.
-        //   $list = Db::name('ctfc_player') -> where('Approval', 1);
-        //   $list = $list->paginate($pagesize, false, [
-        //     'query' => input('param.'),
-        //   ]);
-        //   if ($this->jsonRequest())
-        //     $this->paginatedResult($list->total(), $pagesize, $list->currentPage(), $list->items());
-        // } else {
-          // List players of a particular season.
-          if (!$seasonid and !$teamid) {
+        if (input('all')) {
+        //   List all players in the database.
+          $list = Db::name('ctfc_player');
+          $list = $list->paginate($pagesize, false, [
+            'query' => input('param.'),
+          ]);
+          if ($this->jsonRequest())
+            $this->paginatedResult($list->total(), $pagesize, $list->currentPage(), $list->items());
+        } else if (!$seasonid and !$teamid) {
+          // List all approved player.
             $list = Db::name('ctfc_player')->where('Approval', 1);
             $this->view->assign('showNumber', false);
           } else {
