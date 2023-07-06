@@ -340,35 +340,22 @@
 
     // getting select options for season. 
     axios.get('/CTFCSeason', {}).then(function (response) {
-        console.log(response);
+        // console.log(response);
         const data = response.data.data;
+        const maxseasonid = data.reduce((max, item)=>{
+                return item.ID > max ? item.ID : max; 
+            }, 0 )
         $.each(data, function (index, item) {
-        $('#SeasonID').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+            if(item.ID == maxseasonid) {
+                $('#SeasonID').empty();
+                $('#SeasonID').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+
+            }
         });
-    }).catch(function (error) {
-        console.log(error);
-    });
-
-    // Event listener for the SeasonID select change
-    $('#SeasonID').on('change', function () {
-        var selectedSeasonID = $(this).val();
-        if (!selectedSeasonID) {
-            // Empty the TeamID select options
-            $('#TeamID').empty();
-            $('#TeamID').append('<option value="">' + "选择队伍" + '</option>');
-            $('#ItemID').empty();
-            $('#ItemID').append('<option value="">' + "选择项目" + '</option>');
-            return;
-        }
-
+        var selectedSeasonID = maxseasonid;
         // Get Seasonteam
         axios.get('/CTFCSeasonteam?seasonid=' + selectedSeasonID, {}).then(function (response) {
-        // console.log(response);
-            const data = response.data.data;
-
-        $('#TeamID').empty();
-        $('#TeamID').append('<option value="">' + "选择队伍" + '</option>');
-
+        const data = response.data.data;
         if (data.length !== 0) {
             $.each(data, function (index, item) {
                 $('#TeamID').append('<option value="' + item.TeamID + '">' + item.TeamName + '</option>');
@@ -377,15 +364,9 @@
         }).catch(function (error) {
                 console.log(error);
         });
-
         // Get Seasonitem
         axios.get('/CTFCSeasonitem?seasonid=' + selectedSeasonID, {}).then(function (response) {
-        // console.log(response);
-            const data = response.data.data;
-
-        $('#ItemID').empty();
-        $('#ItemID').append('<option value="">' + "选择项目" + '</option>');
-
+        const data = response.data.data;
         if (data.length !== 0) {
             $.each(data, function (index, item) {
                 $('#ItemID').append('<option value="' + item.ItemID + '-' + item.Sex + '">' + item.Sex + " - " + item.ItemName +  '</option>');
@@ -396,8 +377,9 @@
                 console.log(error);
         });
 
+    }).catch(function (error) {
+        console.log(error);
     });
-
 
     $('#ItemID').on('change', function () {
         var selectedItemSex = $(this).val().split("-");;
@@ -475,7 +457,6 @@
         });
     });
 
-
     $('#AgeGroupID').on('change', function () {
         var currentAgeGroupid = $(this).val();
         var selectedItemSex = document.getElementById('ItemID').value.split("-");;
@@ -499,7 +480,6 @@
         });
 
     });
-
 
     // Single player option button
     $('#PlayerIDSet1').on('change', function () {
@@ -627,6 +607,7 @@
         xiangmu = selectedItemSex[0];
         xiangmuSex = selectedItemSex[1];
         CheckIsSingle(xiangmu, xiangmuSex, function(currentIsSingleFlag) {
+            // Submit upto 6 single-player items
             if(currentIsSingleFlag == 1) {
                 console.log("SeasonID: " + $('select[name=SeasonID]').val());
                 console.log("TeamID: " + $('select[name=TeamID]').val());
@@ -650,6 +631,14 @@
                 PlayerSetNumber5=$('select[name=PlayerIDSet5]').val();  
                 PlayerSetNumber6=$('select[name=PlayerIDSet6]').val();  
                 
+
+                var playerSetNumbers = [PlayerSetNumber1, PlayerSetNumber2, PlayerSetNumber3, PlayerSetNumber4, PlayerSetNumber5, PlayerSetNumber6];
+
+                if(!playerSetNumbers.some(Boolean)) {
+                    alert('Please add at least one player before submitting');
+                    return;
+                }
+
                 // console.log("PlayerIDSet1: " + PlayerSetNumber1);
                 // console.log("PlayerIDSet2: " + PlayerSetNumber2);
                 // console.log("PlayerIDSet3: " + PlayerSetNumber3);
@@ -682,6 +671,22 @@
                     window.location.href = window.location.origin + "/ctfc"
                 });
             } else {
+                var playerIDs = [
+                    $('select[name=PlayerID1]').val(),
+                    $('select[name=PlayerID2]').val(),
+                    $('select[name=PlayerID3]').val(),
+                    $('select[name=PlayerID4]').val(),
+                    $('select[name=PlayerID5]').val(),
+                    $('select[name=PlayerID6]').val()
+                ];
+
+                var definedPlayerCount = playerIDs.filter(Boolean).length; // Count how many players are defined
+
+                if (definedPlayerCount < 4) {
+                    alert('Please add at least 4 players before submitting');
+                    return;
+                }
+
                 axios.post('/CTFCItemplayer/', {
                     SeasonID:$('select[name=SeasonID]').val(),
                     TeamID: $('select[name=TeamID]').val(),

@@ -305,7 +305,7 @@ class Ctfcitemplayer extends Base
             // SeasonitemSex can be M, F, or mix, when SeasonitemSex is mix, we can ignore M or F
             if (strtolower($SeasonitemSex) == "mix" || strtolower($SeasonitemSex) == strtolower($player['Sex'])) {
                 $currentPlayerAge = $this->calculateAge($player['Birthday']); //TODO (check if need put it into a list)
-                if($currentPlayerAge >= $minAgeBondary && $currentPlayerAge < $maxAgeBondary) {
+                if($currentPlayerAge >= $minAgeBondary && $currentPlayerAge <= $maxAgeBondary) {
                     array_push($list, $player['ID']);
                 }
             }
