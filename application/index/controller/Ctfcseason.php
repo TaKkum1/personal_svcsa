@@ -51,9 +51,7 @@ class Ctfcseason extends Base
             ->select();
         $result = array_reverse($result);
 
-        $itemNames = Db::name('ctfc_item')->column('Name');
-        $ageGroupNames = Db::name('ctfc_agegroup')->column('Name');
-
+        $names = $this->fetchNames();
 
         if ($this->jsonRequest()) {
             $this->dataResult($result[0]);
@@ -69,8 +67,8 @@ class Ctfcseason extends Base
             $this->view->assign('matches', $matches);
             $this->view->assign('thisseason', $result[0]);
             $this->view->assign('otherseasons', $otherseasons);
-            $this->view->assign('itemNames', $itemNames);
-            $this->view->assign('ageGroupNames', $ageGroupNames);
+            $this->view->assign('itemNames', $names['itemNames']);
+            $this->view->assign('ageGroupNames', $names['ageGroupNames']);
 
             return $this->view->fetch('ctfcseason/read');
         } else {
@@ -93,14 +91,12 @@ class Ctfcseason extends Base
 
     public function readRecent()
     {
-        $itemNames = Db::name('ctfc_item')->column('Name');
-        $ageGroupNames = Db::name('ctfc_agegroup')->column('Name');
 
         $result = Db::name('ctfc_season')
             ->order('Date', 'desc')
             ->select();
 
-        
+        $names = $this->fetchNames();
 
         if ($this->jsonRequest()) {
             $this->dataResult($result[0]);
@@ -118,9 +114,9 @@ class Ctfcseason extends Base
             $this->view->assign('matches', $matches);
             $this->view->assign('thisseason', $result[0]);
             $this->view->assign('otherseasons', $otherseasons);
-            $this->view->assign('itemNames', $itemNames);
-            $this->view->assign('ageGroupNames', $ageGroupNames);
-            
+            $this->view->assign('itemNames', $names['itemNames']);
+            $this->view->assign('ageGroupNames', $names['ageGroupNames']);
+
             return $this->view->fetch('ctfcseason/read');
         } else {
             header("HTTP/1.0 404 Not Found");
@@ -146,8 +142,7 @@ class Ctfcseason extends Base
     public function filter($id)
     {
         // Fetch the dropdown options from the database
-        $itemNames = Db::name('ctfc_item')->column('Name');
-        $ageGroupNames = Db::name('ctfc_agegroup')->column('Name');
+        $names = $this->fetchNames();
 
         $exp = new Expression('field(ID,' . $id . '),Date DESC');
         $result = Db::name('ctfc_season')
@@ -187,13 +182,20 @@ class Ctfcseason extends Base
             $this->view->assign('matches', $matches);
             $this->view->assign('thisseason', $result[0]);
             $this->view->assign('otherseasons', $otherseasons);
-            $this->view->assign('itemNames', $itemNames);
-            $this->view->assign('ageGroupNames', $ageGroupNames);
+            $this->view->assign('itemNames', $names['itemNames']);
+            $this->view->assign('ageGroupNames', $names['ageGroupNames']);
 
             return $this->view->fetch('ctfcseason/read');
         } else {
             header("HTTP/1.0 404 Not Found");
             die;
         }
+    }
+    protected function fetchNames()
+    {
+        return [
+            'itemNames' => Db::name('ctfc_item')->column('Name'),
+            'ageGroupNames' => Db::name('ctfc_agegroup')->column('Name')
+        ];
     }
 }
