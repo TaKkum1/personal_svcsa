@@ -11,19 +11,33 @@
 <div class="pro-wrap">
     <div class="clearfix block">
         <div class="filter-form">
-            <form method="get" action="{:url('index/ctfcseason/filter')}">
+            <form method="get" action="{:url('index/ctfcseason/filter', ['id'=>$thisseason['ID']])}" onsubmit="this.reset();">
                 <label for="itemName">项目名称:</label>
-                <input type="text" id="itemName" name="itemName">
+                <select id="itemName" name="itemName">
+                    <option value="">全选</option>
+                    {volist name="itemNames" id="name"}
+                        <option value="{$name}">{$name}</option>
+                    {/volist}
+                </select>
         
                 <label for="gender">性别:</label>
-                <input type="text" id="gender" name="gender">
+                <select id="gender" name="gender">
+                    <option value="">全选</option>
+                    <option value="1">1</option>
+                    <option value="0">0</option>
+                </select>
         
                 <label for="ageGroupName">年龄组:</label>
-                <input type="text" id="ageGroupName" name="ageGroupName">
+                <select id="ageGroupName" name="ageGroupName">
+                    <option value="">全选</option>
+                    {volist name="ageGroupNames" id="name"}
+                        <option value="{$name}">{$name}</option>
+                    {/volist}
+                </select>
         
                 <input type="submit" value="Search">
             </form>
-        </div>              
+        </div>                            
         <div class="public-left">
             <table class="table">
                 <thead>

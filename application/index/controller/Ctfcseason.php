@@ -8,7 +8,7 @@
 
 namespace app\index\controller;
 
-require_once (__DIR__ . '/../../../thinkphp/library/think/db/Expression.php');
+require_once(__DIR__ . '/../../../thinkphp/library/think/db/Expression.php');
 
 
 use think\Db;
@@ -34,36 +34,44 @@ class Ctfcseason extends Base
         $this->affectedRowsResult($result);
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
         $this->checkauthorization();
 
         $result = Db::name('ctfc_season')->where('ID', $id)->delete();
         $this->affectedRowsResult($result);
     }
 
-    public function read($id){
+    public function read($id)
+    {
 
-        $exp = new Expression('field(ID,'.$id.'),Date DESC');
+        $exp = new Expression('field(ID,' . $id . '),Date DESC');
         $result = Db::name('ctfc_season')
             ->order($exp)
             ->select();
         $result = array_reverse($result);
 
+        $itemNames = Db::name('ctfc_item')->column('Name');
+        $ageGroupNames = Db::name('ctfc_agegroup')->column('Name');
 
-        if($this->jsonRequest()) {
+
+        if ($this->jsonRequest()) {
             $this->dataResult($result[0]);
-        } else if(count($result)>0){
+        } else if (count($result) > 0) {
             $this->headerAndFooter('ctfc');
 
-            $otherseasons = array_slice($result,1);
+            $otherseasons = array_slice($result, 1);
 
             $matches = Db::name('ctfc_heat_view')->where('SeasonID', $result[0]['ID'])
                 // ->order('StartTime','desc')
                 ->select();
 
-            $this->view->assign('matches',$matches);
-            $this->view->assign('thisseason',$result[0]);
-            $this->view->assign('otherseasons',$otherseasons);
+            $this->view->assign('matches', $matches);
+            $this->view->assign('thisseason', $result[0]);
+            $this->view->assign('otherseasons', $otherseasons);
+            $this->view->assign('itemNames', $itemNames);
+            $this->view->assign('ageGroupNames', $ageGroupNames);
+
             return $this->view->fetch('ctfcseason/read');
         } else {
             header("HTTP/1.0 404 Not Found");
@@ -72,7 +80,8 @@ class Ctfcseason extends Base
 
     }
 
-    public function lists(){
+    public function lists()
+    {
         $list = Db::name('ctfc_season')->paginate(input('pagesize'));
         $this->paginatedResult(
             $list->total(),
@@ -82,43 +91,50 @@ class Ctfcseason extends Base
         );
     }
 
-    public function readRecent(){
+    public function readRecent()
+    {
+        $itemNames = Db::name('ctfc_item')->column('Name');
+        $ageGroupNames = Db::name('ctfc_agegroup')->column('Name');
 
         $result = Db::name('ctfc_season')
-            ->order('Date','desc')
+            ->order('Date', 'desc')
             ->select();
 
+        
 
-        if($this->jsonRequest()) {
+        if ($this->jsonRequest()) {
             $this->dataResult($result[0]);
-        } else if(count($result)>0){
+        } else if (count($result) > 0) {
             $this->headerAndFooter('ctfc');
 
-            $otherseasons = array_slice($result,1);
+            $otherseasons = array_slice($result, 1);
 
             $matches = Db::name('ctfc_heat_view')->where('SeasonID', $result[0]['ID'])
-                ->order(['EventID', 'HeatID','LaneNumber'])
+                ->order(['EventID', 'HeatID', 'LaneNumber'])
                 ->select();
 
             // $events= Db::name('ctfc_event')->select();
             // $this->view->assign('recenteventid',$events[0]['ID']);
-            $this->view->assign('matches',$matches);
-            $this->view->assign('thisseason',$result[0]);
-            $this->view->assign('otherseasons',$otherseasons);
+            $this->view->assign('matches', $matches);
+            $this->view->assign('thisseason', $result[0]);
+            $this->view->assign('otherseasons', $otherseasons);
+            $this->view->assign('itemNames', $itemNames);
+            $this->view->assign('ageGroupNames', $ageGroupNames);
+            
             return $this->view->fetch('ctfcseason/read');
         } else {
             header("HTTP/1.0 404 Not Found");
             die;
         }
-
     }
 
-    public function update($id){
+    public function update($id)
+    {
         $this->checkauthorization();
 
         $data = request()->only(self::FIELD, 'post');
         $this->makeNull($data);
-//        $validator = validate('Ctfc_season');
+        //        $validator = validate('Ctfc_season');
 //        $result = $validator->check($data);
 //        if (!$result){
 //            $this->result(0);
@@ -127,35 +143,57 @@ class Ctfcseason extends Base
         $this->affectedRowsResult($result);
     }
 
-    public function filter(){
+    public function filter($id)
+    {
+        // Fetch the dropdown options from the database
+        $itemNames = Db::name('ctfc_item')->column('Name');
+        $ageGroupNames = Db::name('ctfc_agegroup')->column('Name');
 
+        $exp = new Expression('field(ID,' . $id . '),Date DESC');
         $result = Db::name('ctfc_season')
-        ->order('Date','desc')
-        ->select();
+            ->order($exp)
+            ->select();
 
-        $itemName = input('get.itemName');
-        $gender = input('get.gender');
-        $ageGroupName = input('get.ageGroupName');
-    
-        // If all inputs are empty, simply return the 'read' view without modifying the 'matches' variable.
-        if (empty($itemName) && empty($gender) && empty($ageGroupName)) {
+        $result = array_reverse($result);
+
+        if ($this->jsonRequest()) {
+            $this->dataResult($result[0]);
+        } else if (count($result) > 0) {
+            $this->headerAndFooter('ctfc');
+
+            $otherseasons = array_slice($result, 1);
+
+            // Construct the filter
+            $itemName = input('get.itemName');
+            $gender = input('get.gender');
+            $ageGroupName = input('get.ageGroupName');
+
+            $filter = [];
+            if (!empty($itemName)) {
+                $filter['ItemName'] = $itemName;
+            }
+            if (!empty($gender)) {
+                $filter['Gender'] = $gender;
+            }
+            if (!empty($ageGroupName)) {
+                $filter['AgeGroupName'] = $ageGroupName;
+            }
+
+            // Get the matches
+            $matches = Db::name('ctfc_heat_view')->where('SeasonID', $result[0]['ID'])->where($filter)
+                // ->order('StartTime','desc')
+                ->select();
+
+            $this->view->assign('matches', $matches);
+            $this->view->assign('thisseason', $result[0]);
+            $this->view->assign('otherseasons', $otherseasons);
+            $this->view->assign('itemNames', $itemNames);
+            $this->view->assign('ageGroupNames', $ageGroupNames);
+
             return $this->view->fetch('ctfcseason/read');
+        } else {
+            header("HTTP/1.0 404 Not Found");
+            die;
         }
-    
-        // If at least one filter field is filled, perform the database query.
-        $matches = Db::name('ctfc_heat_view')
-                    ->where('SeasonID', $result[0]['ID']) // Assuming you have a way to get the current season id
-                    ->where('ItemName', 'like', "%$itemName%")
-                    ->where('Gender', 'like', "%$gender%")
-                    ->where('AgeGroupName', 'like', "%$ageGroupName%")
-                    ->order(['EventID', 'HeatID','LaneNumber'])
-                    ->select();
-    
-        // Assign the filtered matches to the view
-        $this->view->assign('matches', $matches);
-    
-        // Render the same 'read' view
-        return $this->view->fetch('ctfcseason/read');
     }
-
 }
