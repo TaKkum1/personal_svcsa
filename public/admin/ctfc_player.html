@@ -1,16 +1,18 @@
 <!-- 内容主体区域 -->
 <link rel="stylesheet" href="layui/css/layui.css">
-<style>.layui-table-cell {
-    height: 80px;
-    /* line-height: 80px; */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+<style>
+    .layui-table-cell {
+        height: 80px;
+        /* line-height: 80px; */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-.layui-table-cell img {
-    max-height: 70px;
-}</style>
+    .layui-table-cell img {
+        max-height: 70px;
+    }
+</style>
 <div>
     <div class="layui-tab">
         <div class="layui-tab-content">
@@ -50,8 +52,8 @@
 <script src="layui/layui.js"></script>
 <script>
     function tongguo(ids, passed) {
-      console.log(ids);
-      console.log(passed);
+        console.log(ids);
+        console.log(passed);
         $.ajax({
             url: '../ctfcplayer/passapp',
             type: 'Post',
@@ -64,16 +66,33 @@
                 Accept: 'application/json'
             },
             success: function (data) {
-                    layer.msg('成功审核通过' + data['affectedRows']  + '个运动员，发送了' + data['affectedEmails'] +'个邮件', {
-                        icon: 1,
-                        time: 1200
-                    }, function () {
-                        location.reload();
-                    });
+                layer.msg('成功审核通过' + data['affectedRows'] + '个运动员，发送了' + data['affectedEmails'] + '个邮件', {
+                    icon: 1,
+                    time: 1200
+                }, function () {
+                    // location.reload();
+                    reloadPage();
+                });
             },
             error: function (xhr) {
                 if (xhr.status == 401)
-							top.location.href = 'login.html';
+                    top.location.href = 'login.html';
+            }
+        });
+    }
+
+    function reloadPage() {
+        var table = layui.table;
+        var form = layui.form;
+        var currentPage = 1;
+
+        if (table.cache['test']) {
+            currentPage = table.cache['test'].curr;
+        }
+        table.reload('test', {
+            url: '../CTFCPlayer?all=1',
+            page: {
+                curr: currentPage //重新从第 1 页开始
             }
         });
     }
@@ -95,7 +114,7 @@
             method: 'get',
             request: {
                 pageName: 'page' //页码的参数名称，默认：page
-                ,limitName: 'pagesize' //每页数据量的参数名，默认：limit
+                , limitName: 'pagesize' //每页数据量的参数名，默认：limit
             },
             title: '用户数据表',
             cols: [
@@ -150,7 +169,6 @@
                 , groups: 1 //只显示 1 个连续页码
                 , first: false //不显示首页
                 , last: false //不显示尾页
-
             }
         });
         $('#tongguoAll').click(function () {
@@ -176,7 +194,7 @@
 
         })
         $("#add").click(function () {
-            var index=layer.open({
+            var index = layer.open({
                 type: 2,
                 title: '新建田径选手',
                 shadeClose: true,
@@ -224,16 +242,17 @@
 
                         body.find('#PhotoSrc').val(data.PhotoSrc)
                         body.find('#Email').val(data.Email)
-//                        body.find('#TeamID').val(data.TeamID)
-                  //      body.find('#SeasonID').attr("value", data.SeasonID)
+                        //                        body.find('#TeamID').val(data.TeamID)
+                        //      body.find('#SeasonID').attr("value", data.SeasonID)
 
                         body.find('#demo1').attr("src", "../uploads/" + data.PhotoSrc)
                         body.find('#ID').val(data.ID)
 
-//                        body.find('#TeamID').attr("value", data.TeamID)
+                        //                        body.find('#TeamID').attr("value", data.TeamID)
                     },
                     end: function () {
-                        location.reload();
+                        // location.reload();
+                        reloadPage();
                     }
                 });
                 layer.full(index);
@@ -258,7 +277,8 @@
                         icon: 1,
                         time: 1200
                     }, function () {
-                        location.reload();
+                        // location.reload();
+                        reloadPage();
                     });
                 }, function () {
                 });
@@ -266,7 +286,7 @@
                 layer.confirm('确认要审核通过吗？', {
                     btn: ['确认', '取消'] //按钮
                 }, function () {
-                    layer.msg('正在通过...', {icon: 7});
+                    layer.msg('正在通过...', { icon: 7 });
                     tongguo(data.ID, 1)
                 }, function () {
                 });
@@ -274,7 +294,7 @@
                 layer.confirm('确认要驳回吗？', {
                     btn: ['确认', '取消'] //按钮
                 }, function () {
-                    layer.msg('正在驳回...', {icon: 7});
+                    layer.msg('正在驳回...', { icon: 7 });
                     tongguo(data.ID, 0)
                 }, function () {
                 });
