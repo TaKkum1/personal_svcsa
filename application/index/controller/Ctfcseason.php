@@ -168,7 +168,7 @@ class Ctfcseason extends Base
                 $filter['ItemName'] = $itemName;
             }
             if (!empty($gender)) {
-                $filter['Gender'] = $gender === '男' ? 0 : 1;
+                $filter['Gender'] = $gender;
             }
             if (!empty($ageGroupName)) {
                 $filter['AgeGroupName'] = $ageGroupName;
