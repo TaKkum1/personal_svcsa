@@ -179,11 +179,9 @@
 \think\Route::get('ctfcseason/:seasonid/apply', 'index/ctfcteam/getapply', [], ['seasonid' => '\d+']);
 \think\Route::post('ctfcseason/:id', 'index/ctfcseason/update', [], ['id' => '\d+']);
 \think\Route::post('ctfcseason', 'index/ctfcseason/add');
-\think\Route::get('ctfcseason/filter/:id', 'index/ctfcseason/filter', [], ['id' => '\d+']);
 \think\Route::delete('ctfcseason/:id', 'index/ctfcseason/delete', [], ['id' => '\d+']);
 \think\Route::get('ctfcseason/:id', 'index/ctfcseason/read', [], ['id' => '\d+']);
 \think\Route::get('ctfcseason', 'index/ctfcseason/lists');
-
 
 \think\Route::post('ctfcstatistics/:id', 'index/ctfcstatistics/update', [], ['id' => '\d+']);
 \think\Route::post('ctfcstatistics', 'index/ctfcstatistics/add');
