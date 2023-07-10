@@ -165,19 +165,21 @@ class Ctfcseason extends Base
 
             $filter = [];
             if (!empty($itemName)) {
-                $filter['ItemName'] = $itemName;
+                $filter['itemName'] = $itemName;
             }
             if (!empty($gender)) {
-                $filter['Gender'] = $gender;
+                $filter['gender'] = $gender;
             }
             if (!empty($ageGroupName)) {
-                $filter['AgeGroupName'] = $ageGroupName;
+                $filter['ageGroupName'] = $ageGroupName;
             }
 
             // Get the matches
             $matches = Db::name('ctfc_heat_view')->where('SeasonID', $result[0]['ID'])->where($filter)
                 // ->order('StartTime','desc')
                 ->select();
+
+            $this->view->assign('filter', $filter);
 
             $this->view->assign('matches', $matches);
             $this->view->assign('thisseason', $result[0]);

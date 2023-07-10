@@ -14,28 +14,27 @@
             <form method="get" action="{:url('index/ctfcseason/filter', ['id'=>$thisseason['ID']])}">
                 <label for="itemName">项目名称:</label>
                 <select id="itemName" name="itemName">
-                    <option value="">全选</option>
+                    <option value="" {if condition="isset($filter['itemName']) and $filter['itemName'] eq ''"}selected{/if}>全选</option>
                     {volist name="itemNames" id="name"}
-                        <option value="{$name}">{$name}</option>
+                        <option value="{$name}" {if condition="isset($filter['itemName']) and $filter['itemName'] eq $name"}selected{/if}>{$name}</option>
                     {/volist}
                 </select>
         
                 <label for="gender">性别:</label>
                 <select id="gender" name="gender">
-                    <option value="">全选</option>
-                    <option value="M">M</option>
-                    <option value="F">F</option>
-                    <option value="Mix">Mix</option>
+                    <option value="" {if condition="isset($filter['gender']) and $filter['gender'] eq ''"}selected{/if}>全选</option>
+                    <option value="M" {if condition="isset($filter['gender']) and $filter['gender'] eq 'M'"}selected{/if}>M</option>
+                    <option value="F" {if condition="isset($filter['gender']) and $filter['gender'] eq 'F'"}selected{/if}>F</option>
+                    <option value="Mix" {if condition="isset($filter['gender']) and $filter['gender'] eq 'Mix'"}selected{/if}>Mix</option>
                 </select>
         
-                <label for="ageGroupName">年龄组:</label>
                 <select id="ageGroupName" name="ageGroupName">
-                    <option value="">全选</option>
+                    <option value="" {if condition="isset($filter['ageGroupName']) and $filter['ageGroupName'] eq ''"}selected{/if}>全选</option>
                     {volist name="ageGroupNames" id="name"}
-                        <option value="{$name}">{$name}</option>
+                        <option value="{$name}" {if condition="isset($filter['ageGroupName']) and $filter['ageGroupName'] eq $name"}selected{/if}>{$name}</option>
                     {/volist}
                 </select>
-        
+                
                 <input type="submit" value="Search">
             </form>
         </div>  
