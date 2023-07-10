@@ -27,7 +27,8 @@
                     <option value="F" {if condition="isset($filter['gender']) and $filter['gender'] eq 'F'"}selected{/if}>F</option>
                     <option value="Mix" {if condition="isset($filter['gender']) and $filter['gender'] eq 'Mix'"}selected{/if}>Mix</option>
                 </select>
-        
+
+                <label for="ageGroupName">年龄组:</label>
                 <select id="ageGroupName" name="ageGroupName">
                     <option value="" {if condition="isset($filter['ageGroupName']) and $filter['ageGroupName'] eq ''"}selected{/if}>全选</option>
                     {volist name="ageGroupNames" id="name"}
