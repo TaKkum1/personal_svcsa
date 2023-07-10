@@ -370,7 +370,7 @@
         // console.log("------", data)
         if (data.length !== 0) {
             $.each(data, function (index, item) {
-                console.log("=====", item)
+                // console.log("=====", item)
                 var optionText = item.Sex === "Mix" && item.MinAgeGroupID === item.MaxAgeGroupID ? item.Sex + " - " + item.ItemName + " - "+ item.MinAgeGroupName + "8岁以下" : item.Sex + " - " + item.ItemName;
                 $('#ItemID').append('<option value="' + item.ItemID + '-' + item.Sex + '">' + optionText + '</option>');
             });
