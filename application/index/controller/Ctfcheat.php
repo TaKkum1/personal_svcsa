@@ -54,6 +54,13 @@ class Ctfcheat extends Base
      
             $modifiedList[] = $newTable;
         }
+            // Extract the values to be sorted into separate arrays
+            $eventIDs = array_column($modifiedList, 'EventID');
+            $heatIDs = array_column($modifiedList, 'HeatID');
+            $laneNumbers = array_column($modifiedList, 'LaneNumber');
+
+            // Sort the modified list using the extracted values
+            array_multisort($eventIDs, SORT_ASC, $heatIDs, SORT_ASC, $laneNumbers, SORT_ASC, $modifiedList);
 
         $this->dataResult($modifiedList);
 
