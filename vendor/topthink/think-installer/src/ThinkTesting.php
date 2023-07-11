@@ -11,9 +11,10 @@
 
 namespace think\composer;
 
+
+use Composer\Installer\LibraryInstaller;
 use Composer\Package\PackageInterface;
 use Composer\Repository\InstalledRepositoryInterface;
-use InvalidArgumentException;
 
 class ThinkTesting extends LibraryInstaller
 {
@@ -23,7 +24,7 @@ class ThinkTesting extends LibraryInstaller
     public function getInstallPath(PackageInterface $package)
     {
         if ('topthink/think-testing' !== $package->getPrettyName()) {
-            throw new InvalidArgumentException('Unable to install this library!');
+            throw new \InvalidArgumentException('Unable to install this library!');
         }
 
         return parent::getInstallPath($package);
@@ -31,16 +32,19 @@ class ThinkTesting extends LibraryInstaller
 
     public function install(InstalledRepositoryInterface $repo, PackageInterface $package)
     {
-        parent::install($repo, $package)->then(function () use ($package) {
-            $this->copyTestDir($package);
-        });
+        parent::install($repo, $package);
+
+        $this->copyTestDir($package);
+
+
     }
 
     public function update(InstalledRepositoryInterface $repo, PackageInterface $initial, PackageInterface $target)
     {
-        return parent::update($repo, $initial, $target)->then(function () use ($target) {
-            $this->copyTestDir($target);
-        });
+        parent::update($repo, $initial, $target);
+
+        $this->copyTestDir($target);
+
     }
 
     private function copyTestDir(PackageInterface $package)
