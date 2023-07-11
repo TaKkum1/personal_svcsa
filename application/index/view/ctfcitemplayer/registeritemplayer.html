@@ -248,12 +248,6 @@
                     return currentPlayerList.includes(item.ID);
                 });
 
-                playerList.sort(function (a, b) {
-                    var nameA = a.Name.toUpperCase();
-                    var nameB = b.Name.toUpperCase();
-                    return (nameA < nameB) ? -1 : (nameA > nameB) ? 1 : 0;
-                });
-
                 playerList.forEach(function (item) {
                     var option = '<option value="' + item.ID + '">' + item.Name + '</option>';
                     $('#PlayerIDSet1').append(option);
@@ -310,12 +304,6 @@
                 axios.get('/CTFCPlayer?all=1', {}).then(function (response) {
                     var playerList = response.data.data.filter(function (item) {
                         return currentPlayerList.includes(item.ID);
-                    });
-
-                    playerList.sort(function (a, b) {
-                        var nameA = a.Name.toUpperCase();
-                        var nameB = b.Name.toUpperCase();
-                        return (nameA < nameB) ? -1 : (nameA > nameB) ? 1 : 0;
                     });
 
                     playerList.forEach(function (item) {
