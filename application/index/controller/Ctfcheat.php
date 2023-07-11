@@ -31,7 +31,8 @@ class Ctfcheat extends Base
             $newTable = [];
             $newTable['ID'] = $heateachrow['ID'];
             $newTable['EventID'] = $heateachrow['EventID'];
-            $newTable['HeatID'] = $heateachrow['HeatID'];
+            // Set default value of 1 to HeatID if null or empty
+            $newTable['HeatID'] = $heateachrow['HeatID'] ? $heateachrow['HeatID'] : 1;
             $newTable['LaneNumber'] = $heateachrow['LaneNumber'];
             $newTable['TeamName'] = $heateachrow['TeamName'];
             $newTable['ItemAgeGroupSex'] = $heateachrow['ItemAgeGroupSex'];
