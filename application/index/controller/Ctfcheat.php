@@ -16,11 +16,12 @@ class Ctfcheat extends Base
         if($IAGSid) {
             $list = Db::name('ctfc_heat_view')->where('ItemAgeGroupSex', $IAGSid)->paginate(input('pagesize'));
         }elseif($IsSingle != null){
-                $list = Db::name('ctfc_heat_view')->where('IsSingle', $IsSingle)->paginate(input('pagesize'));
+            $list = Db::name('ctfc_heat_view')->where('IsSingle', $IsSingle)->paginate(input('pagesize'));
         }
         else {
-            $list = Db::name('ctfc_heat_view')->order(['EventID', 'HeatID', 'LaneNumber'])->paginate(input('pagesize'));
+            $list = Db::name('ctfc_heat_view')->paginate(input('pagesize'));
         }
+        $list = Db::name('ctfc_heat_view')->order(['EventID', 'HeatID', 'LaneNumber'])->paginate(input('pagesize'));
         // Modify the player1-6 fields to combine them into a single column
 
         $modifiedList = [];
