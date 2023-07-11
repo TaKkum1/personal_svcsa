@@ -367,14 +367,16 @@
         // Get Seasonitem
         axios.get('/CTFCSeasonitem?seasonid=' + selectedSeasonID, {}).then(function (response) {
         const data = response.data.data;
+        // console.log("------", data)
         if (data.length !== 0) {
             $.each(data, function (index, item) {
-                $('#ItemID').append('<option value="' + item.ItemID + '-' + item.Sex + '">' + item.Sex + " - " + item.ItemName +  '</option>');
-
+                // console.log("=====", item)
+                var optionText = item.Sex === "Mix" && item.MinAgeGroupID === item.MaxAgeGroupID ? "7 - 8岁" + " - " + item.ItemName : item.Sex + " - " + item.ItemName;
+                $('#ItemID').append('<option value="' + item.ItemID + '-' + item.Sex + '">' + optionText + '</option>');
             });
             }
         }).catch(function (error) {
-                console.log(error);
+            console.log(error);
         });
 
     }).catch(function (error) {
