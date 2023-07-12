@@ -16,13 +16,12 @@ class Ctfcheat extends Base
         if($IAGSid) {
             $list = Db::name('ctfc_heat_view')->where('ItemAgeGroupSex', $IAGSid)->paginate(input('pagesize'));
         }elseif($IsSingle != null){
-                $list = Db::name('ctfc_heat_view')->where('IsSingle', $IsSingle)->paginate(input('pagesize'));
+            $list = Db::name('ctfc_heat_view')->where('IsSingle', $IsSingle)->paginate(input('pagesize'));
         }
         else {
             $list = Db::name('ctfc_heat_view')->paginate(input('pagesize'));
         }
-
-
+        $list = Db::name('ctfc_heat_view')->order(['EventID', 'HeatID', 'LaneNumber'])->paginate(input('pagesize'));
         // Modify the player1-6 fields to combine them into a single column
 
         $modifiedList = [];
@@ -31,7 +30,8 @@ class Ctfcheat extends Base
             $newTable = [];
             $newTable['ID'] = $heateachrow['ID'];
             $newTable['EventID'] = $heateachrow['EventID'];
-            $newTable['HeatID'] = $heateachrow['HeatID'];
+            // Set default value of 1 to HeatID if null or empty
+            $newTable['HeatID'] = $heateachrow['HeatID'] ? $heateachrow['HeatID'] : 1;
             $newTable['LaneNumber'] = $heateachrow['LaneNumber'];
             $newTable['TeamName'] = $heateachrow['TeamName'];
             $newTable['ItemAgeGroupSex'] = $heateachrow['ItemAgeGroupSex'];
@@ -54,6 +54,7 @@ class Ctfcheat extends Base
      
             $modifiedList[] = $newTable;
         }
+          
 
         $this->dataResult($modifiedList);
 
