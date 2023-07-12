@@ -61,9 +61,10 @@
                 <div class="layui-input-block">
                     <button type="button" class="layui-btn" id="test1">上传logo</button>
                     <input type="hidden" id="LogoSrc" name="LogoSrc" value=""/>
+                    <input type="hidden" id="LogoSelected" value=""/>
                     <div class="layui-upload-list">
                         <img class="layui-upload-img" width="100px" height="80px" id="demo1"/>
-                        <p id="demoText"></p>
+                        <p id="demoText1"></p>
                     </div>
                 </div>
             </div>
@@ -74,9 +75,10 @@
                 <div class="layui-input-block">
                     <button type="button" class="layui-btn" id="test2">上传图片</button>
                     <input type="hidden" id="PhotoSrc" name="PhotoSrc" value=""/>
+                    <input type="hidden" id="PhotoSelected" value=""/>
                     <div class="layui-upload-list">
-                        <img class="layui-upload-img" width="100px" height="80px" id="demo1"/>
-                        <p id="demoText"></p>
+                        <img class="layui-upload-img" width="100px" height="80px" id="demo2"/>
+                        <p id="demoText2"></p>
                     </div>
                 </div>
             </div>
@@ -104,36 +106,30 @@
        
         var uploadInst = upload.render({
             elem: '#test1',
-            url: apiurl,
+            url: "../uploadimage",
             acceptMime: 'image/*',
             auto:false,
-            bindAction:'',
-            multiple: false,
+            multiple: true,
             before: function (obj) {
-
+                
                 this.data = {
                     Name: $('input[name="Name"]').val(),
                     ShortName: $('input[name="ShortName"]').val(),
                     Description: $('input[name="description"]').val(),
-                    // CaptainName:$('input[name="CaptainName"]').val(),
-                    CaptainName: data.field.CaptainName,
+                    CaptainName:$('input[name="CaptainName"]').val(),
                     CaptainEmail:$('input[name="email"]').val(),
                     CaptainPhone:$('input[name="CaptainPhone"]').val(),
-                    // LogoSrc: $("#img_url").val(),
                     LogoSrc: $('input[name="LogoSrc"]').val(),
-                    PhotoSrc: $("#img_url").val(),
-                    // PhotoSrc: $('input[name="PhotoSrc"]').val(),
+                    PhotoSrc: $('input[name="PhotoSrc"]').val(),
                 }
-                console.log(data)
-
             },
             //选择文件后的回调
-            // choose: function (obj) {
-            //     $("input[name=\"PhotoSrc\"]").attr("value", "");
-            //     obj.preview(function (index, file, result) {
-            //         $('#demo1').attr('src', result); //图片链接（base64）
-            //     })
-            // },
+            choose: function (obj) {
+                obj.preview(function (index, file, result) {
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                    $('#LogoSelected').val('selected');
+                })
+            },
             done: function (res) {
                 var index = parent.layer.getFrameIndex(window.name);
 
@@ -143,26 +139,110 @@
                 }
                 //上传成功
                 console.log(res);
-                //            picture = res.data.savename;
-                //            $("#img_url").attr("value", picture)
-                layer.msg('添加成功', {
-                    icon: 1,
-                    time: 1500
-                }, function () {
-
-                    parent.layer.close(index);
+                picture = res.data.savename;
+                $("#LogoSrc").attr("value", picture);
+                axios.post('../ctfcteam/' + $('input[name="ID"]').val(), {
+                Name: $('input[name="Name"]').val(),
+                ShortName: $('input[name="ShortName"]').val(),
+                Description: $('input[name="description"]').val(),
+                CaptainName:$('input[name="CaptainName"]').val(),
+                CaptainEmail:$('input[name="email"]').val(),
+                CaptainPhone:$('input[name="CaptainPhone"]').val(),
+                LogoSrc: $('input[name="LogoSrc"]').val(),
+                PhotoSrc: $('input[id="demo2"]').val()
+            })
+            .then(function (response) {
+                    layer.msg('修改成功', {
+                        icon: 1,
+                        time: 1500
+                    }, function () {
+                        parent.layer.close(index);
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
                 });
             },
-            error: function (index,upload) {
-
-                return layer.msg('网络异常，更新失败。可能需要重新登录。');
+            error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText1');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    console.log("uploadInst.upload");
+                    uploadInst.upload();
+                });
             }
-            
-        
         });
 
-        
+        var uploadInst2 = upload.render({
+            elem: '#test2',
+            url: "../uploadimage",
+            acceptMime: 'image/*',
+            auto:false,
+            multiple: true,
+            before: function (obj) {
+                this.data = {
+                    Name: $('input[name="Name"]').val(),
+                    ShortName: $('input[name="ShortName"]').val(),
+                    Description: $('input[name="description"]').val(),
+                    CaptainName:$('input[name="CaptainName"]').val(),
+                    CaptainEmail:$('input[name="email"]').val(),
+                    CaptainPhone:$('input[name="CaptainPhone"]').val(),
+                    LogoSrc: $('input[name="LogoSrc"]').val(),
+                    PhotoSrc: $('input[name="PhotoSrc"]').val(),
+                }
+            },
+            //选择文件后的回调
+            choose: function (obj) {
+                obj.preview(function (index, file, result) {
+                    $('#demo2').attr('src', result); //图片链接（base64）
+                    $('#PhotoSelected').val('selected');
+                })
+            },
+            done: function (res) {
+                var index = parent.layer.getFrameIndex(window.name);
 
+                //如果上传失败
+                if (res.status == '0') {
+                    return layer.msg('上传图片失败，请检查网络。');
+                }
+                //上传成功
+                console.log(res);
+                picture = res.data.savename;
+                $("#PhotoSrc").attr("value", picture);
+                axios.post('../ctfcteam/' + $('input[name="ID"]').val(), {
+                Name: $('input[name="Name"]').val(),
+                ShortName: $('input[name="ShortName"]').val(),
+                Description: $('input[name="description"]').val(),
+                CaptainName:$('input[name="CaptainName"]').val(),
+                CaptainEmail:$('input[name="email"]').val(),
+                CaptainPhone:$('input[name="CaptainPhone"]').val(),
+                LogoSrc: $('input[id="demo1"]').val(),
+                PhotoSrc: $('input[name="PhotoSrc"]').val()
+            })
+            .then(function (response) {
+                    layer.msg('修改成功', {
+                        icon: 1,
+                        time: 1500
+                    }, function () {
+                        parent.layer.close(index);
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
+            
+            error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText2');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    console.log("uploadInst2.upload");
+                    uploadInst2.upload();
+                });
+            }
+        });
 
         form.verify({
             // chkbirth: [/^\d{1,4}-\d{1,2}-\d{1,2}$/, '生日必须是YYYY-MM-dd格式！'],
@@ -175,29 +255,30 @@
         });
 
         form.on('submit(add)', function (data) {
-            // if ($('input[name="file"]').val()!="") {
-            //     uploadInst.upload();
-            //     return;
-            // }
-
-            if(!form.verify()) return;
-
-            var index = parent.layer.getFrameIndex(window.name);
-            axios.post('../ctfcteam/' + $('input[name="ID"]').val(), {
-                Name: $('input[name="Name"]').val(),
-                ShortName: $('input[name="ShortName"]').val(),
-                Description: $('input[name="description"]').val(),
-                CaptainName:$('input[name="CaptainName"]').val(),
-                // CaptainName: data.field.CaptainName,
-                CaptainEmail:$('input[name="email"]').val(),
-                CaptainPhone:$('input[name="CaptainPhone"]').val(),
-                // LogoSrc: $("#img_url").val(),
-                LogoSrc: $('input[name="LogoSrc"]').val(),
-                PhotoSrc: $("#img_url").val(),
-                // PhotoSrc: $('input[name="PhotoSrc"]').val()
-
+            if ($('input[id="PhotoSelected"]').val()!="" && $('input[id="LogoSelected"]').val()!="") {
+                uploadInst2.upload();
+                uploadInst.upload();
+                return;
+            } else if ($('input[id="PhotoSelected"]').val() != "") {
+                uploadInst2.upload();
+                return;
+            } else if ($('input[id="LogoSelected"]').val() != "") {
+                uploadInst.upload();
+                return;
+            } 
+                console.log("the third axios.post");
+                var index = parent.layer.getFrameIndex(window.name);
+                axios.post('../ctfcteam/' + $('input[name="ID"]').val(), {
+                    Name: $('input[name="Name"]').val(),
+                    ShortName: $('input[name="ShortName"]').val(),
+                    Description: $('input[name="description"]').val(),
+                    CaptainName:$('input[name="CaptainName"]').val(),
+                    CaptainEmail:$('input[name="email"]').val(),
+                    CaptainPhone:$('input[name="CaptainPhone"]').val(),
+                    LogoSrc: $('input[id="demo1"]').val(),
+                    PhotoSrc: $('input[id="demo2"]').val()
             })
-                .then(function (response) {
+            .then(function (response) {
                     layer.msg('修改成功', {
                         icon: 1,
                         time: 1500
@@ -205,9 +286,12 @@
                         parent.layer.close(index);
                     });
                 })
-                .catch(function (error) {
+            .catch(function (error) {
                     console.log(error);
                 });
+            
+
+            if(!form.verify()) return;
         });
         
     });
