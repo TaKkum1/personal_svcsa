@@ -20,10 +20,10 @@
             <script type="text/html" id="toolbarDemo">
             </script>
             <script type="text/html" id="show-img">
-                <img src="../uploads/{{d.TeamPhotoSrc}}" alt="图片名">
+                <img src="../uploads/{{d.PhotoSrc}}" alt="图片名">
             </script>
-            <script type="text/html" id="show-img">
-                <img src="../uploads/{{d.TeamLogoSrc}}" alt="图片名">
+            <script type="text/html" id="show-img2">
+                <img src="../uploads/{{d.LogoSrc}}" alt="图片名">
             </script>
             <script type="text/html" id="barDemo">
                 <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
@@ -75,7 +75,7 @@
                 },{
                     field: 'LogoSrc',
                     title: 'Logo',
-                    templet: '#show-img',
+                    templet: '#show-img2',
                     width: 100,
                 }, 
                 {
@@ -157,18 +157,15 @@
                     area: ['100%', '100%'],
                     content: 'ctfc_team_edit.html',
                     success: function (layero, index) {
-                        // layer.iframeAuto(index);
                         var body = layer.getChildFrame('body', index);
                         body.find('#Name').val(data.Name)
                         body.find('#ShortName').val(data.ShortName)
-                        //body.find('#LogoSrc').val(data.LogoSrc)
-                        //body.find('#PhotoSrc').val(data.PhotoSrc)
                         body.find('#Description').val(data.Description)
                         body.find('#CaptainName').val(data.CaptainName)
                         body.find('#CaptainEmail').val(data.CaptainEmail)
                         body.find('#CaptainPhone').val(data.CaptainPhone)
-                        body.find('#PhotoSrc').attr("src", "../uploads/" + data.PhotoSrc)
-                        body.find('#LogoSrc').attr("src", "../uploads/" + data.LogoSrc)
+                        body.find('#demo1').attr("src", "../uploads/" + data.LogoSrc)
+                        body.find('#demo2').attr("src", "../uploads/" + data.PhotoSrc)
 
                         body.find('#ID').val(data.ID)
                     },
