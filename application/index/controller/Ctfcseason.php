@@ -175,9 +175,7 @@ class Ctfcseason extends Base
             }
 
             // Get the matches
-            $matches = Db::name('ctfc_heat_view')->where('SeasonID', $result[0]['ID'])->where($filter)
-                // ->order('StartTime','desc')
-                ->select();
+            $matches = Db::name('ctfc_heat_view')->where('SeasonID', $result[0]['ID'])->where($filter)->order(['EventID', 'HeatID', 'LaneNumber'])->select();
 
             $this->view->assign('filter', $filter);
 
