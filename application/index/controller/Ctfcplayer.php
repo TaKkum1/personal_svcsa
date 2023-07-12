@@ -92,7 +92,7 @@ class Ctfcplayer extends Base
             $player["PhotoSrc"] = $infophotofile->move(__DIR__ . $assetUrl)
                 ->getSaveName();
 
-        $result = Db::name('ctfc_player')->insert($player);
+        $result = Db::name('ctfc_player')->order('Name')->insert($player);
 
         $this->headerAndFooter('ctfc');
 
@@ -124,27 +124,9 @@ class Ctfcplayer extends Base
         $pagesize = (!input('pagesize')) ? 100 : input('pagesize');
         if (!$seasonid && input('seasonid')) $seasonid = input('seasonid');
         if (!$teamid && input('teamid')) $teamid = input('teamid');
-        // if (!$competitionid && input('competitionid')) {
-        //   $competitionid = input('CompetitionID');
-        // }
-        // if (input('freeagant')) {
-        //   // List all the free agents for a particular season.
-        //   $sql =
-        //       'select * '.
-        //       'from ctfc_player '.
-        //       'where ctfc_player.ID not in ('.
-        //           'select distinct ctfc_seasonteamplayer.PlayerID '.
-        //           'from ctfc_seasonteamplayer '.
-        //           'where ctfc_seasonteamplayer.SeasonID='.strval($seasonid).')'.
-        //       'order by Name asc';
-        //   $list = Db::query($sql);
-        //   if ($this->jsonRequest())
-        //     $this->dataResult($list);
-        //   //$list = Db::name('ctfc_player')->order('Name asc');
-        // } else 
         if (input('all')) {
         //   List all players in the database.
-          $list = Db::name('ctfc_player');
+          $list = Db::name('ctfc_player')->order('Name asc');
           $list = $list->paginate($pagesize, false, [
             'query' => input('param.'),
           ]);
