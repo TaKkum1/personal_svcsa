@@ -11,10 +11,9 @@
 <div>
     <div class="layui-tab">
         <div class="layui-tab-content">
-            <div class="layui-input-inline" style="">
-                <div class="layui-input-inline">
+            
+            <div class="layui-input-inline">
                     <button id="edit" class="layui-btn layui-btn-normal">分配赛道/结果录入</button>
-                </div>
             </div>
             <div class="layui-input-inline">
                 <form class="layui-form" action="">
@@ -32,6 +31,9 @@
                         
                     </select>
                 </form>
+            </div>
+            <div class="layui-input-inline">
+                    <button id="timing" class="layui-btn layui-btn-warm">生成电计时表格</button>
             </div>
    
             <table class="layui-hide" id="test" lay-filter="test"></table>
@@ -249,7 +251,23 @@
                 
             });
         });
- 
+        
+
+        // 一键生成电计时表格
+        $("#timing").click(function() {
+        // Perform an AJAX request to call the PHP script
+            $.ajax({
+                url: "../ctfcheatcsv",
+                type: "Get",
+                success: function(response) {
+                    console.log("========here========")
+                    console.log(response);  // Handle the response from the PHP script
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);  // Handle any errors that occur during the AJAX request
+                }
+            });
+        });
  
 
     });

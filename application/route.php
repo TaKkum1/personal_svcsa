@@ -254,7 +254,7 @@
 // ctfc_heat_view
 \think\Route::get('ctfcheatview', 'index/ctfcheat/lists');
 \think\Route::post('ctfcheat/:id', 'index/ctfcheat/update', [], ['id' => '\d+']);
-
+\think\Route::get('ctfcheatcsv', 'index/CtfcheatCSV/generateCSV');
 return [
 
 //    '[bbcompetition]' => [
