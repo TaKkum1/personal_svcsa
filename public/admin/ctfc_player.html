@@ -92,7 +92,7 @@
         table.reload('test', {
             url: '../CTFCPlayer?all=1',
             page: {
-                curr: currentPage //重新从第 1 页开始
+                curr: currentPage 
             }
         });
     }
@@ -162,7 +162,7 @@
                     width: 122,
                     toolbar: '#barDemo'
                 }]
-            ], limit: 20,
+            ], limit: 5,
             page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
                 layout: ['count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
                 //,curr: 5 //设定初始在第 5 页

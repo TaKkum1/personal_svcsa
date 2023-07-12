@@ -130,18 +130,20 @@ class Ctfcplayer extends Base
         if (!$teamid && input('teamid'))
             $teamid = input('teamid');
         if (input('all')) {
-            //   List all players in the database.
-            $list = Db::name('ctfc_player')->orderRaw('CONVERT(Name USING gbk)');
+            // List all players in the database. (For admin page only)
+            // $list = Db::name('ctfc_player')->orderRaw('CONVERT(Name USING gbk)');
+            $list = Db::name('ctfc_player')->order('Approval, ID');
             $list = $list->paginate($pagesize, false, [
                 'query' => input('param.'),
             ]);
             if ($this->jsonRequest())
                 $this->paginatedResult($list->total(), $pagesize, $list->currentPage(), $list->items());
         } else if (!$seasonid and !$teamid) {
-            // List all approved player.
+            // List all approved player. (For player display page.)
             $list = Db::name('ctfc_player')->where('Approval', 1)->orderRaw('CONVERT(Name USING gbk)');
             $this->view->assign('showNumber', false);
         } else {
+            // TODO: Add where will use this case.
             $list = Db::name('ctfc_seasonplayer_view')->orderRaw('CONVERT(PlayerName USING gbk)');
             $this->view->assign('showNumber', true);
 
