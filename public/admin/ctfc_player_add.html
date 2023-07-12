@@ -79,7 +79,8 @@
         var laydate = layui.laydate;
         var uploadInst = upload.render({
             elem: '#test1',
-            url: '../CTFCPlayer',
+            //url: '../CTFCPlayer',
+            url: "../uploadimage",
             acceptMime: 'image/*',
             auto:false,
             bindAction:'',
@@ -112,14 +113,28 @@
                 }
                 //上传成功
                 console.log(res);
-    //            picture = res.data.savename;
-    //            $("#img_url").attr("value", picture)
-                layer.msg('添加成功', {
-                    icon: 1,
-                    time: 1500
-                }, function () {
+                console.log(res.data.savename);
+                picture = res.data.savename;
+                $("#PhotoSrc").attr("value", picture);
+                axios.post('../CTFCPlayer/', {
+                Name: $('input[name="Name"]').val(),
+                Sex: $('input[name="Sex"]').val(),
+                Birthday: $('input[name="Birthday"]').val(),
+                PhotoSrc: $('input[name="PhotoSrc"]').val(),
+                Email: $('input[name="Email"]').val(),
+                Approval:  $('input[name="Approval"]').val()
 
-                    parent.layer.close(index);
+            })
+                .then(function (response) {
+                    layer.msg('添加成功', {
+                        icon: 1,
+                        time: 1500
+                    }, function () {
+                        parent.layer.close(index);
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
                 });
             },
             error: function (index,upload) {
