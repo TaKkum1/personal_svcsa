@@ -12,10 +12,31 @@
     .input-box {
         margin-left: 20px;
     }
+
     .aNote {
         color: red;
     }
- 
+
+    .modal {
+        display: none; 
+        position: fixed;
+        z-index: 1; 
+        padding-top: 100px; 
+        left: 0;
+        top: 0;
+        width: 100%; 
+        height: 100%; 
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4); 
+    }
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+
 </style>
 
 <div class="site-box">
@@ -98,55 +119,36 @@
             </div>
 
             <div class="dropdown" id="1-dropdown">
-                <div class="input-box" style="width:240px;border:0px">
-                    <label for="PlayerIDSet1" style="width: 70px;"><b>参赛队员: </b></label>        
-                    <select name="PlayerIDSet1" id="PlayerIDSet1" style="width: 240px;">
-                        <option value="">选择参赛队员</option>
-                    </select>
-                    <input id="AgeGroupIDSet1" name="AgeGroupIDSet1" type="hidden" value="">
-                </div>
-                <div class="input-box" style="width:240px;border:0px">
-                    <label for="PlayerIDSet2" style="width: 70px;"><b>参赛队员: </b></label>        
-                    <select name="PlayerIDSet2" id="PlayerIDSet2" style="width: 240px;">
-                        <option value="">选择参赛队员</option>
-                    </select>
-                    <input id="AgeGroupIDSet2" name="AgeGroupIDSet2" type="hidden" value="">
-                </div>
 
-                <div class="input-box" style="width:240px;border:0px">
-                    <label for="PlayerIDSet3" style="width: 70px;"><b>参赛队员: </b></label>        
-                    <select name="PlayerIDSet3" id="PlayerIDSet3" style="width: 240px;">
-                        <option value="">选择参赛队员</option>
-                    </select>
-                    <input id="AgeGroupIDSet3" name="AgeGroupIDSet3" type="hidden" value="">
+                <div class="input-box select-input">
+                    <span class="select-btn">选择队员</span><span class="nub">已选择<em>0</em>个球员</span>
+                    <input type="hidden" name="PlayerNumbers" />
+                    <input type="hidden" name="PlayerIDs" />
                 </div>
-                <div class="input-box" style="width:240px;border:0px">
-                    <label for="PlayerIDSet4" style="width: 70px;"><b>参赛队员: </b></label>        
-                    <select name="PlayerIDSet4" id="PlayerIDSet4" style="width: 240px;">
-                        <option value="">选择参赛队员</option>
-                    </select>
-                    <input id="AgeGroupIDSet4" name="AgeGroupIDSet4" type="hidden" value="">
-                </div>
-                <div class="input-box" style="width:240px;border:0px">
-                    <label for="PlayerIDSet5" style="width: 70px;"><b>参赛队员: </b></label>        
-                    <select name="PlayerIDSet5" id="PlayerIDSet5" style="width: 240px;">
-                        <option value="">选择参赛队员</option>
-                    </select>
-                    <input id="AgeGroupIDSet5" name="AgeGroupIDSet5" type="hidden" value="">
-                </div>
-                <div class="input-box" style="width:240px;border:0px">
-                    <label for="PlayerIDSet6" style="width: 70px;"><b>参赛队员: </b></label>        
-                    <select name="PlayerIDSet6" id="PlayerIDSet6" style="width: 240px;">
-                        <option value="">选择参赛队员</option>
-                    </select>
-                    <input id="AgeGroupIDSet6" name="AgeGroupIDSet6" type="hidden" value="">
-                </div>
-
             </div>
 
             <div class="sub">发送</div>
         
-        </div>       
+        
+            <div id="myModal" class="modal">
+                <div class="modal-content">
+                    <span id="closeBtn">&times;</span>
+
+                    <div class="col-md-3">
+                        <div class="item-box">
+                            <label>
+                                <p id="playerList"></p>
+                            </label>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>         
+    
+    
+        
     </form>
 
 </div>
@@ -482,107 +484,11 @@
     });
 
     // Single player option button
-    $('#PlayerIDSet1').on('change', function () {
-        var playerid = document.getElementById('PlayerIDSet1').value;
-            $('#AgeGroupIDSet1').empty();
-            // $('#SexSingle').empty();
-
-            getPlayerAgeSex(playerid, function(playerAgeGroup, playerSex){
-                axios.get('/CTFCAgegroup', {}).then(function (response) {
-                    $.each(response.data.data, function (index, element) {
-                        if(playerAgeGroup == element.ID) {
-                            // $('#AgeGroupIDSingle').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
-                            $('#AgeGroupIDSet1').val(element.ID);
-                        }
-                    });
-                })
-        });
+    $('.select-btn').click(function(){
+        console.log("here")
+        displayPlayerList();
     });
 
-    $('#PlayerIDSet2').on('change', function () {
-        var playerid = document.getElementById('PlayerIDSet2').value;
-            $('#AgeGroupIDSet2').empty();
-            // $('#SexSingle').empty();
-
-            getPlayerAgeSex(playerid, function(playerAgeGroup, playerSex){
-                axios.get('/CTFCAgegroup', {}).then(function (response) {
-                    $.each(response.data.data, function (index, element) {
-                        if(playerAgeGroup == element.ID) {
-                            // $('#AgeGroupIDSingle').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
-                            $('#AgeGroupIDSet2').val(element.ID);
-                        }
-                    });
-                })
-        });
-    });
-
-    $('#PlayerIDSet3').on('change', function () {
-        var playerid = document.getElementById('PlayerIDSet3').value;
-            $('#AgeGroupIDSet3').empty();
-            // $('#SexSingle').empty();
-
-            getPlayerAgeSex(playerid, function(playerAgeGroup, playerSex){
-                axios.get('/CTFCAgegroup', {}).then(function (response) {
-                    $.each(response.data.data, function (index, element) {
-                        if(playerAgeGroup == element.ID) {
-                            // $('#AgeGroupIDSingle').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
-                            $('#AgeGroupIDSet3').val(element.ID);
-                        }
-                    });
-                })
-        });
-    });
-
-    $('#PlayerIDSet4').on('change', function () {
-        var playerid = document.getElementById('PlayerIDSet4').value;
-            $('#AgeGroupIDSet4').empty();
-            // $('#SexSingle').empty();
-
-            getPlayerAgeSex(playerid, function(playerAgeGroup, playerSex){
-                axios.get('/CTFCAgegroup', {}).then(function (response) {
-                    $.each(response.data.data, function (index, element) {
-                        if(playerAgeGroup == element.ID) {
-                            // $('#AgeGroupIDSingle').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
-                            $('#AgeGroupIDSet4').val(element.ID);
-                        }
-                    });
-                })
-        });
-    });
-
-    $('#PlayerIDSet5').on('change', function () {
-        var playerid = document.getElementById('PlayerIDSet5').value;
-            $('#AgeGroupIDSet5').empty();
-            // $('#SexSingle').empty();
-
-            getPlayerAgeSex(playerid, function(playerAgeGroup, playerSex){
-                axios.get('/CTFCAgegroup', {}).then(function (response) {
-                    $.each(response.data.data, function (index, element) {
-                        if(playerAgeGroup == element.ID) {
-                            // $('#AgeGroupIDSingle').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
-                            $('#AgeGroupIDSet5').val(element.ID);
-                        }
-                    });
-                })
-        });
-    });
-
-    $('#PlayerIDSet6').on('change', function () {
-        var playerid = document.getElementById('PlayerIDSet6').value;
-            $('#AgeGroupIDSet6').empty();
-            // $('#SexSingle').empty();
-
-            getPlayerAgeSex(playerid, function(playerAgeGroup, playerSex){
-                axios.get('/CTFCAgegroup', {}).then(function (response) {
-                    $.each(response.data.data, function (index, element) {
-                        if(playerAgeGroup == element.ID) {
-                            // $('#AgeGroupIDSingle').append('<option value="' + element.ID + '">' + element.Name + ' ' + element.MinAge + '-' + element.MaxAge + '</option>');
-                            $('#AgeGroupIDSet6').val(element.ID);
-                        }
-                    });
-                })
-        });
-    });
 
     function postData(SeasonIDNumber, TeamIDNumber, xiangmuSex, AgeGroupIDNumber, xiangmu, PlayerSetNumber) {
         return axios.post('/CTFCItemplayer/', {
@@ -712,5 +618,77 @@
     });
 
 
+    // document.getElementById('closeBtn').addEventListener('click', closeModal);
+
+    function openModal() {
+        console.log("openModal");
+        document.getElementById('myModal').style.display = "block";
+
+    }
+
+    function displayPlayerList() {
+        var selectedItemSex = document.getElementById('ItemID').value.split("-");;
+        var xiangmu = selectedItemSex[0];
+        var xiangmuSex = selectedItemSex[1];
+        var SelectedTeamID = document.getElementById('TeamID').value;
+        var SelectedSeasonID = document.getElementById('SeasonID').value;
+        
+        axios.get('/ctfcitemseasonitemagegroupview?seasonid=' + SelectedSeasonID, {}).then(function (response) {
+            const data = response.data.data;
+            $.each(response.data.data, function (index, item) {
+                if(item.ItemID == xiangmu && item.Sex == xiangmuSex) {
+                    seasonitemFiltersMinAG = item.MinAgeGroupMinAge;
+                    seasonitemFiltersMaxAG = item.MaxAgeGroupMaxAge;
+
+                    getPlayerList(xiangmu, xiangmuSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, SelectedSeasonID, function(currentPlayerList) {
+                        console.log("getPlayerList");
+                        let playerArray = []; 
+                        axios.get('/CTFCPlayer?all=1', {}).then(function (response) {
+                            $.each(response.data.data, function (index, player) {
+                                if(currentPlayerList.includes(player.ID)) {
+                                    playerArray.push(player);
+                                }
+                            });
+                        }).catch(function (error) {
+                            console.log(error);
+                        });
+                        console.log(playerArray);
+
+                        let playerData = playerArray;
+                        let playerListDiv = document.getElementById('playerList');
+                        playerData.forEach(player => {
+                            console.log("player.PhotoSrc"+ player.PhotoSrc);
+                            let playerImage = document.createElement('img');
+                            playerImage.src = '{$Think.config.public_assets}' + "/uploads/" + player.PhotoSrc;
+                            console.log("player.PhotoSrc"+ player.PhotoSrc);
+
+                            playerImage.alt = 'Player Photo';
+                            playerImage.style.maxWidth = '100%';
+                            playerImage.style.height = 'auto';
+                            playerListDiv.appendChild(playerImage);
+                        });
+
+
+
+                        openModal();
+                    });
+
+
+                }
+            });
+        }).catch(function (error) {
+            console.log(error);
+        });
+        // updatePlayerList(xiangmu, xiangmuSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, SelectedSeasonID);
+        
+
+        
+    }
+
+
+
+    function closeModal() {
+        document.getElementById('myModal').style.display = "none";
+    }
 
 </script>

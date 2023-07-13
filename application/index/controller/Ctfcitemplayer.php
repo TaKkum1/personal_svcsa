@@ -379,6 +379,9 @@ class Ctfcitemplayer extends Base
             }
 
         }
+        $available_players = $final_list;
+
+        $this->view->assign('available_players', $available_players);
 
         $this->jsonResult(0, ['affectedRows' => $final_list]);
     }
@@ -392,6 +395,7 @@ class Ctfcitemplayer extends Base
         if (!$season) goto notfound;
         
         $this->view->assign('season', $season);
+
         return $this->view->fetch('ctfcitemplayer/registeritemplayer');
 
         notfound:
