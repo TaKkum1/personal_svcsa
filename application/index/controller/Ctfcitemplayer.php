@@ -354,32 +354,33 @@ class Ctfcitemplayer extends Base
 
         // Check if the player has 3 single items in the current season aleady.
         $final_list = $list;
-        foreach ($list as $itemplayer_id) {
-            //get all ctfc_itemplayer of one single player.
-            $data = Db::name('ctfc_itemplayer')->where("SeasonID", $CurrentSeasonID)->where("PlayerID1", $itemplayer_id)->select();
-            
-            // Add all singleitem to an array for this player.
-            $players_items_list = [];
-            foreach($data as $one_data) {
-                if ($this->checkSignleItem($one_data['ItemID'])) {
-                    array_push($players_items_list, $one_data['ItemID']);
+        if ($this->checkSignleItem($CurrentSelecteditemID)) {
+            foreach ($list as $itemplayer_id) {
+                //get all ctfc_itemplayer of one single player.
+                $data = Db::name('ctfc_itemplayer')->where("SeasonID", $CurrentSeasonID)->where("PlayerID1", $itemplayer_id)->select();
+                
+                // Add all singleitem to an array for this player.
+                $players_items_list = [];
+                foreach($data as $one_data) {
+                    if ($this->checkSignleItem($one_data['ItemID'])) {
+                        array_push($players_items_list, $one_data['ItemID']);
+                    }
                 }
-            }
 
-            // count how many singleitems for this player, skip this player if >=3.
-            if(count($players_items_list) >=3) {
-                // Find the index of this player to be removed.
-                 $index = array_search($itemplayer_id, $final_list);
-                 // Remove the element if it exists in the array
-                 if ($index !== false) {
-                     unset($final_list[$index]);
-                 }
-                 // Re-index the array
-                 $final_list = array_values($final_list);
-            }
+                // count how many singleitems for this player, skip this player if >=3.
+                if(count($players_items_list) >=3) {
+                    // Find the index of this player to be removed.
+                    $index = array_search($itemplayer_id, $final_list);
+                    // Remove the element if it exists in the array
+                    if ($index !== false) {
+                        unset($final_list[$index]);
+                    }
+                    // Re-index the array
+                    $final_list = array_values($final_list);
+                }
 
+            }
         }
-
         $this->jsonResult(0, ['affectedRows' => $final_list]);
     }
 
