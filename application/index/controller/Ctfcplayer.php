@@ -22,7 +22,8 @@ class Ctfcplayer extends Base
         $this->affectedRowsResult($result);
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
         $this->checkauthorization();
 
         $result = Db::name('ctfc_player')->where('ID', $id)->where('ID', $id)->delete();
@@ -49,9 +50,9 @@ class Ctfcplayer extends Base
 
         // Check if player with the same name and birthday already exists
         $existingPlayer = Db::name('ctfc_player')
-        ->where('Name', $player["Name"])
-        ->where('Birthday', $player["Birthday"])
-        ->find();
+            ->where('Name', $player["Name"])
+            ->where('Birthday', $player["Birthday"])
+            ->find();
 
         if ($existingPlayer) {
             // Player with the same name and birthday already exists
@@ -65,22 +66,22 @@ class Ctfcplayer extends Base
                         </div>
                         <div class='col-sm-9'>
                             <small>
-                                <strong>姓名:</strong>". $existingPlayer["Name"]. "<br>
-                                <strong>生日:</strong>". $existingPlayer["Birthday"]. "<br>
-                                <strong>Email:</strong>". $existingPlayer["Email"]."
+                                <strong>姓名:</strong>" . $existingPlayer["Name"] . "<br>
+                                <strong>生日:</strong>" . $existingPlayer["Birthday"] . "<br>
+                                <strong>Email:</strong>" . $existingPlayer["Email"] . "
                             </small>
                         </div>
                     </div>
                 </div>
             </div>";
-            $applyresult = '该用户已存在！如有误，请联系管理员(svcba.svcsa@gmail.com)修改。<br><br>'.$existingPlayerInfo;
+            $applyresult = '该用户已存在！如有误，请联系管理员(svcba.svcsa@gmail.com)修改。<br><br>' . $existingPlayerInfo;
             $this->view->assign('applyresult', $applyresult);
             return $this->view->fetch('ctfcplayer/applyres');
         }
 
         $validator = validate('ctfc_player');
         $result = $validator->check($player);
-        if (!$result){
+        if (!$result) {
             $this->affectedRowsResult(0);
         }
 
@@ -88,29 +89,31 @@ class Ctfcplayer extends Base
         $assetUrl = getAssetUploadUrl();
         $infophotofile = request()->file('Photo');
 
-        if($infophotofile)
+        if ($infophotofile)
             $player["PhotoSrc"] = $infophotofile->move(__DIR__ . $assetUrl)
                 ->getSaveName();
 
-        $result = Db::name('ctfc_player')->insert($player);
+        $result = Db::name('ctfc_player')->order('Name')->insert($player);
 
         $this->headerAndFooter('ctfc');
 
-        $applyresult='';
-        if($result > 0) 
+        $applyresult = '';
+        if ($result > 0)
             $applyresult = '您的申请已提交，审核后将会给您发邮箱或者短信通知，请关注！';
-        $this->view->assign('applyresult',$applyresult);
+        $this->view->assign('applyresult', $applyresult);
         return $this->view->fetch('ctfcplayer/applyres');
     }
 
-    public function read($id){
+    public function read($id)
+    {
         $result = Db::name('ctfc_player')->where('ID', $id)->find();
         if ($this->jsonRequest())
             $this->dataResult($result);
 
-        if(!$result) goto notfound;
+        if (!$result)
+            goto notfound;
         $this->headerAndFooter('ctfc');
-        $this->view->assign('player',$result);
+        $this->view->assign('player', $result);
         return $this->view->fetch('player/ctfcread');
 
         notfound:
@@ -122,57 +125,45 @@ class Ctfcplayer extends Base
     {
         // Get some basic info from input.
         $pagesize = (!input('pagesize')) ? 100 : input('pagesize');
-        if (!$seasonid && input('seasonid')) $seasonid = input('seasonid');
-        if (!$teamid && input('teamid')) $teamid = input('teamid');
-        // if (!$competitionid && input('competitionid')) {
-        //   $competitionid = input('CompetitionID');
-        // }
-        // if (input('freeagant')) {
-        //   // List all the free agents for a particular season.
-        //   $sql =
-        //       'select * '.
-        //       'from ctfc_player '.
-        //       'where ctfc_player.ID not in ('.
-        //           'select distinct ctfc_seasonteamplayer.PlayerID '.
-        //           'from ctfc_seasonteamplayer '.
-        //           'where ctfc_seasonteamplayer.SeasonID='.strval($seasonid).')'.
-        //       'order by Name asc';
-        //   $list = Db::query($sql);
-        //   if ($this->jsonRequest())
-        //     $this->dataResult($list);
-        //   //$list = Db::name('ctfc_player')->order('Name asc');
-        // } else 
+        if (!$seasonid && input('seasonid'))
+            $seasonid = input('seasonid');
+        if (!$teamid && input('teamid'))
+            $teamid = input('teamid');
         if (input('all')) {
-        //   List all players in the database.
-          $list = Db::name('ctfc_player');
-          $list = $list->paginate($pagesize, false, [
-            'query' => input('param.'),
-          ]);
-          if ($this->jsonRequest())
-            $this->paginatedResult($list->total(), $pagesize, $list->currentPage(), $list->items());
+            // List all players in the database. (For admin page only)
+            // $list = Db::name('ctfc_player')->orderRaw('CONVERT(Name USING gbk)');
+            $list = Db::name('ctfc_player')->order('Approval, ID');
+            $list = $list->paginate($pagesize, false, [
+                'query' => input('param.'),
+            ]);
+            if ($this->jsonRequest())
+                $this->paginatedResult($list->total(), $pagesize, $list->currentPage(), $list->items());
         } else if (!$seasonid and !$teamid) {
-          // List all approved player.
-            $list = Db::name('ctfc_player')->where('Approval', 1);
+            // List all approved player. (For player display page.)
+            $list = Db::name('ctfc_player')->where('Approval', 1)->orderRaw('CONVERT(Name USING gbk)');
             $this->view->assign('showNumber', false);
-          } else {
-            $list = Db::name('ctfc_seasonplayer_view')->order('PlayerName asc');
+        } else {
+            // TODO: Add where will use this case.
+            $list = Db::name('ctfc_seasonplayer_view')->orderRaw('CONVERT(PlayerName USING gbk)');
             $this->view->assign('showNumber', true);
-            
+
             if ($seasonid)
                 $list = $list->where('seasonid', $seasonid);
             if ($teamid)
                 $list = $list->where('teamid', $teamid);
             else if (input('playerids'))
-                $list = $list->whereIn('PlayerID',
-                    explode(',', input('playerids')));
-          }
-          $list = $list->paginate($pagesize, false, [
+                $list = $list->whereIn(
+                    'PlayerID',
+                    explode(',', input('playerids'))
+                );
+        }
+        $list = $list->paginate($pagesize, false, [
             'query' => input('param.'),
-          ]);
+        ]);
 
-          if ($this->jsonRequest())
+        if ($this->jsonRequest())
             $this->paginatedResult($list->total(), $pagesize, $list->currentPage(), $list->items());
-        
+
 
         $this->headerAndFooter('player');
 
@@ -184,12 +175,11 @@ class Ctfcplayer extends Base
         //     $playertitle = $list->items()[0]['SeasonName'];
         //   }
         // else 
-        if ($teamid && count($list->items())>0) {
+        if ($teamid && count($list->items()) > 0) {
             $playertitle = Db::name('ctfc_team')
                 ->where('ID', $teamid)
-                ->find()['Name'].'的';
-        }
-        else
+                ->find()['Name'] . '的';
+        } else
             $playertitle = '';
 
         $this->view->assign('playertitle', $playertitle);
@@ -206,7 +196,8 @@ class Ctfcplayer extends Base
         die;
     }
 
-    public function update($id){
+    public function update($id)
+    {
         $this->checkauthorization();
 
         $data = request()->only(self::FIELD, 'post');
@@ -222,15 +213,15 @@ class Ctfcplayer extends Base
 
         $data = request()->only('PlayerIDs,Passed', 'post');
         $playerIDs = urldecode($data['PlayerIDs']);
-        $passed = isset($data['Passed'])?boolval($data['Passed']):true;
+        $passed = isset($data['Passed']) ? boolval($data['Passed']) : true;
 
         $result = 0;
-        $playerIDsarr = explode(',',$playerIDs);
+        $playerIDsarr = explode(',', $playerIDs);
 
-        if($passed) {
+        if ($passed) {
             foreach ($playerIDsarr as $playerID) {
                 $result += Db::name('ctfc_player')->where('ID', $playerID)
-                    ->update(['Approval'=>1]);
+                    ->update(['Approval' => 1]);
             }
         } else {
             foreach ($playerIDsarr as $playerID) {

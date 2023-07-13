@@ -80,11 +80,19 @@
             form.on('submit(edit-this-row)', function (obj) {   
                 var index = parent.layer.getFrameIndex(window.name);
                 var _id = obj.field.id
-                console.log(obj.field.id)
+                // console.log(obj.field.id)
+                // Get the value of HeatID
+                var heatID = $('input[name="heatid"]').val();
+                // Check if HeatID has input
+                if (heatID === "") {
+                // Set default value of 1
+                heatID = 1;
+                }
+
                 axios.post('../ctfcheat/' + _id, {
                     ID: _id,
                     EventID: $('input[name="eventid"]').val(),
-                    HeatID: $('input[name="heatid"]').val(),
+                    HeatID: heatID,
                     ItemPlayerID: _id,
                     LaneNumber: $('input[name="lanenumber"]').val(),
                     Result: $('input[name="result"]').val(),
