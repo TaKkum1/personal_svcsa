@@ -182,7 +182,7 @@ function getAssetUploadUrl() {
             return "/../../../public/uploads";
             break;
         default:
-            //return "/../../../../uploads";
-            return "/../../../public/uploads";
+            return "/../../../../uploads";
+            //return "/../../../public/uploads";
     }
 }
