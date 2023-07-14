@@ -753,8 +753,12 @@ class Bbteam extends Base
         $team_data['Email'] = $data['Email'];
         $team_data['Tel'] = $data['Tel'];
         $team_data['Wechat'] = $data['Wechat'];
-        $team_data['LogoSrc'] = $data['LogoSrc'];
-        $team_data['PhotoSrc'] = $data['PhotoSrc'];
+        if (array_key_exists('LogoSrc', $data) && !empty($data['LogoSrc'])) {
+          $team_data['LogoSrc'] = $data['LogoSrc'];
+        }
+        if (array_key_exists('PhotoSrc', $data) && !empty($data['PhotoSrc'])) {
+          $team_data['PhotoSrc'] = $data['PhotoSrc'];
+        }
         $team_data['Description'] = $data['Description'];
         $result = Db::name('bb_team')->where('ID', $id)->update($team_data);
         // Update bb_seasonteam.
