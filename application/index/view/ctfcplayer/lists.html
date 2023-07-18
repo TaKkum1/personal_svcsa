@@ -30,7 +30,12 @@
                                 <div class="txt-box">
                                     {if condition="$showNumber eq 'true'"}
                                         <!-- show players of a team or season -->
-                                        {$player.PlayerNumber}号 {$player.PlayerName}
+                                        {if condition="$player.PlayerNumber"}
+                                            {$player.PlayerNumber}号 {$player.PlayerName}
+                                        {else /}
+                                            <!-- for team players who has not been assigned a number -->
+                                            {$player.PlayerName}
+                                        {/if}
                                     {else /}
                                         <!-- show all players -->
                                         {$player.Name}

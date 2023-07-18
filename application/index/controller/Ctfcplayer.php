@@ -143,7 +143,8 @@ class Ctfcplayer extends Base
             $list = Db::name('ctfc_player')->where('Approval', 1)->orderRaw('CONVERT(Name USING gbk)');
             $this->view->assign('showNumber', false);
         } else {
-            // TODO: Add where will use this case.
+            // List all players in a team and a season. (For team display page.)
+            // 华锦赛 -> 田径团队 -> (选择团队) -> 查看队员
             $list = Db::name('ctfc_seasonplayer_view')->orderRaw('CONVERT(PlayerName USING gbk)');
             $this->view->assign('showNumber', true);
 
