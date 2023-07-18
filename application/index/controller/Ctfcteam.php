@@ -142,7 +142,7 @@ class Ctfcteam extends Base
 
         $team = Db::name('ctfc_team')->where('ID', $id)->find();
         
-        $playercount = Db::name('ctfc_playernumber')
+        $playercount = Db::name('ctfc_seasonplayer_view')
             ->where('SeasonID', $seasonid)
             ->where('TeamID', $id)
             ->count();

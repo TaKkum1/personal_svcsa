@@ -36,8 +36,14 @@ select `match`.`ctfc_season`.`ID` AS `SeasonID`,`match`.`ctfc_season`.`Name` AS 
 from ((`match`.`ctfc_seasonteam` join `match`.`ctfc_season` on((`match`.`ctfc_seasonteam`.`SeasonID` = `match`.`ctfc_season`.`ID`))) join `match`.`ctfc_team` on((`match`.`ctfc_seasonteam`.`TeamID` = `match`.`ctfc_team`.`ID`)));
 
 
-CREATE OR REPLACE VIEW ctfc_seasonplayer_view AS
-select `match`.`ctfc_season`.`ID` AS `SeasonID`,`match`.`ctfc_season`.`Name` AS `SeasonName`,`match`.`ctfc_season`.`Date` AS `Date`,`match`.`ctfc_season`.`Venue` AS `Venue`,`match`.`ctfc_player`.`ID` AS `PlayerID`,`match`.`ctfc_player`.`Name` AS `PlayerName`,`match`.`ctfc_player`.`Sex` AS `Sex`,`match`.`ctfc_player`.`Birthday` AS `Birthday`,`match`.`ctfc_player`.`PhotoSrc` AS `PhotoSrc`,`match`.`ctfc_player`.`Email` AS `Email`,`match`.`ctfc_player`.`Approval` AS `Approval`,`match`.`ctfc_playernumber`.`TeamID` AS `TeamID`,`match`.`ctfc_playernumber`.`PlayerNumber` AS `PlayerNumber` from ((`match`.`ctfc_season` join `match`.`ctfc_playernumber` on((`match`.`ctfc_season`.`ID` = `match`.`ctfc_playernumber`.`SeasonID`))) join `match`.`ctfc_player` on((`match`.`ctfc_playernumber`.`PlayerID` = `match`.`ctfc_player`.`ID`)));
+CREATE OR REPLACE VIEW ctfc_seasonplayer_view AS SELECT `match`.`ctfc_season`.`ID` AS `SeasonID`,`match`.`ctfc_season`.`Name` AS `SeasonName`,`match`.`ctfc_season`.`Date` AS `Date`,`match`.`ctfc_season`.`Venue` AS `Venue`,`SeaTeaPla`.`TeamID` AS `TeamID`,`match`.`ctfc_player`.`ID` AS `PlayerID`,`match`.`ctfc_player`.`Name` AS `PlayerName`,`match`.`ctfc_player`.`Sex` AS `Sex`,`match`.`ctfc_player`.`Birthday` AS `Birthday`,`match`.`ctfc_player`.`PhotoSrc` AS `PhotoSrc`,`match`.`ctfc_player`.`Email` AS `Email`,`match`.`ctfc_player`.`Approval` AS `Approval`,`match`.`ctfc_playernumber`.`PlayerNumber` AS `PlayerNumber`
+FROM (SELECT `match`.`ctfc_itemplayer`.`SeasonID` AS `SeasonID`,`match`.`ctfc_itemplayer`.`TeamID` AS `TeamID`,`match`.`ctfc_itemplayer`.`PlayerID1` AS `PlayerID` FROM `match`.`ctfc_itemplayer` UNION SELECT `match`.`ctfc_itemplayer`.`SeasonID`,`match`.`ctfc_itemplayer`.`TeamID`,`match`.`ctfc_itemplayer`.`PlayerID2` FROM `match`.`ctfc_itemplayer` UNION SELECT `match`.`ctfc_itemplayer`.`SeasonID`,`match`.`ctfc_itemplayer`.`TeamID`,`match`.`ctfc_itemplayer`.`PlayerID3` FROM `match`.`ctfc_itemplayer` UNION SELECT `match`.`ctfc_itemplayer`.`SeasonID`,`match`.`ctfc_itemplayer`.`TeamID`,`match`.`ctfc_itemplayer`.`PlayerID4` FROM `match`.`ctfc_itemplayer` UNION SELECT  `match`.`ctfc_itemplayer`.`SeasonID`,`match`.`ctfc_itemplayer`.`TeamID`,`match`.`ctfc_itemplayer`.`PlayerID5` FROM `match`.`ctfc_itemplayer` UNION SELECT `match`.`ctfc_itemplayer`.`SeasonID`,`match`.`ctfc_itemplayer`.`TeamID`,`match`.`ctfc_itemplayer`.`PlayerID6` FROM `match`.`ctfc_itemplayer`) as `SeaTeaPla`
+JOIN `match`.`ctfc_season` ON `match`.`ctfc_season`.`ID` = `SeaTeaPla`.`SeasonID`
+JOIN `match`.`ctfc_player` ON `match`.`ctfc_player`.`ID` = `SeaTeaPla`.`PlayerID`
+LEFT JOIN `match`.`ctfc_playernumber` 
+	ON `match`.`ctfc_playernumber`.`SeasonID` = `SeaTeaPla`.`SeasonID`
+	AND `match`.`ctfc_playernumber`.`TeamID` = `SeaTeaPla`.`TeamID`
+	AND `match`.`ctfc_playernumber`.`PlayerID` = `SeaTeaPla`.`PlayerID`;
 
 
 
