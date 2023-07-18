@@ -132,16 +132,16 @@
         
             <div id="myModal" class="modal">
                 <div class="modal-content">
-                    <span id="closeBtn">&times;</span>
-
+                    <span id="closeBtn" onclick="closeModal()">&times;</span>
                     <div class="col-md-3">
                         <div class="item-box">
                             <label>
                                 <p id="playerList"></p>
+                                <h1>选择参赛队员</h1>
                             </label>
                         </div>
                     </div>
-
+        
                 </div>
             </div>
 
@@ -158,8 +158,7 @@
 <script src="public/layui/layui.js"></script>
 
 <script>
-
-
+ 
 
     function CheckIsSingle(OneId, sexId, callback) {
         $.ajax({
@@ -649,21 +648,23 @@
                     seasonitemFiltersMaxAG = item.MaxAgeGroupMaxAge;
 
                     getPlayerList(xiangmu, xiangmuSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, SelectedSeasonID, function(currentPlayerList) {
-                        console.log("getPlayerList");
+                        console.log("=====getPlayerList=====");
                         let playerArray = []; 
                         axios.get('/CTFCPlayer?all=1', {}).then(function (response) {
                             $.each(response.data.data, function (index, player) {
                                 if(currentPlayerList.includes(player.ID)) {
-                                    playerArray.push(player);
+                                     playerArray.push(player);
                                 }
                             });
                         }).catch(function (error) {
                             console.log(error);
                         });
-                        console.log(playerArray);
+                        console.log("----playerArray----",playerArray);
 
                         let playerData = playerArray;
+                        console.log("----playerData----",playerData);
                         let playerListDiv = document.getElementById('playerList');
+                        console.log(playerListDiv )
                         playerData.forEach(player => {
                             console.log("player.PhotoSrc"+ player.PhotoSrc);
                             let playerImage = document.createElement('img');
@@ -698,5 +699,8 @@
     function closeModal() {
         document.getElementById('myModal').style.display = "none";
     }
+
+
+
 
 </script>
