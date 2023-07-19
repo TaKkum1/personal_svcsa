@@ -252,23 +252,9 @@
             });
         });
         
-
-        // 一键生成电计时表格
         $("#timing").click(function() {
-        // Perform an AJAX request to call the PHP script
-            $.ajax({
-                url: "../ctfcheatcsv",
-                type: "Get",
-                success: function(response) {
-                    console.log("========here========")
-                    console.log(response);  // Handle the response from the PHP script
-                },
-                error: function(xhr, status, error) {
-                    console.error(error);  // Handle any errors that occur during the AJAX request
-                }
-            });
+            window.location.href = "../ctfcheatcsv";
         });
- 
 
     });
 </script>
