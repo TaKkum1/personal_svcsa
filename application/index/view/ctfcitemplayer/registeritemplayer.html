@@ -37,6 +37,18 @@
         width: 80%;
     }
 
+    .player-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between; /* or space-around or center, depending on how you want the images to be spaced */
+    }
+
+    .player-container img {
+        flex: 1 0 calc(33.33% - 10px); /* This makes each image take up about a third of the row, minus 10px for some margin */
+        margin: 5px; /* Adds some space around each image */
+        max-width: 100%;
+        height: auto;
+    }
 </style>
 
 <div class="site-box">
@@ -138,6 +150,9 @@
                             <label>
                                 <p id="playerList"></p>
                                 <h1>选择参赛队员</h1>
+                                <div id="playerContainer" class="player-container"> <!-- New playerContainer div here -->
+                                    <!-- player images will be appended here -->
+                                </div>
                             </label>
                         </div>
                     </div>
@@ -648,34 +663,78 @@
                     seasonitemFiltersMaxAG = item.MaxAgeGroupMaxAge;
 
                     getPlayerList(xiangmu, xiangmuSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, SelectedSeasonID, function(currentPlayerList) {
+                        console.log("currentPlayerList:"+currentPlayerList);
+
                         console.log("=====getPlayerList=====");
                         let playerArray = []; 
-                        axios.get('/CTFCPlayer?all=1', {}).then(function (response) {
+                        axios.get('/CTFCPlayer', {}).then(function (response) {
                             $.each(response.data.data, function (index, player) {
                                 if(currentPlayerList.includes(player.ID)) {
-                                     playerArray.push(player);
+                                    console.log("player:"+player);
+                                    playerArray.push(player);
                                 }
                             });
-                        }).catch(function (error) {
-                            console.log(error);
-                        });
-                        console.log("----playerArray----",playerArray);
+                            console.log("----playerArray----",playerArray);
 
-                        let playerData = playerArray;
-                        console.log("----playerData----",playerData);
-                        let playerListDiv = document.getElementById('playerList');
-                        console.log(playerListDiv )
-                        playerData.forEach(player => {
+
+
+                            let playerData = playerArray;
+                            console.log("----playerData----",playerData);
+
+                            let playerContainer = document.getElementById('playerList');
+
+                            playerData.forEach(player => {
                             console.log("player.PhotoSrc"+ player.PhotoSrc);
+
+                            // Create a new div for this player
+                            let playerDiv = document.createElement('div');
+
+                            // Style the div as a column so the name appears below the image
+                            playerDiv.style.display = 'flex';
+                            playerDiv.style.flexDirection = 'column';
+                            playerDiv.style.alignItems = 'center'; // center the content
+                            playerDiv.style.width = '200px';
+
                             let playerImage = document.createElement('img');
                             playerImage.src = '{$Think.config.public_assets}' + "/uploads/" + player.PhotoSrc;
                             console.log("player.PhotoSrc"+ player.PhotoSrc);
-
                             playerImage.alt = 'Player Photo';
-                            playerImage.style.maxWidth = '100%';
+                            playerImage.style.maxWidth = '70%';
                             playerImage.style.height = 'auto';
-                            playerListDiv.appendChild(playerImage);
+                            playerDiv.appendChild(playerImage); // Append the image to the new div
+
+                            // Create a new p element for the player's name
+                            let playerName = document.createElement('p');
+                            playerName.innerText = player.Name; // Assuming player.name contains the player's name
+
+                            // Create a new input element for the checkbox
+                            let playerCheckbox = document.createElement('input');
+                            playerCheckbox.type = 'checkbox';
+
+                            // Create a div for the checkbox and player's name
+                            let nameCheckboxDiv = document.createElement('div');
+                            nameCheckboxDiv.style.display = 'flex';
+                            nameCheckboxDiv.style.justifyContent = 'center';
+
+                            // Append the checkbox and player's name to the div
+                            nameCheckboxDiv.appendChild(playerName);
+                            nameCheckboxDiv.appendChild(playerCheckbox);
+
+                            playerDiv.appendChild(nameCheckboxDiv);
+
+
+                            // Append the new div to the container
+                            document.getElementById('playerContainer').appendChild(playerDiv);
                         });
+
+
+
+
+
+                        }).catch(function (error) {
+                            console.log(error);
+                        });
+
 
 
 
