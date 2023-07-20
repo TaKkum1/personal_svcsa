@@ -150,4 +150,183 @@ class Ctfcheat extends Base
             return json(['success' => false, 'message' => 'Failed to update the heat']);
         }
     }
+
+    public function reassign()
+    {
+            // 调用 lists 方法获取数据列表
+            $list = $this->lists();
+    
+            // 建立空的映射数组
+            $eventid_map = [];
+    
+            foreach ($list as $heateachrow) {
+                // 逐行读取数据并建立映射
+                $ItemAgeGroupSex = $heateachrow['ItemAgeGroupSex'];
+                $ID = $heateachrow['ID'];
+    
+                // 如果映射数组中不存在该键，创建一个空数组作为值
+                if (!isset($eventid_map[$ItemAgeGroupSex])) {
+                    $eventid_map[$ItemAgeGroupSex] = [];
+                }
+    
+                // 将当前行的ID添加到对应键的数组中
+                $eventid_map[$ItemAgeGroupSex][] = $ID;
+            }
+    
+            
+                
+            $predefined_events = [
+                '5000米(少年乙组 F)',
+                '5000米(少年乙组 M)',
+                '5000米(少年甲组 F)',
+                '5000米(少年甲组 M)',
+                '5000米(青年组 F)',
+                '5000米(青年组 M)',
+                '5000米(公开组 F)',
+                '5000米(公开组 M)',
+                '5000米(壮年组 F)',
+                '5000米(壮年组 M)',
+                '5000米(常青组 F)',
+                '5000米(常青组 M)',
+                '100m(儿童男女组 Mix)',
+                '100m(儿童甲组 F)',
+                '100m(儿童甲组 M)',
+                '100m(少年乙组 F)',
+                '100m(少年乙组 M)',
+                '100m(少年甲组 F)',
+                '100m(少年甲组 M)',
+                '100m(青年组 F)',
+                '100m(青年组 M)',
+                '100m(公开组 F)',
+                '100m(公开组 M)',
+                '100m(壮年组 F)',
+                '100m(壮年组 M)',
+                '100m(常青组 F)',
+                '100m(常青组 M)',
+                '400米(儿童男女组 Mix)',
+                '400米(儿童甲组 F)',
+                '400米(儿童甲组 M)',
+                '400米(少年乙组 F)',
+                '400米(少年乙组 M)',
+                '400米(少年甲组 F)',
+                '400米(少年甲组 M)',
+                '400米(青年组 F)',
+                '400米(青年组 M)',
+                '400米(公开组 F)',
+                '400米(公开组 M)',
+                '400米(壮年组 F)',
+                '400米(壮年组 M)',
+                '400米(常青组 F)',
+                '400米(常青组 M)',
+                '4×100米接力(儿童男女组 Mix)',
+                '4×100米接力(儿童甲组 F)',
+                '4×100米接力(儿童甲组 M)',
+                '4×100米接力(少年乙组 F)',
+                '4×100米接力(少年乙组 M)',
+                '4×100米接力(少年甲组 F)',
+                '4×100米接力(少年甲组 M)',
+                '4×100米接力(青年组 F)',
+                '4×100米接力(青年组 M)',
+                '4×100米接力(公开组 F)',
+                '4×100米接力(公开组 M)',
+                '4×100米接力(壮年组 F)',
+                '4×100米接力(壮年组 M)',
+                '4×100米接力(常青组 F)',
+                '4×100米接力(常青组 M)',
+                '800米(儿童男女组 Mix)',
+                '800米(儿童甲组 F)',
+                '800米(儿童甲组 M)',
+                '800米(少年乙组 F)',
+                '800米(少年乙组 M)',
+                '800米(少年甲组 F)',
+                '800米(少年甲组 M)',
+                '800米(青年组 F)',
+                '800米(青年组 M)',
+                '800米(公开组 F)',
+                '800米(公开组 M)',
+                '800米(壮年组 F)',
+                '800米(壮年组 M)',
+                '800米(常青组 F)',
+                '800米(常青组 M)',
+                '200米(儿童男女组 Mix)',
+                '200米(儿童甲组 F)',
+                '200米(儿童甲组 M)',
+                '200米(少年乙组 F)',
+                '200米(少年乙组 M)',
+                '200米(少年甲组 F)',
+                '200米(少年甲组 M)',
+                '200米(青年组 F)',
+                '200米(青年组 M)',
+                '200米(公开组 F)',
+                '200米(公开组 M)',
+                '200米(壮年组 F)',
+                '200米(壮年组 M)',
+                '200米(常青组 F)',
+                '200米(常青组 M)',
+                '1500米(少年乙组 F)',
+                '1500米(少年乙组 M)',
+                '1500米(少年甲组 F)',
+                '1500米(少年甲组 M)',
+                '1500米(青年组 F)',
+                '1500米(青年组 M)',
+                '1500米(公开组 F)',
+                '1500米(公开组 M)',
+                '1500米(壮年组 F)',
+                '1500米(壮年组 M)',
+                '1500米(常青组 F)',
+                '1500米(常青组 M)',
+                '4×400米接力(儿童男女组 Mix)',
+                '4×400米接力(儿童甲组 Mix)',
+                '4×400米接力(少年乙组 Mix)',
+                '4×400米接力(少年甲组 Mix)',
+                '4×400米接力(青年组 Mix)',
+                '4×400米接力(公开组 Mix)',
+                '4×400米接力(壮年组 Mix)',
+                '4×400米接力(常青组 Mix)'
+    
+                 // 其他预定义的事件
+              ];
+              
+            $next_event_id = 1;
+           
+            foreach ($predefined_events as $ItemAgeGroupSex) {
+                if (isset($eventid_map[$ItemAgeGroupSex])) {
+                    // 事件存在于事件ID映射中。更新 ctfc_heat 表
+                    // 注意，映射的值是与该事件关联的 itemplayer ids 的列表
+                    
+                    foreach ($eventid_map[$ItemAgeGroupSex] as $ItemPlayerID) {
+                        // 使用 $next_event_id 插入 EventID，并根据 ItemPlayerID 进行过滤
+                        Db::name('ctfc_heat')->where('ItemPlayerID', $ItemPlayerID)->update(['EventID' => $next_event_id]);
+                    
+                        // 将更新后的EventID添加到每个记录中
+                        $found = false;
+                        foreach ($list as &$record) {
+                            if ($record['ID'] == $ItemPlayerID) {
+                                $record['EventID'] = $next_event_id;
+                                $found = true;
+                                break;
+                            }
+                        }
+                    
+                        // 如果没有找到匹配的记录，则创建新的记录并将EventID赋值
+                        if (!$found) {
+                            $newRecord = [
+                                'ID' => $ItemPlayerID,
+                                'EventID' => $next_event_id,
+                            ];
+                            $list[] = $newRecord;
+    
+                            
+                        }
+                    }
+                    // 这个事件ID已经使用，增加 next_event_id
+                    $next_event_id++;
+                }
+            }
+    
+            $this->dataResult($list);
+        }
 }
+
+
+
