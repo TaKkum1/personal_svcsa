@@ -154,27 +154,24 @@ class Ctfcheat extends Base
     public function reassign()
     {
             // 调用 lists 方法获取数据列表
-            $list = $this->lists();
-    
+            $list = Db::name('ctfc_heat_view')->select();
+
             // 建立空的映射数组
             $eventid_map = [];
-    
+
             foreach ($list as $heateachrow) {
                 // 逐行读取数据并建立映射
                 $ItemAgeGroupSex = $heateachrow['ItemAgeGroupSex'];
                 $ID = $heateachrow['ID'];
-    
+
                 // 如果映射数组中不存在该键，创建一个空数组作为值
                 if (!isset($eventid_map[$ItemAgeGroupSex])) {
                     $eventid_map[$ItemAgeGroupSex] = [];
                 }
-    
+
                 // 将当前行的ID添加到对应键的数组中
                 $eventid_map[$ItemAgeGroupSex][] = $ID;
-            }
-    
-            
-                
+            }        
             $predefined_events = [
                 '5000米(少年乙组 F)',
                 '5000米(少年乙组 M)',
@@ -287,44 +284,32 @@ class Ctfcheat extends Base
                  // 其他预定义的事件
               ];
               
-            $next_event_id = 1;
-           
-            foreach ($predefined_events as $ItemAgeGroupSex) {
-                if (isset($eventid_map[$ItemAgeGroupSex])) {
-                    // 事件存在于事件ID映射中。更新 ctfc_heat 表
-                    // 注意，映射的值是与该事件关联的 itemplayer ids 的列表
-                    
-                    foreach ($eventid_map[$ItemAgeGroupSex] as $ItemPlayerID) {
-                        // 使用 $next_event_id 插入 EventID，并根据 ItemPlayerID 进行过滤
-                        Db::name('ctfc_heat')->where('ItemPlayerID', $ItemPlayerID)->update(['EventID' => $next_event_id]);
-                    
-                        // 将更新后的EventID添加到每个记录中
-                        $found = false;
-                        foreach ($list as &$record) {
-                            if ($record['ID'] == $ItemPlayerID) {
-                                $record['EventID'] = $next_event_id;
-                                $found = true;
-                                break;
+                // 初始化一个 EventID 计数器
+                $next_event_id = 1;
+
+                foreach ($predefined_events as $ItemAgeGroupSex) {
+                    if (isset($eventid_map[$ItemAgeGroupSex])) {
+                        // 事件存在于事件ID映射中。更新 ctfc_heat 表
+                        // 注意，映射的值是与该事件关联的 itemplayer ids 的列表
+
+                        foreach ($eventid_map[$ItemAgeGroupSex] as $ItemPlayerID) {
+                            // 使用 $next_event_id 更新 ctfc_heat 表的 EventID
+                            Db::name('ctfc_heat')->where('ID', $ItemPlayerID)->update(['EventID' => $next_event_id]);
+
+                            // 更新 $list 数组中匹配的记录的 EventID
+                            foreach ($list as &$record) {
+                                if ($record['ID'] == $ItemPlayerID) {
+                                    $record['EventID'] = $next_event_id;
+                                    break;
+                                }
                             }
                         }
-                    
-                        // 如果没有找到匹配的记录，则创建新的记录并将EventID赋值
-                        if (!$found) {
-                            $newRecord = [
-                                'ID' => $ItemPlayerID,
-                                'EventID' => $next_event_id,
-                            ];
-                            $list[] = $newRecord;
-    
-                            
-                        }
+                        // 这个事件ID已经使用，增加 next_event_id
+                        $next_event_id++;
                     }
-                    // 这个事件ID已经使用，增加 next_event_id
-                    $next_event_id++;
                 }
-            }
-    
-            $this->dataResult($list);
+                
+                $this->dataResult($list);
         }
 }
 
