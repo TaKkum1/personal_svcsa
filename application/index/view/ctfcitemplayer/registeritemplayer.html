@@ -145,6 +145,9 @@
             <div id="myModal" class="modal">
                 <div class="modal-content">
                     <span id="closeBtn" onclick="closeModal()">&times;</span>
+
+                    <button id="saveButton">选中</button>
+
                     <div class="col-md-3">
                         <div class="item-box">
                             <label>
@@ -665,7 +668,6 @@
                     getPlayerList(xiangmu, xiangmuSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, SelectedSeasonID, function(currentPlayerList) {
                         console.log("currentPlayerList:"+currentPlayerList);
 
-                        console.log("=====getPlayerList=====");
                         let playerArray = []; 
                         axios.get('/CTFCPlayer', {}).then(function (response) {
                             $.each(response.data.data, function (index, player) {
@@ -674,58 +676,72 @@
                                     playerArray.push(player);
                                 }
                             });
-                            console.log("----playerArray----",playerArray);
-
-
-
                             let playerData = playerArray;
-                            console.log("----playerData----",playerData);
-
                             let playerContainer = document.getElementById('playerList');
+                            
+                            
+                            
+                            
+                            
 
-                            playerData.forEach(player => {
-                            console.log("player.PhotoSrc"+ player.PhotoSrc);
 
-                            // Create a new div for this player
-                            let playerDiv = document.createElement('div');
+                            playerData.forEach((player, index) => {
+                                console.log("player.PhotoSrc"+ player.PhotoSrc);
 
-                            // Style the div as a column so the name appears below the image
-                            playerDiv.style.display = 'flex';
-                            playerDiv.style.flexDirection = 'column';
-                            playerDiv.style.alignItems = 'center'; // center the content
+                                // Create a new div for this player
+                                let playerDiv = document.createElement('div');
+
+                                // Style the div as a column so the name appears below the image
+                                playerDiv.style.display = 'flex';
+                                playerDiv.style.flexDirection = 'column';
+                                playerDiv.style.alignItems = 'center'; // center the content
                             playerDiv.style.width = '200px';
 
-                            let playerImage = document.createElement('img');
-                            playerImage.src = '{$Think.config.public_assets}' + "/uploads/" + player.PhotoSrc;
-                            console.log("player.PhotoSrc"+ player.PhotoSrc);
-                            playerImage.alt = 'Player Photo';
-                            playerImage.style.maxWidth = '70%';
-                            playerImage.style.height = 'auto';
-                            playerDiv.appendChild(playerImage); // Append the image to the new div
+                                // Create the image as before
+                                let playerImage = document.createElement('img');
+                                playerImage.src = '{$Think.config.public_assets}' + "/uploads/" + player.PhotoSrc;
+                                console.log("player.PhotoSrc"+ player.PhotoSrc);
+                                playerImage.alt = 'Player Photo';
+                                playerImage.style.maxWidth = '100%';
+                                playerImage.style.height = 'auto';
 
-                            // Create a new p element for the player's name
-                            let playerName = document.createElement('p');
-                            playerName.innerText = player.Name; // Assuming player.name contains the player's name
+                                // Create a new input element for the checkbox
+                                let playerCheckbox = document.createElement('input');
+                                playerCheckbox.type = 'checkbox';
+                                playerCheckbox.id = 'playerCheckbox' + index; // Give each checkbox a unique ID
 
-                            // Create a new input element for the checkbox
-                            let playerCheckbox = document.createElement('input');
-                            playerCheckbox.type = 'checkbox';
-
-                            // Create a div for the checkbox and player's name
-                            let nameCheckboxDiv = document.createElement('div');
-                            nameCheckboxDiv.style.display = 'flex';
-                            nameCheckboxDiv.style.justifyContent = 'center';
-
-                            // Append the checkbox and player's name to the div
-                            nameCheckboxDiv.appendChild(playerName);
-                            nameCheckboxDiv.appendChild(playerCheckbox);
-
-                            playerDiv.appendChild(nameCheckboxDiv);
+                                playerDiv.appendChild(playerImage); // Append the image to the new div
 
 
-                            // Append the new div to the container
-                            document.getElementById('playerContainer').appendChild(playerDiv);
-                        });
+                                // Create a new p element for the player's name
+                                let playerName = document.createElement('p');
+                                playerName.innerText = player.Name; // Assuming player.Name contains the player's name
+
+                                // Create a div for the checkbox and player's name
+                                let nameCheckboxDiv = document.createElement('div');
+                                nameCheckboxDiv.style.display = 'flex';
+                                nameCheckboxDiv.style.justifyContent = 'center';
+
+                                // Append the checkbox and player's name to the div
+                                nameCheckboxDiv.appendChild(playerCheckbox);
+                                nameCheckboxDiv.appendChild(playerName);
+
+                                playerDiv.appendChild(nameCheckboxDiv); // Append the name and checkbox to the new div
+
+                                // Add an onclick event listener to the image to check the checkbox
+                                playerDiv.addEventListener('click', function() {
+                                    let checkbox = document.getElementById('playerCheckbox'+index);
+                                    checkbox.checked = !checkbox.checked;
+                                    
+                                });
+
+
+
+                                // Append the new div to the container
+                                document.getElementById('playerContainer').appendChild(playerDiv);
+                            });
+
+
 
 
 
