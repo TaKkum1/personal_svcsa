@@ -14,14 +14,17 @@ class Ctfcheat extends Base
     const FIELD = 'ID,EventID,HeatID,LaneNumber,TeamName,ItemAgeGroupSex,Player1,Player2,Player3,Player4,Player5,Player6,Result,Note,IsSingle,HeatSize,ItemName,Gender,AgeGroupNumber,ItemPlayerID,TeamID,ItemID';
     public function lists($IAGSid = null, $IsSingle = null)
     {
-        if ($IAGSid) {
-            $list = Db::name('ctfc_heat_view')->where('ItemAgeGroupSex', $IAGSid)->paginate(input('pagesize'));
-        } elseif ($IsSingle != null) {
-            $list = Db::name('ctfc_heat_view')->where('IsSingle', $IsSingle)->paginate(input('pagesize'));
-        } else {
-            $list = Db::name('ctfc_heat_view')->paginate(input('pagesize'));
-        }
-        $list = Db::name('ctfc_heat_view')->order(['EventID', 'HeatID', 'LaneNumber'])->paginate(input('pagesize'));
+        // Saved for future pagenage() use 
+        // if ($IAGSid) {
+        //     $list = Db::name('ctfc_heat_view')->where('ItemAgeGroupSex', $IAGSid)->paginate(input('pagesize'));
+        // } elseif ($IsSingle != null) {
+        //     $list = Db::name('ctfc_heat_view')->where('IsSingle', $IsSingle)->paginate(input('pagesize'));
+        // } else {
+        //     $list = Db::name('ctfc_heat_view')->paginate(input('pagesize'));
+        // }
+        // $list = Db::name('ctfc_heat_view')->order(['EventID', 'HeatID', 'LaneNumber'])->paginate(input('pagesize'));
+
+        $list = Db::name('ctfc_heat_view')->order(['EventID', 'HeatID', 'LaneNumber'])->select();
         // Modify the player1-6 fields to combine them into a single column
 
         $modifiedList = [];
