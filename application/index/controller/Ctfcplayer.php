@@ -141,11 +141,6 @@ class Ctfcplayer extends Base
         } else if (input('registeritem')) {
             // List all approved player. (For register item page.)
             $list = Db::name('ctfc_player')->where('Approval', 1)->orderRaw('CONVERT(Name USING gbk)');
-            $list = $list->paginate($pagesize, false, [
-                'query' => input('param.'),
-            ]);
-            if ($this->jsonRequest())
-                $this->paginatedResult($list->total(), $pagesize, $list->currentPage(), $list->items());
         } else if (!$seasonid and !$teamid) {
             // List all approved player. (For player display page.)
             $list = Db::name('ctfc_player')->where('Approval', 1)->orderRaw('CONVERT(Name USING gbk)');
