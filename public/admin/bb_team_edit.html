@@ -96,7 +96,7 @@
                 <div class="layui-input-block">
                     <input id="GroupID" type="hidden" name="" value="">
                     <select id="GroupID_s" name="GroupID" lay-filter="myselect">
-                        <option value="">请选择</option>
+                        <option value="0">请选择</option>
                     </select>
                 </div>
             </div>
@@ -106,7 +106,7 @@
                    <div class="layui-input-block">
                        <input id="PlayoffGroupID" type="hidden" name="" value="">
                        <select id="PlayoffGroupID_s" name="PlayoffGroupID" lay-filter="myselect">
-                           <option value="">请选择</option>
+                           <option value="0">请选择</option>
                        </select>
                    </div>
             </div>-->
@@ -141,7 +141,23 @@
                 url: '../uploadimage',
                 acceptMime: 'image/*',
                 multiple: true,
-                before: function(obj) {
+                before: function (obj) {
+                    this.data = {
+                        Name: $('input[name="Name"]').val(),
+                        ShortName: $('input[name="ShortName"]').val(),
+                        Captain: $('input[name="Captain"]').val(),
+                        Email: $('input[name="Email"]').val(),
+                        Tel: $('input[name="Tel"]').val(),
+                        Wechat: $('input[name="Wechat"]').val(),
+                        Description: $('input[id="Description"]').val(),
+                        TimePreference: $('input[id="TimePreference"]').val(),
+                        PlayoffGroupID: $('input[id="PlayoffGroupID"]').val(),
+                        GroupID: $('input[id="GroupID"]').val(),
+                        LogoSrc: $('input[name="LogoSrc"]').val(),
+                        PhotoSrc: $('input[id="demo2"]').val(),
+                    }
+                },
+                choose: function(obj) {
                     //预读本地文件示例，不支持ie8
                     obj.preview(function(index, file, result) {
                         $('#demo1').attr('src', result); //图片链接（base64）
@@ -172,7 +188,23 @@
                 url: '../uploadimage',
                 acceptMime: 'image/*',
                 multiple: true,
-                before: function(obj) {
+                before: function (obj) {
+                    this.data = {
+                        Name: $('input[name="Name"]').val(),
+                        ShortName: $('input[name="ShortName"]').val(),
+                        Captain: $('input[name="Captain"]').val(),
+                        Email: $('input[name="Email"]').val(),
+                        Tel: $('input[name="Tel"]').val(),
+                        Wechat: $('input[name="Wechat"]').val(),
+                        Description: $('input[id="Description"]').val(),
+                        TimePreference: $('input[id="TimePreference"]').val(),
+                        PlayoffGroupID: $('input[id="PlayoffGroupID"]').val(),
+                        GroupID: $('input[id="GroupID"]').val(),
+                        LogoSrc: $('input[name="LogoSrc"]').val(),
+                        PhotoSrc: $('input[id="demo2"]').val(),
+                    }
+                },
+                choose: function(obj) {
                     //预读本地文件示例，不支持ie8
                     obj.preview(function(index, file, result) {
                         $('#demo2').attr('src', result); //图片链接（base64）

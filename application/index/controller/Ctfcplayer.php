@@ -138,12 +138,21 @@ class Ctfcplayer extends Base
             ]);
             if ($this->jsonRequest())
                 $this->paginatedResult($list->total(), $pagesize, $list->currentPage(), $list->items());
+        } else if (input('registeritem')) {
+            // List all approved player. (For register item page.)
+            $list = Db::name('ctfc_player')->where('Approval', 1)->orderRaw('CONVERT(Name USING gbk)');
+            $list = $list->paginate($pagesize, false, [
+                'query' => input('param.'),
+            ]);
+            if ($this->jsonRequest())
+                $this->paginatedResult($list->total(), $pagesize, $list->currentPage(), $list->items());
         } else if (!$seasonid and !$teamid) {
             // List all approved player. (For player display page.)
             $list = Db::name('ctfc_player')->where('Approval', 1)->orderRaw('CONVERT(Name USING gbk)');
             $this->view->assign('showNumber', false);
         } else {
-            // TODO: Add where will use this case.
+            // List all players in a team and a season. (For team display page.)
+            // 华锦赛 -> 田径团队 -> (选择团队) -> 查看队员
             $list = Db::name('ctfc_seasonplayer_view')->orderRaw('CONVERT(PlayerName USING gbk)');
             $this->view->assign('showNumber', true);
 
