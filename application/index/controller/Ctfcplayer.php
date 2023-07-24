@@ -130,6 +130,11 @@ class Ctfcplayer extends Base
         if (!$teamid && input('teamid'))
             $teamid = input('teamid');
 
+        // TODO: 
+        // 1. Clean up logic and combine duplicated code.
+        // 2. Refine or remove the pagesize.
+        // 3. Refine if condition of (!$seasonid and !$teamid) (for approved players and seasonplayers)
+        // 4. tba.
         if (input('registeritem')) {
                 // List all approved player. (For register item page.)
                 $list = Db::name('ctfc_player')->where('Approval', 1)->paginate($pagesize);
