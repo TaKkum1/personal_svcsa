@@ -137,7 +137,7 @@ class Ctfcplayer extends Base
         // 4. tba.
         if (input('registeritem')) {
                 // List all approved player. (For register item page.)
-                $list = Db::name('ctfc_player')->where('Approval', 1)->paginate($pagesize);
+                $list = Db::name('ctfc_player')->where('Approval', 1)->orderRaw('CONVERT(Name USING gbk)')->paginate($pagesize);
 
                 $this->paginatedResult(
                     $list->total(),
