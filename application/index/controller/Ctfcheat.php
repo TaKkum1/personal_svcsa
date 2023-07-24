@@ -150,4 +150,158 @@ class Ctfcheat extends Base
             return json(['success' => false, 'message' => 'Failed to update the heat']);
         }
     }
+
+    public function reassign()
+    {
+            // 调用 lists 方法获取数据列表
+            $list = Db::name('ctfc_heat_view')->select();
+
+            // 建立空的映射数组
+            $eventid_map = [];
+
+            foreach ($list as $heateachrow) {
+                // 逐行读取数据并建立映射
+                $ItemAgeGroupSex = $heateachrow['ItemAgeGroupSex'];
+                $ItemPlayerID = $heateachrow['ItemPlayerID'];
+
+                // 如果映射数组中不存在该键，创建一个空数组作为值
+                if (!isset($eventid_map[$ItemAgeGroupSex])) {
+                    $eventid_map[$ItemAgeGroupSex] = [];
+                }
+
+                // 将当前行的ID添加到对应键的数组中
+                $eventid_map[$ItemAgeGroupSex][] = $ItemPlayerID;
+            }        
+            $predefined_events = [
+                '5000m(少年乙组 F)',
+                '5000m(少年乙组 M)',
+                '5000m(少年甲组 F)',
+                '5000m(少年甲组 M)',
+                '5000m(青年组 F)',
+                '5000m(青年组 M)',
+                '5000m(公开组 F)',
+                '5000m(公开组 M)',
+                '5000m(壮年组 F)',
+                '5000m(壮年组 M)',
+                '5000m(常青组 F)',
+                '5000m(常青组 M)',
+                '100m(儿童男女 Mix)',
+                '100m(儿童甲组 F)',
+                '100m(儿童甲组 M)',
+                '100m(少年乙组 F)',
+                '100m(少年乙组 M)',
+                '100m(少年甲组 F)',
+                '100m(少年甲组 M)',
+                '100m(青年组 F)',
+                '100m(青年组 M)',
+                '100m(公开组 F)',
+                '100m(公开组 M)',
+                '100m(壮年组 F)',
+                '100m(壮年组 M)',
+                '100m(常青组 F)',
+                '100m(常青组 M)',
+                '400m(儿童男女 Mix)',
+                '400m(儿童甲组 F)',
+                '400m(儿童甲组 M)',
+                '400m(少年乙组 F)',
+                '400m(少年乙组 M)',
+                '400m(少年甲组 F)',
+                '400m(少年甲组 M)',
+                '400m(青年组 F)',
+                '400m(青年组 M)',
+                '400m(公开组 F)',
+                '400m(公开组 M)',
+                '400m(壮年组 F)',
+                '400m(壮年组 M)',
+                '400m(常青组 F)',
+                '400m(常青组 M)',
+                '4x100m relay(儿童男女 Mix)',
+                '4x100m relay(儿童甲组 F)',
+                '4x100m relay(儿童甲组 M)',
+                '4x100m relay(少年乙组 F)',
+                '4x100m relay(少年乙组 M)',
+                '4x100m relay(少年甲组 F)',
+                '4x100m relay(少年甲组 M)',
+                '4x100m relay(青年组 F)',
+                '4x100m relay(青年组 M)',
+                '4x100m relay(公开组 F)',
+                '4x100m relay(公开组 M)',
+                '4x100m relay(壮年组 F)',
+                '4x100m relay(壮年组 M)',
+                '4x100m relay(常青组 F)',
+                '4x100m relay(常青组 M)',
+                '800m(儿童男女 Mix)',
+                '800m(儿童甲组 F)',
+                '800m(儿童甲组 M)',
+                '800m(少年乙组 F)',
+                '800m(少年乙组 M)',
+                '800m(少年甲组 F)',
+                '800m(少年甲组 M)',
+                '800m(青年组 F)',
+                '800m(青年组 M)',
+                '800m(公开组 F)',
+                '800m(公开组 M)',
+                '800m(壮年组 F)',
+                '800m(壮年组 M)',
+                '800m(常青组 F)',
+                '800m(常青组 M)',
+                '200m(儿童男女 Mix)',
+                '200m(儿童甲组 F)',
+                '200m(儿童甲组 M)',
+                '200m(少年乙组 F)',
+                '200m(少年乙组 M)',
+                '200m(少年甲组 F)',
+                '200m(少年甲组 M)',
+                '200m(青年组 F)',
+                '200m(青年组 M)',
+                '200m(公开组 F)',
+                '200m(公开组 M)',
+                '200m(壮年组 F)',
+                '200m(壮年组 M)',
+                '200m(常青组 F)',
+                '200m(常青组 M)',
+                '1500m(少年乙组 F)',
+                '1500m(少年乙组 M)',
+                '1500m(少年甲组 F)',
+                '1500m(少年甲组 M)',
+                '1500m(青年组 F)',
+                '1500m(青年组 M)',
+                '1500m(公开组 F)',
+                '1500m(公开组 M)',
+                '1500m(壮年组 F)',
+                '1500m(壮年组 M)',
+                '1500m(常青组 F)',
+                '1500m(常青组 M)',
+                '4x400m mixed relay(儿童男女 Mix)',
+                '4x400m mixed relay(儿童甲组 Mix)',
+                '4x400m mixed relay(少年乙组 Mix)',
+                '4x400m mixed relay(少年甲组 Mix)',
+                '4x400m mixed relay(青年组 Mix)',
+                '4x400m mixed relay(公开组 Mix)',
+                '4x400m mixed relay(壮年组 Mix)',
+                '4x400m mixed relay(常青组 Mix)'
+                 // 其他预定义的事件
+              ];
+              
+                // 初始化一个 EventID 计数器
+                $next_event_id = 1;
+
+                foreach ($predefined_events as $ItemAgeGroupSex) {
+                    if (isset($eventid_map[$ItemAgeGroupSex])) {
+                        // 事件存在于事件ID映射中。更新 ctfc_heat 表
+                        // 注意，映射的值是与该事件关联的 itemplayer ids 的列表
+
+                        foreach ($eventid_map[$ItemAgeGroupSex] as $ItemPlayerID) {
+                            // 使用 $next_event_id 更新 ctfc_heat 表的 EventID
+                            Db::name('ctfc_heat')->where('ItemPlayerID', $ItemPlayerID)->update(['EventID' => $next_event_id]);
+                        }
+                        // 这个事件ID已经使用，增加 next_event_id
+                        $next_event_id++;
+                    }
+                }
+                $this->dataResult($list);
+        }
 }
+
+
+
