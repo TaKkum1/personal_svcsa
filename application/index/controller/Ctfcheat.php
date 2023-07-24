@@ -14,50 +14,50 @@ class Ctfcheat extends Base
     const FIELD = 'ID,EventID,HeatID,LaneNumber,TeamName,ItemAgeGroupSex,Player1,Player2,Player3,Player4,Player5,Player6,Result,Note,IsSingle,HeatSize,ItemName,Gender,AgeGroupNumber,ItemPlayerID,TeamID,ItemID';
     public function lists($IAGSid = null, $IsSingle = null)
     {
-        if ($IAGSid) {
-            $list = Db::name('ctfc_heat_view')->where('ItemAgeGroupSex', $IAGSid)->paginate(input('pagesize'));
-        } elseif ($IsSingle != null) {
-            $list = Db::name('ctfc_heat_view')->where('IsSingle', $IsSingle)->paginate(input('pagesize'));
-        } else {
-            $list = Db::name('ctfc_heat_view')->paginate(input('pagesize'));
-        }
-        $list = Db::name('ctfc_heat_view')->order(['EventID', 'HeatID', 'LaneNumber'])->paginate(input('pagesize'));
-        // Modify the player1-6 fields to combine them into a single column
+        // Saved for future pagenage() use 
+        // $list = Db::name('ctfc_heat_view')->order(['EventID', 'HeatID', 'LaneNumber'])->paginate(input('pagesize'));
 
+        if ($IAGSid) {
+            $list = Db::name('ctfc_heat_view')->where('ItemAgeGroupSex', $IAGSid)->order(['EventID', 'HeatID', 'LaneNumber'])->select();
+        } elseif ($IsSingle != null) {
+            $list = Db::name('ctfc_heat_view')->where('IsSingle', $IsSingle)->order(['EventID', 'HeatID', 'LaneNumber'])->select();
+        } else {
+            $list = Db::name('ctfc_heat_view')->order(['EventID', 'HeatID', 'LaneNumber'])->select();
+        }
         $modifiedList = [];
 
-        foreach ($list as $heateachrow) {
-            $newTable = [];
-            $newTable['ID'] = $heateachrow['ID'];
-            $newTable['EventID'] = $heateachrow['EventID'];
-            // Set default value of 1 to HeatID if null or empty
-            $newTable['HeatID'] = $heateachrow['HeatID'] ? $heateachrow['HeatID'] : 1;
-            $newTable['LaneNumber'] = $heateachrow['LaneNumber'];
-            $newTable['TeamName'] = $heateachrow['TeamName'];
-            $newTable['ItemAgeGroupSex'] = $heateachrow['ItemAgeGroupSex'];
+        if ($list) {
+            // Modify the player1-6 fields to combine them into a single column
+            foreach ($list as $heateachrow) {
+                $newTable = [];
+                $newTable['ID'] = $heateachrow['ID'];
+                $newTable['EventID'] = $heateachrow['EventID'];
+                // Set default value of 1 to HeatID if null or empty
+                $newTable['HeatID'] = $heateachrow['HeatID'] ? $heateachrow['HeatID'] : 1;
+                $newTable['LaneNumber'] = $heateachrow['LaneNumber'];
+                $newTable['TeamName'] = $heateachrow['TeamName'];
+                $newTable['ItemAgeGroupSex'] = $heateachrow['ItemAgeGroupSex'];
 
-            $players = [];
-            for ($i = 1; $i <= 6; $i++) {
-                if ($heateachrow["Player{$i}"]) {
-                    $players[] = $heateachrow["Player{$i}"];
+                $players = [];
+                for ($i = 1; $i <= 6; $i++) {
+                    if ($heateachrow["Player{$i}"]) {
+                        $players[] = $heateachrow["Player{$i}"];
+                    }
                 }
+                $newTable['Players'] = implode(' , ', $players);
+                $newTable['Result'] = $heateachrow['Result'];
+                $newTable['Note'] = $heateachrow['Note'];
+
+                // passing data for 项目 filter 
+                $newTable['ItemID'] = $heateachrow['ItemID'];
+                $newTable['ItemName'] = $heateachrow['ItemName'];
+                // passing data for 队伍 filter
+                $newTable['TeamID'] = $heateachrow['TeamID'];
+
+                $modifiedList[] = $newTable;
             }
-            $newTable['Players'] = implode(' , ', $players);
-            $newTable['Result'] = $heateachrow['Result'];
-            $newTable['Note'] = $heateachrow['Note'];
-
-            // passing data for 项目 filter 
-            $newTable['ItemID'] = $heateachrow['ItemID'];
-            $newTable['ItemName'] = $heateachrow['ItemName'];
-            // passing data for 队伍 filter
-            $newTable['TeamID'] = $heateachrow['TeamID'];
-
-            $modifiedList[] = $newTable;
         }
-
-
         $this->dataResult($modifiedList);
-
     }
 
     public function update($id)
