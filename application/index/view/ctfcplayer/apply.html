@@ -144,6 +144,13 @@
                 var fileInput = this.fileInput;
                 var files = fileInput.files;
                 var file = files[0];
+
+                var filesize = Math.floor((file.size)/1024/1024);
+                if(filesize > 2){
+                    alert("上传图片的大小不能超过2MB");
+                    return false;
+                }
+
                 var img = window.URL.createObjectURL(file);
                 var filename = file.name;
                 this.me.find("img").attr("src",img);
@@ -190,6 +197,13 @@
             var reg1 = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)/;
             if(reg1.test( $('input[name=Email]').val() ) == false) {
                 alert('邮箱格式不正确');
+                return false;
+            }
+
+            var fileInput = document.getElementById("photofile");
+            var filesize = Math.floor((fileInput.files[0].size)/1024/1024);
+            if(filesize > 2) {
+                alert("上传图片的大小不能超过2MB");
                 return false;
             }
             
