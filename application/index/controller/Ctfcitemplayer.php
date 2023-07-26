@@ -117,11 +117,11 @@ class Ctfcitemplayer extends Base
             // Step 3: Insert the itemplayerID into ctfc_heat
             $heat_data = [
                 'ItemPlayerID' => $itemplayerID,
-                'LaneNumber' => 'by default',
-                'Result' => 'by default',
-                'Note' => 'by default',
-                'EventID' => 'by default',
-                'HeatID' => 'by default'
+                'LaneNumber' => null,
+                'Result' => null,
+                'Note' => null,
+                'EventID' => null,
+                'HeatID' => null
             ];
             $heat_result = Db::name('ctfc_heat')->insert($heat_data);
             $this->affectedRowsResult($heat_result);
