@@ -108,9 +108,29 @@ class Ctfcitemplayer extends Base
     public function add()
     {
         $this->checkauthorization();
+        // Step 1: Insert data into ctfc_itemplayer
         $data = request()->only(self::FIELD, 'post');
         $result = Db::name('ctfc_itemplayer')->insert($data);
-        $this->affectedRowsResult($result);
+        // Step 2: Get the itemplayerID of the inserted row
+        if ($result) {
+            $itemplayerID = Db::name('ctfc_itemplayer')->getLastInsID();
+            // Step 3: Insert the itemplayerID into ctfc_heat
+            $heat_data = [
+                'ItemPlayerID' => $itemplayerID,
+                'LaneNumber' => 0,
+                'Result' => 0,
+                'Note' => '',
+                'EventID' => 0,
+                'HeatID' => 1
+            ];
+            $heat_result = Db::name('ctfc_heat')->insert($heat_data);
+            $this->affectedRowsResult($heat_result);
+        } else {
+            // Handle the case when the insertion into ctfc_itemplayer fails
+            // You can raise an error, log the issue, or handle it based on your application logic.
+            // For this example, we will just print an error message.
+            echo "Failed to insert data into ctfc_itemplayer.";
+        }
     }
 
     public function update($id)
