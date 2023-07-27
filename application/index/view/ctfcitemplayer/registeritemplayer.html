@@ -142,9 +142,13 @@
         
             <div id="myModal" class="modal">
                 <div class="modal-content">
-                    <span id="closeBtn" onclick="closeModal()">&times;</span>
+                   
+                    <div class="button-container" style="display: flex; justify-content: space-between; align-items: center; width: 400px;">
+                        <button id="saveButton">确认所有选中队员</button>
 
-                    <button id="saveButton">选中</button>
+                        <span id="closeBtn" onclick="closeModal()">&times;关闭窗口</span>
+                    </div>
+                   
                     <input type="hidden" name="selectedPlayerIDs" />
                     <input type="hidden" name="selectedplayers" />
                     <input type="hidden" name="selectedplayersAgeGroup" />
@@ -152,10 +156,12 @@
                         <div class="item-box">
                             <label>
                                 <p id="playerList"></p>
-                                <h1>点击图片选择参赛队员</h1>
+                                <h3>点击图片即可选择参赛队员！</h3>
                                 <div id="playerContainer" class="player-container"> 
                                     <!-- player images will be appended here -->
                                 </div>
+                                <button id="saveButton" style="width: 200px; height: 50px;">确认所有选中队员</button>
+
                             </label>
                         </div>
                     </div>
@@ -716,7 +722,7 @@
                                 // Create the image as before
                                 let playerImage = document.createElement('img');
                                 playerImage.src = '{$Think.config.public_assets}' + "/uploads/" + player.PhotoSrc;
-                                // console.log("player.PhotoSrc"+ player.PhotoSrc);
+                                console.log("player.PhotoSrc"+ player.PhotoSrc);
                                 playerImage.alt = 'Player Photo';
                                 playerImage.style.maxWidth = '100%';
                                 playerImage.style.height = 'auto';
