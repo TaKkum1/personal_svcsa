@@ -107,7 +107,27 @@
                         <option value="">选择年龄组</option>
                     </select>
                 </div>
-               
+                <div class="input-box" style="width:240px;border:0px">
+                    <label for="PlayerID" style="width: 70px;"><b>接力队员: </b></label>        
+                    <select name="PlayerID1" id="PlayerID1" style="width: 240px;" lay-filter="PlayerClick1" required>
+                        <option value="">选择接力队员#1 (必填)</option>
+                    </select>
+                    <select name="PlayerID2" id="PlayerID2" style="width: 240px;" lay-filter="PlayerClick2" required>
+                        <option value="">选择接力队员#2 (必填)</option>
+                    </select>
+                    <select name="PlayerID3" id="PlayerID3" style="width: 240px;" lay-filter="PlayerClick3" required>
+                        <option value="">选择接力队员#3 (必填)</option>
+                    </select>
+                    <select name="PlayerID4" id="PlayerID4" style="width: 240px;" lay-filter="PlayerClick4" required>
+                        <option value="">选择接力队员#4 (必填)</option>
+                    </select>
+                    <select name="PlayerID5" id="PlayerID5" style="width: 240px;" lay-filter="PlayerClick5">
+                        <option value="">选择接力队员#5 (选填)</option>
+                    </select>
+                    <select name="PlayerID6" id="PlayerID6" style="width: 240px;" lay-filter="PlayerClick6">
+                        <option value="">选择接力队员#6 (选填)</option>
+                    </select>
+                </div>
             </div>
 
             <div class="dropdown" id="1-dropdown">
@@ -133,7 +153,7 @@
                             <label>
                                 <p id="playerList"></p>
                                 <h1>点击图片选择参赛队员</h1>
-                                <div id="playerContainer" class="player-container"> <!-- New playerContainer div here -->
+                                <div id="playerContainer" class="player-container"> 
                                     <!-- player images will be appended here -->
                                 </div>
                             </label>
@@ -464,11 +484,11 @@
             AgeGroupID: AgeGroupIDNumber,
             ItemID: xiangmu,
             PlayerID1: PlayerSetNumber,
-            PlayerID2: null,
-            PlayerID3: null,
-            PlayerID4: null,
-            PlayerID5: null,
-            PlayerID6: null,
+            PlayerID2: 0,
+            PlayerID3: 0,
+            PlayerID4: 0,
+            PlayerID5: 0,
+            PlayerID6: 0,
         }).catch(function (error) {
             console.log(error);
         });
@@ -489,11 +509,11 @@
         AgeGroupID: AgeGroupIDNumber,
         ItemID: xiangmu,
         PlayerID1: PlayerSetNumber,
-        PlayerID2: null,
-        PlayerID3: null,
-        PlayerID4: null,
-        PlayerID5: null,
-        PlayerID6: null,
+        PlayerID2: 0,
+        PlayerID3: 0,
+        PlayerID4: 0,
+        PlayerID5: 0,
+        PlayerID6: 0,
     }).then(function(response) {
         callback(null, response);
     }).catch(function (error) {
@@ -634,8 +654,6 @@
         });
     });
 
-
-    // document.getElementById('closeBtn').addEventListener('click', closeModal);
 
     function openModal() {
         console.log("openModal");
@@ -781,8 +799,6 @@
     function closeModal() {
         document.getElementById('myModal').style.display = "none";
     }
-
-
 
 
 </script>
