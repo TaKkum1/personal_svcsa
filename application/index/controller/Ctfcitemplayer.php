@@ -108,9 +108,29 @@ class Ctfcitemplayer extends Base
     public function add()
     {
         $this->checkauthorization();
+        // Step 1: Insert data into ctfc_itemplayer
         $data = request()->only(self::FIELD, 'post');
         $result = Db::name('ctfc_itemplayer')->insert($data);
-        $this->affectedRowsResult($result);
+        // Step 2: Get the itemplayerID of the inserted row
+        if ($result) {
+            $itemplayerID = Db::name('ctfc_itemplayer')->getLastInsID();
+            // Step 3: Insert the itemplayerID into ctfc_heat
+            $heat_data = [
+                'ItemPlayerID' => $itemplayerID,
+                'LaneNumber' => 0,
+                'Result' => 0,
+                'Note' => '',
+                'EventID' => 0,
+                'HeatID' => 1
+            ];
+            $heat_result = Db::name('ctfc_heat')->insert($heat_data);
+            $this->affectedRowsResult($heat_result);
+        } else {
+            // Handle the case when the insertion into ctfc_itemplayer fails
+            // You can raise an error, log the issue, or handle it based on your application logic.
+            // For this example, we will just print an error message.
+            echo "Failed to insert data into ctfc_itemplayer.";
+        }
     }
 
     public function update($id)
@@ -354,35 +374,33 @@ class Ctfcitemplayer extends Base
 
         // Check if the player has 3 single items in the current season aleady.
         $final_list = $list;
-        foreach ($list as $itemplayer_id) {
-            //get all ctfc_itemplayer of one single player.
-            $data = Db::name('ctfc_itemplayer')->where("SeasonID", $CurrentSeasonID)->where("PlayerID1", $itemplayer_id)->select();
-            
-            // Add all singleitem to an array for this player.
-            $players_items_list = [];
-            foreach($data as $one_data) {
-                if ($this->checkSignleItem($one_data['ItemID'])) {
-                    array_push($players_items_list, $one_data['ItemID']);
+        if ($this->checkSignleItem($CurrentSelecteditemID)) {
+            foreach ($list as $itemplayer_id) {
+                //get all ctfc_itemplayer of one single player.
+                $data = Db::name('ctfc_itemplayer')->where("SeasonID", $CurrentSeasonID)->where("PlayerID1", $itemplayer_id)->select();
+                
+                // Add all singleitem to an array for this player.
+                $players_items_list = [];
+                foreach($data as $one_data) {
+                    if ($this->checkSignleItem($one_data['ItemID'])) {
+                        array_push($players_items_list, $one_data['ItemID']);
+                    }
                 }
-            }
 
-            // count how many singleitems for this player, skip this player if >=3.
-            if(count($players_items_list) >=3) {
-                // Find the index of this player to be removed.
-                 $index = array_search($itemplayer_id, $final_list);
-                 // Remove the element if it exists in the array
-                 if ($index !== false) {
-                     unset($final_list[$index]);
-                 }
-                 // Re-index the array
-                 $final_list = array_values($final_list);
-            }
+                // count how many singleitems for this player, skip this player if >=3.
+                if(count($players_items_list) >=3) {
+                    // Find the index of this player to be removed.
+                    $index = array_search($itemplayer_id, $final_list);
+                    // Remove the element if it exists in the array
+                    if ($index !== false) {
+                        unset($final_list[$index]);
+                    }
+                    // Re-index the array
+                    $final_list = array_values($final_list);
+                }
 
+            }
         }
-        $available_players = $final_list;
-
-        $this->view->assign('available_players', $available_players);
-
         $this->jsonResult(0, ['affectedRows' => $final_list]);
     }
 

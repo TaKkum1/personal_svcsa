@@ -218,7 +218,6 @@
         });
     }
 
-
     function getAgeRange(seasonAgeGroupID, callback) {
         $.ajax({
             url: '/ctfcitemplayer/getAgeRangeSeasonItem',
@@ -257,13 +256,13 @@
                     $('#PlayerID' + i).append('<option value="">' + "选择队员 (必填)" + '</option>');
                 }
                 
-                axios.get('/CTFCPlayer?all=1', {}).then(function (response) {
+                axios.get('/CTFCPlayer?registeritem=1', {}).then(function (response) {
                     var playerList = response.data.data.filter(function (item) {
                         return currentPlayerList.includes(item.ID);
                     });
 
                     playerList.forEach(function (item) {
-                        var option = '<option value="' + item.Name + '">' + item.Name + '</option>';
+                        var option = '<option value="' + item.ID + '">' + item.Name + '</option>';
                         $('#PlayerID1').append(option);
                         $('#PlayerID2').append(option);
                         $('#PlayerID3').append(option);
@@ -563,7 +562,6 @@
                     $('select[name=PlayerID5]').val(),
                     $('select[name=PlayerID6]').val()
                 ];
-
                 var definedPlayerCount = playerIDs.filter(Boolean).length; // Count how many players are defined
 
                 if (definedPlayerCount < 4) {
@@ -571,26 +569,67 @@
                     return;
                 }
 
-                axios.post('/CTFCItemplayer/', {
-                    SeasonID:$('select[name=SeasonID]').val(),
-                    TeamID: $('select[name=TeamID]').val(),
-                    Sex: xiangmuSex,
-                    AgeGroupID: $('select[name=AgeGroupID]').val(),
-                    ItemID: xiangmu,
-                    PlayerID1: $('select[name=PlayerID1]').val(),
-                    PlayerID2: $('select[name=PlayerID2]').val(),
-                    PlayerID3: $('select[name=PlayerID3]').val(),
-                    PlayerID4: $('select[name=PlayerID4]').val(),
-                    PlayerID5: $('select[name=PlayerID5]').val(),
-                    PlayerID6: $('select[name=PlayerID6]').val(),
+                var i = 0, male = 0, female = 0;
+                let ajaxCallsRemaining = definedPlayerCount; 
+                while (i < definedPlayerCount) {
+                    getPlayerAgeSex(playerIDs[i], function(playerAgeGroup, playerSex){
+                        console.log("playerAgeGroup: " + playerAgeGroup);
+                        console.log("playerSex: " + playerSex);
+                        if (playerSex == 'M') male++;
+                        else if (playerSex == 'F') female++;
+                        --ajaxCallsRemaining;
+                        if (ajaxCallsRemaining <= 0) {
+                            if (definedPlayerCount == 4 && male > 2 && $('#AgeGroupID').val() != 1) {
+                                alert('A maximum of 2 men are allowed to this event.');
+                                return;
+                            } else if (definedPlayerCount > 4 && male > 3 && $('#AgeGroupID').val() != 1) {
+                                alert('A maximum of 3 men are allowed to this event.');
+                                return;
+                            }
+                            axios.post('/CTFCItemplayer/', {
+                                SeasonID:$('select[name=SeasonID]').val(),
+                                TeamID: $('select[name=TeamID]').val(),
+                                Sex: xiangmuSex,
+                                AgeGroupID: $('select[name=AgeGroupID]').val(),
+                                ItemID: xiangmu,
+                                PlayerID1: $('select[name=PlayerID1]').val(),
+                                PlayerID2: $('select[name=PlayerID2]').val(),
+                                PlayerID3: $('select[name=PlayerID3]').val(),
+                                PlayerID4: $('select[name=PlayerID4]').val(),
+                                PlayerID5: $('select[name=PlayerID5]').val(),
+                                PlayerID6: $('select[name=PlayerID6]').val(),
+                            }).then(function (response) {
+                                alert('添加成功');
+                                // Redirect to a specific URL
+                                window.location.href = window.location.origin + "/ctfc"
+                            }).catch(function (error) {
+                                console.log(error);
+                            });
+                        }
+                    });
+                    i++;
+                }
+
+                // axios.post('/CTFCItemplayer/', {
+                //     SeasonID:$('select[name=SeasonID]').val(),
+                //     TeamID: $('select[name=TeamID]').val(),
+                //     Sex: xiangmuSex,
+                //     AgeGroupID: $('select[name=AgeGroupID]').val(),
+                //     ItemID: xiangmu,
+                //     PlayerID1: $('select[name=PlayerID1]').val(),
+                //     PlayerID2: $('select[name=PlayerID2]').val(),
+                //     PlayerID3: $('select[name=PlayerID3]').val(),
+                //     PlayerID4: $('select[name=PlayerID4]').val(),
+                //     PlayerID5: $('select[name=PlayerID5]').val(),
+                //     PlayerID6: $('select[name=PlayerID6]').val(),
                        
-                }).then(function (response) {
-                    alert('添加成功');
-                    // Redirect to a specific URL
-                    // window.location.href = window.location.origin + "/ctfc"
-                }).catch(function (error) {
-                    console.log(error);
-                });
+                // }).then(function (response) {
+                //     alert('添加成功');
+                //     // Redirect to a specific URL
+                //     window.location.href = window.location.origin + "/ctfc"
+                // }).catch(function (error) {
+                //     console.log(error);
+                // });
             }
         });
     });

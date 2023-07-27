@@ -1,9 +1,21 @@
 <!-- 内容主体区域 -->
 <link rel="stylesheet" href="layui/css/layui.css">
 <style>
-    .layui-table-cell .layui-form-checkbox[lay-skin="primary"]{
+    .layui-form-checkbox[lay-skin="primary"]{
+        height: 80px;
+        line-height: 80px;
         top: 50%;
         transform: translateY(-50%);
+    }
+    .layui-table-cell {
+        height: 80px;
+        line-height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .layui-table-cell img {
+        max-height: 70px;
     }
 </style>
 <div style="padding: 15px;">
@@ -166,17 +178,17 @@
                     //     title: '队长联系方式-微信',
                     //     width: 150,
                     // }
-                    // , {
-                    //     field: 'LogoSrc',
-                    //     title: 'Logo存放位置',
-                    //     templet: '#show-img',
-                    //     width: 150,
-                    // }, {
-                    //     field: 'PhotoSrc',
-                    //     title: '集体照存放位置',
-                    //     templet: '#show-img2',
-                    //     width: 150,
-                    // }
+                    , {
+                        field: 'LogoSrc',
+                        title: 'Logo',
+                        templet: '#show-img',
+                        width: 100,
+                    }, {
+                        field: 'PhotoSrc',
+                        title: '集体照',
+                        templet: '#show-img2',
+                        width: 100,
+                    }
                     // , {
                     //     field: 'Wechat',
                     //     title: '队长联系方式-微信',
@@ -306,8 +318,8 @@
                         body.find('#Email').val(data.Email)
                         body.find('#Tel').val(data.Tel)
                         body.find('#Wechat').val(data.Wechat)
-                        body.find('#img_url1').val(data.LogoSrc)
-                        body.find('#img_url2').val(data.PhotoSrc)
+                        //body.find('#img_url1').val(data.LogoSrc)
+                        //body.find('#img_url2').val(data.PhotoSrc)
                         if (data.TimePreference == 0) {
                           body.find('#prefer_all').attr("checked", "true");
                         } else if (data.TimePreference == 1) {
