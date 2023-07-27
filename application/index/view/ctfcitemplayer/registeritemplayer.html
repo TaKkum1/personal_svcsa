@@ -69,7 +69,7 @@
             <li><h5>注册混合接力时，至少二男二女。</h5></li> 
             <li><h5>如下拉菜单没有成功显示运动员，<br>请先确认运动员是否已被注册成功，<br/>或查看该运动员已被其他队伍注册登记。 </h5></li>
             <li><h5>报名项目由各队队长/领队为自己队伍统一填写。<br>请确保运动队已经注册。</h5></li>
-            <li><h5>本队所有待报名球员已经自行注册。<br>否则你的队伍名字以及队员名字，<br>不会出现在下拉列表中。</h5></li>
+            <li><h5>本队所有待报名队员已经自行注册。<br>否则你的队伍名字以及队员名字，<br>不会出现在下拉列表中。</h5></li>
         </ul>
     </div>
 
@@ -107,33 +107,13 @@
                         <option value="">选择年龄组</option>
                     </select>
                 </div>
-                <div class="input-box" style="width:240px;border:0px">
-                    <label for="PlayerID" style="width: 70px;"><b>接力队员: </b></label>        
-                    <select name="PlayerID1" id="PlayerID1" style="width: 240px;" lay-filter="PlayerClick1" required>
-                        <option value="">选择接力队员#1 (必填)</option>
-                    </select>
-                    <select name="PlayerID2" id="PlayerID2" style="width: 240px;" lay-filter="PlayerClick2" required>
-                        <option value="">选择接力队员#2 (必填)</option>
-                    </select>
-                    <select name="PlayerID3" id="PlayerID3" style="width: 240px;" lay-filter="PlayerClick3" required>
-                        <option value="">选择接力队员#3 (必填)</option>
-                    </select>
-                    <select name="PlayerID4" id="PlayerID4" style="width: 240px;" lay-filter="PlayerClick4" required>
-                        <option value="">选择接力队员#4 (必填)</option>
-                    </select>
-                    <select name="PlayerID5" id="PlayerID5" style="width: 240px;" lay-filter="PlayerClick5">
-                        <option value="">选择接力队员#5 (选填)</option>
-                    </select>
-                    <select name="PlayerID6" id="PlayerID6" style="width: 240px;" lay-filter="PlayerClick6">
-                        <option value="">选择接力队员#6 (选填)</option>
-                    </select>
-                </div>
+               
             </div>
 
             <div class="dropdown" id="1-dropdown">
 
                 <div class="input-box select-input">
-                    <span class="select-btn">选择队员</span><span class="nub">已选择<em>0</em>个球员</span>
+                    <span class="select-btn">选择队员</span><span class="nub">已选择<em>0</em>个队员</span>
                 </div>
             </div>
 
@@ -145,14 +125,14 @@
                     <span id="closeBtn" onclick="closeModal()">&times;</span>
 
                     <button id="saveButton">选中</button>
-
-                    <input type="hidden" name="PlayerIDs" />
-
+                    <input type="hidden" name="selectedPlayerIDs" />
+                    <input type="hidden" name="selectedplayers" />
+                    <input type="hidden" name="selectedplayersAgeGroup" />
                     <div class="col-md-3">
                         <div class="item-box">
                             <label>
                                 <p id="playerList"></p>
-                                <h1>选择参赛队员</h1>
+                                <h1>点击图片选择参赛队员</h1>
                                 <div id="playerContainer" class="player-container"> <!-- New playerContainer div here -->
                                     <!-- player images will be appended here -->
                                 </div>
@@ -238,49 +218,6 @@
         });
     }
 
-    function updatePlayerList(currentItemid, currentSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, SelectedSeasonID) {
-        // console.log("SelectedSeasonID: " + SelectedSeasonID);
-        // console.log("currentItemid: " + currentItemid);
-        // console.log("currentSex: " + currentSex);
-        // console.log("SelectedTeamID: " + SelectedTeamID);
-        // console.log("seasonitemFiltersMin Age: " + seasonitemFiltersMinAG);
-        // console.log("seasonitemFiltersMax Age: " + seasonitemFiltersMaxAG);
-                
-        getPlayerList(currentItemid, currentSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, SelectedSeasonID, function(currentPlayerList) {
-            // console.log('PlayerList=' + currentPlayerList);
-            $('#PlayerIDSet1').empty();
-            $('#PlayerIDSet1').append('<option value="">' + "选择参赛队员" + '</option>');
-            $('#PlayerIDSet2').empty();
-            $('#PlayerIDSet2').append('<option value="">' + "选择参赛队员" + '</option>');
-            $('#PlayerIDSet3').empty();
-            $('#PlayerIDSet3').append('<option value="">' + "选择参赛队员" + '</option>');
-            
-            $('#PlayerIDSet4').empty();
-            $('#PlayerIDSet4').append('<option value="">' + "选择参赛队员" + '</option>');
-            $('#PlayerIDSet5').empty();
-            $('#PlayerIDSet5').append('<option value="">' + "选择参赛队员" + '</option>');
-            $('#PlayerIDSet6').empty();
-            $('#PlayerIDSet6').append('<option value="">' + "选择参赛队员" + '</option>');
-            
-            axios.get('/CTFCPlayer?all=1', {}).then(function (response) {
-                var playerList = response.data.data.filter(function (item) {
-                    return currentPlayerList.includes(item.ID);
-                });
-
-                playerList.forEach(function (item) {
-                    var option = '<option value="' + item.ID + '">' + item.Name + '</option>';
-                    $('#PlayerIDSet1').append(option);
-                    $('#PlayerIDSet2').append(option);
-                    $('#PlayerIDSet3').append(option);
-                    $('#PlayerIDSet4').append(option);
-                    $('#PlayerIDSet5').append(option);
-                    $('#PlayerIDSet6').append(option);
-                });
-                }).catch(function (error) {
-                console.log(error);
-                });
-        });
-    }
 
     function getAgeRange(seasonAgeGroupID, callback) {
         $.ajax({
@@ -474,7 +411,13 @@
                             seasonitemFiltersMinAG = item.MinAgeGroupMinAge;
                             seasonitemFiltersMaxAG = item.MaxAgeGroupMaxAge;
 
-                            updatePlayerList(xiangmu, xiangmuSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, SelectedSeasonID);
+                            //Clean up myModal
+                            $("input[name='selectedPlayerIDs']").val('');
+                            $("input[name='selectedplayers']").val('');
+                            $("input[name='selectedplayersAgeGroup']").val('');
+
+                            // Empty the player container
+                            $("#playerContainer").empty();
                         }
                     });
                 }).catch(function (error) {
@@ -510,7 +453,6 @@
 
     // Single player option button
     $('.select-btn').click(function(){
-        console.log("here")
         displayPlayerList();
     });
 
@@ -533,6 +475,33 @@
         });
     }
 
+    function postDataWithCallback(SeasonIDNumber, TeamIDNumber, xiangmuSex, AgeGroupIDNumber, xiangmu, PlayerSetNumber, callback) {
+        // console.log("SeasonIDNumber: " + SeasonIDNumber);
+        // console.log("TeamIDNumber: " + TeamIDNumber);
+        // console.log("xiangmuSex: " + xiangmuSex);
+        // console.log("AgeGroupIDNumber: " + AgeGroupIDNumber);
+        // console.log("xiangmu: " + xiangmu);
+        // console.log("PlayerSetNumber: " + PlayerSetNumber);
+
+    axios.post('/CTFCItemplayer/', {
+        SeasonID: SeasonIDNumber,
+        TeamID: TeamIDNumber,
+        Sex: xiangmuSex,
+        AgeGroupID: AgeGroupIDNumber,
+        ItemID: xiangmu,
+        PlayerID1: PlayerSetNumber,
+        PlayerID2: null,
+        PlayerID3: null,
+        PlayerID4: null,
+        PlayerID5: null,
+        PlayerID6: null,
+    }).then(function(response) {
+        callback(null, response);
+    }).catch(function (error) {
+        callback(error);
+    });
+}
+
     $(".sub").click(function(){
         var selectedItemSex = $('select[name=ItemID]').val().split("-");
         xiangmu = selectedItemSex[0];
@@ -540,67 +509,51 @@
         CheckIsSingle(xiangmu, xiangmuSex, function(currentIsSingleFlag) {
             // Submit upto 6 single-player items
             if(currentIsSingleFlag == 1) {
-                console.log("SeasonID: " + $('select[name=SeasonID]').val());
-                console.log("TeamID: " + $('select[name=TeamID]').val());
-                console.log("Sex: " + xiangmuSex);
-                console.log("AgeGroupID: " + $('input[name=AgeGroupIDSet1]').val());
-                console.log("ItemID: " + xiangmu);
+                // console.log("SeasonID: " + $('select[name=SeasonID]').val());
+                // console.log("TeamID: " + $('select[name=TeamID]').val());
+                // console.log("Sex: " + xiangmuSex);
+                // console.log("ItemID: " + xiangmu);
                 SeasonIDNumber=$('select[name=SeasonID]').val();
                 TeamIDNumber =$('select[name=TeamID]').val();
                 
-                AgeGroupIDNumber1=$('input[name=AgeGroupIDSet1]').val();
-                AgeGroupIDNumber2=$('input[name=AgeGroupIDSet2]').val();
-                AgeGroupIDNumber3=$('input[name=AgeGroupIDSet3]').val();
-                AgeGroupIDNumber4=$('input[name=AgeGroupIDSet4]').val();
-                AgeGroupIDNumber5=$('input[name=AgeGroupIDSet5]').val();
-                AgeGroupIDNumber6=$('input[name=AgeGroupIDSet6]').val();
+                let playerIdsStr = $("input[name='selectedPlayerIDs']").val();
+                let playerIds = playerIdsStr.split(',');
 
-                PlayerSetNumber1=$('select[name=PlayerIDSet1]').val();  
-                PlayerSetNumber2=$('select[name=PlayerIDSet2]').val();  
-                PlayerSetNumber3=$('select[name=PlayerIDSet3]').val();  
-                PlayerSetNumber4=$('select[name=PlayerIDSet4]').val();  
-                PlayerSetNumber5=$('select[name=PlayerIDSet5]').val();  
-                PlayerSetNumber6=$('select[name=PlayerIDSet6]').val();  
-                
-
-                var playerSetNumbers = [PlayerSetNumber1, PlayerSetNumber2, PlayerSetNumber3, PlayerSetNumber4, PlayerSetNumber5, PlayerSetNumber6];
-
-                if(!playerSetNumbers.some(Boolean)) {
+                if(!playerIds.some(Boolean)) {
                     alert('Please add at least one player before submitting');
                     return;
                 }
 
-                // console.log("PlayerIDSet1: " + PlayerSetNumber1);
-                // console.log("PlayerIDSet2: " + PlayerSetNumber2);
-                // console.log("PlayerIDSet3: " + PlayerSetNumber3);
-                // console.log("PlayerIDSet4: " + PlayerSetNumber4);
-                // console.log("PlayerIDSet5: " + PlayerSetNumber5);
-                // console.log("PlayerIDSet6: " + PlayerSetNumber6);
-                let promises = [];
 
-                if(PlayerSetNumber1) {
-                    promises.push(postData(SeasonIDNumber, TeamIDNumber, xiangmuSex, AgeGroupIDNumber1, xiangmu, PlayerSetNumber1));
-                }
-                if(PlayerSetNumber2) {
-                    promises.push(postData(SeasonIDNumber, TeamIDNumber, xiangmuSex, AgeGroupIDNumber2, xiangmu, PlayerSetNumber2));
-                }
-                if(PlayerSetNumber3) {
-                    promises.push(postData(SeasonIDNumber, TeamIDNumber, xiangmuSex, AgeGroupIDNumber3, xiangmu, PlayerSetNumber3));
-                }
-                if(PlayerSetNumber4) {
-                    promises.push(postData(SeasonIDNumber, TeamIDNumber, xiangmuSex, AgeGroupIDNumber4, xiangmu, PlayerSetNumber4));
-                }
-                if(PlayerSetNumber5) {
-                    promises.push(postData(SeasonIDNumber, TeamIDNumber, xiangmuSex, AgeGroupIDNumber5, xiangmu, PlayerSetNumber5));
-                }
-                if(PlayerSetNumber6) {
-                    promises.push(postData(SeasonIDNumber, TeamIDNumber, xiangmuSex, AgeGroupIDNumber6, xiangmu, PlayerSetNumber6));
+                let playerAgeGroupsStr = $("input[name='selectedplayersAgeGroup']").val();
+                OptplayerAgeGroupsStr = playerAgeGroupsStr.slice(0, -2);
+                console.log("OptplayerAgeGroupsStr: " + OptplayerAgeGroupsStr);
+                let playerAgeGroups = OptplayerAgeGroupsStr.split(',');
+
+
+                let successfulPostCount = 0;
+
+                for(let i = 0; i < playerIds.length; i++) {
+                    console.log("playerIds["+i+"]="+playerIds[i]);
+
+                    if(playerIds[i]) {
+                        postDataWithCallback(SeasonIDNumber, TeamIDNumber, xiangmuSex, playerAgeGroups[i], xiangmu, playerIds[i], function(error, result) {
+                            if(error) {
+                                console.log(error);
+                                // handle error
+                            } else {
+                                console.log(result);
+                                // handle result
+                                successfulPostCount++; // increment the counter
+                                if(successfulPostCount === playerIds.length) {
+                                    alert('添加成功');
+                                    window.location.href = window.location.origin + "/ctfc"
+                                }
+                            }
+                        });
+                    }
                 }
 
-                Promise.all(promises).then(function() {
-                    alert('添加成功');
-                    window.location.href = window.location.origin + "/ctfc"
-                });
             } else {
                 var playerIDs = [
                     $('select[name=PlayerID1]').val(),
@@ -634,7 +587,7 @@
                 }).then(function (response) {
                     alert('添加成功');
                     // Redirect to a specific URL
-                    window.location.href = window.location.origin + "/ctfc"
+                    // window.location.href = window.location.origin + "/ctfc"
                 }).catch(function (error) {
                     console.log(error);
                 });
@@ -648,14 +601,14 @@
     function openModal() {
         console.log("openModal");
         document.getElementById('myModal').style.display = "block";
-
     }
 
+    let playerIDArray = [];
     function displayPlayerList() {
         var selectedItemSex = document.getElementById('ItemID').value.split("-");;
         var xiangmu = selectedItemSex[0];
         var xiangmuSex = selectedItemSex[1];
-        var SelectedTeamID = document.getElementById('TeamID').value;
+       var SelectedTeamID = document.getElementById('TeamID').value;
         var SelectedSeasonID = document.getElementById('SeasonID').value;
         
         axios.get('/ctfcitemseasonitemagegroupview?seasonid=' + SelectedSeasonID, {}).then(function (response) {
@@ -667,7 +620,7 @@
 
                     getPlayerList(xiangmu, xiangmuSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, SelectedSeasonID, function(currentPlayerList) {
                         console.log("currentPlayerList:"+currentPlayerList);
-
+                        playerIDArray = currentPlayerList;
                         let playerArray = []; 
                         axios.get('/CTFCPlayer', {}).then(function (response) {
                             $.each(response.data.data, function (index, player) {
@@ -678,13 +631,6 @@
                             });
                             let playerData = playerArray;
                             let playerContainer = document.getElementById('playerList');
-                            
-                            
-                            
-                            
-                            
-
-
                             playerData.forEach((player, index) => {
                                 console.log("player.PhotoSrc"+ player.PhotoSrc);
 
@@ -692,15 +638,16 @@
                                 let playerDiv = document.createElement('div');
 
                                 // Style the div as a column so the name appears below the image
+                                playerDiv.name = 'playerDiv';
                                 playerDiv.style.display = 'flex';
                                 playerDiv.style.flexDirection = 'column';
                                 playerDiv.style.alignItems = 'center'; // center the content
-                            playerDiv.style.width = '200px';
+                                playerDiv.style.width = '180px';
 
                                 // Create the image as before
                                 let playerImage = document.createElement('img');
                                 playerImage.src = '{$Think.config.public_assets}' + "/uploads/" + player.PhotoSrc;
-                                console.log("player.PhotoSrc"+ player.PhotoSrc);
+                                // console.log("player.PhotoSrc"+ player.PhotoSrc);
                                 playerImage.alt = 'Player Photo';
                                 playerImage.style.maxWidth = '100%';
                                 playerImage.style.height = 'auto';
@@ -732,45 +679,66 @@
                                 playerDiv.addEventListener('click', function() {
                                     let checkbox = document.getElementById('playerCheckbox'+index);
                                     checkbox.checked = !checkbox.checked;
-                                    
+                                    console.log("checkbox("+index+") checked");
+                                    // Access the 'selectedplayers' element
+                                    let mySelectedPlayers = document.querySelector('input[name="selectedplayers"]');
+                                    // Check if checkbox is checked
+                                    if (checkbox.checked) {
+                                        // If checked, append the player's ID
+                                        mySelectedPlayers.value += player.ID + ', ';
+                                    } else {
+                                        // If unchecked, remove the player's ID
+                                        mySelectedPlayers.value = mySelectedPlayers.value.replace(player.ID + ', ', '');
+                                    }
+                                    let selectedPlayersArray = mySelectedPlayers.value.split(", "); // Split string into an array
+                                    let selectedPlayersSet = new Set(selectedPlayersArray); // Convert array to set to remove duplicates
+                                    let uniqueSelectedPlayersArray = Array.from(selectedPlayersSet); // Convert set back to array
+                                    let uniqueSelectedPlayers = uniqueSelectedPlayersArray.join(", "); // Convert array back to string
+                                    mySelectedPlayers.value = uniqueSelectedPlayers; // Assign back to your input field                                    
                                 });
-
-
-
                                 // Append the new div to the container
                                 document.getElementById('playerContainer').appendChild(playerDiv);
                             });
-
-
-
-
-
-
-
                         }).catch(function (error) {
                             console.log(error);
                         });
-
-
-
-
                         openModal();
                     });
-
-
                 }
             });
         }).catch(function (error) {
             console.log(error);
         });
-        // updatePlayerList(xiangmu, xiangmuSex, seasonitemFiltersMinAG,seasonitemFiltersMaxAG, SelectedTeamID, SelectedSeasonID);
         
-
         
     }
 
-
-
+    $("#saveButton").click(function() {
+        event.preventDefault();
+        let selectedPlayers = $("input[name='selectedplayers']").val();
+        OptselectedPlayerIDs = selectedPlayers.slice(0, -2);
+        $("input[name='selectedPlayerIDs']").val(OptselectedPlayerIDs);
+        let selectedPlayerIDs = $("input[name='selectedPlayerIDs']").val();
+        console.log($("input[name='selectedPlayerIDs']").val());
+        let playerIds = selectedPlayerIDs.split(',');
+        for (let i = 0; i < playerIds.length; i++) {
+            let playerId = playerIds[i];
+            console.log("playerId: " + playerId);
+            getPlayerAgeSex(playerId, function(playerAgeGroup, playerSex) {
+                axios.get('/CTFCAgegroup', {}).then(function (response) {
+                    let playerAgeGroups = document.querySelector('input[name="selectedplayersAgeGroup"]');
+                    $.each(response.data.data, function (index, element) {
+                        if(playerAgeGroup == element.ID) {
+                            playerAgeGroups.value += element.ID + ', ';
+                        }
+                    });
+                    console.log("playerAgeGroups.value: " + playerAgeGroups.value);
+                });
+            });
+        }
+        $('.input-box .nub em').text(playerIds.length);
+        closeModal();
+    });
     function closeModal() {
         document.getElementById('myModal').style.display = "none";
     }
