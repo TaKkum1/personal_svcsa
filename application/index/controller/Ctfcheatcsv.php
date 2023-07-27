@@ -8,12 +8,13 @@ use think\Response;
 
 class CtfcheatCSV extends Base
 {
-    const FIELD = 'EventID,HeatID,LaneNumber,TeamName,TeamAbbr,ItemAgeGroupSex,Player1,Player2,Player3,Player4,Player5,Player6,Result,Note,IsSingle,HeatSize,ItemName,Gender,AgeGroupNumber,ItemPlayerID,TeamID,ItemID,Division';
+    const FIELD = 'EventID,HeatID,LaneNumber,TeamName,TeamAbbr,ItemAgeGroupSex,Player1,Player2,Player3,Player4,Player5,Player6,Result,Note,IsSingle,IsTrack,HeatSize,ItemName,Gender,AgeGroupNumber,ItemPlayerID,TeamID,ItemID,Division';
 
     public function generateCSV()
     {
         // Retrieve data from the database
         $list = Db::name('ctfc_heat_view')
+        ->where('IsTrack', 1)
         ->order(['EventID', 'HeatID', 'LaneNumber'])
         ->select();
 
