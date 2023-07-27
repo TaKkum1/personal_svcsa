@@ -23,8 +23,40 @@ class CtfcheatCSV extends Base
         foreach ($list as $heateachrow) {
             $newTable = [];
             $newTable['D ( DO NOT CHANGE)'] ='D';
-            $newTable['Last Name'] ='LN';
-            $newTable['First Name'] ='FN';
+            // Initialize an empty array to store last names and first names
+            $lastNames = [];
+            $firstNames = [];
+
+            // Extract last name and first name from players' data and add them to the respective arrays
+            if ($heateachrow["Player1"]) {
+                $playerData = $heateachrow["Player1"];
+                        // Remove '#' character and any text after it from the player data
+                $playerDataParts = explode('#', $playerData, 2);
+                $playerData = $playerDataParts[0];
+                // Check if the name contains any Chinese characters
+                if (preg_match('/\p{Han}+/u', $playerData)) {
+                    // If the name contains Chinese characters, use mb_substr to extract the first character as the last name
+                    $lastName = mb_substr($playerData, 0, 1, 'UTF-8');
+                    $firstName = mb_substr($playerData, 1, null, 'UTF-8');
+                } else {
+                    // If the name doesn't contain Chinese characters, assume the name is in Western order (First Last)
+                    // Split the full name by the space character
+                    $nameParts = explode(' ', $playerData, 2);
+
+                    // First part is the first name
+                    $firstName = trim($nameParts[0]);
+
+                    // Second part is the last name
+                    $lastName = isset($nameParts[1]) ? trim($nameParts[1]) : '';
+                }
+
+                // Add the names to the respective arrays
+                $lastNames[] = $lastName;
+                $firstNames[] = $firstName;
+            }
+            // Combine last names and first names into their respective columns
+            $newTable['Last Name'] = implode(', ', $lastNames);
+            $newTable['First Name'] = implode(', ', $firstNames);
             $newTable['LEAVE BLANK'] ='';
             // Check if the gender value is 'M' or 'F', otherwise set it to 'M'
             $gender = $heateachrow['Gender'];
@@ -50,24 +82,10 @@ class CtfcheatCSV extends Base
             } else {
                 $newTable['DIVISION'] = trim($heateachrow['Division']);
             }
-            // $newTable['ID'] = $heateachrow['ID'];
-            // $newTable['EventID'] = $heateachrow['EventID'];
-            // $newTable['HeatID'] = $heateachrow['HeatID'] ? $heateachrow['HeatID'] : 1;
-            // $newTable['LaneNumber'] = $heateachrow['LaneNumber'];
-            // $newTable['ItemAgeGroupSex'] = $heateachrow['ItemAgeGroupSex'];
-
-            // $players = [];
-            // for ($i = 1; $i <= 6; $i++) {
-            //     if ($heateachrow["Player{$i}"]) {
-            //         $players[] = $heateachrow["Player{$i}"];
-            //     }
-            // }
-            // $newTable['Players'] = implode(', ', $players);
-            // $newTable['Result'] = $heateachrow['Result'];
-            // $newTable['Note'] = $heateachrow['Note'];
-            
+    
 
             $modifiedList[] = $newTable;
+  
         }
 
         // Prepare the CSV file data
