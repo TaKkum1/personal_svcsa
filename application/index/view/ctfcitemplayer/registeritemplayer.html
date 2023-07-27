@@ -364,6 +364,15 @@
         console.log(error);
     });
 
+    $('#TeamID').on('change', function () {
+        //Clean up myModal
+        $("input[name='selectedPlayerIDs']").val('');
+        $("input[name='selectedplayers']").val('');
+        $("input[name='selectedplayersAgeGroup']").val('');
+        // Empty the player container
+        $("#playerContainer").empty();
+    });
+
     $('#ItemID').on('change', function () {
         var selectedItemSex = $(this).val().split("-");;
         var xiangmu = selectedItemSex[0];
@@ -422,6 +431,12 @@
                     console.log(error);
                 });
             } else { // single player only update playerlist
+                //Clean up myModal
+                $("input[name='selectedPlayerIDs']").val('');
+                $("input[name='selectedplayers']").val('');
+                $("input[name='selectedplayersAgeGroup']").val('');
+                // Empty the player container
+                $("#playerContainer").empty();
                 // console.log("CheckIsSingle:"+currentIsSingleFlag);
                 axios.get('/ctfcitemseasonitemagegroupview?seasonid=' + SelectedSeasonID, {}).then(function (response) {
                     const data = response.data.data;
@@ -429,14 +444,6 @@
                         if(item.ItemID == xiangmu && item.Sex == xiangmuSex) {
                             seasonitemFiltersMinAG = item.MinAgeGroupMinAge;
                             seasonitemFiltersMaxAG = item.MaxAgeGroupMaxAge;
-
-                            //Clean up myModal
-                            $("input[name='selectedPlayerIDs']").val('');
-                            $("input[name='selectedplayers']").val('');
-                            $("input[name='selectedplayersAgeGroup']").val('');
-
-                            // Empty the player container
-                            $("#playerContainer").empty();
                         }
                     });
                 }).catch(function (error) {
@@ -668,6 +675,7 @@
        var SelectedTeamID = document.getElementById('TeamID').value;
         var SelectedSeasonID = document.getElementById('SeasonID').value;
         
+        let checkplayerContainer = document.getElementById('playerContainer');
         axios.get('/ctfcitemseasonitemagegroupview?seasonid=' + SelectedSeasonID, {}).then(function (response) {
             const data = response.data.data;
             $.each(response.data.data, function (index, item) {
@@ -680,16 +688,20 @@
                         playerIDArray = currentPlayerList;
                         let playerArray = []; 
                         axios.get('/CTFCPlayer', {}).then(function (response) {
-                            $.each(response.data.data, function (index, player) {
-                                if(currentPlayerList.includes(player.ID)) {
-                                    console.log("player:"+player);
-                                    playerArray.push(player);
-                                }
-                            });
+                            if (checkplayerContainer.hasChildNodes()) {
+                                console.log("playerContainer has child nodes");
+                            } else {
+                                console.log("playerContainer does not have any child nodes");
+                                $.each(response.data.data, function (index, player) {
+                                    if(currentPlayerList.includes(player.ID)) {
+                                        console.log("player:"+player);
+                                        playerArray.push(player);
+                                    }
+                                });
+                            }
                             let playerData = playerArray;
                             let playerContainer = document.getElementById('playerList');
                             playerData.forEach((player, index) => {
-                                console.log("player.PhotoSrc"+ player.PhotoSrc);
 
                                 // Create a new div for this player
                                 let playerDiv = document.createElement('div');
@@ -766,7 +778,6 @@
         }).catch(function (error) {
             console.log(error);
         });
-        
         
     }
 
