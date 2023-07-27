@@ -413,6 +413,7 @@ class Ctfcitemplayer extends Base
         if (!$season) goto notfound;
         
         $this->view->assign('season', $season);
+
         return $this->view->fetch('ctfcitemplayer/registeritemplayer');
 
         notfound:
