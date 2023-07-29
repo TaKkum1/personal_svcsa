@@ -716,7 +716,7 @@
                                 playerDiv.style.display = 'flex';
                                 playerDiv.style.flexDirection = 'column';
                                 playerDiv.style.alignItems = 'center'; // center the content
-                                playerDiv.style.width = '180px';
+                                playerDiv.style.width = '120px';
 
                                 // Create the image as before
                                 let playerImage = document.createElement('img');
@@ -751,6 +751,7 @@
 
                                 // Add an onclick event listener to the image to check the checkbox
                                 playerDiv.addEventListener('click', function() {
+                                    event.preventDefault(); // Add this line to prevent the default behavior of the event
                                     let checkbox = document.getElementById('playerCheckbox'+index);
                                     checkbox.checked = !checkbox.checked;
                                     console.log("checkbox("+index+") checked");
