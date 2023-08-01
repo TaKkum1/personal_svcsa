@@ -800,20 +800,27 @@
         output an array of player agegroup ids
         */
         const promiseArray = [];
-        playerIds.forEach((playerId, idx) => {
+        playerIds.forEach((playerId) => {
             const playerPromoise = new Promise((res, rej) => {
-                // refactor to use `then` and promise
-                getPlayerAgeSex(playerId, function(playerAgeGroup, playerSex) {
-                    axios.get('/CTFCAgegroup', {}).then(function (response) {
-                        let playerAgeGroups = document.querySelector('input[name="selectedplayersAgeGroup"]');
-                        $.each(response.data.data, function (index, element) {
-                            if(playerAgeGroup == element.ID) {
-                                res(element.ID)
-                            }
-                        });
-                        rej('Cannot find the assoicated age group');
-                    });
-                })
+                $.ajax({
+                    url: '/ctfcitemplayer/getAgeSex',
+                    type: 'Get',
+                    dataType: 'json',
+                    data: {
+                        PlayerID: playerId
+                    },
+                    header: {
+                        Accept: 'application/json'
+                    },
+                    success: function(data) {
+                        playerAgeAndSex = data['affectedRows'];
+                        res(playerAgeAndSex[0]);
+                    },
+                    error: function(xhr) {
+                        console.log(xhr.status);
+                        rej('Cannot find the assoicated age group', xhr.status);
+                    }
+                });
             });
             promiseArray.push(playerPromise);
         })
