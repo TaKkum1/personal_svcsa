@@ -812,10 +812,10 @@
                     header: {
                         Accept: 'application/json'
                     },
-                    success: function(data) {
+                    success: function onsuccess(data) {
                         playerAgeAndSex = data['affectedRows'];
                         res(playerAgeAndSex[0]);
-                    error: function(xhr) {
+                    error: function onerror(xhr) {
                         console.log(xhr.status);
                         rej('Cannot find the assoicated age group', xhr.status);
                     }
