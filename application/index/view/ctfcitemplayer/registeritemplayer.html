@@ -814,8 +814,7 @@
                     },
                     success: function(data) {
                         playerAgeAndSex = data['affectedRows'];
-                        res(playerAgeAndSex[0], playerAgeAndSex[1]);
-                    },
+                        res(playerAgeAndSex[0]);
                     error: function(xhr) {
                         console.log(xhr.status);
                         rej('Cannot find the assoicated age group', xhr.status);
