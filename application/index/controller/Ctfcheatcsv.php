@@ -18,19 +18,16 @@ class CtfcheatCSV extends Base
         ->order(['EventID', 'HeatID', 'LaneNumber'])
         ->select();
 
-        // Modify the player1-6 fields to combine them into a single column
         $modifiedList = [];
         foreach ($list as $heateachrow) {
             $newTable = [];
             $newTable['D ( DO NOT CHANGE)'] ='D';
-            // Initialize an empty array to store last names and first names
             $lastNames = [];
             $firstNames = [];
-
             // Extract last name and first name from players' data and add them to the respective arrays
             if ($heateachrow["Player1"]) {
                 $playerData = $heateachrow["Player1"];
-                        // Remove '#' character and any text after it from the player data
+                // Remove '#' character and any text after it from the player data
                 $playerDataParts = explode('#', $playerData, 2);
                 $playerData = $playerDataParts[0];
                 // Check if the name contains any Chinese characters
@@ -42,14 +39,11 @@ class CtfcheatCSV extends Base
                     // If the name doesn't contain Chinese characters, assume the name is in Western order (First Last)
                     // Split the full name by the space character
                     $nameParts = explode(' ', $playerData, 2);
-
                     // First part is the first name
                     $firstName = trim($nameParts[0]);
-
                     // Second part is the last name
                     $lastName = isset($nameParts[1]) ? trim($nameParts[1]) : '';
                 }
-
                 // Add the names to the respective arrays
                 $lastNames[] = $lastName;
                 $firstNames[] = $firstName;
