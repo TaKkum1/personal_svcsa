@@ -795,21 +795,47 @@
         let selectedPlayerIDs = $("input[name='selectedPlayerIDs']").val();
         console.log($("input[name='selectedPlayerIDs']").val());
         let playerIds = selectedPlayerIDs.split(',');
-        for (let i = 0; i < playerIds.length; i++) {
-            let playerId = playerIds[i];
-            console.log("playerId: " + playerId);
-            getPlayerAgeSex(playerId, function(playerAgeGroup, playerSex) {
-                axios.get('/CTFCAgegroup', {}).then(function (response) {
-                    let playerAgeGroups = document.querySelector('input[name="selectedplayersAgeGroup"]');
-                    $.each(response.data.data, function (index, element) {
-                        if(playerAgeGroup == element.ID) {
-                            playerAgeGroups.value += element.ID + ', ';
-                        }
+        /**
+        Take an array of player ids
+        output an array of player agegroup ids
+        */
+        const promiseArray = [];
+        playerIds.forEach((playerId, idx) => {
+            const playerPromoise = new Promise((res, rej) => {
+                // refactor to use `then` and promise
+                getPlayerAgeSex(playerId, function(playerAgeGroup, playerSex) {
+                    axios.get('/CTFCAgegroup', {}).then(function (response) {
+                        let playerAgeGroups = document.querySelector('input[name="selectedplayersAgeGroup"]');
+                        $.each(response.data.data, function (index, element) {
+                            if(playerAgeGroup == element.ID) {
+                                res(element.ID)
+                            }
+                        });
+                        rej('Cannot find the assoicated age group');
                     });
-                    console.log("playerAgeGroups.value: " + playerAgeGroups.value);
-                });
+                })
             });
-        }
+            promiseArray.push(playerPromise);
+        })
+
+        Promise.all(...promiseArray).then((ageGroupIds) => {
+            selectedPlayerIDs = ageGroupIds.join(',');
+        })
+        // for (let i = 0; i < playerIds.length; i++) {
+            // let playerId = playerIds[i];
+            // console.log("playerId: " + playerId);
+            // getPlayerAgeSex(playerId, function(playerAgeGroup, playerSex) {
+            //     axios.get('/CTFCAgegroup', {}).then(function (response) {
+            //         let playerAgeGroups = document.querySelector('input[name="selectedplayersAgeGroup"]');
+            //         $.each(response.data.data, function (index, element) {
+            //             if(playerAgeGroup == element.ID) {
+            //                 playerAgeGroups.value += element.ID + ', ';
+            //             }
+            //         });
+            //         console.log("playerAgeGroups.value: " + playerAgeGroups.value);
+            //     });
+            // });
+        // }
         $('.input-box .nub em').text(playerIds.length);
         closeModal();
     });
