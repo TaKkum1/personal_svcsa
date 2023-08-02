@@ -833,7 +833,15 @@
                     }
                 });
             });
-        }
+
+            promiseArray.push(playerPromise);
+        });
+
+        Promise.all(promiseArray).then((ageGroupIds) => {
+            playerAgeGroups = ageGroupIds.join(',');
+            $("input[name='selectedplayersAgeGroup']").val(playerAgeGroups);
+        });
+        
         $('.input-box .nub em').text(playerIds.length);
         closeModal();
     });
