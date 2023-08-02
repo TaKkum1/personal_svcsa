@@ -806,18 +806,31 @@
         let selectedPlayerIDs = $("input[name='selectedPlayerIDs']").val();
         console.log($("input[name='selectedPlayerIDs']").val());
         let playerIds = selectedPlayerIDs.split(',');
-        for (let i = 0; i < playerIds.length; i++) {
-            let playerId = playerIds[i];
-            console.log("playerId: " + playerId);
-            getPlayerAgeSex(playerId, function(playerAgeGroup, playerSex) {
-                axios.get('/CTFCAgegroup', {}).then(function (response) {
-                    let playerAgeGroups = document.querySelector('input[name="selectedplayersAgeGroup"]');
-                    $.each(response.data.data, function (index, element) {
-                        if(playerAgeGroup == element.ID) {
-                            playerAgeGroups.value += element.ID + ', ';
-                        }
-                    });
-                    console.log("playerAgeGroups.value: " + playerAgeGroups.value);
+        /**
+        Take an array of player ids
+        output an array of player agegroup ids
+        */
+        const promiseArray = [];
+        playerIds.forEach((playerId) => {
+            const playerPromise = new Promise((res, rej) => {
+                $.ajax({
+                    url: '/ctfcitemplayer/getAgeSex',
+                    type: 'Get',
+                    dataType: 'json',
+                    data: {
+                        PlayerID: playerId
+                    },
+                    header: {
+                        Accept: 'application/json'
+                    },
+                    success: function onsuccess(data) {
+                        playerAgeAndSex = data['affectedRows'];
+                        res(playerAgeAndSex[0]);
+                    },
+                    error: function onerror(xhr) {
+                        console.log(xhr.status);
+                        rej('Cannot find the assoicated age group', xhr.status);
+                    }
                 });
             });
         }
