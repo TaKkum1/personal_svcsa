@@ -61,11 +61,16 @@ class CtfcheatCSV extends Base
             $newTable['Club'] = $heateachrow['TeamName'];
             $newTable['Age'] ='';
             $newTable['Grade'] ='';
-            // Strip any characters other than integers and 'x' from the 'Event' field
+            // Strip any characters other than integers and the first 'x' from the 'Event' field
             $event = $heateachrow['ItemName'];
             $strippedEvent = preg_replace('/[^0-9x]/i', '', $event);
+            $firstXPosition = strpos($strippedEvent, 'x');
+            if ($firstXPosition !== false) {
+                $strippedEvent = substr($strippedEvent, 0, $firstXPosition + 1) .
+                                preg_replace('/x/i', '', substr($strippedEvent, $firstXPosition + 1));
+            }
             // Format the EVENT value to align in the cell
-            $formattedEvent = '="' . $strippedEvent . '"';
+            $formattedEvent = '="' . $strippedEvent . '"';    
             $newTable['EVENT (only 1)'] = $formattedEvent;
             $newTable['SEED TIME'] ='';
             $newTable['M ( DO NOT CHANGE)'] ='M';
@@ -81,6 +86,38 @@ class CtfcheatCSV extends Base
             $modifiedList[] = $newTable;
   
         }
+
+        // List of race distances
+        $RACE_DISTANCES = ["5000", "100", "400", "4x100", "800", "200", "1500", "4x400", "16x000"];
+
+        // Sorting function
+        usort($modifiedList, function ($a, $b) use ($RACE_DISTANCES) {
+            // Extract the values for the EVENT (only 1) field
+            $eventA = str_replace(['="', '"'], '', $a['EVENT (only 1)']);
+            $eventB = str_replace(['="', '"'], '', $b['EVENT (only 1)']);
+            $indexA = array_search($eventA, $RACE_DISTANCES);
+            $indexB = array_search($eventB, $RACE_DISTANCES);
+
+            // Compare the indexes to sort the array
+            $result = $indexA <=> $indexB;
+
+            // If the EVENT (only 1) field values are the same, sort by the DIVISION field
+            if ($result === 0) {
+                // Extract the first number from the DIVISION field
+                preg_match('/\d+/', $a['DIVISION'], $matchesA);
+                $divisionA = isset($matchesA[0]) ? intval($matchesA[0]) : 0;
+
+                preg_match('/\d+/', $b['DIVISION'], $matchesB);
+                $divisionB = isset($matchesB[0]) ? intval($matchesB[0]) : 0;
+
+                // Compare the first numbers in ascending order
+                $result = $divisionA <=> $divisionB;
+            }
+
+            return $result;
+        });
+
+
 
         // Prepare the CSV file data
         $fp = fopen('php://temp', 'w');
