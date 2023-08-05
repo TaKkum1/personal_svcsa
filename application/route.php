@@ -12,7 +12,7 @@
 \think\Route::get('phpinfo', 'index/index/phpinfo');
 \think\Route::get('', 'index/index/index');
 
-\think\Route::rule('/:controller', 'index/Base/optionpass','OPTIONS', [], ['id' => '.+']);
+\think\Route::rule('/:controller', 'index/Base/optionpass', 'OPTIONS', [], ['id' => '.+']);
 
 \think\Route::get('system', 'index/system/read');
 \think\Route::post('system', 'index/system/update');
@@ -29,7 +29,7 @@
 \think\Route::get('faq/:id', 'index/article/faqread', [], ['id' => '\d+']);
 \think\Route::get('faq', 'index/article/faqlists');
 
-\think\Route::get('player', 'index/bbplayer/lists',['competitionid'=>1]);
+\think\Route::get('player', 'index/bbplayer/lists', ['competitionid' => 1]);
 
 
 \think\Route::post('article/:id', 'index/article/update', [], ['id' => '\d+']);
@@ -49,8 +49,12 @@
 \think\Route::get('authorization', 'index/authorization/lists');
 
 
-\think\Route::post('bbmatch/:matchid/bbstatistics', 'index/bbstatistics/add',
-    [], ['matchid' => '\d+']);
+\think\Route::post(
+    'bbmatch/:matchid/bbstatistics',
+    'index/bbstatistics/add',
+    [],
+    ['matchid' => '\d+']
+);
 \think\Route::post('bbstatistics/:id', 'index/bbstatistics/update', [], ['id' => '\d+']);
 \think\Route::post('bbstatistics', 'index/bbstatistics/add');
 \think\Route::delete('bbstatistics/:id', 'index/bbstatistics/delete', [], ['id' => '\d+']);
@@ -198,9 +202,9 @@
 \think\Route::get('sponsor', 'index/sponsor/lists');
 
 \think\Route::post('ctfcseasonteam/passapp', 'index/ctfcseasonteam/passApplication');
-\think\Route::post('ctfcseasonteam/:seasonid/:teamid', 'index/ctfcseasonteam/update', [], ['seasonid' => '\d+'],['teamid' => '\d+']);
+\think\Route::post('ctfcseasonteam/:seasonid/:teamid', 'index/ctfcseasonteam/update', [], ['seasonid' => '\d+'], ['teamid' => '\d+']);
 \think\Route::post('ctfcseasonteam', 'index/ctfcseasonteam/add');
-\think\Route::delete('ctfcseasonteam/:seasonid/:teamid', 'index/ctfcseasonteam/delete', [], ['seasonid' => '\d+'],['teamid' => '\d+']);
+\think\Route::delete('ctfcseasonteam/:seasonid/:teamid', 'index/ctfcseasonteam/delete', [], ['seasonid' => '\d+'], ['teamid' => '\d+']);
 \think\Route::get('ctfcseasonteam/:id', 'index/ctfcseasonteam/read', [], ['id' => '\d+']);
 \think\Route::get('ctfcseasonteam', 'index/ctfcseasonteam/lists');
 
@@ -210,14 +214,14 @@
 \think\Route::get('ctfcagegroup/:id', 'index/ctfcagegroup/read', [], ['id' => '\d+']);
 \think\Route::get('ctfcagegroup', 'index/ctfcagegroup/lists');
 
-\think\Route::post('ctfcseasonitem/:seasonid/:itemid/:sex', 'index/ctfcseasonitem/update', [], ['seasonid' => '\d+'],['itemid' => '\d+'],['sex' => '\d+']);
+\think\Route::post('ctfcseasonitem/:seasonid/:itemid/:sex', 'index/ctfcseasonitem/update', [], ['seasonid' => '\d+'], ['itemid' => '\d+'], ['sex' => '\d+']);
 \think\Route::post('ctfcseasonitem', 'index/ctfcseasonitem/add');
-\think\Route::delete('ctfcseasonitem/:seasonid/:itemid/:sex', 'index/ctfcseasonitem/delete', [], ['seasonid' => '\d+'],['itemid' => '\d+'],['sex' => '\d+']);
+\think\Route::delete('ctfcseasonitem/:seasonid/:itemid/:sex', 'index/ctfcseasonitem/delete', [], ['seasonid' => '\d+'], ['itemid' => '\d+'], ['sex' => '\d+']);
 \think\Route::get('ctfcseasonitem/:id', 'index/ctfcseasonitem/read', [], ['id' => '\d+']);
 \think\Route::get('ctfcseasonitem', 'index/ctfcseasonitem/lists');
 
-\think\Route::post('ctfcplayernumber/:seasonid/:teamid/:playerid', 'index/ctfcplayernumber/update', [], ['seasonid' => '\d+'],['teamid' => '\d+'],['playerid' => '\d+']);
-\think\Route::delete('ctfcplayernumber/:seasonid/:teamid/:playerid', 'index/ctfcplayernumber/delete', [], ['seasonid' => '\d+'],['teamid' => '\d+'],['playerid' => '\d+']);
+\think\Route::post('ctfcplayernumber/:seasonid/:teamid/:playerid', 'index/ctfcplayernumber/update', [], ['seasonid' => '\d+'], ['teamid' => '\d+'], ['playerid' => '\d+']);
+\think\Route::delete('ctfcplayernumber/:seasonid/:teamid/:playerid', 'index/ctfcplayernumber/delete', [], ['seasonid' => '\d+'], ['teamid' => '\d+'], ['playerid' => '\d+']);
 \think\Route::post('ctfcplayernumber', 'index/ctfcplayernumber/add');
 \think\Route::get('ctfcplayernumber/:id', 'index/ctfcplayernumber/read', [], ['id' => '\d+']);
 \think\Route::get('ctfcplayernumber', 'index/ctfcplayernumber/lists');
@@ -255,9 +259,12 @@
 \think\Route::get('ctfcheatview', 'index/ctfcheat/lists');
 \think\Route::post('ctfcheat/:id', 'index/ctfcheat/update', [], ['id' => '\d+']);
 \think\Route::get('ctfcheatcsv', 'index/CtfcheatCSV/generateCSV');
+\think\Route::post('ctfcheat/edit', 'index/ctfcheat/edit');
+\think\Route::post('ctfcheat/reassign', 'index/ctfcheat/reassign');
+
 return [
 
-//    '[bbcompetition]' => [
+    //    '[bbcompetition]' => [
 //        ':id'   => ['index/bbcompetition/read', ['method' => 'get'], ['id' => '\d+']],
 //        ':id'   => ['index/bbcompetition/delete', ['method' => 'delete'], ['id' => '\d+']],
 //    ],

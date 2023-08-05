@@ -307,7 +307,7 @@
                             $('#PlayerID' + i + "_s").append('<option value="">' + "选择队员 (必填)" + '</option>');
                         }
                     }
-                    axios.get('../CTFCPlayer?all=1', {}).then(function (response) {
+                    axios.get('../CTFCPlayer?registeritem=1', {}).then(function (response) {
                         $.each(response.data.data, function (index, item) {
                             if(currentPlayerList.includes(item.ID)) {
 
@@ -340,7 +340,7 @@
                     $('#PlayerIDOne_s').empty();
                     $('#PlayerIDOne_s').append('<option value="">' + "选择队员" + '</option>');
                 }
-                axios.get('../CTFCPlayer?all=1', {}).then(function (response) {
+                axios.get('../CTFCPlayer?registeritem=1', {}).then(function (response) {
                     $.each(response.data.data, function (index, item) {
                         if(currentPlayerList.includes(item.ID)) {
                             $('#PlayerIDOne_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
@@ -796,7 +796,7 @@
                         console.log(error);
                     });
 
-                    axios.get('../CTFCPlayer?all=1', {}).then(function (response) {
+                    axios.get('../CTFCPlayer?registeritem=1', {}).then(function (response) {
                         var readseasonid = document.getElementById('SeasonID_s').value;
                         var currentteamid = document.getElementById('TeamID_s').value;
                         
@@ -921,7 +921,7 @@
                     });
 
                     //prefill the player
-                    axios.get('../CTFCPlayer?all=1', {}).then(function (response) {
+                    axios.get('../CTFCPlayer?registeritem=1', {}).then(function (response) {
                         $.each(response.data.data, function (index, element) {
                             if(relayPlayerID1 == element.ID) {
                                 $('#PlayerID1_s').append('<option value="' + relayPlayerID1 + '">' + element.Name + '</option>');

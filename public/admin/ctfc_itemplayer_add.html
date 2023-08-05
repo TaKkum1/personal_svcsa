@@ -292,7 +292,7 @@
                         $('#PlayerID' + i).append('<option value="">' + "选择队员 (必填)" + '</option>');
                     }
                     
-                    axios.get('../CTFCPlayer', {}).then(function (response) {
+                    axios.get('../CTFCPlayer?registeritem=1', {}).then(function (response) {
                         $.each(response.data.data, function (index, item) {
                             if(currentPlayerList.includes(item.ID)) {
                                 $('#PlayerID1').append('<option value="' + item.ID + '">' + item.Name + '</option>');
@@ -324,7 +324,7 @@
                 $('#PlayerIDOne').empty();
                 $('#PlayerIDOne').append('<option value="">' + "选择队员" + '</option>');
                 
-                axios.get('../CTFCPlayer', {}).then(function (response) {
+                axios.get('../CTFCPlayer?registeritem=1', {}).then(function (response) {
                     $.each(response.data.data, function (index, item) {
                         if(currentPlayerList.includes(item.ID)) {
                             $('#PlayerIDOne').append('<option value="' + item.ID + '">' + item.Name + '</option>');
@@ -658,6 +658,61 @@
                     item_id = parts[0];
                     item_Sex = parts[1];
 
+                    var playerIDs = [
+                        $('select[name=PlayerID1]').val(),
+                        $('select[name=PlayerID2]').val(),
+                        $('select[name=PlayerID3]').val(),
+                        $('select[name=PlayerID4]').val(),
+                        $('select[name=PlayerID5]').val(),
+                        $('select[name=PlayerID6]').val()
+                    ];
+                    var definedPlayerCount = playerIDs.filter(Boolean).length; // Count how many players are defined
+                    
+                    if (item_id == 12 && item_Sex == 'Mix' && $('#AgeGroupID').val() != 1) {
+                        var i = 0, male = 0, female = 0;
+                        let ajaxCallsRemaining = definedPlayerCount; 
+                        while (i < definedPlayerCount) {
+                            getPlayerAgeSex(playerIDs[i], function(playerAgeGroup, playerSex){
+                                if (playerSex == 'M') male++;
+                                else if (playerSex == 'F') female++;
+                                --ajaxCallsRemaining;
+                                if (ajaxCallsRemaining <= 0) {
+                                    if (definedPlayerCount == 4 && male > 2) {
+                                        alert('最多2名男性参加此项比赛');
+                                        return;
+                                    } else if (definedPlayerCount > 4 && male > 3) {
+                                        alert('最多3名男性参加此项比赛');
+                                        return;
+                                    }
+                                    axios.post('../CTFCItemplayer/', {
+                                        SeasonID: data.field.SeasonID,
+                                        TeamID: data.field.TeamID,
+                                        Sex: data.field.Sex,
+                                        AgeGroupID: data.field.AgeGroupID,
+                                        ItemID: item_id,
+                                        PlayerID1: data.field.PlayerID1,
+                                        PlayerID2: data.field.PlayerID2,
+                                        PlayerID3: data.field.PlayerID3,
+                                        PlayerID4: data.field.PlayerID4,
+                                        PlayerID5: data.field.PlayerID5,
+                                        PlayerID6: data.field.PlayerID6,
+                                    })
+                                    .then(function (response) {
+                                        layer.msg('添加成功', {
+                                            icon: 1,
+                                            time: 1500
+                                        }, function () {
+                                            parent.layer.close(index);
+                                        });
+                                    })
+                                    .catch(function (error) {
+                                        console.log(error);
+                                    });
+                                }
+                            });
+                            i++;
+                        }
+                    } else {
                     axios.post('../CTFCItemplayer/', {
                         SeasonID: data.field.SeasonID,
                         TeamID: data.field.TeamID,
@@ -684,6 +739,7 @@
                         .catch(function (error) {
                             console.log(error);
                         });
+                    }
                 }
             });
   
