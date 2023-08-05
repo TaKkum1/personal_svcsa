@@ -46,6 +46,10 @@
             <button id="reassign" class="layui-btn layui-btn-normal">更改Event ID</button>
         </div>
       </div>
+      <div class="layui-input-inline">
+        <button id="timing" class="layui-btn layui-btn-warm">生成电计时表格</button>
+      </div>
+
 
       <table class="layui-hide" id="test" lay-filter="test"></table>
       <script type="text/html" id="toolbarDemo"></script>
@@ -297,5 +301,10 @@
         url: "../CTFCheatview?IAGSid=" + data.value,
       });
     });
+
+    $("#timing").click(function() {
+            window.location.href = "../ctfcheatcsv";
+    });
+
   });
 </script>

@@ -258,6 +258,7 @@
 // ctfc_heat_view
 \think\Route::get('ctfcheatview', 'index/ctfcheat/lists');
 \think\Route::post('ctfcheat/:id', 'index/ctfcheat/update', [], ['id' => '\d+']);
+\think\Route::get('ctfcheatcsv', 'index/CtfcheatCSV/generateCSV');
 \think\Route::post('ctfcheat/edit', 'index/ctfcheat/edit');
 \think\Route::post('ctfcheat/reassign', 'index/ctfcheat/reassign');
 
