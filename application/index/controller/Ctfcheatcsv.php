@@ -6,7 +6,7 @@ use think\Db;
 use think\Session;
 use think\Response;
 
-class CtfcheatCSV extends Base
+class Ctfcheatcsv extends Base
 {
     const FIELD = 'EventID,HeatID,LaneNumber,TeamName,TeamAbbr,ItemAgeGroupSex,Player1,Player2,Player3,Player4,Player5,Player6,Result,Note,IsSingle,IsTrack,HeatSize,ItemName,Gender,AgeGroupNumber,ItemPlayerID,TeamID,ItemID,Division';
 
