@@ -196,7 +196,7 @@ class Bbteam extends Base
                   'and bb_player.Sex="'.$playersex.'") '.
               'order by Name asc';
         } elseif ($competitionid == 4) {
-          // Men Senior, not selected + birth < 1988/01/01
+          // Men Senior, not selected + birth < 1989/01/01
           $sql =
               'select * '.
               'from bb_player '.
@@ -204,7 +204,7 @@ class Bbteam extends Base
                   'select distinct bb_seasonteamplayer.PlayerID '.
                   'from bb_seasonteamplayer '.
                   'where bb_seasonteamplayer.SeasonID='.strval($seasonid).') '.
-                  'and date(bb_player.Birth) < "1988-01-01") '.
+                  'and date(bb_player.Birth) < "1989-01-01") '.
               'order by Name asc';
         }
         $available_players = Db::query($sql);
