@@ -91,7 +91,12 @@
                         </td>
                         <td>{$match['TeamName']}</td>
                         <td>{$match['LaneNumber']}</td>
-                        <td>{$match['Result']}</td>
+                        <td>{if condition="$match['TimeSpan']"}
+                                {$match['TimeSpan']}
+                            {else \}
+                                {$match['Result']}
+                            {/if}
+                            </td>
                         <td>{$match['Note']}</td>
 
                     </tr>
