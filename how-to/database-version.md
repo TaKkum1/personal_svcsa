@@ -1,7 +1,10 @@
 ## Database version
-TLDR is to be able to re-create the databse in the mySQL instance of version number in the database name. 
+High level goal is to be able to re-create the databse in the mySQL instance of version number in the database name. 
 
-## How to deploy the database
+## How to make a copy of the database
 
-TBA
+DBeaver
 
+Dump Database
+
+Extra command args: `--ssl-mode=disabled`
