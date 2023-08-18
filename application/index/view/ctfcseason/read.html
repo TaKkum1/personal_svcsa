@@ -92,7 +92,7 @@
                         <td>{$match['TeamName']}</td>
                         <td>{$match['LaneNumber']}</td>
                         <td>{if condition="$match['TimeSpan']"}
-                                {$match['TimeSpan']}
+                                <?php echo substr($match['TimeSpan'],3);?>
                             {else \}
                                 {$match['Result']}
                             {/if}

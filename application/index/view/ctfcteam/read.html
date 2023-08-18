@@ -38,7 +38,7 @@
 </div>
 <div class="team_des-wrap block">
     <div class="des-box clearfix">
-        <div class="left-box">
+        <div>
             <h3>队伍联系方式</h3>
             <dl>
                 <dt><span class="icon-phone"></span> 电话</dt>
@@ -61,7 +61,7 @@
 
 <div class="pro-wrap">
     <div class="clearfix block">
-        <div class="public-left">
+        <div>
             <table class="table">
                 <thead>
                 <tr>
@@ -72,7 +72,7 @@
                     <th>年龄组</th>
                     <th>运动员-号码牌</th>
                     <th>道次</th>
-                    <th>成绩</th>
+                    <th width="200px">成绩</th>
                     <th>备注</th>
                 </tr>
                 </thead>
@@ -109,7 +109,12 @@
                             {/for}
                         </td>
                         <td>{$match['LaneNumber']}</td>
-                        <td>{$match['Result']}</td>
+                        <td>{if condition="$match['TimeSpan']"}
+                                <?php echo substr($match['TimeSpan'],3);?>
+                            {else \}
+                                {$match['Result']}
+                            {/if}
+                            </td>
                         <td>{$match['Note']}</td>
 
                     </tr>
