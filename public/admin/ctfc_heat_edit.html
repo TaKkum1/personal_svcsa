@@ -47,11 +47,28 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="layui/layui.js"></script>
 <script>
+    /**
+     * return whether a item is a track match
+     * true, track game
+     * false, field game
+     * 
+     * TODO: This is a fragile solution to match the item name. 
+     * Long term, the source of truth should be defined in Database (as Item.isTrack as boolean)
+     */
+
+    function isTrackItem(itemName) {
+        const FIELDITEM = ["跳高","三级跳远","铅球","跳远"];
+
+        return !FIELDITEM.includes(itemName)
+    }
+
     layui.use(['table', 'form'], function () {
         var table = layui.table;
         var form = layui.form;
         var util = layui.util;
         // 根据返回数据中某个字段来判断开启该行的编辑
+        // TODO: this doesn't work as expected, the field `edit` is taking a string, it will not exec the function with `d` as param,
+        // It behaves as a boolean today. Should be just a string as `text`
         var editable = function(d){
             if(d.editable) return 'text'; // 这里假设以 editable 字段为判断依据
         };
@@ -134,12 +151,31 @@
                 },
                 {
                     field: 'Result',
-                    title: '成绩',
+                    title: '成绩(m)',
                     width: 150,
                     sort: true,
                     edit: editable,
                     templet: function(d){
-                    return `<span style="color: #16B777">${d.Result}</span>`;
+                        const isTimeSpan = isTrackItem(d.ItemName);
+                        if (isTimeSpan) {
+                            return `<span style="color: #999">N/A</span>`
+                        }
+                        return `<span style="color: #16B777">${d.Result}</span>`;
+                    }
+               
+                }, 
+                {
+                    field: 'TimeSpan',
+                    title: '成绩(00:00.00)',
+                    width: 150,
+                    sort: true,
+                    edit: editable,
+                    templet: function(d){
+                        const isTimeSpan = isTrackItem(d.ItemName);
+                        if (!isTimeSpan) {
+                            return `<span style="color: #999">N/A</span>`
+                        }
+                        return `<span style="color: #16B777">${d.TimeSpan ? d.TimeSpan.substring(3) : '00:00.00'}</span>`;
                     }
                
                 }, 
@@ -190,22 +226,31 @@
             // Check if the row has been edited
             if (rowData.edited) {
                 // console.log(rowData.edited)
+                let rawTimeSpan = rowData.TimeSpan;
+
+                // When it is in format 00:00.00, conver to 00:00:00.00
+                if(rawTimeSpan && rawTimeSpan.length ===8) {
+                    rawTimeSpan = '00:' + rawTimeSpan;
+                }
                 var modifiedRow = {
                     ID: rowData.ID,
                     EventID: rowData.EventID,
                     HeatID: rowData.HeatID,
                     LaneNumber: rowData.LaneNumber,
                     Result: rowData.Result,
+                    TimeSpan: rawTimeSpan,
                     Note: rowData.Note
                 };
 
                 // Add the modified row to the modifiedData array
                 modifiedData.push(modifiedRow); 
                 
-            }else{
-            layer.alert('无任何修改，请返回重试完成修改后提交！')
-        }
+            }
         } 
+        if(modifiedData.length ===0){
+            layer.alert('无任何修改，请返回重试完成修改后提交！');
+            return;
+        }
 
         for (var i = 0; i < modifiedData.length; i++) {
             var rowData = modifiedData[i];
@@ -219,6 +264,7 @@
                 ItemPlayerID: rowData.ID,
                 LaneNumber: rowData.LaneNumber,
                 Result: rowData.Result,
+                TimeSpan: rowData.TimeSpan,
                 Note: rowData.Note
             })
             .then(function (response) {

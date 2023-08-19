@@ -16,7 +16,7 @@
       <div class="layui-input-inline" style="">
         <div class="layui-input-inline">
           <button id="edit" class="layui-btn layui-btn-normal">
-            分配赛道/结果录入
+            批量分配赛道/结果录入
           </button>
         </div>
       </div>
@@ -66,6 +66,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="layui/layui.js"></script>
 <script>
+  /**
+   * return whether a item is a track match
+   * true, track game
+   * false, field game
+   *
+   * TODO: This is a fragile solution to match the item name.
+   * Long term, the source of truth should be defined in Database (as Item.isTrack as boolean)
+   */
+
+  function isTrackItem(itemName) {
+    const FIELDITEM = ["跳高", "三级跳远", "铅球", "跳远"];
+
+    return !FIELDITEM.includes(itemName);
+  }
+
   layui.use(["table", "form"], function () {
     var table = layui.table;
     var form = layui.form;
@@ -135,15 +150,31 @@
           },
           {
             field: "Result",
-            title: "成绩",
+            title: "成绩(m)",
             width: 150,
             sort: true,
+            templet: function (d) {
+              const isTimeSpan = isTrackItem(d.ItemName);
+              if (isTimeSpan) {
+                return `<span style="color: #999">N/A</span>`;
+              }
+              return `<span style="color: #16B777">${d.Result}</span>`;
+            },
           },
           {
             field: "TimeSpan",
-            title: "时间",
+            title: "成绩(00:00.00)",
             width: 150,
             sort: true,
+            templet: function (d) {
+              const isTimeSpan = isTrackItem(d.ItemName);
+              if (!isTimeSpan) {
+                return `<span style="color: #999">N/A</span>`;
+              }
+              return `<span style="color: #16B777">${
+                d.TimeSpan ? d.TimeSpan.substring(3) : "00:00.00"
+              }</span>`;
+            },
           },
           {
             field: "Note",
@@ -171,7 +202,7 @@
     $("#edit").click(function () {
       var index = layer.open({
         type: 2,
-        title: "分配赛道/结果录入",
+        title: "批量分配赛道/结果录入",
         shadeClose: true,
         shade: 0.8,
         offset: "0px",
