@@ -94,18 +94,6 @@
         </div>
       </div>
       <div class="layui-form-item">
-        <label class="layui-form-label">结果</label>
-        <div class="layui-input-inline">
-          <input
-            placeholder="请输入"
-            class="layui-input"
-            type="text"
-            id="Result"
-            name="Result"
-          />
-        </div>
-      </div>
-      <div class="layui-form-item">
         <label class="layui-form-label">备注</label>
         <div class="layui-input-inline">
           <input
@@ -118,6 +106,35 @@
         </div>
       </div>
 
+      <h3>结果录入</h3>
+      <p id="error-msg"></p>
+      <div class="layui-form-item" style="display:flex;">
+        <label class="layui-form-label">径赛结果</label>
+        <div>
+          <div>
+            <label style="align-self: center; display: inline-block; min-width: 70px;">小时（h）</label>
+            <input style="display: inline-block; width: auto;" placeholder="hour" class="layui-input" type="number" id="result-hour" name="Hour" />
+          </div>
+          <div>
+            <label style="align-self: center; display: inline-block; min-width: 70px;">分钟（m）</label>
+            <input style="display: inline-block; width: auto;" placeholder="minute" class="layui-input" type="number" id="result-minute" name="Minute" />
+          </div>
+          <div>
+            <label style="align-self: center; display: inline-block; min-width: 70px;">秒（s）</label>
+            <input style="display: inline-block; width: auto;" placeholder="second" class="layui-input" type="number" id="result-second" name="Second" />
+          </div>
+          <div>
+            <label style="align-self: center; display: inline-block; min-width: 70px;">.00秒</label>
+            <input style="display: inline-block; width: auto;" placeholder="second fraction" class="layui-input" type="number" id="result-fraction" name="Fraction" />
+          </div>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">田赛结果</br>（单位：m）</label>
+        <div class="layui-input-inline">
+          <input placeholder="请输入" class="layui-input" type="text" id="Result" name="Result" />
+        </div>
+      </div>
       <div class="layui-form-item">
         <div class="layui-input-block">
           <button
@@ -147,6 +164,19 @@
         // parse name: eg: Xiao # 101 -> Xiao
         const playerName = data.field.Players.split("#")[0].trim();
 
+
+        // 如果同时有数据 报错
+        const hasTimeSpan = data.field.Hour || data.field.Minute || data.field.Second || data.field.Fraction
+        if(data.field.Result && data.field.Result !== '0' && hasTimeSpan) {
+          alert('CANNOT HAVE BOTH RESULT');
+
+          return;
+        }
+
+        // construct TimeSpan
+
+        const timeSpanInput = hasTimeSpan ? `${data.field.Hour || '00'}:${data.field.Minute || '00'}:${data.field.Second || '00'}.${data.field.Fraction|| '00'}`: null;
+
         axios
           .post("../ctfcheat/edit", {
             PlayerName: playerName,
@@ -155,6 +185,7 @@
             HeatID: data.field.HeatID,
             LaneNumber: data.field.LaneNumber,
             Result: data.field.Result,
+            TimeSpan: timeSpanInput,
             Note: data.field.Note,
           })
 

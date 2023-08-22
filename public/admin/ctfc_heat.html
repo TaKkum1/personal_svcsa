@@ -16,7 +16,7 @@
       <div class="layui-input-inline" style="">
         <div class="layui-input-inline">
           <button id="edit" class="layui-btn layui-btn-normal">
-            分配赛道/结果录入
+            批量分配赛道/结果录入
           </button>
         </div>
       </div>
@@ -43,13 +43,16 @@
       </div>
       <div class="layui-input-inline">
         <div class="layui-input-inline">
-            <button id="reassign" class="layui-btn layui-btn-normal">更改Event ID</button>
+          <button id="reassign" class="layui-btn layui-btn-normal">
+            更改Event ID
+          </button>
         </div>
       </div>
       <div class="layui-input-inline">
-        <button id="timing" class="layui-btn layui-btn-warm">生成电计时表格</button>
+        <button id="timing" class="layui-btn layui-btn-warm">
+          生成电计时表格
+        </button>
       </div>
-
 
       <table class="layui-hide" id="test" lay-filter="test"></table>
       <script type="text/html" id="toolbarDemo"></script>
@@ -63,6 +66,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="layui/layui.js"></script>
 <script>
+  /**
+   * return whether a item is a track match
+   * true, track game
+   * false, field game
+   *
+   * TODO: This is a fragile solution to match the item name.
+   * Long term, the source of truth should be defined in Database (as Item.isTrack as boolean)
+   */
+
+  function isTrackItem(itemName) {
+    const FIELDITEM = ["跳高", "三级跳远", "铅球", "跳远"];
+
+    return !FIELDITEM.includes(itemName);
+  }
+
   layui.use(["table", "form"], function () {
     var table = layui.table;
     var form = layui.form;
@@ -132,9 +150,31 @@
           },
           {
             field: "Result",
-            title: "成绩",
+            title: "成绩(m)",
             width: 150,
             sort: true,
+            templet: function (d) {
+              const isTimeSpan = isTrackItem(d.ItemName);
+              if (isTimeSpan) {
+                return `<span style="color: #999">N/A</span>`;
+              }
+              return `<span style="color: #16B777">${d.Result}</span>`;
+            },
+          },
+          {
+            field: "TimeSpan",
+            title: "成绩(00:00.00)",
+            width: 150,
+            sort: true,
+            templet: function (d) {
+              const isTimeSpan = isTrackItem(d.ItemName);
+              if (!isTimeSpan) {
+                return `<span style="color: #999">N/A</span>`;
+              }
+              return `<span style="color: #16B777">${
+                d.TimeSpan ? d.TimeSpan.substring(3) : "00:00.00"
+              }</span>`;
+            },
           },
           {
             field: "Note",
@@ -162,7 +202,7 @@
     $("#edit").click(function () {
       var index = layer.open({
         type: 2,
-        title: "分配赛道/结果录入",
+        title: "批量分配赛道/结果录入",
         shadeClose: true,
         shade: 0.8,
         offset: "0px",
@@ -183,33 +223,41 @@
       });
     });
 
-    $("#reassign").click(function() {
-      layer.confirm('确认重新分配eventID吗？', {
-            btn: ['确认', '取消'] //按钮
-        }, function () {    
-                $.ajax({
-                    url: '../ctfcheat/reassign',
-                    type: 'post',
-                    dataType: 'json',
-                    header: {
-                        Accept: 'application/json'
-                    },
-                    success: function (data) {
-                        console.log('success');
-                    },
-                    error: function (xhr) {
-                        console.log(xhr);
-                    } 
-                });
-                layer.msg('重新分配成功', {
-                        icon: 1,
-                        time: 1200
-                    }, function () {
-                        location.reload();
-                });
-            }, function () {
-            });
-    })
+    $("#reassign").click(function () {
+      layer.confirm(
+        "确认重新分配eventID吗？",
+        {
+          btn: ["确认", "取消"], //按钮
+        },
+        function () {
+          $.ajax({
+            url: "../ctfcheat/reassign",
+            type: "post",
+            dataType: "json",
+            header: {
+              Accept: "application/json",
+            },
+            success: function (data) {
+              console.log("success");
+            },
+            error: function (xhr) {
+              console.log(xhr);
+            },
+          });
+          layer.msg(
+            "重新分配成功",
+            {
+              icon: 1,
+              time: 1200,
+            },
+            function () {
+              location.reload();
+            }
+          );
+        },
+        function () {}
+      );
+    });
 
     table.on("tool(test)", function (obj) {
       //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
@@ -242,6 +290,15 @@
             body.find("#Players").val(obj.data.Players);
             body.find("#TeamName").val(obj.data.TeamName);
             body.find("#ItemID").val(obj.data.ItemID);
+
+            if (obj.data.TimeSpan) {
+              const [hour, minute, second] = obj.data.TimeSpan.split(":");
+              const [whole, fraction] = second.split(".");
+              body.find("#result-hour").val(hour);
+              body.find("#result-minute").val(minute);
+              body.find("#result-second").val(whole);
+              body.find("#result-fraction").val(fraction);
+            }
           },
           end: function () {
             location.reload();
@@ -302,9 +359,8 @@
       });
     });
 
-    $("#timing").click(function() {
-            window.location.href = "../ctfcheatcsv";
+    $("#timing").click(function () {
+      window.location.href = "../ctfcheatcsv";
     });
-
   });
 </script>

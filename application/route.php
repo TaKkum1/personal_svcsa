@@ -165,6 +165,7 @@
 \think\Route::get('ctfcplayer/apply', 'index/ctfcplayer/getapply');
 
 # route for 田径运动队 
+# TODO: remove the route that are not in use
 \think\Route::post('ctfcteam/passapp', 'index/ctfcteam/passApplication');
 \think\Route::post('ctfcteam/:id', 'index/ctfcteam/update', [], ['id' => '\d+']);
 \think\Route::post('ctfcteam', 'index/ctfcteam/add');
@@ -172,6 +173,7 @@
 \think\Route::get('ctfcteam/:id', 'index/ctfcteam/read', [], ['id' => '\d+']);
 \think\Route::get('ctfcteam', 'index/ctfcteam/lists');
 
+# TODO: to remove if not in use
 \think\Route::post('ctfcmatch/:matchid/ctfcstatistics', 'index/ctfcstatistics/add', [], ['matchid' => '\d+']);
 \think\Route::post('ctfcmatch/:id', 'index/ctfcmatch/update', [], ['id' => '\d+']);
 \think\Route::post('ctfcmatch', 'index/ctfcmatch/add');

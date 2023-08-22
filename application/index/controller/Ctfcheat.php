@@ -46,6 +46,7 @@ class Ctfcheat extends Base
                 }
                 $newTable['Players'] = implode(' , ', $players);
                 $newTable['Result'] = $heateachrow['Result'];
+                $newTable['TimeSpan'] = $heateachrow['TimeSpan'];
                 $newTable['Note'] = $heateachrow['Note'];
 
                 // passing data for 项目 filter 
@@ -88,6 +89,7 @@ class Ctfcheat extends Base
         $HeatID = $data['HeatID'];
         $LaneNumber = $data['LaneNumber'];
         $Result = $data['Result'];
+        $TimeSpan = $data['TimeSpan'];
         $Note = $data['Note'];
 
         // Find the player ID based on the PlayerName
@@ -123,6 +125,7 @@ class Ctfcheat extends Base
         $updateData = [
             'LaneNumber' => $LaneNumber,
             'Result' => $Result,
+            'TimeSpan' => $TimeSpan,
             'Note' => $Note,
             'EventID' => $EventID,
             'HeatID' => $HeatID,
