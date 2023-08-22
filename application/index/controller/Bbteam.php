@@ -183,6 +183,7 @@ class Bbteam extends Base
                   'select distinct bb_seasonteamplayer.PlayerID '.
                   'from bb_seasonteamplayer '.
                   'where bb_seasonteamplayer.SeasonID='.strval($seasonid).') '.
+                  'and bb_player.Approval=1 '.
               'order by Name asc';
         } elseif ($competitionid == 2) {
           // Women Open, not selected + women players
@@ -194,6 +195,7 @@ class Bbteam extends Base
                   'from bb_seasonteamplayer '.
                   'where bb_seasonteamplayer.SeasonID='.strval($seasonid).') '.
                   'and bb_player.Sex="'.$playersex.'") '.
+                  'and bb_player.Approval=1 '.
               'order by Name asc';
         } elseif ($competitionid == 4) {
           // Men Senior, not selected + birth < 1989/01/01
@@ -205,6 +207,7 @@ class Bbteam extends Base
                   'from bb_seasonteamplayer '.
                   'where bb_seasonteamplayer.SeasonID='.strval($seasonid).') '.
                   'and date(bb_player.Birth) < "1989-01-01") '.
+                  'and bb_player.Approval=1 '.
               'order by Name asc';
         }
         $available_players = Db::query($sql);
