@@ -183,6 +183,7 @@ class Bbteam extends Base
                   'select distinct bb_seasonteamplayer.PlayerID '.
                   'from bb_seasonteamplayer '.
                   'where bb_seasonteamplayer.SeasonID='.strval($seasonid).') '.
+                  'and bb_player.Approval=1'.
               'order by Name asc';
         } elseif ($competitionid == 2) {
           // Women Open, not selected + women players
