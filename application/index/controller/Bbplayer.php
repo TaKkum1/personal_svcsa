@@ -231,8 +231,8 @@ class Bbplayer extends Base
             $this->dataResult($list);
           //$list = Db::name('bb_player')->order('Name asc');
         } else if (input('all')) {
-          // List all players in the database.
-          $list = Db::name('bb_player');
+          // List all players in the database. (For admin page only)
+          $list = Db::name('bb_player')->order('Approval, ID');
           $list = $list->paginate($pagesize, false, [
             'query' => input('param.'),
           ]);
