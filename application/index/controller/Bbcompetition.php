@@ -51,7 +51,8 @@ class BbCompetition extends Base
     public function lists(){
       // This is only used when app is reading competition data.
       //$pagesize = input('pagesize');
-      $list = Db::name('bb_competition');
+      $sql = 'select * from bb_competition';
+      $list = Db::query($sql);
       $this->dataResult($list);
       //$this->paginatedResult(
       //    $list->total(),
