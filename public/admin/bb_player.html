@@ -1,30 +1,50 @@
 <!-- 内容主体区域 -->
-<link rel="stylesheet" href="layui/css/layui.css">
-<style>.layui-table-cell {
+<link rel="stylesheet" href="layui/css/layui.css" />
+<style>
+  .layui-table-cell {
     height: 80px;
     /* line-height: 80px; */
     display: flex;
     align-items: center;
     justify-content: center;
-}
+  }
 
-.layui-table-cell img {
+  .layui-table-cell img {
     max-height: 70px;
-}</style>
+  }
+</style>
 <div>
-    <div class="layui-tab">
-        <div class="layui-tab-content">
-            <div class="layui-input-inline" style="">
-                <div class="layui-input-inline">
-                    <button id="tongguoAll" class="layui-btn layui-btn-normal">审核通过</button>
-                </div>
-            </div>
-            <div class="layui-input-inline" style="">
-                <div class="layui-input-inline">
-                    <button id="add" class="layui-btn layui-btn-normal">新建篮球球员</button>
-                </div>
-            </div>
-            <!--
+  <div class="layui-tab">
+    <div class="layui-tab-content">
+      <div class="layui-input-inline" style="">
+        <div class="layui-input-inline">
+          <button id="tongguoAll" class="layui-btn layui-btn-normal">
+            审核通过
+          </button>
+        </div>
+      </div>
+      <div class="layui-input-inline" style="">
+        <div class="layui-input-inline">
+          <button id="add" class="layui-btn layui-btn-normal">
+            新建篮球球员
+          </button>
+        </div>
+      </div>
+      <form class="layui-form layui-inline">
+        <div class="layui-input-inline">
+          <div class="layui-input-inline">
+            <input
+              type="text"
+              name="Name"
+              value=""
+              placeholder="🔍 姓名查询 (eg. zhang)"
+              class="layui-input"
+              lay-affix="clear"
+            />
+          </div>
+        </div>
+      </form>
+      <!--
             <div class="layui-input-inline">
                 <form class="layui-form" action="">
                     <select id="Season" name="city" lay-verify="" lay-filter="Season">
@@ -33,323 +53,412 @@
                 </form>
             </div>
             -->
-            <!--            <div class="layui-input-inline">
+      <!--            <div class="layui-input-inline">
                             <form class="layui-form" action="">
                                 <select id="Team" name="city" lay-verify="" lay-filter="Team">
                                     <option value="">选择球队</option>
                                 </select>
                             </form>
                         </div>-->
-            <table class="layui-hide" id="test" lay-filter="test"></table>
-            <script type="text/html" id="toolbarDemo">
-            </script>
-            <script type="text/html" id="show-img">
-                <img src="../uploads/{{d.PhotoSrc}}" alt="图片名">
-            </script>
-            <script type="text/html" id="barDemo">
-                <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
-                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-            </script>
-            <script type="text/html" id="shenhe">
-                {{#  if(d.Approval==0){ }}
-                <a class="layui-btn layui-btn-xs" lay-event="tongguo">通过</a>
-                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="bohui">驳回</a>
+      <table class="layui-hide" id="test" lay-filter="test"></table>
+      <script type="text/html" id="toolbarDemo"></script>
+      <script type="text/html" id="show-img">
+        <img src="../uploads/{{d.PhotoSrc}}" alt="图片名" />
+      </script>
+      <script type="text/html" id="barDemo">
+        <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"
+          >删除</a
+        >
+      </script>
+      <script type="text/html" id="shenhe">
+        {{# if(d.Approval==0){ }}
+        <a class="layui-btn layui-btn-xs" lay-event="tongguo">通过</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="bohui"
+          >驳回</a
+        >
 
-                {{#  } else { }}
-                <a class="layui-btn layui-btn-disabled layui-btn-xs">已通过</a>
-                {{#  } }}
-            </script>
-        </div>
+        {{# } else { }}
+        <a class="layui-btn layui-btn-disabled layui-btn-xs">已通过</a>
+        {{# } }}
+      </script>
     </div>
+  </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 <script src="layui/layui.js"></script>
 <script>
-    function tongguo(ids, passed) {
-      console.log(ids);
-      console.log(passed);
-        $.ajax({
-            url: '../bbplayer/passapp',
-            type: 'Post',
-            dataType: 'json',
-            data: {
-                PlayerIDs: ids,
-                Passed: passed
-            },
-            header: {
-                Accept: 'application/json'
-            },
-            success: function (data) {
-                    layer.msg('成功审核通过' + data['affectedRows']  + '个球员，发送了' + data['affectedEmails'] +'个邮件', {
-                        icon: 1,
-                        time: 1200
-                    }, function () {
-                        location.reload();
-                    });
-            },
-            error: function (xhr) {
-                if (xhr.status == 401)
-							top.location.href = 'login.html';
-            }
-        });
-    }
-
-    layui.use(['table', 'form'], function () {
-        var table = layui.table;
-        var form = layui.form;
-        table.render({
-            elem: '#test',
-            url: '../BBPlayer?all=1',
-            parseData: function (res) {
-                return {
-                    "code": 0, //解析接口状态
-                    "msg": '', //解析提示文本
-                    "count": res.totalcount, //解析数据长度
-                    "data": res.data //解析数据列表
-                };
-            },
-            method: 'get',
-            request: {
-                pageName: 'page' //页码的参数名称，默认：page
-                ,limitName: 'pagesize' //每页数据量的参数名，默认：limit
-            },
-            title: '用户数据表',
-            cols: [
-                [{
-                    type: 'checkbox',
-                    fixed: 'center',
-                    width: 90
-                },
-                {
-                    field: 'ID',
-                    title: 'ID',
-                    width: 60,
-                    fixed: 'left',
-                    unresize: true,
-                    sort: true,
-                }, {
-                    field: 'Name',
-                    title: '姓名',
-                    width: 200,
-                }, {
-                    field: 'Sex',
-                    title: '性别',
-                    width: 60,
-                },
-                {
-                    field: 'Birth',
-                    title: '出生月日',
-                    width: 90,
-                }, {
-                    field: 'Height',
-                    title: '身高',
-                    width: 60,
-                }, {
-                    field: 'Weight',
-                    title: '体重',
-                    width: 60,
-                }, {
-                    field: 'PhotoSrc',
-                    title: '头像',
-                    templet: '#show-img',
-                    width: 100,
-                }, {
-                    field: 'Email',
-                    title: '电子邮件',
-                    width: 250,
-                }, {
-                    field: 'Approval',
-                    title: '审核',
-                    width: 130,
-                    toolbar: '#shenhe'
-                }, {
-                    title: '操作',
-                    fixed: 'right',
-                    width: 122,
-                    toolbar: '#barDemo'
-                }]
-            ], limit: 20,
-            page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
-                layout: ['count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
-                //,curr: 5 //设定初始在第 5 页
-                , groups: 1 //只显示 1 个连续页码
-                , first: false //不显示首页
-                , last: false //不显示尾页
-
-            }
-        });
-        $('#tongguoAll').click(function () {
-            var mycars = ''
-            var data = table.checkStatus('test').data; //idTest 即为基础参数 id 对应的值
-            mycars = '';
-            if (data.length === 0) {
-                layer.alert('请至少选择一个项目')
-            } else {
-                for (var i = 0; i < data.length; i++) {
-                    if (i === data.length - 1) {
-                        if (data[i].Approval === 0) {
-                            mycars += data[i].ID
-                        }
-                    } else {
-                        if (data[i].Approval === 0) {
-                            mycars += data[i].ID + ','
-                        }
-                    }
-                }
-                tongguo(mycars, 1)
-            }
-
-        })
-        $("#add").click(function () {
-            var index=layer.open({
-                type: 2,
-                title: '新建篮球球员',
-                shadeClose: true,
-                shade: 0.8,
-                offset: '0px',
-                area: ['100%', '100%'],
-                content: 'bb_player_add.html',
-                success: function (layero, index) {
-                    // layer.iframeAuto(index);
-                },
-                end: function () {
-                    location.reload();
-                }
-            });
-            layer.full(index);
-            window.sessionStorage.setItem("bb_player_index", index);
-            //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
-            $(window).on("resize", function () {
-                layer.full(window.sessionStorage.getItem("bb_player_index"));
-            })
-        })
-        table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
-            var data = obj.data; //获得当前行数据
-            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
-            var tr = obj.tr; //获得当前行 tr 的DOM对象
-
-            if (layEvent === 'edit') { //查看
-                console.log(obj.data);
-                var index = layer.open({
-                    type: 2,
-                    title: '修改篮球球员',
-                    shadeClose: true,
-                    shade: 0.8,
-                    offset: '0px',
-                    area: ['100%', '100%'],
-                    content: 'bb_player_edit.html',
-                    success: function (layero, index) {
-                        // layer.iframeAuto(index);
-                        var body = layer.getChildFrame('body', index);
-                        body.find('#Name').val(data.Name)
-                        body.find('#Sex').val(data.Sex)
-                        //body.find('#Number').val(data.Number)
-                        body.find('#Birth').val(data.Birth)
-                        body.find('#Height').val(data.Height)
-                        body.find('#Weight').val(data.Weight)
-                        body.find('#PhotoSrc').val(data.PhotoSrc)
-                        body.find('#Email').val(data.Email)
-//                        body.find('#TeamID').val(data.TeamID)
-                  //      body.find('#SeasonID').attr("value", data.SeasonID)
-
-                        body.find('#demo1').attr("src", "../uploads/" + data.PhotoSrc)
-                        body.find('#ID').val(data.ID)
-
-//                        body.find('#TeamID').attr("value", data.TeamID)
-                    },
-                    end: function () {
-                        location.reload();
-                    }
-                });
-                layer.full(index);
-                window.sessionStorage.setItem("bb_player_index", index);
-                //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
-                $(window).on("resize", function () {
-                    layer.full(window.sessionStorage.getItem("bb_player_index"));
-                })
-            } else if (layEvent === 'del') {
-                layer.confirm('确认删除', {
-                    btn: ['确认', '取消'],
-                    offset: ['100px']//按钮
-                }, function () {
-                    axios.delete('../BBPlayer/' + data.ID, {})
-                        .then(function (response) {
-                            console.log(response);
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
-                    layer.msg('删除成功', {
-                        icon: 1,
-                        time: 1200
-                    }, function () {
-                        location.reload();
-                    });
-                }, function () {
-                });
-            }else if (layEvent === 'tongguo') {
-                layer.confirm('确认要审核通过吗？', {
-                    btn: ['确认', '取消'] //按钮
-                }, function () {
-                    layer.msg('正在通过...', {icon: 7});
-                    tongguo(data.ID, 1)
-                }, function () {
-                });
-            } else if (layEvent === 'bohui') {
-                layer.confirm('确认要驳回吗？', {
-                    btn: ['确认', '取消'] //按钮
-                }, function () {
-                    layer.msg('正在驳回...', {icon: 7});
-                    tongguo(data.ID, 0)
-                }, function () {
-                });
-            }
-        });
-        axios.get('../BBSeason', {}).then(function (response) {
-            console.log(response);
-            $.each(response.data.data, function (index, item) {
-                $('#Season').append('<option value="' + item.SeasonID + '">' + item.SeasonName + '</option>');
-            });
-            form.render();
-        })
-            .catch(function (error) {
-                console.log(error);
-            });
-        axios.get('../BBTeam', {}).then(function (response) {
-            console.log(response);
-            $.each(response.data.data, function (index, item) {
-                $('#Team').append('<option value="' + item.ID + '">' + item.Name + '</option>');
-            });
-            form.render();
-        })
-            .catch(function (error) {
-                console.log(error);
-            });
-        form.on('select(Season)', function (data) {
-            table.reload('test', {
-                // where: { //设定异步数据接口的额外参数，任意设
-                //     // SeasonID: data.value,
-                //     url: '../bbseason/' + data.value + '/bbplayer',
-                // },
-                url: '../bbseason/' + data.value + '/bbplayer',
-                page: {
-                    curr: 1 //重新从第 1 页开始
-                }
-            });
-        });
-        form.on('select(Team)', function (data) {
-            table.reload('test', {
-                // where: { //设定异步数据接口的额外参数，任意设
-                //     // SeasonID: data.value,
-                //     url: '../bbseason/' + data.value + '/bbplayer',
-                // },
-                url: '../bbteam/' + data.value + '/bbplayer',
-                page: {
-                    curr: 1 //重新从第 1 页开始
-                }
-            });
-        })
-
+  function tongguo(ids, passed) {
+    console.log(ids);
+    console.log(passed);
+    $.ajax({
+      url: "../bbplayer/passapp",
+      type: "Post",
+      dataType: "json",
+      data: {
+        PlayerIDs: ids,
+        Passed: passed,
+      },
+      header: {
+        Accept: "application/json",
+      },
+      success: function (data) {
+        layer.msg(
+          "成功审核通过" +
+            data["affectedRows"] +
+            "个球员，发送了" +
+            data["affectedEmails"] +
+            "个邮件",
+          {
+            icon: 1,
+            time: 1200,
+          },
+          function () {
+            location.reload();
+          }
+        );
+      },
+      error: function (xhr) {
+        if (xhr.status == 401) top.location.href = "login.html";
+      },
     });
+  }
+
+  const filterData = function (data, name) {
+    return data.filter(function (r) {
+      return r.Name.toLowerCase().includes(name);
+    });
+  };
+
+  const renderTable = function (
+    limit = 20,
+    filterMode = false,
+    filterValue = ""
+  ) {
+    layui.table.render({
+      elem: "#test",
+      url: "../BBPlayer?all=1",
+      parseData: function (res) {
+        if (filterMode) {
+          res.data = filterData(res.data, filterValue);
+          res.totalcount = res.data.length;
+        }
+        return {
+          code: 0, //解析接口状态
+          msg: "", //解析提示文本
+          count: res.totalcount, //解析数据长度
+          data: res.data, //解析数据列表
+        };
+      },
+      method: "get",
+      request: {
+        pageName: "page", //页码的参数名称，默认：page
+        limitName: "pagesize", //每页数据量的参数名，默认：limit
+      },
+      title: "用户数据表",
+      cols: [
+        [
+          {
+            type: "checkbox",
+            fixed: "center",
+            width: 90,
+          },
+          {
+            field: "ID",
+            title: "ID",
+            width: 60,
+            fixed: "left",
+            unresize: true,
+            sort: true,
+          },
+          {
+            field: "Name",
+            title: "姓名",
+            width: 200,
+          },
+          {
+            field: "Sex",
+            title: "性别",
+            width: 60,
+          },
+          {
+            field: "Birth",
+            title: "出生月日",
+            width: 90,
+          },
+          {
+            field: "Height",
+            title: "身高",
+            width: 60,
+          },
+          {
+            field: "Weight",
+            title: "体重",
+            width: 60,
+          },
+          {
+            field: "PhotoSrc",
+            title: "头像",
+            templet: "#show-img",
+            width: 100,
+          },
+          {
+            field: "Email",
+            title: "电子邮件",
+            width: 250,
+          },
+          {
+            field: "Approval",
+            title: "审核",
+            width: 130,
+            toolbar: "#shenhe",
+          },
+          {
+            title: "操作",
+            fixed: "right",
+            width: 122,
+            toolbar: "#barDemo",
+          },
+        ],
+      ],
+      limit: limit,
+      page: {
+        //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+        layout: ["count", "prev", "page", "next", "skip"], //自定义分页布局
+        //,curr: 5 //设定初始在第 5 页
+        groups: 1, //只显示 1 个连续页码
+        first: false, //不显示首页
+        last: false, //不显示尾页
+      },
+    });
+  };
+
+  layui.use(["table", "form"], function () {
+    var table = layui.table;
+    var form = layui.form;
+
+    renderTable();
+
+    let timer; // Declare a variable to hold the timer outside the event handler
+
+    // Attach a keyup event handler to the input
+    $('input[name="Name"]').on("keyup", function () {
+      const name = $(this).val().toLowerCase();
+      // Clear the existing timer
+      clearTimeout(timer);
+      const allData = { data: [] };
+      // Set a new timer
+      timer = setTimeout(function () {
+        // Reload the table data from the server, passing the name as a parameter
+        if (!name) {
+          renderTable();
+        } else {
+          renderTable(500, true, name);
+        }
+      }, 500); // Wait for 1 second of inactivity before executing
+    });
+
+    $("#tongguoAll").click(function () {
+      var mycars = "";
+      var data = table.checkStatus("test").data; //idTest 即为基础参数 id 对应的值
+      mycars = "";
+      if (data.length === 0) {
+        layer.alert("请至少选择一个项目");
+      } else {
+        for (var i = 0; i < data.length; i++) {
+          if (i === data.length - 1) {
+            if (data[i].Approval === 0) {
+              mycars += data[i].ID;
+            }
+          } else {
+            if (data[i].Approval === 0) {
+              mycars += data[i].ID + ",";
+            }
+          }
+        }
+        tongguo(mycars, 1);
+      }
+    });
+    $("#add").click(function () {
+      var index = layer.open({
+        type: 2,
+        title: "新建篮球球员",
+        shadeClose: true,
+        shade: 0.8,
+        offset: "0px",
+        area: ["100%", "100%"],
+        content: "bb_player_add.html",
+        success: function (layero, index) {
+          // layer.iframeAuto(index);
+        },
+        end: function () {
+          location.reload();
+        },
+      });
+      layer.full(index);
+      window.sessionStorage.setItem("bb_player_index", index);
+      //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+      $(window).on("resize", function () {
+        layer.full(window.sessionStorage.getItem("bb_player_index"));
+      });
+    });
+    table.on("tool(test)", function (obj) {
+      //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+      var data = obj.data; //获得当前行数据
+      var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+      var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+      if (layEvent === "edit") {
+        //查看
+        console.log(obj.data);
+        var index = layer.open({
+          type: 2,
+          title: "修改篮球球员",
+          shadeClose: true,
+          shade: 0.8,
+          offset: "0px",
+          area: ["100%", "100%"],
+          content: "bb_player_edit.html",
+          success: function (layero, index) {
+            // layer.iframeAuto(index);
+            var body = layer.getChildFrame("body", index);
+            body.find("#Name").val(data.Name);
+            body.find("#Sex").val(data.Sex);
+            //body.find('#Number').val(data.Number)
+            body.find("#Birth").val(data.Birth);
+            body.find("#Height").val(data.Height);
+            body.find("#Weight").val(data.Weight);
+            body.find("#PhotoSrc").val(data.PhotoSrc);
+            body.find("#Email").val(data.Email);
+            //                        body.find('#TeamID').val(data.TeamID)
+            //      body.find('#SeasonID').attr("value", data.SeasonID)
+
+            body.find("#demo1").attr("src", "../uploads/" + data.PhotoSrc);
+            body.find("#ID").val(data.ID);
+
+            //                        body.find('#TeamID').attr("value", data.TeamID)
+          },
+          end: function () {
+            location.reload();
+          },
+        });
+        layer.full(index);
+        window.sessionStorage.setItem("bb_player_index", index);
+        //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+        $(window).on("resize", function () {
+          layer.full(window.sessionStorage.getItem("bb_player_index"));
+        });
+      } else if (layEvent === "del") {
+        layer.confirm(
+          "确认删除",
+          {
+            btn: ["确认", "取消"],
+            offset: ["100px"], //按钮
+          },
+          function () {
+            axios
+              .delete("../BBPlayer/" + data.ID, {})
+              .then(function (response) {
+                console.log(response);
+              })
+              .catch(function (error) {
+                console.log(error);
+              });
+            layer.msg(
+              "删除成功",
+              {
+                icon: 1,
+                time: 1200,
+              },
+              function () {
+                location.reload();
+              }
+            );
+          },
+          function () {}
+        );
+      } else if (layEvent === "tongguo") {
+        layer.confirm(
+          "确认要审核通过吗？",
+          {
+            btn: ["确认", "取消"], //按钮
+          },
+          function () {
+            layer.msg("正在通过...", { icon: 7 });
+            tongguo(data.ID, 1);
+          },
+          function () {}
+        );
+      } else if (layEvent === "bohui") {
+        layer.confirm(
+          "确认要驳回吗？",
+          {
+            btn: ["确认", "取消"], //按钮
+          },
+          function () {
+            layer.msg("正在驳回...", { icon: 7 });
+            tongguo(data.ID, 0);
+          },
+          function () {}
+        );
+      }
+    });
+    axios
+      .get("../BBSeason", {})
+      .then(function (response) {
+        console.log(response);
+        $.each(response.data.data, function (index, item) {
+          $("#Season").append(
+            '<option value="' +
+              item.SeasonID +
+              '">' +
+              item.SeasonName +
+              "</option>"
+          );
+        });
+        form.render();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    axios
+      .get("../BBTeam", {})
+      .then(function (response) {
+        console.log(response);
+        $.each(response.data.data, function (index, item) {
+          $("#Team").append(
+            '<option value="' + item.ID + '">' + item.Name + "</option>"
+          );
+        });
+        form.render();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    form.on("select(Season)", function (data) {
+      table.reload("test", {
+        // where: { //设定异步数据接口的额外参数，任意设
+        //     // SeasonID: data.value,
+        //     url: '../bbseason/' + data.value + '/bbplayer',
+        // },
+        url: "../bbseason/" + data.value + "/bbplayer",
+        page: {
+          curr: 1, //重新从第 1 页开始
+        },
+      });
+    });
+    form.on("select(Team)", function (data) {
+      table.reload("test", {
+        // where: { //设定异步数据接口的额外参数，任意设
+        //     // SeasonID: data.value,
+        //     url: '../bbseason/' + data.value + '/bbplayer',
+        // },
+        url: "../bbteam/" + data.value + "/bbplayer",
+        page: {
+          curr: 1, //重新从第 1 页开始
+        },
+      });
+    });
+  });
 </script>
