@@ -1,7 +1,7 @@
 .tournament{width:720px;}
 
 .round{
-       float:left;
+    float:left;
 }
 
 .player{
@@ -22,7 +22,7 @@
 /*QUARTER-FINALS*/
 .quarter-finals .match{
     height:100px;
-        background:right top no-repeat url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAABkAQMAAAD+JvEYAAAAA3NCSVQICAjb4U/gAAAABlBMVEUAAAD///+l2Z/dAAAACXBIWXMAAAsSAAALEgHS3X78AAAAFnRFWHRDcmVhdGlvbiBUaW1lADEwLzEwLzEyGAKeIwAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNAay06AAAAAnSURBVCiRY/gPBgcYhjoNBPZQ/v4hQjeAHD0I3IGXRgpXqsbXEKEB2yGL0P7iVKIAAAAASUVORK5CYII=);
+    background:right top no-repeat url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAABkAQMAAAD+JvEYAAAAA3NCSVQICAjb4U/gAAAABlBMVEUAAAD///+l2Z/dAAAACXBIWXMAAAsSAAALEgHS3X78AAAAFnRFWHRDcmVhdGlvbiBUaW1lADEwLzEwLzEyGAKeIwAAABx0RVh0U29mdHdhcmUAQWRvYmUgRmlyZXdvcmtzIENTNAay06AAAAAnSURBVCiRY/gPBgcYhjoNBPZQ/v4hQjeAHD0I3IGXRgpXqsbXEKEB2yGL0P7iVKIAAAAASUVORK5CYII=);
 }
 .quarter-finals .player{
 
@@ -55,3 +55,175 @@
 }
 /* CHAMP*/
 .champion{padding-top:200px;}
+
+
+/* Container for the match blocks */
+.match-container {
+    display: flex;
+    justify-content: space-between; /* Distribute blocks evenly */
+    padding: 10px 50px;
+    margin: 40px;
+}
+
+
+
+/* bracket view in binary tree */
+
+.tree {
+	width:100%;
+	height: auto;
+	text-align: center;
+}
+
+.tree li {
+	display: inline-table;
+	list-style-type: none;
+	position: relative;
+	padding: 10px 1px;
+}
+
+.tree li div {
+	border: 1px solid #ccc;
+	height: 80px;
+	padding: 10px;
+	display: inline-grid;
+	border-radius: 5px;
+	text-decoration-line: none;
+}
+
+/* ordinary tree linkage */
+
+.ordinary ul {
+	padding-top: 20px;
+	position: relative;
+}
+
+.ordinary li::before, .ordinary li::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 50%;
+	border-top: 1px solid #ccc;
+	width: 51%;
+	height: 10px;
+}
+.ordinary li::after {
+	right: auto;
+	left: 50%;
+	border-left: 1px solid #ccc;
+}
+.ordinary li:only-child::after, .ordinary li:only-child::before {
+	display: none;
+}
+.ordinary li:only-child {
+	padding-top: 0;
+}
+.ordinary li:first-child::before, .ordinary li:last-child::after {
+	border: 0 none;
+}
+.ordinary li:last-child::before {
+	border-right: 1px solid #ccc;
+	border-radius: 0 5px 0 0;
+	-webkit-border-radius: 0 5px 0 0;
+	-moz-border-radius: 0 5px 0 0;
+}
+.ordinary li:first-child::after {
+	border-radius: 5px 0 0 0;
+	-webkit-border-radius: 5px 0 0 0;
+	-moz-border-radius: 5px 0 0 0;
+}
+.ordinary ul ul::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 50%;
+	border-left: 1px solid #ccc;
+	width: 0;
+	height: 20px;
+}
+
+
+/* reverse-tree linkage */
+/**
+.reversed ul {
+	padding-bottom: 20px;
+	position: relative;
+}
+
+.right::before{
+	content: '';
+	position: absolute;
+	top: 90px;
+	left: 50%;
+	border-bottom: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	width: 52%;
+	height: 10px;
+}
+
+.left::before{
+	content: '';
+	position: absolute;
+	top: 90px;
+	right: 50%;
+	border-bottom: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	width: 52%;
+	height: 10px;
+}
+
+.right-outter::before{
+	content: '';
+	position: absolute;
+	top: 210px;
+	left: 50%;
+	border-bottom: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	width: 52%;
+	height: 10px;
+}
+
+.left-outter::before{
+	content: '';
+	position: absolute;
+	top: 210px;
+	right: 50%;
+	border-bottom: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	width: 52%;
+	height: 10px;
+}
+
+.topline::before{
+	content: '';
+    position: absolute;
+    top: 110px; 
+    left: 50%;
+    width: 1px; 
+    height: 20px;
+    background-color: #ccc;
+}
+
+.final-topline::before{
+	content: '';
+    position: absolute;
+    top: 230px; 
+    left: 50%;
+    width: 1px;
+    height: 20px; 
+    background-color: #ccc;
+}
+**/
+
+
+.time {
+    margin: 2px 2px;
+    font-family: arial;
+    color: rgb(50, 50, 50);
+    font-size: 1.5ch;
+}
+
+.winner-team {
+    color: rgb(50, 50, 50);
+    font-weight: bold;
+}
