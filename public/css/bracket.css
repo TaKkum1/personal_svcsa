@@ -142,80 +142,6 @@
 	height: 20px;
 }
 
-
-/* reverse-tree linkage */
-/**
-.reversed ul {
-	padding-bottom: 20px;
-	position: relative;
-}
-
-.right::before{
-	content: '';
-	position: absolute;
-	top: 90px;
-	left: 50%;
-	border-bottom: 1px solid #ccc;
-	border-left: 1px solid #ccc;
-	width: 52%;
-	height: 10px;
-}
-
-.left::before{
-	content: '';
-	position: absolute;
-	top: 90px;
-	right: 50%;
-	border-bottom: 1px solid #ccc;
-	border-right: 1px solid #ccc;
-	width: 52%;
-	height: 10px;
-}
-
-.right-outter::before{
-	content: '';
-	position: absolute;
-	top: 210px;
-	left: 50%;
-	border-bottom: 1px solid #ccc;
-	border-left: 1px solid #ccc;
-	width: 52%;
-	height: 10px;
-}
-
-.left-outter::before{
-	content: '';
-	position: absolute;
-	top: 210px;
-	right: 50%;
-	border-bottom: 1px solid #ccc;
-	border-right: 1px solid #ccc;
-	width: 52%;
-	height: 10px;
-}
-
-.topline::before{
-	content: '';
-    position: absolute;
-    top: 110px; 
-    left: 50%;
-    width: 1px; 
-    height: 20px;
-    background-color: #ccc;
-}
-
-.final-topline::before{
-	content: '';
-    position: absolute;
-    top: 230px; 
-    left: 50%;
-    width: 1px;
-    height: 20px; 
-    background-color: #ccc;
-}
-**/
-
-
 .time {
     margin: 2px 2px;
     font-family: arial;
@@ -224,6 +150,6 @@
 }
 
 .winner-team {
-    color: rgb(50, 50, 50);
+    color: green;
     font-weight: bold;
 }
