@@ -77,7 +77,7 @@
                             <dd class="active"><a href="{:url('index/bbstatistics/lists')}?seasonid={$thisseason['SeasonID']}&playoff=0&ofield=Points&desc=1">技术统计<span class="icon-chevron-right2 icon"></a></dd>
                         </dl>
                     </li>
-                    <!--{if condition="$competitionid eq 1"}
+                    {if condition="$competitionid eq 1"}
                       <li>
                           <dl>
                               <dt>季后赛</dt>
@@ -85,7 +85,7 @@
                               <dd><a href="{:url('index/bbstatistics/lists')}?seasonid={$thisseason['SeasonID']}&playoff=1&ofield=Points&desc=1">技术统计<span class="icon-chevron-right2 icon"></a></dd>
                           </dl>
                       </li>
-                    {/if}-->
+                    {/if}
                     <li><a href="{:url('index/bbteam/apply',['seasonid'=>$thisseason['SeasonID']])}"><span class="icon-chevron-right2 icon"></span>加入赛事</a></li>
                     <li>
                         <dl>
