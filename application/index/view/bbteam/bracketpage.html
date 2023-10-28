@@ -254,7 +254,6 @@
               <li><a href="{:url('index/bbseason/read',['id'=>$thisseason['SeasonID']])}"><span class="icon-chevron-right2 icon"></span>赛程</a></li>
                 <li><a href="{:url('index/bbteam/lists',['seasonid'=>$thisseason['SeasonID']])}"><span class="icon-chevron-right2 icon"></span>球队</a></li>
                 <li><a href="{:url('index/bbplayer/lists')}?competitionid={$thisseason['CompetitionID']}&seasonid={$thisseason['SeasonID']}"><span class="icon-chevron-right2 icon"></span>球员</a></li>
-                <li><a href="{:url('index/bbteam/bracketpage')}"><span class="icon-chevron-right2 icon"></span>Bracket View</a></li>
                 <li>
                   <dl>
                     <dt>常规赛</dt>
@@ -262,15 +261,13 @@
                       <dd><a href="{:url('index/bbstatistics/lists')}?seasonid={$thisseason['SeasonID']}&playoff=0&ofield=Points&desc=1">技术统计<span class="icon-chevron-right2 icon"></a></dd>
                   </dl>
                 </li>
-                <!--{if condition="$competitionid eq 1"}
-                  <li>
-                    <dl>
-                      <dt>季后赛</dt>
-                        <dd class="active"><a href="{:url('index/bbteam/rankplayoff',['seasonid'=>$thisseason['SeasonID']])}">积分榜<span class="icon-chevron-right2 icon"></a></dd>
-                        <dd><a href="{:url('index/bbstatistics/lists')}?seasonid={$thisseason['SeasonID']}&playoff=1&ofield=Points&desc=1">技术统计<span class="icon-chevron-right2 icon"></a></dd>
-                    </dl>
-                  </li>
-                {/if}-->
+                <li>
+                <dl>
+                    <dt>季后赛</dt>
+                    <dd class="active"><a href="{:url('index/bbteam/bracketpage',['seasonid'=>$thisseason['SeasonID']])}">排行榜<span class="icon-chevron-right2 icon"></a></dd>
+                    <dd><a href="{:url('index/bbstatistics/lists')}?seasonid={$thisseason['SeasonID']}&playoff=1&ofield=Points&desc=1">技术统计<span class="icon-chevron-right2 icon"></a></dd>
+                </dl>
+                </li>
                 <li><a href="{:url('index/bbteam/apply',['seasonid'=>$thisseason['SeasonID']])}"><span class="icon-chevron-right2 icon"></span>加入赛事</a></li>
                 <li>
                   <dl>
