@@ -59,7 +59,7 @@
             <div class="tab-box">
               <h3>项目信息</h3>
               <ul>
-                <li><a href="{:url('index/bbseason/read',['id'=>$thisseason['SeasonID']])}"><span class="icon-chevron-right2 icon"></span>赛程</a></li>
+                <li class="active"><a href="{:url('index/bbseason/read',['id'=>$thisseason['SeasonID']])}"><span class="icon-chevron-right2 icon"></span>赛程</a></li>
                 <li><a href="{:url('index/bbteam/lists',['seasonid'=>$thisseason['SeasonID']])}"><span class="icon-chevron-right2 icon"></span>球队</a></li>
                 <li><a href="{:url('index/bbplayer/lists')}?competitionid={$thisseason['CompetitionID']}&seasonid={$thisseason['SeasonID']}"><span class="icon-chevron-right2 icon"></span>球员</a></li>
                 <li>
@@ -72,7 +72,7 @@
                 <li>
                   <dl>
                     <dt>季后赛</dt>
-                      <dd class="active"><a href="{:url('index/bbteam/rankplayoff',['seasonid'=>$thisseason['SeasonID']])}">积分榜<span class="icon-chevron-right2 icon"></a></dd>
+                      <dd><a href="{:url('index/bbteam/rankplayoff',['seasonid'=>$thisseason['SeasonID']])}">积分榜<span class="icon-chevron-right2 icon"></a></dd>
                       <dd><a href="{:url('index/bbstatistics/lists')}?seasonid={$thisseason['SeasonID']}&playoff=1&ofield=Points&desc=1">技术统计<span class="icon-chevron-right2 icon"></a></dd>
                   </dl>
                 </li>

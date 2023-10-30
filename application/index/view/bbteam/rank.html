@@ -72,14 +72,14 @@
         <li>
           <dl>
             <dt>常规赛</dt>
-              <dd><a href="{:url('index/bbteam/rank',['seasonid'=>$thisseason['SeasonID']])}">积分榜<span class="icon-chevron-right2 icon"></a></dd>
+              <dd class="active"><a href="{:url('index/bbteam/rank',['seasonid'=>$thisseason['SeasonID']])}">积分榜<span class="icon-chevron-right2 icon"></a></dd>
               <dd><a href="{:url('index/bbstatistics/lists')}?seasonid={$thisseason['SeasonID']}&playoff=0&ofield=Points&desc=1">技术统计<span class="icon-chevron-right2 icon"></a></dd>
           </dl>
         </li>
         <li>
           <dl>
             <dt>季后赛</dt>
-              <dd class="active"><a href="{:url('index/bbteam/rankplayoff',['seasonid'=>$thisseason['SeasonID']])}">积分榜<span class="icon-chevron-right2 icon"></a></dd>
+              <dd><a href="{:url('index/bbteam/rankplayoff',['seasonid'=>$thisseason['SeasonID']])}">积分榜<span class="icon-chevron-right2 icon"></a></dd>
               <dd><a href="{:url('index/bbstatistics/lists')}?seasonid={$thisseason['SeasonID']}&playoff=1&ofield=Points&desc=1">技术统计<span class="icon-chevron-right2 icon"></a></dd>
           </dl>
         </li>
