@@ -424,7 +424,7 @@ notfound:
           $list = Db::name('bb_seasonplayerstatistics_view')
           ->where('seasonid', $seasonid) ;
         } else {
-          $list = Db::name('bb_seasonplayerstatisticsplayoff_view')
+          $list = Db::name('bb_seasonplayerstatsplayoff_view')
           ->where('seasonid', $seasonid) ;
         }
         
