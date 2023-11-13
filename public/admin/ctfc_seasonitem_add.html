@@ -9,7 +9,7 @@
                 <label class="layui-form-label" style="width: 90px;">赛季</label>
                     <div class="layui-input-inline" style="width: 380px;  height: auto;">
                         <select id="SeasonID" name="SeasonID" lay-verify="required">
-                            <option value="">选择赛季</option>
+                           
                         </select>
                     </div>
             </div>
@@ -98,6 +98,10 @@
 
         axios.get('../CTFCSeason', {}).then(function (response) {
             console.log(response);
+            // Reverse the data array
+            response.data.data.sort(function (a, b) {
+                return new Date(b.Date) - new Date(a.Date);
+            });
           $.each(response.data.data, function (index, element) {
                 $('#SeasonID').append('<option value="' + element.ID + '">' + element.Name + '</option>');
             });
