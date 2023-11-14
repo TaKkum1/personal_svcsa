@@ -131,6 +131,7 @@
         // Populate Season Selectbox.
         // Updated - The display of season select
         axios.get('../BBSeason', {}).then(function (response) {
+            
             //Updated 11132023 To change the display of SeasonName
             // Filter the data to include only competitionID 1, 2, or 4
             var filteredData = response.data.data.filter(function(item) {
