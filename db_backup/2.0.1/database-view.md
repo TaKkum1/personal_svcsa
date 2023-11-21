@@ -55,6 +55,42 @@ LEFT JOIN `match`.`ctfc_playernumber`
 	AND `match`.`ctfc_playernumber`.`TeamID` = `SeaTeaPla`.`TeamID`
 	AND `match`.`ctfc_playernumber`.`PlayerID` = `SeaTeaPla`.`PlayerID`;
 
+CREATE OR REPLACE VIEW bb_seasonplayerstatsplayoff_view AS 
+SELECT `bb_statistics`.PlayerID AS PlayerID,
+team_player.PlayerName AS PlayerName,
+team_player.TeamID AS TeamID,
+team_player.TeamName AS TeamName,
+team_player.TeamShortName AS TeamShortName,
+`bb_match`.SeasonID AS SeasonID,
+`bb_season`.Name AS SeasonName,
+`bb_season`.`CompetitionID` AS CompetitionID,
+AVG(`bb_statistics`.Foul) AS Foul,
+AVG(`bb_statistics`.Points) AS Points,
+AVG(`bb_statistics`.Assist) AS Assist,
+AVG(`bb_statistics`.Steal) AS Steal,
+AVG(`bb_statistics`.Block) AS Block,
+AVG(`bb_statistics`.OffensiveRebound) AS OffensiveRebound,
+AVG(`bb_statistics`.Rebound) AS Rebound,
+CASE WHEN AVG(3PointsShot)+AVG(2PointsShot) = 0 THEN 0 ELSE (AVG(3PointsHit)+AVG(2PointsHit))/(AVG(3PointsShot)+AVG(2PointsShot)) END AS FGP,
+case when AVG(3PointsShot) = 0 THEN 0 ELSE AVG(3PointsHit)/AVG(3PointsShot) END AS 3GP,
+case when AVG(1PointsShot) = 0 THEN 0 ELSE AVG(1PointsHit)/AVG(1PointsShot) END AS FTP,
+AVG(Turnover) AS Turnover
+FROM `bb_statistics` 
+RIGHT JOIN `bb_match` ON (`bb_statistics`.MatchID = `bb_match`.ID)
+LEFT JOIN `bb_season` ON (`bb_match`.`SeasonID`=`bb_season`.`ID`)
+LEFT JOIN(
+    SELECT `bb_seasonteamplayer`.`PlayerID` AS PlayerID,
+    `bb_player`.Name AS PlayerName,
+    `bb_seasonteamplayer`.`TeamID` AS TeamID,
+    `bb_team`.Name AS TeamName,
+    `bb_team`.`ShortName` AS TeamShortName,
+    SeasonID AS SeasonID
+    FROM `bb_seasonteamplayer` 
+    JOIN `bb_team` ON `bb_team`.`ID` = `bb_seasonteamplayer`.`TeamID`
+    JOIN `bb_player` ON `bb_player`.`ID` = `bb_seasonteamplayer`.`PlayerID`
+) AS team_player ON (`bb_statistics`.PlayerID = team_player.PlayerID )
 
+WHERE `bb_match`.Round > 0
+GROUP BY PlayerID;
 
 ```
