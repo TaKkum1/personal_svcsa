@@ -131,37 +131,25 @@
         // Populate Season Selectbox.
         // Updated - The display of season select
         axios.get('../BBSeason', {}).then(function (response) {
-            
-            //Updated 11132023 To change the display of SeasonName
-            // Filter the data to include only competitionID 1, 2, or 4
-            var filteredData = response.data.data.filter(function(item) {
-                return [1, 2, 4].includes(item.CompetitionID);
-            });
 
             // Convert the values of the filteredData object to an array
-            var mostRecentSeasons = Object.values(filteredData);
-
-            // Sort the most recent seasons by StartTime in descending order
-            mostRecentSeasons.sort(function(a, b) {
-                return new Date(b.StartTime) - new Date(a.StartTime);
-            });
-
+            var mostRecentSeasons = Object.values(response.data.data);
 
             // Create an object to store the latest season for each competitionID
             var latestSeasons = {};
 
             // Iterate through the filtered data to find the latest season for each competitionID
             mostRecentSeasons.forEach(function(item) {
-                if (!latestSeasons[item.CompetitionID] || new Date(item.StartTime) > new Date(latestSeasons[item.CompetitionID].StartTime)) {
-                    latestSeasons[item.CompetitionID] = item;
+                if (item.CompetitionID == 1 || item.CompetitionID == 2 || item.CompetitionID == 4) {
+                    
+                    if (!latestSeasons[item.CompetitionID] || new Date(item.StartTime) > new Date(latestSeasons[item.CompetitionID].StartTime)) {
+                        latestSeasons[item.CompetitionID] = item;
+                    }   
                 }
             });
-
-            // Take the first three items from the sorted most recent seasons
-            var selectedSeasons = mostRecentSeasons.slice(0, 3);
           
             // Append options to the dropdown for the selected seasons
-            $.each(selectedSeasons, function (index, item) {
+            $.each(latestSeasons, function (index, item) {
                  // Extract the part of SeasonName before the substring "第"
                 var truncatedSeasonName = item.SeasonName.split('第')[0];
                 $('#SeasonID_s').append('<option value="' + item.SeasonID + '">' + truncatedSeasonName + '</option>');
