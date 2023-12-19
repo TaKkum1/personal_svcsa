@@ -419,14 +419,16 @@ notfound:
         $orderby = $desc>0?$ofield . ' desc':$ofield . ' asc';
         $pagesize = input('pagesize');
 
-        // print_r($list);
+        
         if ($playoff == 0) {
           $list = Db::name('bb_seasonplayerstatistics_view')
           ->where('seasonid', $seasonid) ;
         } else {
-          $list = Db::name('bb_seasonplayerstatsplayoff_view')
+          $list = Db::name('bb_seasonplayerstatisticsplayoff_view')
           ->where('seasonid', $seasonid) ;
         }
+
+        
         
         $list = $list
             ->order($orderby)
