@@ -418,17 +418,23 @@ notfound:
         $playoff = input('playoff')?input('playoff'):0;
         $orderby = $desc>0?$ofield . ' desc':$ofield . ' asc';
         $pagesize = input('pagesize');
-        $list = Db::name('bb_seasonplayerstatistics_view')
-            ->where('seasonid', $seasonid);
+
+        
         if ($playoff == 0) {
-          $list = $list->where('round', 0);
+          $list = Db::name('bb_seasonplayerstatistics_view')
+          ->where('seasonid', $seasonid) ;
         } else {
-          $list = $list->where('round>0');
+          $list = Db::name('bb_seasonplayerstatisticsplayoff_view')
+          ->where('seasonid', $seasonid) ;
         }
+
+        
+        
         $list = $list
             ->order($orderby)
             ->paginate($pagesize,false);
         $result = $list->items();
+        
         if($this->jsonRequest()) {
             $this->paginatedResult(
                 $list->total(),
