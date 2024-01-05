@@ -1,17 +1,17 @@
 <div class="inside-banner block track-banner">
-    <h3>田径赛会 - {$thisseason['Name']}</h3>
-    <p>查看{$thisseason['Name']}比赛赛程</p>
+    <h3>田径赛会 - 历史排名</h3>
+    <p>查看田径历史成绩</p>
 </div>
 <div class="site-box">
     <div class="block">
-        <span class="icon-home home_icon icon"></span><a href="">首页</a><span class="icon-arrow-right arrow_icon icon"></span><span class="active">田径赛会</span>
+        <span class="icon-home home_icon icon"></span><a href="">首页</a><span class="icon-arrow-right arrow_icon icon"></span><span class="active">历史成绩</span>
     </div>
 </div>
 </div>
 <div class="pro-wrap">
     <div class="clearfix block">
         <div class="filter-form">
-            <form method="get" action="{:url('index/ctfcseason/filter', ['id'=>$thisseason['ID']])}">
+            <form method="get" action="{:url('index/ctfcseason/history')}">
                 <label for="itemName">项目名称:</label>
                 <select id="itemName" name="itemName">
                     <option value="" {if condition="isset($filter['itemName']) and $filter['itemName'] eq ''"}selected{/if}>全选</option>
@@ -23,9 +23,9 @@
                 <label for="gender">性别:</label>
                 <select id="gender" name="gender">
                     <option value="" {if condition="isset($filter['gender']) and $filter['gender'] eq ''"}selected{/if}>全选</option>
-                    <option value="M" {if condition="isset($filter['gender']) and $filter['gender'] eq 'M'"}selected{/if}>M</option>
-                    <option value="F" {if condition="isset($filter['gender']) and $filter['gender'] eq 'F'"}selected{/if}>F</option>
-                    <option value="Mix" {if condition="isset($filter['gender']) and $filter['gender'] eq 'Mix'"}selected{/if}>Mix</option>
+                    <option value="M" {if condition="isset($filter['gender']) and $filter['gender'] eq 'M'"}selected{/if}>男</option>
+                    <option value="F" {if condition="isset($filter['gender']) and $filter['gender'] eq 'F'"}selected{/if}>女</option>
+                    <option value="Mix" {if condition="isset($filter['gender']) and $filter['gender'] eq 'Mix'"}selected{/if}>混合</option>
                 </select>
 
                 <label for="ageGroupName">年龄组:</label>
@@ -35,9 +35,17 @@
                         <option value="{$name}" {if condition="isset($filter['ageGroupName']) and $filter['ageGroupName'] eq $name"}selected{/if}>{$name}</option>
                     {/volist}
                 </select>
+
+                <label for="seasonName">赛季:</label>
+                <select id="seasonName" name="seasonName">
+                    <option value="" {if condition="isset($filter['seasonName']) and $filter['seasonName'] eq ''"}selected{/if}>全选</option>
+                    {volist name="seasonNames" id="name"}
+                        <option value="{$name}" {if condition="isset($filter['seasonName']) and $filter['seasonName'] eq $name"}selected{/if}>{$name}</option>
+                    {/volist}
+                </select>
                 
                 <input type="submit" value="Search">
-                <button type="button" onclick="window.location.href='{:url('index/ctfcseason/read', ['id'=>$thisseason['ID']])}'">Reset</button>
+                <button type="button" onclick="window.location.href='{:url('index/ctfcseason/history')}'">Reset</button>
             </form>
         </div>  
         <br/>                          
@@ -45,28 +53,26 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th width = "45px">EventID</th>
-                    <th width = "45px">HeatID</th>
                     <th width = "40px">性别</th>
                     <th width = "65px">项目名称</th>
                     <th width = "70px">年龄组</th>
                     <th width="180px">运动员-号码牌</th>
                     <th width="180px">队名</th>
-                    <th width = "50px">道次</th>
                     <th width = "100px">成绩</th>
-                    <th width = "80px">备注</th>
+                    <th width = "80px">赛季</th>
                 </tr>
                 </thead>
                 <tbody>
                     {if condition="!$matches"}
                     <tr>
-                        <td>赛程暂时为空！</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>查询结果暂时为空！</td>
                     </tr>
                     {/if}
                     {volist name="matches" id="match" }
                     <tr>
-                        <td>{$match['EventID']}</td>
-                        <td>{$match['HeatID']}</td>
                         <td>{$match['Gender']}</td>
                         <td>{$match['ItemName']}</td>
                         <td>{$match['AgeGroupName']}</td>
@@ -78,7 +84,7 @@
                                 {if condition="$match['Player' . $i] neq ''"}
                                     <!-- add a comma before every second player -->
                                     {if condition="$i % 2 eq 0"}
-                                    , 
+                                    , <br/>
                                     {/if}
                                     <!-- show the Player i -->
                                     {$match['Player' . $i]}
@@ -90,14 +96,13 @@
                             {/for}
                         </td>
                         <td>{$match['TeamName']}</td>
-                        <td>{$match['LaneNumber']}</td>
                         <td>{if condition="$match['TimeSpan']"}
                                 <?php echo substr($match['TimeSpan'],3);?>
                             {else \}
                                 {$match['Result']}
                             {/if}
                             </td>
-                        <td>{$match['Note']}</td>
+                        <td>{$match['SeasonName']}</td>
 
                     </tr>
                     {/volist}
@@ -109,13 +114,8 @@
                 <h3>项目信息</h3>
                 <ul>
 
-                    <li class="active"><a href="
-                        {if condition="$thisseason['ID'] eq 'recent'"}
-                        {:url('index/ctfcseason/readrecent')}
-                        {else/}
-                        {:url('index/ctfcseason/read',['id'=>$thisseason['ID']])}
-                        {/if}"><span class="icon-chevron-right2 icon"></span>比赛列表</a></li>
-                    <li><a href="{:url('index/ctfcseason/history')}?itemName=100m&gender=M&ageGroupName=&seasonName="><span class="icon-chevron-right2 icon"></span>历史排名</a></li>
+                    <li><a href="{:url('index/ctfcseason/readrecent')}"><span class="icon-chevron-right2 icon"></span>比赛列表</a></li>
+                    <li class="active"><a href="{:url('index/ctfcseason/history')}?itemName=100m&gender=M&ageGroupName=&seasonName="><span class="icon-chevron-right2 icon"></span>历史排名</a></li>
                     <li><a href="{:url('index/ctfcteam/lists',['seasonid'=>$thisseason['ID']])}"><span class="icon-chevron-right2 icon"></span>田径团队</a></li>
                     <li><a href="{:url('index/Ctfcplayer/lists')}"><span class="icon-chevron-right2 icon"></span>田径队员</a></li>
                     <li>
