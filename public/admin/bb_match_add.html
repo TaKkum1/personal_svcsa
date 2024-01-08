@@ -162,8 +162,9 @@
 
         // After season selected, populated teams and round selectboxes.
         form.on('select(Season)', function (data) {
-           $('#SeasonID').attr("value", data.value);
-
+             // Clear existing options in Round and Team Selectboxes
+            $('#Round_s, #TeamID_s, #TeamID2_s').empty();
+            $('#SeasonID').attr("value", data.value);
            // Popluate round selectbox.
            var season_url = '../BBSeason/' + data.value;
            axios.get(season_url, {}).then(function (response) {
@@ -191,7 +192,7 @@
            var team_url = '../bbteam?seasonid=' + data.value;
            axios.get(team_url, {}).then(function (response) {
              $.each(response.data.data, function (index, item) {
-               $('#TeamID_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                $('#TeamID_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
              });
              form.render();
            })
