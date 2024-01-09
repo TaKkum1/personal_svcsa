@@ -278,7 +278,7 @@ class Ctfcseason extends Base
                         return -1;
                     }
                     else {
-                        return $a['Result'] > $b['Result'] ? 1 : -1;
+                        return $a['Result'] > $b['Result'] ? -1 : 1;
                     }
                 }
                 else {
