@@ -18,7 +18,7 @@
 
       <div class="layui-form-item">
           <div class="layui-inline" style="width: 340px">
-              <label class="layui-form-label">所属赛季</label>
+              <label class="layui-form-label">选择比赛</label>
               <div class="layui-input-block">
                   <input id="SeasonID" type="hidden" name="" value="">
                   <select id="SeasonID_s" lay-verify="required" name="SeasonID" lay-filter="Season">
@@ -129,9 +129,30 @@
         });
 
         // Populate Season Selectbox.
+        // Updated - The display of season select
         axios.get('../BBSeason', {}).then(function (response) {
-            $.each(response.data.data, function (index, item) {
-                $('#SeasonID_s').append('<option value="' + item.SeasonID + '">' + item.SeasonName + '</option>');
+
+            // Convert the values of the filteredData object to an array
+            var mostRecentSeasons = Object.values(response.data.data);
+
+            // Create an object to store the latest season for each competitionID
+            var latestSeasons = {};
+
+            // Iterate through the filtered data to find the latest season for each competitionID
+            mostRecentSeasons.forEach(function(item) {
+                if (item.CompetitionID == 1 || item.CompetitionID == 2 || item.CompetitionID == 4) {
+                    
+                    if (!latestSeasons[item.CompetitionID] || new Date(item.StartTime) > new Date(latestSeasons[item.CompetitionID].StartTime)) {
+                        latestSeasons[item.CompetitionID] = item;
+                    }   
+                }
+            });
+          
+            // Append options to the dropdown for the selected seasons
+            $.each(latestSeasons, function (index, item) {
+                 // Extract the part of SeasonName before the substring "第"
+                var truncatedSeasonName = item.SeasonName.split('第')[0];
+                $('#SeasonID_s').append('<option value="' + item.SeasonID + '">' + truncatedSeasonName + '</option>');
             });
             form.render();
         })
@@ -141,8 +162,9 @@
 
         // After season selected, populated teams and round selectboxes.
         form.on('select(Season)', function (data) {
-           $('#SeasonID').attr("value", data.value);
-
+             // Clear existing options in Round and Team Selectboxes
+            $('#Round_s, #TeamID_s, #TeamID2_s').empty();
+            $('#SeasonID').attr("value", data.value);
            // Popluate round selectbox.
            var season_url = '../BBSeason/' + data.value;
            axios.get(season_url, {}).then(function (response) {
@@ -170,7 +192,7 @@
            var team_url = '../bbteam?seasonid=' + data.value;
            axios.get(team_url, {}).then(function (response) {
              $.each(response.data.data, function (index, item) {
-               $('#TeamID_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                $('#TeamID_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
              });
              form.render();
            })
