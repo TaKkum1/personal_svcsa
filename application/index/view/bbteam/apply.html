@@ -62,6 +62,7 @@
         <div class="input-box textarea-box">
             <textarea placeholder="简介：" name="Description"></textarea>
         </div>
+        <input type="hidden" name="recaptchaResponse" id="recaptchaResponse"> 
         <div class="sub">发送</div>
     </div>
     <!-- Defined here, shown/hidden by javascript. -->
@@ -301,10 +302,23 @@
                 return false;
             }
 
+            grecaptcha.ready(function() { // Wait for the recaptcha to be ready
+                grecaptcha
+                    .execute("6LeDmFYpAAAAAOJXYGDLawyC3eqLR8F1rIAX5Gzz", {
+                        action: ""
+                    }) // Execute the recaptcha
+                    .then(function(token){
+                        
+                        let recaptchaResponse = document.getElementById("recaptchaResponse");
+                        recaptchaResponse.value = token; // Set the recaptcha response
+                        $("form").submit();
+                        
+                    })
+            })
 
 
-
-            $("form").submit();
+            
         });
     </script>
+    <script src="https://www.google.com/recaptcha/api.js?render=6LeDmFYpAAAAAOJXYGDLawyC3eqLR8F1rIAX5Gzz"></script>
 </div>
