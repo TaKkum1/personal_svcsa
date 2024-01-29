@@ -143,7 +143,7 @@
 \think\Route::get('ctfcevent/:id', 'index/ctfcevent/read', [], ['id' => '\d+']);
 \think\Route::get('ctfcevent', 'index/ctfcevent/lists');
 
-
+\think\Route::get('ctfchistory', 'index/ctfcseason/history');
 
 \think\Route::post('ctfcpicture/:id', 'index/ctfcpicture/update', [], ['id' => '\d+']);
 \think\Route::post('ctfcpicture', 'index/ctfcpicture/add');

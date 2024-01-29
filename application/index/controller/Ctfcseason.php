@@ -195,7 +195,113 @@ class Ctfcseason extends Base
     {
         return [
             'itemNames' => Db::name('ctfc_item')->column('Name'),
-            'ageGroupNames' => Db::name('ctfc_agegroup')->column('Name')
+            'ageGroupNames' => Db::name('ctfc_agegroup')->column('Name'),
+            'seasonNames' => Db::name('ctfc_season')->column('Name')
         ];
+    }
+    public function history()
+    {
+        // Fetch the dropdown options from the database
+        $names = $this->fetchNames();
+
+        // Fetch the season names
+        $exp = new Expression('Date DESC');
+        $result = Db::name('ctfc_season')
+            ->order($exp)
+            ->select();
+
+        // $result = array_reverse($result);
+
+        if ($this->jsonRequest()) {
+            // 如果是json请求，干什么没看懂
+            $this->dataResult($result[0]);
+        } else if (count($result) > 0) {
+            // 如果赛季查询结果不为空            
+            $this->headerAndFooter('ctfc');
+
+            $otherseasons = $result;
+
+            // Construct the filter
+            $itemName = input('get.itemName');
+            $gender = input('get.gender');
+            $ageGroupName = input('get.ageGroupName');
+            $seasonName = input('get.seasonName');
+            
+            // lookup season id from database
+            $seasonId = Db::name('ctfc_season')->where('Name', $seasonName)->value('ID');
+
+
+            $filter = [];
+            if (!empty($itemName)) {
+                $filter['itemName'] = $itemName;
+            }
+            if (!empty($gender)) {
+                $filter['gender'] = $gender;
+            }
+            if (!empty($ageGroupName)) {
+                $filter['ageGroupName'] = $ageGroupName;
+            }
+            if (!empty($seasonId)) {
+                $filter['seasonID'] = $seasonId;
+            }
+            
+            // Get the matches
+            $matches = Db::name('ctfc_heat_view')->where($filter)->order(['TimeSpan', 'Result DESC'])->select();
+            // add a column for season name
+            foreach ($matches as &$match) {
+                $match['SeasonName'] = Db::name('ctfc_season')->where('ID', $match['SeasonID'])->value('Name');
+                if ($match['TimeSpan'] == "" && $match['IsTrack'] == 1) {
+                    $match['TimeSpan'] = '   DNS';  // add 3 more spaces for front-end alignment
+                }
+                else if ($match['Result'] == "" && $match['IsTrack'] == 0) {
+                    $match['Result'] = 'DNS';
+                }
+            }
+            // keep the original order and move the DNS to the end
+            usort($matches, function($a, $b) {
+                if ($a['IsTrack'] == 1 && $b['IsTrack'] == 1) {
+                    if ($a['TimeSpan'] == '   DNS' && $b['TimeSpan'] != '   DNS') {
+                        return 1;
+                    }
+                    else if ($a['TimeSpan'] != '   DNS' && $b['TimeSpan'] == '   DNS') {
+                        return -1;
+                    }
+                    else {
+                        return $a['TimeSpan'] > $b['TimeSpan'] ? 1 : -1;
+                    }
+                }
+                else if ($a['IsTrack'] == 0 && $b['IsTrack'] == 0) {
+                    if ($a['Result'] == 'DNS' && $b['Result'] != 'DNS') {
+                        return 1;
+                    }
+                    else if ($a['Result'] != 'DNS' && $b['Result'] == 'DNS') {
+                        return -1;
+                    }
+                    else {
+                        return $a['Result'] > $b['Result'] ? -1 : 1;
+                    }
+                }
+                else {
+                    return 0;
+                }
+            });
+
+            $filter['seasonName'] = $seasonName;
+            
+            // filter for page rendering
+            $this->view->assign('filter', $filter);
+
+            $this->view->assign('matches', $matches);
+            $this->view->assign('thisseason', $result[0]);
+            $this->view->assign('otherseasons', $otherseasons);
+            $this->view->assign('itemNames', $names['itemNames']);
+            $this->view->assign('ageGroupNames', $names['ageGroupNames']);
+            $this->view->assign('seasonNames', $names['seasonNames']);
+
+            return $this->view->fetch('ctfcseason/read_history');
+        } else {
+            header("HTTP/1.0 404 Not Found");
+            die;
+        }
     }
 }
