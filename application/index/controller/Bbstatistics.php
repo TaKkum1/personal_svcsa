@@ -73,17 +73,20 @@ function IsSubEvent($event, &$playername_on, &$playername_off) {
   if (strpos($event, 'enters the game') == false) {
     return false;
   } else {
-    // First, find all spaces pos.
+    // First, trim the [] part.
+    right_bracket_pos = strpos($event, ']', 0);
+    $event = substr($event, right_bracket_pos+1);
+    
+    // Second, find all spaces pos.
     $space_pos = array();
     $last_space_pos = 0;
     while (($last_space_pos = strpos($event, ' ', $last_space_pos)) !== false) {
       $space_pos[] = $last_space_pos;
       $last_space_pos += 1;
     }
-    // Second, find the pos of 'for' and 'enters'.
+    // Third, find the pos of 'for' and 'enters'.
     $enters_pos = strpos($event, 'enters', 0);
     $for_pos = strpos($event, 'for', 0);
-    $par_pos = strpos($event, '(', 0);
 
     // On player is right after the 2nd space and before 'enters'.
     $start = $space_pos[1] + 1;
@@ -91,7 +94,6 @@ function IsSubEvent($event, &$playername_on, &$playername_off) {
     $playername_on = substr($event, $start, $end - $start);
 
     // Off player is third spaces after 'for'
-    // and before first '(' or till the end if for 1st round）
     $space_count = 0;
     foreach ($space_pos as $pos) {
       if ($pos > $for_pos) {
@@ -99,11 +101,7 @@ function IsSubEvent($event, &$playername_on, &$playername_off) {
       }
       if ($space_count == 3) {
         $start = $pos + 1;
-        if ($par_pos !== false) {
-          $end = $par_pos;
-        } else {
-          $end = strlen($event);
-        }
+        $end = strlen($event);
         $playername_off = substr($event, $start, $end - $start);
         break;
       }
@@ -157,8 +155,8 @@ function CalculatePlayerLastOnCourtTimeInSeconds(
 
 function GetTeamInfoInEvent($event) {
   $team = '';
-  $start = strpos($event, '(');
-  $end = strpos($event, ')');
+  $start = strpos($event, '[');
+  $end = strpos($event, ']');
   if ($start !== false and $end !== false) {
       $team = substr($event, $start + 1, $end - $start - 1);
   }
