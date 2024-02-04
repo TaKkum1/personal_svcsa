@@ -74,8 +74,8 @@ function IsSubEvent($event, &$playername_on, &$playername_off) {
     return false;
   } else {
     // First, trim the [] part.
-    right_bracket_pos = strpos($event, ']', 0);
-    $event = substr($event, right_bracket_pos+1);
+    $right_bracket_pos = strpos($event, ']', 0);
+    $event = substr($event, $right_bracket_pos+1);
     
     // Second, find all spaces pos.
     $space_pos = array();
