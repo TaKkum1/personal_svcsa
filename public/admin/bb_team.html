@@ -17,10 +17,32 @@
     .layui-table-cell img {
         max-height: 70px;
     }
+    .layui-tab-content {
+    display: flex; /* Use flexbox to align children inline */
+    align-items: center; /* Align items vertically in the center */
+    justify-content: start; /* Align children to the start of the container */
+    flex-wrap: nowrap; /* Prevent wrapping of items */
+    }
+
+    .layui-btn { /* Adjust button styling if necessary */
+        margin-right: 10px; /* Add margin between buttons */
+    }
+
 </style>
 <div style="padding: 15px;">
     <div class="layui-tab">
-        <div class="layui-tab-content">
+        <div class="layui-tab-content" style="display: flex; align-items: center; justify-content: start; flex-wrap: nowrap;">
+            <button id="tongguoAll" class="layui-btn layui-btn-normal">审核通过</button>
+            <button id="add" class="layui-btn layui-btn-normal">新建球队</button>
+            <button id="confirmDelete" class="layui-btn layui-btn-normal">确认删除</button>
+            <form class="layui-form" action="" style="margin-left: 10px;">
+                <select id="Season" name="city" lay-verify="" lay-filter="Season">
+                    <option value="">选择赛季</option>
+                </select>
+            </form>
+        </div>
+        
+        <!-- <div class="layui-tab-content">
             <div class="layui-input-inline" style="">
                 <div class="layui-input-inline">
                     <button id="tongguoAll" class="layui-btn layui-btn-normal">审核通过</button>
@@ -31,14 +53,20 @@
                     <button id="add" class="layui-btn layui-btn-normal">新建球队</button>
                 </div>
             </div>
-
+            <div class="layui-input-inline" style="">
+                <div class="layui-input-inline">
+                    <button id="confirmDelete" class="layui-btn layui-btn-normal">确认删除</button>
+                </div>
+            </div>
+        </div>
+               
             <div class="layui-input-inline">
                 <form class="layui-form" action="">
                     <select id="Season" name="city" lay-verify="" lay-filter="Season">
                         <option value="">选择赛季</option>
                     </select>
                 </form>
-            </div>
+            </div> -->
             <table class="layui-hide" id="test" lay-filter="test"></table>
             <script type="text/html" id="toolbarDemo">
             </script>
@@ -295,6 +323,52 @@
                 layer.full(window.sessionStorage.getItem("bb_index"));
             })
         })
+        $('#confirmDelete').click(function () {
+            var checkStatus = table.checkStatus('test'); // 'test' is the table container's ID
+            var data = checkStatus.data; // Get the selected data
+
+            if (data.length === 0) {
+                layer.msg('请至少选择一个球队', {time: 1200, icon: 5});
+                return;
+            }
+
+            // Assemble the selected IDs
+            var idsToDelete = data.map(function(item) {
+                return item.ID;
+            }).join(',');
+
+            layer.confirm('确认删除选中的球队信息？', {
+                btn: ['确认', '取消'] //buttons
+            }, function () {
+                $.ajax({
+                    url: '../bbteam/deleteteams', // Assuming you have a backend endpoint for batch deletion
+                    type: 'POST',
+                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // Ensure correct content type
+                    data: {
+                        TeamIDs: idsToDelete // Send array of IDs, matching the expected field in your PHP backend
+                    },
+                    success: function (response) {
+                        layer.msg('删除成功', {
+                        //layer.msg('删除成功，共删除' + response.deletedCount + '个球队', {
+                            icon: 1,
+                            time: 1200
+                        }, function () {
+                            table.reload('test'); // Reload the table to reflect changes
+                        });
+                    },
+                    error: function (xhr) {
+                        var errorMsg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : xhr.statusText;
+                        layer.msg('删除失败: ' + errorMsg, {
+                            icon: 2,
+                            time: 1200
+                        });
+                    }
+                });
+            }, function () {
+                // Action on cancel
+            });
+        });
+        
         table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
             var data = obj.data; //获得当前行数据
             var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
