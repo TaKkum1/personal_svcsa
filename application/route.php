@@ -110,6 +110,7 @@
 \think\Route::delete('bbteam/:id', 'index/bbteam/delete', [], ['id' => '\d+']);
 \think\Route::get('bbteam/:id', 'index/bbteam/read', [], ['id' => '\d+']);
 \think\Route::get('bbteam', 'index/bbteam/lists', [], ['id' => '\d+']);
+\think\Route::post('bbteam/deleteteams', 'index/bbteam/deleteTeams');
 
 
 \think\Route::post('bbcompetition/:competitionid/bbseason', 'index/bbseason/add', [], ['competitionid' => '\d+']);
