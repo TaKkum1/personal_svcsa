@@ -315,6 +315,30 @@ class Bbteam extends Base
         $this->affectedRowsResult($result);
     }
 
+    public function deleteTeams()
+    {
+        $this->checkauthorization(); // Check user authorization
+
+        $data = request()->only('TeamIDs', 'post'); // Get the TeamIDs passed from the client
+        $teamIDs = urldecode($data['TeamIDs']);
+        $teamIDsarr = explode(',', $teamIDs); // Convert the string of IDs into an array
+
+        $result = 0; // To keep track of the number of deleted teams
+
+        foreach ($teamIDsarr as $teamID) {
+            // Perform the deletion operation for each team ID
+            $deleteResult = Db::name('bb_team')->where('ID', $teamID)->delete();
+            // If the team was successfully deleted, increment the result counter
+            if ($deleteResult) {
+                $result++;
+            }
+        }
+
+        // Return a JSON response indicating the number of teams that were successfully deleted
+        $this->jsonResult(0, ['deletedCount' => $result]);
+    }
+
+
     public function read($id)
     {
         $result = Db::name('bb_seasonteam')->where('TeamID', $id)->find();
