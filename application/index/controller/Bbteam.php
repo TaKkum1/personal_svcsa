@@ -256,7 +256,7 @@ class Bbteam extends Base
         $validator = validate('Bb_team');
         $team_result = $validator->check($team);
         if (!$team_result) {
-            // 
+            $this->affectedRowsResult(0);
         }
 
         $team["LogoSrc"] = "";
