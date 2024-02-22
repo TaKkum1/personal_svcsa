@@ -1,3 +1,5 @@
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 <div class="inside-banner block img_1-banner">
     <h3>申请加入</h3>
     <p>加入{$competitionseason['CompetitionName']} - {$competitionseason['SeasonName']}，团结拼搏，一起奉献。</p>
@@ -58,6 +60,10 @@
             <span class="select-btn">选择球员</span><span class="nub">已选择<em>0</em>个球员</span>
             <input type="hidden" name="PlayerNumbers" />
             <input type="hidden" name="PlayerIDs" />
+        </div>
+        <div class="input-box up_pic-box">
+            <div class="g-recaptcha" style="transform:scale(0.8); transform-origin:0 0;" data-sitekey="6Let_GUpAAAAALnTW5ROhrmttUZ3rz8KMH2LeiX9"></div>
+            <input type="hidden" name="recaptchaResponse" id="recaptchaResponse"> 
         </div>
         <div class="input-box textarea-box">
             <textarea placeholder="简介：" name="Description"></textarea>
@@ -294,6 +300,13 @@
                 alert('申请信息不完整，请检查。');
                 return false;
             }
+            if (grecaptcha.getResponse() == ""){
+                alert('请完成验证码');
+                return false;
+            }
+
+            let recaptchaResponse = document.getElementById('recaptchaResponse');
+            recaptchaResponse.value = grecaptcha.getResponse();
 
             var reg1 = /([\w-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([\w-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)/;
             if(reg1.test( $('input[name=Email]').val() ) == false) {
