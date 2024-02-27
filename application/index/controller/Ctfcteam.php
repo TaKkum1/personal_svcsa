@@ -55,6 +55,22 @@ class Ctfcteam extends Base
         $data = request()->only(self::FIELD, 'post');
         $this->makeNull($data);
 
+        // recapcha validation
+        $recaptcha_url = 'https://www.google.com/recaptcha/api/siteverify';
+        $recaptcha_secret = '6Let_GUpAAAAAH7wc4AWDM7oPeRqBfHjaME0QNOU'; // Secret key
+        $recaptcha_response = $_POST['recaptchaResponse']; // Response from reCAPTCHA server, added to the form during processing
+        $recaptcha = file_get_contents($recaptcha_url.'?secret='.$recaptcha_secret.'&response='.$recaptcha_response); // Send request to the server
+        $recaptcha = json_decode($recaptcha); // Decode the JSON response
+        echo json_encode($recaptcha);
+
+        // 未通过人机验证
+        if ($recaptcha->success == false) {
+          $this->headerAndFooter('competition');
+          $applyresult = '您的申请未通过人机验证，请重试或联系管理员！';
+          $this->view->assign('applyresult', $applyresult);
+          return $this->view->fetch('ctfcteam/applyres');
+        }
+
         $team = array();
         $team["Name"] = $data["Name"];
         $team["ShortName"] = $data["ShortName"];

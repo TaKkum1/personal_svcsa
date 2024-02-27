@@ -1,3 +1,5 @@
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 <div class="inside-banner block img_1-banner">
     <h3>申请成为球员</h3>
     <p>团结拼搏，一起奉献。</p>
@@ -50,6 +52,10 @@
                 <li>注意:不符合要求将无法通过注册并参加比赛</li>
             </ul>           
             <input type="file" name="Photo" id="photofile" />
+        </div>
+        <div class="input-box up_pic-box">
+            <div class="g-recaptcha" style="transform:scale(0.8); transform-origin:0 0;" data-sitekey="6Let_GUpAAAAALnTW5ROhrmttUZ3rz8KMH2LeiX9"></div>
+            <input type="hidden" name="recaptchaResponse" id="recaptchaResponse"> 
         </div>
         <div class="sub">发送</div>
     </div>
@@ -264,6 +270,14 @@
                 alert('邮箱格式不正确');
                 return false;
             }
+            
+            if (grecaptcha.getResponse() == ""){
+                alert('请完成验证码');
+                return false;
+            }
+
+            let recaptchaResponse = document.getElementById('recaptchaResponse');
+            recaptchaResponse.value = grecaptcha.getResponse();
 
 
 
