@@ -85,7 +85,6 @@
             });
 
         axios.get('../CTFCTeam?all=1', {}).then(function (response) {
-            
             console.log(response);
             $.each(response.data.data, function (index, item) {
                 $('#TeamID').append('<option value="' + item.ID + '">' + item.Name + '</option>');
