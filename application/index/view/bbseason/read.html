@@ -74,7 +74,7 @@
                         <dl>
                             <dt>季后赛</dt>
                             <!-- divided into 3 page for different layout -->
-                            {if condition="$competitionid eq 1"}
+                            <!-- {if condition="$competitionid eq 1"}
                             <dd><a href="{:url('index/bbteam/rankplayoff_men',['seasonid'=>$thisseason['SeasonID']])}">积分榜<span class="icon-chevron-right2 icon"></a></dd>
                             {/if}
                             {if condition="$competitionid eq 2"}
@@ -82,7 +82,9 @@
                             {/if}
                             {if condition="$competitionid eq 4"}
                             <dd><a href="{:url('index/bbteam/rankplayoff_men_senior',['seasonid'=>$thisseason['SeasonID']])}">积分榜<span class="icon-chevron-right2 icon"></a></dd>
-                            {/if}
+                            {/if} -->
+
+                            <dd><a href="{:url('index/bbteam/rankplayoff',['seasonid'=>$thisseason['SeasonID']])}">积分榜<span class="icon-chevron-right2 icon"></a></dd>
                             <dd><a href="{:url('index/bbstatistics/lists')}?seasonid={$thisseason['SeasonID']}&playoff=1&ofield=Points&desc=1">技术统计<span class="icon-chevron-right2 icon"></a></dd>
                         </dl>
                     </li>

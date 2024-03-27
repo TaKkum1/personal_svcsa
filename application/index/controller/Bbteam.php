@@ -770,7 +770,9 @@ class Bbteam extends Base
         $this->view->assign('brackets', $brackets);
         $this->view->assign('competitionid', $competitionid);
 
-        return $this->view->fetch('bbteam/rank_playoff');
+        if ($competitionid == 1) return $this->view->fetch('bbteam/rank_playoff_men');
+        if ($competitionid == 2) return $this->view->fetch('bbteam/rank_playoff_women');
+        if ($competitionid == 4) return $this->view->fetch('bbteam/rank_playoff_men_senior');
 
         notfound:
         header("HTTP/1.0 404 Not Found");
