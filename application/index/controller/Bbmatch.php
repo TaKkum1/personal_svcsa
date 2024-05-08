@@ -7,11 +7,12 @@
  */
 
 namespace app\index\controller;
-
+include "Bbnews.php";
 
 
 use think\Db;
 use think\Session;
+
 
 class Bbmatch extends Base
 {
@@ -30,11 +31,18 @@ class Bbmatch extends Base
             $data["SeasonID"]=$seasonid;
         $validator = validate('BbMatch');
         $result = $validator->check($data);
-        if (!$result){
-            $this->affectedRowsResult(0);
-        }
         $result = Db::name('bb_match')->insert($data);
+
+        // Call the add_schedule_news function to add data to the news table
+        $add_news = new Bbnews();
+        $add_news->add_schedule_news($data, $seasonid);
+
+        if (!$result){
+          $this->affectedRowsResult(0);
+        }
         $this->affectedRowsResult($result);
+
+        
     }
 
     public function delete($id){
@@ -261,11 +269,15 @@ notfound:
         $data = request()->only(self::FIELD, 'post');
         $this->makeNull($data);
 
-//        $validator = validate('BbMatch');
-//        $result = $validator->check($data);
-//        if (!$result){
-//            $this->result(0);
-//        }
+        $validator = validate('BbMatch');
+        $result = $validator->check($data);
+        if (!$result){
+           $this->result(0);
+        }
+
+        $add_news = new Bbnews();
+        $add_news->add_game_result_news($data);
+        
         $result = Db::name('bb_match')->where('ID', $id)->update($data);
         $this->affectedRowsResult($result);
     }
