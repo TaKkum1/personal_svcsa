@@ -4,6 +4,23 @@ namespace app\index\controller;
 use DateTime;
 use think\Db;
 
+/*
+----- bb_news DB schema -----
+DROP TABLE IF EXISTS `bb_news`;
+CREATE TABLE `bb_news` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `SeasonID` int(11) NOT NULL,
+  `MatchID` int(11) DEFAULT NULL,
+  `PlayerID` int(11) DEFAULT NULL,
+  `CreateDate` datetime NOT NULL,
+  `Image` varchar(1023) DEFAULT NULL,
+  `Category` varchar(1023) NOT NULL,
+  `Title` varchar(1023) NOT NULL,
+  `Content` text NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8;
+*/
+
 class Bbnews extends Base {
     public function add_schedule_news($data, $seasonid) {
         $season = Db::name('bb_season')->where('ID', $seasonid)->find();
@@ -17,9 +34,9 @@ class Bbnews extends Base {
         $bb_news['Category'] = "bb_schedule";
         $bb_news['Title'] = "New Schedules Released";
         $bb_news["Content"] = "{$season_name}[{$roundInfo}]: schedules of the game date {$gameDate} have been released.";
-        $is_existed = Db::name('news')->where('Content', $bb_news["Content"])->find();
+        $is_existed = Db::name('bb_news')->where('Content', $bb_news["Content"])->find();
         if (!$is_existed) {
-          Db::name('news')->insert($bb_news);
+          Db::name('bb_news')->insert($bb_news);
         }
     }
 
@@ -43,6 +60,6 @@ class Bbnews extends Base {
         . " beat team " .($data['ScoreTeamA'] > $data['ScoreTeamB']? $teamB_name : $teamA_name) ." with a score of " .($data['ScoreTeamA'] > $data['ScoreTeamB']? $data['ScoreTeamA'] : $data['ScoreTeamB'])
       .":" .($data['ScoreTeamA'] > $data['ScoreTeamB']? $data['ScoreTeamB'] : $data['ScoreTeamA']) .".";
         $bb_news['Image'] = $data['ScoreTeamA'] > $data['ScoreTeamB']? $teamA["LogoSrc"] : $teamB["LogoSrc"];
-        $res = Db::name('news')->insert($bb_news); 
+        $res = Db::name('bb_news')->insert($bb_news); 
     }
 }

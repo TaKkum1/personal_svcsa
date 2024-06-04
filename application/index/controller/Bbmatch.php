@@ -33,7 +33,7 @@ class Bbmatch extends Base
         $result = $validator->check($data);
         $result = Db::name('bb_match')->insert($data);
 
-        // Call the add_schedule_news function to add data to the news table
+        // Call the add_schedule_news function to add data to the bb_news table
         $add_news = new Bbnews();
         $add_news->add_schedule_news($data, $seasonid);
 
@@ -274,11 +274,10 @@ notfound:
         if (!$result){
            $this->result(0);
         }
+        $result = Db::name('bb_match')->where('ID', $id)->update($data);
 
         $add_news = new Bbnews();
         $add_news->add_game_result_news($data);
-        
-        $result = Db::name('bb_match')->where('ID', $id)->update($data);
         $this->affectedRowsResult($result);
     }
 }
