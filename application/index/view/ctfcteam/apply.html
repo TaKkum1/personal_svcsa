@@ -228,7 +228,6 @@
                 // get team info
                 axios.get('/ctfcteam/' + teamID).then(function(response){
                     var data = response.data.data;
-                    console.log(data.Name)
                     $('#TeamName').val(data.Name); // 必须存在，后端要用
                     $('#CaptainName').val("队长：" + data.CaptainName);
                     $('#CaptainName').prop("disabled", true);
