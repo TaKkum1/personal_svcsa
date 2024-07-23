@@ -856,6 +856,13 @@
   border: 1px solid #e6e6e6;
   margin-bottom: 20px;
 }
+.input-box-select-team {
+  width: 400px;
+  float: left;
+  height: 40px;
+  border: 1px solid #e6e6e6;
+  padding: 15px;
+}
 .link-wrap .form-box .input-box:nth-child(2n+2) {
   margin-left: 20px;
 }
