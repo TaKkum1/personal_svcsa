@@ -15,7 +15,7 @@ use think\Session;
 class Ctfcteam extends Base
 {
     const FIELD = 
-        'TeamID,Name,ShortName,CaptainName,CaptainEmail,CaptainPhone,Description,LogoSrc,PhotoSrc';
+        'ID,Name,ShortName,CaptainName,CaptainEmail,CaptainPhone,Description,LogoSrc,PhotoSrc';
 
     public function add()
     {
