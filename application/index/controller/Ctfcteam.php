@@ -15,7 +15,7 @@ use think\Session;
 class Ctfcteam extends Base
 {
     const FIELD = 
-        'ID,Name,ShortName,CaptainName,CaptainEmail,CaptainPhone,Description,LogoSrc,PhotoSrc';
+        'TeamID,Name,ShortName,CaptainName,CaptainEmail,CaptainPhone,Description,LogoSrc,PhotoSrc';
 
     public function add()
     {
@@ -76,7 +76,7 @@ class Ctfcteam extends Base
         }
 
         // If the team is new, insert it into table ctfc_team
-        if ($data["ID"] === 0) {
+        if ($data["TeamID"] === 0) {
             $team = array();
             $team["Name"] = $data["Name"];
             $team["ShortName"] = $data["ShortName"];
