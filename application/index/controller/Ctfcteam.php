@@ -15,7 +15,7 @@ use think\Session;
 class Ctfcteam extends Base
 {
     const FIELD = 
-        'Name,ShortName,CaptainName,CaptainEmail,CaptainPhone,Description,LogoSrc,PhotoSrc';
+        'TeamID,Name,ShortName,CaptainName,CaptainEmail,CaptainPhone,Description,LogoSrc,PhotoSrc';
 
     public function add()
     {
@@ -42,6 +42,10 @@ class Ctfcteam extends Base
             ->where('ID', $seasonid)->find(); 
             if (!$season) goto notfound;
         $this->view->assign('season', $season);
+
+        $teams = Db::name('ctfc_team')->select();
+        $this->view->assign('teams', $teams);
+
         return $this->view->fetch('ctfcteam/apply');
 
         notfound:
@@ -71,45 +75,48 @@ class Ctfcteam extends Base
           return $this->view->fetch('ctfcteam/applyres');
         }
 
-        $team = array();
-        $team["Name"] = $data["Name"];
-        $team["ShortName"] = $data["ShortName"];
-        $team["CaptainName"] = $data["CaptainName"];
-        $team["CaptainEmail"] = $data["CaptainEmail"];
-        $team["CaptainPhone"] = $data["CaptainPhone"];
-        $team["Description"] = $data["Description"];
-
-        $validator = validate('ctfc_team');
-        $result = $validator->check($data, []);
-        if (!$result){
-            $this->affectedRowsResult(0);
-            goto error;
+        // If the team is new, insert it into table ctfc_team
+        if ($data["TeamID"] == 0) {
+            $team = array();
+            $team["Name"] = $data["Name"];
+            $team["ShortName"] = $data["ShortName"];
+            $team["CaptainName"] = $data["CaptainName"];
+            $team["CaptainEmail"] = $data["CaptainEmail"];
+            $team["CaptainPhone"] = $data["CaptainPhone"];
+            $team["Description"] = $data["Description"];
+    
+            $validator = validate('ctfc_team');
+            $result = $validator->check($data, []);
+            if (!$result){
+                $this->affectedRowsResult(0);
+                goto error;
+            }
+    
+            $team["LogoSrc"] = "";
+            $team["PhotoSrc"] = "";
+            $assetUrl = getAssetUploadUrl();
+            $infologofile = request()->file('Logo');
+            $infophotofile = request()->file('Photo');
+    
+            if($infologofile)
+                $team["LogoSrc"] = $infologofile->move(__DIR__ . $assetUrl)
+                    ->getSaveName();
+    
+            if($infophotofile)
+                $team["PhotoSrc"] = $infophotofile->move(__DIR__ . $assetUrl)
+                    ->getSaveName();
+    
+            $check_duplicates = Db::name('ctfc_team')->where("Name", $team["Name"])->find();
+            if ($check_duplicates > 0) {
+                goto duplicates;
+            }
+            $result = Db::name('ctfc_team')->insert($team);
         }
-
-        $team["LogoSrc"] = "";
-        $team["PhotoSrc"] = "";
-        $assetUrl = getAssetUploadUrl();
-        $infologofile = request()->file('Logo');
-        $infophotofile = request()->file('Photo');
-
-        if($infologofile)
-            $team["LogoSrc"] = $infologofile->move(__DIR__ . $assetUrl)
-                ->getSaveName();
-
-        if($infophotofile)
-            $team["PhotoSrc"] = $infophotofile->move(__DIR__ . $assetUrl)
-                ->getSaveName();
-
-        $check_duplicates = Db::name('ctfc_team')->where("Name", $team["Name"])->find();
-        if ($check_duplicates > 0) {
-            goto duplicates;
-        }
-        $result = Db::name('ctfc_team')->insert($team);
 
         // Update ctfc_seasonteam
         $seasonteam = array();
-        $row = Db::name('ctfc_team')->where("Name", $team["Name"])->find();
-
+        $row = Db::name('ctfc_team')->where("Name", $data["Name"])->find();
+        
         $teamid = $row['ID'];
         $seasonteam["TeamID"] = $teamid;
         $seasonteam["SeasonID"] = $seasonid;
@@ -120,9 +127,8 @@ class Ctfcteam extends Base
         if($this->jsonRequest())
             $this->affectedRowsResult($result + $seasonteam_result);
 
-
         $applyresult='';
-        if($result > 0 && $seasonteam_result > 0) {
+        if($seasonteam_result > 0) {
             $applyresult = '您的申请已提交，审核后将会给您发邮箱或者短信通知，请关注！';
         }
         $this->view->assign('applyresult',$applyresult);
@@ -140,13 +146,13 @@ class Ctfcteam extends Base
         
     }
 
-    public function read($id){
-        $result = Db::name('ctfc_seasonteam')->where('TeamID', $id)->find();
+    public function read($id){ 
         if ($this->jsonRequest()) {
-
+            $result = Db::name('ctfc_team')->where('ID', $id)->find();
             $this->dataResult($result);
         }
 
+        $result = Db::name('ctfc_seasonteam')->where('TeamID', $id)->find();
         $seasonid = $result['SeasonID'];
 
         $thisseason = Db::name('ctfc_season')
