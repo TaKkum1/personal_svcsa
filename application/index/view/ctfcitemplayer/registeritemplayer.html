@@ -569,6 +569,7 @@
 
 
                 let playerAgeGroupsStr = $("input[name='selectedplayersAgeGroup']").val();
+                console.log("playerAgeGroupStr: " + playerAgeGroupsStr)
                 OptplayerAgeGroupsStr = playerAgeGroupsStr.slice(0, -2);
                 console.log("OptplayerAgeGroupsStr: " + OptplayerAgeGroupsStr);
                 let playerAgeGroups = OptplayerAgeGroupsStr.split(',');
@@ -839,6 +840,7 @@
 
         Promise.all(promiseArray).then((ageGroupIds) => {
             playerAgeGroups = ageGroupIds.join(',');
+            console.log('playerAgeGroups: ' + playerAgeGroups)
             $("input[name='selectedplayersAgeGroup']").val(playerAgeGroups);
         });
         
