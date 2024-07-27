@@ -711,7 +711,6 @@
                                 console.log("playerContainer does not have any child nodes");
                                 $.each(response.data.data, function (index, player) {
                                     if(currentPlayerList.includes(player.ID)) {
-                                        console.log("player:"+player);
                                         playerArray.push(player);
                                     }
                                 });
@@ -733,6 +732,7 @@
                                 // Create the image as before
                                 let playerImage = document.createElement('img');
                                 playerImage.src = '{$Think.config.public_assets}' + "/uploads/" + player.PhotoSrc;
+                                console.log("player:"+player.ID);
                                 console.log("player.PhotoSrc"+ player.PhotoSrc);
                                 playerImage.alt = 'Player Photo';
                                 playerImage.style.maxWidth = '100%';
