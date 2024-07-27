@@ -140,7 +140,7 @@ class Ctfcplayer extends Base
     public function lists($seasonid = null, $teamid = null)
     {
         // Get some basic info from input.
-        $pagesize = (!input('pagesize')) ? 500 : input('pagesize');
+        $pagesize = (!input('pagesize')) ? 1000 : input('pagesize');
         if (!$seasonid && input('seasonid'))
             $seasonid = input('seasonid');
         if (!$teamid && input('teamid'))
