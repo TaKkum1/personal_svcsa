@@ -395,7 +395,7 @@ class Ctfcitemplayer extends Base
 
                 // count how many singleitems for this player, skip this player if >=3.
                 if(count($players_items_list) >=3) {
-                    print('player '.$iterplayer_id.' filtered by too many items')
+                    print('player '.$iterplayer_id.' filtered by too many items');
                     // Find the index of this player to be removed.
                     $index = array_search($itemplayer_id, $final_list);
                     // Remove the element if it exists in the array
