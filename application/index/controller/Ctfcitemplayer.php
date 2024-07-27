@@ -327,7 +327,11 @@ class Ctfcitemplayer extends Base
                 $currentPlayerAge = $this->calculateAge($player['Birthday']); //TODO (check if need put it into a list)
                 if($currentPlayerAge >= $minAgeBondary && $currentPlayerAge <= $maxAgeBondary) {
                     array_push($list, $player['ID']);
+                } else {
+                    print('player '.$player['Name'].' filtered because of age')
                 }
+            } else {
+                print('player '.$player['Name'].' filtered because of sex')
             }
         }
 
@@ -348,6 +352,7 @@ class Ctfcitemplayer extends Base
                         if (($itemplayer['TeamID'] != $CurrentSelectedTeamID) && ($itemplayer['SeasonID'] == $CurrentSeasonID)) {
                             // This player is in another team, remove this one from the return list
                             // Find the index of this player to be removed.
+                            print('player '.$itemplayer['PlayerID1'].' filtered because of other teams.')
                             $index = array_search($player_id, $list);
                             // Remove the element if it exists in the array
                             if ($index !== false) {
@@ -359,6 +364,7 @@ class Ctfcitemplayer extends Base
 
                         if (($itemplayer['ItemID'] == $CurrentSelecteditemID) && (strtolower($itemplayer['Sex']) == strtolower($SeasonitemSex)) && ($itemplayer['SeasonID'] == $CurrentSeasonID)) {
                             // This player has already registered the same item
+                            print('player '.$itemplayer['PlayerID1'].' filtered because already registered for the item.')
                             $index_b = array_search($player_id, $list);
                             // Remove the element if it exists in the array
                             if ($index_b !== false) {
@@ -389,6 +395,7 @@ class Ctfcitemplayer extends Base
 
                 // count how many singleitems for this player, skip this player if >=3.
                 if(count($players_items_list) >=3) {
+                    print('player '.$iterplayer_id.' filtered by too many items')
                     // Find the index of this player to be removed.
                     $index = array_search($itemplayer_id, $final_list);
                     // Remove the element if it exists in the array
