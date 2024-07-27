@@ -316,6 +316,8 @@ class Ctfcitemplayer extends Base
 
         $minAgeBondary=$SeasonitemMinAG;
         $maxAgeBondary=$SeasonitemMaxAG;
+        print('min age bondary '.$minAgeBondary.'\n');
+        print('max age bondary '.$maxAgeBondary.'\n');
 
 
 
@@ -328,10 +330,10 @@ class Ctfcitemplayer extends Base
                 if($currentPlayerAge >= $minAgeBondary && $currentPlayerAge <= $maxAgeBondary) {
                     array_push($list, $player['ID']);
                 } else {
-                    print('player '.$player['Name'].' filtered because of age');
+                    print('player '.$player['Name'].' at '.strval($currentPlayerAge).' filtered because of age.\n');
                 }
             } else {
-                print('player '.$player['Name'].' filtered because of sex');
+                print('player '.$player['Name'].' filtered because of sex.\n');
             }
         }
 
@@ -352,7 +354,7 @@ class Ctfcitemplayer extends Base
                         if (($itemplayer['TeamID'] != $CurrentSelectedTeamID) && ($itemplayer['SeasonID'] == $CurrentSeasonID)) {
                             // This player is in another team, remove this one from the return list
                             // Find the index of this player to be removed.
-                            print('player '.$itemplayer['PlayerID1'].' filtered because of other teams.');
+                            print('player '.$itemplayer['PlayerID1'].' filtered because of other teams.\n');
                             $index = array_search($player_id, $list);
                             // Remove the element if it exists in the array
                             if ($index !== false) {
@@ -364,7 +366,7 @@ class Ctfcitemplayer extends Base
 
                         if (($itemplayer['ItemID'] == $CurrentSelecteditemID) && (strtolower($itemplayer['Sex']) == strtolower($SeasonitemSex)) && ($itemplayer['SeasonID'] == $CurrentSeasonID)) {
                             // This player has already registered the same item
-                            print('player '.$itemplayer['PlayerID1'].' filtered because already registered for the item.');
+                            print('player '.$itemplayer['PlayerID1'].' filtered because already registered for the item.\n');
                             $index_b = array_search($player_id, $list);
                             // Remove the element if it exists in the array
                             if ($index_b !== false) {
@@ -395,7 +397,7 @@ class Ctfcitemplayer extends Base
 
                 // count how many singleitems for this player, skip this player if >=3.
                 if(count($players_items_list) >=3) {
-                    print('player '.$iterplayer_id.' filtered by too many items');
+                    print('player '.$iterplayer_id.' filtered by too many items.\n');
                     // Find the index of this player to be removed.
                     $index = array_search($itemplayer_id, $final_list);
                     // Remove the element if it exists in the array
