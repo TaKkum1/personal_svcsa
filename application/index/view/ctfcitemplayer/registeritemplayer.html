@@ -696,7 +696,7 @@
         axios.get('/ctfcitemseasonitemagegroupview?seasonid=' + SelectedSeasonID, {}).then(function (response) {
             const data = response.data.data;
             $.each(response.data.data, function (index, item) {
-                if(item.ItemID == xiangmu && item.Sex == xiangmuSex && item.SeasonID == selectedSeasonID) {
+                if(item.ItemID == xiangmu && item.Sex == xiangmuSex && item.SeasonID == SelectedSeasonID) {
                     seasonitemFiltersMinAG = item.MinAgeGroupMinAge;
                     seasonitemFiltersMaxAG = item.MaxAgeGroupMaxAge;
 
