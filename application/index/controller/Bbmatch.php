@@ -277,7 +277,8 @@ notfound:
         $result = Db::name('bb_match')->where('ID', $id)->update($data);
 
         $add_news = new Bbnews();
-        $add_news->add_game_result_news($data);
+        $add_news->handle_game_result_news($data, $id);
+        
         $this->affectedRowsResult($result);
     }
 }
