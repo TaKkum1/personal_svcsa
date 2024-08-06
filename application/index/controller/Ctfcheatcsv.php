@@ -15,7 +15,7 @@ class Ctfcheatcsv extends Base
         // Retrieve data from the database
         $list = Db::name('ctfc_heat_view')
         ->where('IsTrack', 1)
-        ->('SeasonID', 2)
+        ->where('SeasonID', 2)
         ->order(['EventID', 'HeatID', 'LaneNumber'])
         ->select();
 
