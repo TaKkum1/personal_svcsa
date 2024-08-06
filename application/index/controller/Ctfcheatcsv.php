@@ -10,11 +10,12 @@ class Ctfcheatcsv extends Base
 {
     const FIELD = 'EventID,HeatID,LaneNumber,TeamName,TeamAbbr,ItemAgeGroupSex,Player1,Player2,Player3,Player4,Player5,Player6,Result,Note,IsSingle,IsTrack,HeatSize,ItemName,Gender,AgeGroupNumber,ItemPlayerID,TeamID,ItemID,Division';
 
-    public function generateCSV()
+    public function generateCSV($seasonid)
     {
         // Retrieve data from the database
         $list = Db::name('ctfc_heat_view')
         ->where('IsTrack', 1)
+        ->('SeasonID', $seasonid)
         ->order(['EventID', 'HeatID', 'LaneNumber'])
         ->select();
 
