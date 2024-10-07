@@ -108,6 +108,12 @@
 					"icon": "icon-text",
 					"href": "ctfc_heat.html",
 					"spread": false
+				},
+				{
+					"title": "历届成绩",
+					"icon": "icon-text",
+					"href": "ctfc_previous_result.html",
+					"spread": false
 				}
 			]
 		}

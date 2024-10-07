@@ -265,6 +265,12 @@
 \think\Route::post('ctfcheat/edit', 'index/ctfcheat/edit');
 \think\Route::post('ctfcheat/reassign', 'index/ctfcheat/reassign');
 
+//ctfc_previous_player
+\think\Route::post('ctfcprevisouresult/','index/Ctfcpriviousresult/add');
+\think\Route::post('ctfcprevisouplayer/','index/Ctfcpreviousresult/add');
+// \think\Route::get('')
+
+
 return [
 
     //    '[bbcompetition]' => [

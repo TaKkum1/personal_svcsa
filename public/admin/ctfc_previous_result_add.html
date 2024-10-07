@@ -1,0 +1,231 @@
+<link rel="stylesheet" href="layui/css/layui.css">
+
+<body class="layui-layout-body">
+
+<div style="padding: 15px;">
+    <form class="layui-form" action="" id="form1">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">赛季</label>
+                <div class="layui-input-block">
+                    <input id="SeasonID" type="text" name="SeasonID"  autocomplete="off" placeholder="请输入"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">队伍名称</label>
+                <div class="layui-input-inline">
+                    <input id="TeamName" type="text" name="TeamName" autocomplete="on"
+                           placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">运动员姓名</label>
+                <div class="layui-input-block">
+                    <input id="Name" type="text" name="Name"  autocomplete="off"
+                           placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">运动员姓名</label>
+                <div class="layui-input-block">
+                    <input id="Name" type="text" name="Name"  autocomplete="off"
+                           placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">项目名称</label>
+                <div class="layui-input-inline">
+                    <input id="Item" type="text" name="Item" class="layui-input" placeholder="请输入">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">年龄组别</label>
+                <div class="layui-input-block">
+                    <input id="AgeGroupID" type="text" name="AgeGroupID" autocomplete="off" placeholder="请输入"
+                           class="layui-input" required>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-block">
+                    <input id="Sex" type="text" name="Sex"  autocomplete="off" placeholder="请输入"
+                           class="layui-input" required>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">成绩</label>
+                <div class="layui-input-inline">
+                    <input id="Result" type="text" name="Result" autocomplete="off"
+                           placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="button" lay-submit="" lay-filter="add" id="commit">储存</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    layui.use(['form','table','upload','laydate'],function(){
+        var form = layui.form;
+        var table = layui.table;
+        var $ = layui.query;
+        var upload = layui.upload;
+        var laydate = layui.laydate;
+        var uploadInst = upload.render({
+            elem: '#test1',
+            
+        })
+
+
+
+
+    })
+
+</script>
+<!-- <script>
+
+    layui.use(['table', 'form', 'upload', 'laydate'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var upload = layui.upload;
+        var laydate = layui.laydate;
+        var uploadInst = upload.render({
+            elem: '#test1',
+            //url: '../CTFCPlayer',
+            url: "../uploadimage",
+            acceptMime: 'image/*',
+            auto:false,
+            bindAction:'',
+            multiple: false,
+            before: function (obj) {
+
+                this.data = {
+                    Name: $('input[name="Name"]').val(),
+                    Sex: $('input[name="Sex"]').val(),
+                    Birthday: $('input[name="Birthday"]').val(),
+                    Email: $('input[name="Email"]').val(),
+                    Approval:  $('input[name="Approval"]').val()
+
+                }
+
+            },
+            //选择文件后的回调
+            choose: function (obj) {
+                $("input[name=\"PhotoSrc\"]").attr("value", "");
+                obj.preview(function (index, file, result) {
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                })
+            },
+            done: function (res) {
+                var index = parent.layer.getFrameIndex(window.name);
+
+                //如果上传失败
+                if (res.status == '0') {
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+                console.log(res);
+                console.log(res.data.savename);
+                picture = res.data.savename;
+                $("#PhotoSrc").attr("value", picture);
+                axios.post('../CTFCPlayer/', {
+                Name: $('input[name="Name"]').val(),
+                Sex: $('input[name="Sex"]').val(),
+                Birthday: $('input[name="Birthday"]').val(),
+                PhotoSrc: $('input[name="PhotoSrc"]').val(),
+                Email: $('input[name="Email"]').val(),
+                Approval:  $('input[name="Approval"]').val()
+
+            })
+                .then(function (response) {
+                    layer.msg('添加成功', {
+                        icon: 1,
+                        time: 1500
+                    }, function () {
+                        parent.layer.close(index);
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
+            error: function (index,upload) {
+
+                return layer.msg('网络异常，新增失败。可能需要重新登录。');
+            }
+        });
+
+
+        form.on('submit(add)', function (data) {
+            if ($('input[name="file"]').val()!="") {
+                uploadInst.upload();
+                return;
+            }
+
+            if(!form.verify()) return;
+
+            var index = parent.layer.getFrameIndex(window.name);
+            axios.post('../CTFCPlayer/', {
+                Name: $('input[name="Name"]').val(),
+                Sex: $('input[name="Sex"]').val(),
+                Birthday: $('input[name="Birthday"]').val(),
+                PhotoSrc: $('input[name="PhotoSrc"]').val(),
+                Email: $('input[name="Email"]').val(),
+                Approval:  $('input[name="Approval"]').val()
+
+            })
+                .then(function (response) {
+                    layer.msg('添加成功', {
+                        icon: 1,
+                        time: 1500
+                    }, function () {
+                        parent.layer.close(index);
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        });
+
+        axios.get('../CTFCSeason', {}).then(function (response) {
+            console.log(response);
+            $.each(response.data.data, function (index, item) {
+                $('#SeasonID_s').append('<option value="' + item.SeasonID + '">' + item.SeasonName + '</option>');
+            });
+            form.render();
+            var num = $("#SeasonID").val();
+            var numbers = $("#SeasonID_s").find("option"); //获取select下拉框的所有值
+            console.log(numbers);
+            for (var j = 1; j < numbers.length; j++) {
+                console.log(numbers);
+                if ($(numbers[j]).val() == num) {
+                    console.log('ok');
+                    $(numbers[j]).attr("selected", "selected");
+                    $(numbers[j]).attr("class", "layui-this");
+                    form.render();
+                }
+            }
+        })
+
+    });
+</script> -->
+
+</body>
