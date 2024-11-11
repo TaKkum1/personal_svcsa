@@ -112,7 +112,7 @@
 				{
 					"title": "历届成绩",
 					"icon": "icon-text",
-					"href": "ctfc_previous_result.html",
+					"href": "ctfc_previous_player.html",
 					"spread": false
 				}
 			]
