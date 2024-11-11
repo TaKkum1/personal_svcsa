@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <div class="inside-banner track-banner block">
     <h3>田径比赛</h3>
     <p>查看{$playertitle}的所有队员</p>
@@ -56,62 +55,3 @@
 </div>
 
 
-=======
-<div class="inside-banner track-banner block">
-    <h3>田径比赛</h3>
-    <p>查看{$playertitle}的所有队员</p>
-</div>
-<div class="site-box">
-    <div class="block">
-        <span class="icon-home home_icon icon"></span><a href="{:url('index/index/index')}">首页</a><span class="icon-arrow-right arrow_icon icon"></span><span class="active">队员</span>
-    </div>
-</div>
-</div>
-<div class="athlete-wrap">
-    <div class="block">
-        <div class="all-box">
-            <div class="list-box active">
-                <div class="row clearfix">
-                    {volist name="players" id="player"  empty='暂没队员信息！'}
-                    <div class="col-md-2">
-                        {if condition="$showNumber eq 'true'"}
-                            <!-- show players of a team or season -->
-                            <a href="{:url('index/ctfcplayer/read',['id'=>$player.PlayerID])}">
-                        {else /}
-                             <!-- show all players -->
-                            <a href="{:url('index/ctfcplayer/read',['id'=>$player.ID])}">
-                        {/if}         
-                     
-                            <div class="item-box">
-                                <div class="img-box">
-                                  <img src="{$Think.config.public_assets}/uploads/{$player.PhotoSrc}">
-                                </div>
-                                <div class="txt-box">
-                                    {if condition="$showNumber eq 'true'"}
-                                        <!-- show players of a team or season -->
-                                        {if condition="$player.PlayerNumber"}
-                                            {$player.PlayerNumber}号 {$player.PlayerName}
-                                        {else /}
-                                            <!-- for team players who has not been assigned a number -->
-                                            {$player.PlayerName}
-                                        {/if}
-                                    {else /}
-                                        <!-- show all players -->
-                                        {$player.Name}
-                                    {/if}                  
-                                </div>
-                            </div>
-                        </a>
-                    </div>
-                    {/volist}
-                </div>
-                <div class="page-box">
-                    {$pagerender}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
->>>>>>> 37313bc (Initial commit)

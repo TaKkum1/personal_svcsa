@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 
         <div class="inside-banner block news-banner">
             <h3>新闻中心</h3>
@@ -50,57 +49,4 @@
                 </div>
             </div>
         </div>
-=======
-
-        <div class="inside-banner block news-banner">
-            <h3>新闻中心</h3>
-            <p>获取SVCSA最近的新闻。</p>
-        </div>
-        <div class="site-box">
-            <div class="block">
-                <span class="icon-home home_icon icon"></span><a href="/">首页</a><span class="icon-arrow-right arrow_icon icon"></span><span class="active">新闻中心</span>
-            </div>
-        </div>
-    </div>
-    <div class="news-wrap">
-        <div class="clearfix block">
-            <div class="list-box">
-			{volist name="toparticle" id="vo1" empty='暂时没有信息！'}
-                <div class="item-box clearfix">
-                    <div class="img-box">
-                        <img src="{$vo1.Content|getArticleImg}">
-                    </div>
-                    <div class="txt-box">
-                        <div class="info-box">
-                            <h3>{$vo1.Title}</h3>
-                            <div class="entry_date"><span class="icon-clock icon"></span> {$vo1.Posttime|strtotime|date='D jS M Y',###}</div>
-                            <p>{$vo1.Content|getAbstract=###,330}...</p>
-                            <a href="{$Think.config.public_assets}/news/{$vo1.ID}" class="more">查看更多></a>
-                        </div>
-                    </div>
-                </div>
-            {/volist}
-            </div>
-            <div class="other-list">
-                <div class="title-box">
-                    其他新闻
-                </div>
-                <div class="row clearfix">
-					{volist name="otherarticle" id="vo2" empty='暂时没有信息！'}
-                    <div class="col-md-6">
-                        <div class="item-box">
-                            <a href="{$Think.config.public_assets}/news/{$vo2.ID}">
-                                <h3>{$vo2.Title}</h3>
-                                <p><span class="icon-clock icon"></span> {$vo2.Posttime|strtotime|date='D jS M Y',###}</p>
-                            </a>
-                        </div>
-                    </div>
-					{/volist}
-                </div>
-                <div class="page-box">
-					{$pagerender}
-                </div>
-            </div>
-        </div>
->>>>>>> 37313bc (Initial commit)
     </div>

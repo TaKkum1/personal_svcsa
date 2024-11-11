@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <link rel="stylesheet" href="layui/css/layui.css">
 
 <body class="childrenBody">
@@ -66,72 +65,3 @@
 </script>
 
 </body>
-=======
-<link rel="stylesheet" href="layui/css/layui.css">
-
-<body class="childrenBody">
-
-    <div style="padding: 15px;" class="layui-layout-body">
-        <form class="layui-form" action="">
-            <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 90px;">年龄组名称</label>
-                <div class="layui-input-inline">
-                    <input id="ID" name="ID" type="hidden" name="" value="">
-                    <input type="text" id="name" name="Name" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item" >
-                <label class="layui-form-label" style="width: 90px;">最小年龄</label>
-                <div class="layui-input-inline">
-                    <input type="text" name="MinAge" id="MinAge" lay-verify="required" autocomplete="off" placeholder="请输入"  class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label" style="width: 90px;">最大年龄</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="MaxAge" name="MaxAge" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-input-block">
-                    <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即修改</button>
-                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                </div>
-            </div>
-        </form>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
-    <script src="layui/layui.js"></script>
-    <script>
-
-        layui.use(['form'], function () {
-        var form = layui.form;
-
-        form.on('submit(add)', function (data) {
-            var index = parent.layer.getFrameIndex(window.name);
-
-            axios.post('../CTFCagegroup/' + $('input[name="ID"]').val(), {
-                Name: $('input[name="Name"]').val(),
-                MinAge: $('input[name="MinAge"]').val(),
-                MaxAge: $('input[name="MaxAge"]').val(),
-            })
-                .then(function (response) {
-                    layer.msg('修改成功', {
-                        icon: 1,
-                        time: 1500
-                    }, function () {
-                        parent.layer.close(index);
-                    });
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        });
-
-    });
-</script>
-
-</body>
->>>>>>> 37313bc (Initial commit)
