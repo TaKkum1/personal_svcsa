@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!-- 内容主体区域 -->
 <link rel="stylesheet" href="layui/css/layui.css">
 <style>.layui-table-cell{height:40px;line-height:40px;}.layui-table-cell img{max-height:70px;}</style>
@@ -170,3 +171,177 @@
         });
     });
 </script>
+=======
+<!-- 内容主体区域 -->
+<link rel="stylesheet" href="layui/css/layui.css">
+<style>.layui-table-cell{height:40px;line-height:40px;}.layui-table-cell img{max-height:70px;}</style>
+<div>
+    <div class="layui-tab">
+        <div class="layui-tab-content">
+            <div class="" style="">
+                <div class="layui-input-inline">
+                    <button id="add" class="layui-btn layui-btn-normal">新建</button>
+                </div>
+            </div>
+            <table class="layui-hide" id="test" lay-filter="test"></table>
+            <script type="text/html" id="toolbarDemo">
+            </script>
+            <script type="text/html" id="show-img">
+                <img  src="../uploads/{{d.Logo}}" alt="图片名">
+            </script>
+            <script type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </script>
+
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    layui.use(['table', 'form'], function() {
+        var table = layui.table;
+        var form = layui.form;
+        table.render({
+            elem: '#test',
+            url: '../Sponsor',
+            parseData: function(res) {
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": '', //解析提示文本
+                    "count": res.totalcount, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            },
+            method: 'get',
+            request: {
+                pageName: 'page' //页码的参数名称，默认：page
+                ,limitName: 'pagesize' //每页数据量的参数名，默认：limit
+            },
+            contentType: 'application/json',
+            // toolbar: '#toolbarDemo',
+            title: '用户数据表',
+            cols: [
+                [{
+                        field: 'ID',
+                        title: '编号',
+                        width: 80,
+                        fixed: 'left',
+                        unresize: true,
+                        sort: true,
+                    }, {
+                        field: 'Sponsorname',
+                        title: '名称',
+                        width: 200,
+                    }, {
+                       field: 'Logo',
+                       title: 'Logo',
+                       templet: '#show-img',
+                       width: 150,
+                       height:150,
+                    },
+                    {
+                        field: 'Profile',
+                        title: '文本简介',
+                        width: 150,
+                    },{
+                        field: 'Link',
+                        title: '链接',
+                        width: 150,
+                    },{
+                        title: '操作',
+                        width: 150,
+                        toolbar: '#barDemo'
+                    }
+                ]
+            ],
+            limit: 20,
+            page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                layout: ['count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+                //,curr: 5 //设定初始在第 5 页
+                , groups: 1 //只显示 1 个连续页码
+                , first: false //不显示首页
+                , last: false //不显示尾页
+
+            },
+        });
+        $("#add").click(function() {
+            layer.open({
+                type: 2,
+                title: '新建链接',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['520px', '200px'],
+                offset: '50px',
+
+                content: 'link_add.html',
+                success: function(layero, index) {
+                    layer.iframeAuto(index);
+                },
+                end: function() {
+                    location.reload();
+                }
+            });
+        })
+        table.on('tool(test)', function(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if (layEvent === 'edit') { //查看
+                console.log(obj.data);
+                layer.open({
+                    type: 2,
+                    title: '修改新闻',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['520px', '200px'],
+                    offset: '50px',
+                    content: 'link_edit.html',
+                    success: function(layero, index) {
+                        layer.iframeAuto(index);
+                        var body = layer.getChildFrame('body', index);
+                        body.find('#Sponsorname').val(obj.data.Sponsorname)
+                        body.find('#Profile').val(obj.data.Profile)
+                        body.find('#Link').val(obj.data.Link)
+                        body.find('#ID').val(obj.data.ID)
+                        body.find('#demo1').attr("src", "../uploads/" + data.Logo)
+                    },
+                    end: function() {
+                        location.reload();
+                    }
+                });
+            } else if (layEvent === 'del') {
+                layer.confirm('确认删除', {
+                    btn: ['确认', '取消'] //按钮
+                }, function() {
+                    $.ajax({
+                        url:'../Sponsor/' + data.ID,
+                        //url:"../bbcompetition",
+                        type : 'delete',
+                        dataType : 'json',
+                        header:{
+                            Accept:'application/json'
+                        },
+                        success:function(data){
+                            console.log(data)
+                        },
+                        error:function(xhr){
+                            if (xhr.status == 401)
+							top.location.href = 'login.html';
+                        }
+                    });
+
+                    layer.msg('删除成功', {
+                        icon: 1,
+                        time: 1200
+                    }, function() {
+                        location.reload();
+                    });
+                }, function() {});
+            }
+        });
+    });
+</script>
+>>>>>>> 37313bc (Initial commit)

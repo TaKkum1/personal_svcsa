@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <link rel="stylesheet" href="layui/css/layui.css">
 
 <body class="childrenBody">
@@ -95,3 +96,102 @@
 </script>
 
 </body>
+=======
+<link rel="stylesheet" href="layui/css/layui.css">
+
+<body class="childrenBody">
+
+    <div style="padding: 15px;" class="layui-layout-body">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 90px;">赛季名称</label>
+                <div class="layui-input-inline">
+                    <input id="ID" name="ID" type="hidden" name="" value="">
+                    <input type="text" id="name" name="Name" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item" >
+                <label class="layui-form-label" style="width: 90px;">比赛时间</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="Date" id="Date" lay-verify="required" autocomplete="off" placeholder="请输入"  class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" style="width: 90px;">比赛地点</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="Venue" name="Venue" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即修改</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="layui/layui.js"></script>
+    <script>
+        layui.use('laydate', function(){
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#Date', //指定元素
+                format:'yyyy-MM-dd HH:mm:ss',
+                type: 'datetime'
+            });
+        });
+        layui.use(['table', 'form'], function () {
+        var table = layui.table;
+        var form = layui.form;
+
+        form.on('submit(add)', function (data) {
+            var index = parent.layer.getFrameIndex(window.name);
+
+            axios.post('../CTFCSeason/' + $('input[name="ID"]').val(), {
+                Name: $('input[name="Name"]').val(),
+                Date: $('input[name="Date"]').val(),
+                Venue: $('input[name="Venue"]').val(),
+            })
+                .then(function (response) {
+                    layer.msg('修改成功', {
+                        icon: 1,
+                        time: 1500
+                    }, function () {
+                        parent.layer.close(index);
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        });
+
+        axios.get('../CTFCSeason', {}).then(function (response) {
+            console.log(response);
+            $.each(response.data.data, function (index, item) {
+                $('#SeasonID_s').append('<option value="' + item.SeasonID + '">' + item.SeasonName + '</option>');
+            });
+            form.render();
+            var num = $("#SeasonID").val();
+            var numbers = $("#SeasonID_s").find("option"); //获取select下拉框的所有值
+            console.log(numbers);
+            for (var j = 1; j < numbers.length; j++) {
+                console.log(numbers);
+                if ($(numbers[j]).val() == num) {
+                    console.log('ok');
+                    $(numbers[j]).attr("selected", "selected");
+                    $(numbers[j]).attr("class", "layui-this");
+                    form.render();
+                }
+            }
+        })
+
+    });
+</script>
+
+</body>
+>>>>>>> 37313bc (Initial commit)

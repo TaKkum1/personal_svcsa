@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 (public function (add|delete|update)\([^\)]+\)\n?\s{0,4}\{)((.|\n)*?\n\s{4})\}
 
 $1\n            if (!Session::get('username'))  \$this->jsonResult(['status'=>'0','msg'=>'unauthorization']);\n$3}
@@ -5,4 +6,13 @@ $1\n            if (!Session::get('username'))  \$this->jsonResult(['status'=>'0
 
 (\$data = request\(\)->only\(self::FIELD, 'post'\);)
 
+=======
+(public function (add|delete|update)\([^\)]+\)\n?\s{0,4}\{)((.|\n)*?\n\s{4})\}
+
+$1\n            if (!Session::get('username'))  \$this->jsonResult(['status'=>'0','msg'=>'unauthorization']);\n$3}
+
+
+(\$data = request\(\)->only\(self::FIELD, 'post'\);)
+
+>>>>>>> 37313bc (Initial commit)
 $1\n        \$this->makeNull(\$data);

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div class="arr"></div>
 </div>
 <div class="session_1 block">
@@ -27,3 +28,34 @@
         {/volist}
     </div>
 </div>
+=======
+<div class="arr"></div>
+</div>
+<div class="session_1 block">
+    <div class="title-box clearfix">
+        <a href="{:url('index/article/newslists')}" class="more">查看更多</a>
+        最新新闻
+    </div>
+    <div class="row clearfix">
+        {volist name='recentnews' id='vo1' empty='暂没最近新闻！'}
+        <div class="col-md-4">
+              <!--  <span class="img-box">
+                    <div class="pd">
+                        <img src="{$vo1.Content|getArticleImg}">
+                        <div class="time-box">
+                            <span>{$vo1.Posttime|strtotime|date='D j',###}</span>
+                        </div>
+                    </div>
+                </span>-->
+            <div class="txt-box">
+                <h3><a href="{:url('index/article/newsread',['id' =>$vo1.ID])}" title="{$vo1.Title}">{$vo1.Title|msubstr=0,20}</a></h3>
+                <p>{$vo1.Content|getAbstract=###,150}...</p>
+                <div class="more">
+                    <a href="{:url('index/article/newsread',['id' =>$vo1.ID])}">阅读全文>><i class="icon-chevron-right"></i></a>
+                </div>
+            </div>
+        </div>
+        {/volist}
+    </div>
+</div>
+>>>>>>> 37313bc (Initial commit)

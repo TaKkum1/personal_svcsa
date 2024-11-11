@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <link rel="stylesheet" href="layui/css/layui.css">
 
 <body class="childrenBody">
@@ -246,3 +247,253 @@
 </script>
 
 </body>
+=======
+<link rel="stylesheet" href="layui/css/layui.css">
+
+<body class="childrenBody">
+
+<div style="padding: 15px;">
+    <form class="layui-form" action="">
+
+      <div class="layui-form-item">
+          <div class="layui-inline"  style="width: 340px">
+              <label class="layui-form-label">所属赛季</label>
+              <div class="layui-input-block">
+                  <input id="SeasonID" type="hidden" name="" value="">
+                  <select id="SeasonID_s" lay-verify="required" name="SeasonID" lay-filter="Select">
+                      <option value="">请选择</option>
+                  </select>
+              </div>
+          </div>
+          <div class="layui-inline">
+              <label class="layui-form-label" style="width: 110px">比赛时间</label>
+              <div class="layui-input-inline" style="width: 230px">
+                  <input id="StartTime" type="text" name="StartTime" class="layui-input"
+                         placeholder="yyyy-MM-dd HH:mm:ss">
+              </div>
+          </div>
+      </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">主队</label>
+                <div class="layui-input-block" style="width: 230px">
+                    <input id="TeamID" type="hidden" name="" value="">
+                    <select id="TeamID_s" lay-verify="required" name="TeamID" lay-filter="myselect">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-inline" style="width: 380px;">
+                <label class="layui-form-label" style="width: 110px">客队</label>
+                <div class="layui-input-inline" style="width: 230px">
+                    <input id="TeamID2" type="hidden" name="" value="">
+                    <select id="TeamID2_s" lay-verify="required" name="TeamID2" lay-filter="myselect">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline" >
+                <label class="layui-form-label">主队分数</label>
+                <div class="layui-input-inline" style="width: 230px">
+                    <input id="ScoreTeamA" type="text" name="ScoreTeamA" autocomplete="off"
+                           placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label" style="width: 100px">客队分数</label>
+                <div class="layui-input-inline" style="width: 230px">
+                    <input id="ScoreTeamB" type="text" name="ScoreTeamB" autocomplete="off"
+                           placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">比赛场地</label>
+            <div class="layui-input-block">
+                <input type="radio" id="Court1" name="Court" value="1号场" title="1号场">
+                <input type="radio" id="Court2" name="Court" value="2号场" title="2号场">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+                <input type="radio" id="not_started" name="State" value="-1" title="未开赛">
+                <input type="radio" id="in_progress" name="State" value="0" title="正在比赛">
+                <input type="radio" id="completed" name="State" value="1" title="已结束">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">比赛轮次</label>
+            <div class="layui-input-block">
+                <input id="Round" type="hidden" name="" value="">
+                <select id="Round_s" lay-verify="required" name="Round" lay-filter="myselect">
+                    <option value="">请选择</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即修改</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="public/wangEditor.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return unescape(r[2]);
+        return null; //返回参数值
+    }
+    layui.use(['table', 'form', 'laydate'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var laydate = layui.laydate;
+        laydate.render({
+            elem: '#StartTime',
+            type: 'datetime'
+        });
+        form.on('submit(add)', function (data) {
+            var index = parent.layer.getFrameIndex(window.name);
+            axios.post('../BBMatch/' + getUrlParam('MatchID'), {
+                TeamAID: data.field.TeamID,
+                TeamBID: data.field.TeamID2,
+                ScoreTeamA: data.field.ScoreTeamA,
+                ScoreTeamB: data.field.ScoreTeamB,
+                State: data.field.State,
+                StartTime: data.field.StartTime,
+                SeasonID: data.field.SeasonID,
+                Court: data.field.Court,
+                Round: data.field.Round,
+            })
+                .then(function (response) {
+                    layer.msg('修改成功', {
+                        icon: 1,
+                        time: 1500
+                    }, function () {
+                        parent.layer.close(index);
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        });
+
+        var selected_season = $("#SeasonID").val();
+        // Populate Season Selectbox.
+        axios.get('../BBSeason', {}).then(function (response) {
+            $.each(response.data.data, function (index, item) {
+                $('#SeasonID_s').append('<option value="' + item.SeasonID + '">' + item.SeasonName + '</option>');
+            });
+            form.render();
+            // Select SeasonID.
+            var seasons = $("#SeasonID_s").find("option"); // get all the elements of the select box.
+            for (var i = 1; i < seasons.length; i++) {
+              if ($(seasons[i]).val() == selected_season) {
+                console.log('populating season id.');
+                $(seasons[i]).attr("selected", "selected");
+                $(seasons[i]).attr("class", "layui-this");
+                form.render();
+              }
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+        // Popluate round selectbox.
+        var season_url = '../BBSeason/' + selected_season;
+        axios.get(season_url, {}).then(function (response) {
+          $.each(response.data.data, function (index, item) {
+            if (item.SeasonID == selected_season) {
+              // Populate Round select box.
+              if (item.PlayoffGroupNumber > 0) {
+                var playoff_round_number = Math.log2(item.TeamNumber / item.PlayoffGroupNumber);
+                $('#Round_s').append('<option value=0>常规赛</option>');
+                for (var i = 1; i <= playoff_round_number; i++) {
+                  $('#Round_s').append('<option value=' + i + '>季后赛第' + i + '轮</option>');
+                }
+              } else {
+                $('#Round_s').append('<option value=0>常规赛</option>');
+              }
+              form.render();
+              // Select Round.
+              var selected_round = $("#Round").val();
+              var rounds = $("#Round_s").find("option"); // get all the elements of the select box.
+              for (var i = 1; i < rounds.length; i++) {
+                if ($(rounds[i]).val() == selected_round) {
+                  console.log('populating round.');
+                  $(rounds[i]).attr("selected", "selected");
+                  $(rounds[i]).attr("class", "layui-this");
+                  form.render();
+                }
+              }
+            }
+          });
+        })
+        .catch(function (error) {
+           console.log(error);
+        });
+
+        // Populate team selectboxes.
+        var team_url = '../bbteam?seasonid=' + selected_season;
+        axios.get(team_url, {}).then(function (response) {
+          $.each(response.data.data, function (index, item) {
+            $('#TeamID_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+          });
+          form.render();
+          // Select teama.
+          var selected_teama = $("#TeamID").val();
+          var teamsa = $("#TeamID_s").find("option"); // get all the elements of the select box.
+          for (var i = 1; i < teamsa.length; i++) {
+            if ($(teamsa[i]).val() == selected_teama) {
+              console.log('populating team a.');
+              $(teamsa[i]).attr("selected", "selected");
+              $(teamsa[i]).attr("class", "layui-this");
+              form.render();
+            }
+          }
+        })
+        .catch(function (error) {
+           console.log(error);
+        });
+
+        axios.get(team_url, {}).then(function (response) {
+          $.each(response.data.data, function (index, item) {
+            $('#TeamID2_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+          });
+          form.render();
+          // Select teama.
+          var selected_teamb = $("#TeamID2").val();
+          var teamsb = $("#TeamID2_s").find("option"); // get all the elements of the select box.
+          for (var i = 1; i < teamsb.length; i++) {
+            if ($(teamsb[i]).val() == selected_teamb) {
+              console.log('populating team b.');
+              $(teamsb[i]).attr("selected", "selected");
+              $(teamsb[i]).attr("class", "layui-this");
+              form.render();
+            }
+          }
+        })
+        .catch(function (error) {
+           console.log(error);
+        });
+    });
+</script>
+
+</body>
+>>>>>>> 37313bc (Initial commit)

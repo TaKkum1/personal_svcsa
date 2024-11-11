@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <link rel="stylesheet" href="layui/css/layui.css">
 
 <body class="childrenBody">
@@ -201,3 +202,208 @@
 </script>
 
 </body>
+=======
+<link rel="stylesheet" href="layui/css/layui.css">
+
+<body class="childrenBody">
+
+<div style="padding: 15px;">
+    <form class="layui-form" action="">
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">队伍名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="Name" lay-verify="required" autocomplete="off" placeholder="请输入"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">短队名</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="ShortName" lay-verify="required" autocomplete="off" placeholder="请输入"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-block">
+                <label class="layui-form-label">队伍简介</label>
+                <div class="layui-input-block">
+                    <input id="Description" type="text" name="Description" lay-verify="required" autocomplete="on"
+                           placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+    
+        </div>
+       <div >
+        <div class="layui-form-item">
+            <label class="layui-form-label">队长名</label>
+            <div class="layui-input-inline">
+                <input type="text" name="CaptainName" autocomplete="off" placeholder="请输入" class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-inline">
+            <label class="layui-form-label">队长-电子邮件</label>
+            <div class="layui-input-inline">
+                <input type="text" name="CaptainEmail" autocomplete="off" placeholder="请输入"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-inline">
+            <label class="layui-form-label">队长手机</label>
+            <div class="layui-input-inline">
+                <input type="text" name="CaptainPhone" autocomplete="off" placeholder="请输入"
+                       class="layui-input">
+            </div>
+        </div>
+    </div>
+
+
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">Logo</label>
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" id="test1">上传图片</button>
+                    <input type="hidden" id="img_url" name="LogoSrc" value=""/>
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" width="100px" height="80px" id="demo1"/>
+                        <p id="demoText"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">集体照</label>
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" id="test2">上传图片</button>
+                    <input type="hidden" id="img_url2" name="PhotoSrc" value=""/>
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" width="100px" height="80px" id="demo2"/>
+                        <!--<p id="demoText"></p>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+ 
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即添加</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    layui.use(['table', 'form', 'upload'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var upload = layui.upload;
+
+        var uploadInst = upload.render({
+            elem: '#test1',
+            url: '../uploadimage',
+            acceptMime: 'image/*',
+            multiple: true,
+            before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+            },
+            done: function (res) {
+                //如果上传失败
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+                console.log(res);
+                picture = res.data.savename;
+                $("#img_url").attr("value", picture)
+            },
+            error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText1');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+        });
+
+        var uploadInst2 = upload.render({
+            elem: '#test2',
+            url: '../uploadimage',
+            acceptMime: 'image/*',
+            multiple: true,
+            before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#demo2').attr('src', result); //图片链接（base64）
+                });
+            },
+            done: function (res) {
+                //如果上传失败
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+                console.log(res);
+                picture = res.data.savename;
+                $("#img_url2").attr("value", picture)
+            },
+            error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText2');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    uploadInst2.upload();
+                });
+            }
+        });
+
+        form.on('submit(add)', function (data) {
+            var index = parent.layer.getFrameIndex(window.name);
+            $.ajax({
+                url: '../ctfcteam/',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    Name: data.field.Name,
+                    ShortName: data.field.ShortName,
+                    Description: data.field.Description,
+                    CaptainName: data.field.CaptainName,
+                    CaptainEmail: data.field.CaptainEmail,
+                    CaptainPhone: data.field.CaptainPhone,
+                    LogoSrc: $("#img_url").val(),
+                    PhotoSrc: $("#img_url2").val(),
+                },
+                header: {
+                    Accept: 'application/json'
+                },
+                success: function (data) {
+                    layer.msg('新建成功', {
+                        icon: 1,
+                        time: 1500
+                    }, function () {
+                        parent.layer.close(index);
+                    });
+                },
+                error: function (xhr) {
+                    if (xhr.status == 401)
+							top.location.href = 'login.html';
+                }
+            });
+
+        });
+    });
+</script>
+
+</body>
+>>>>>>> 37313bc (Initial commit)

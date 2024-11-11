@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <link rel="stylesheet" href="layui/css/layui.css">
 
 
@@ -306,3 +307,313 @@
     </script>
 
 </body>
+=======
+<link rel="stylesheet" href="layui/css/layui.css">
+
+
+<body class="childrenBody">
+
+    <div style="padding: 15px;">
+        <form class="layui-form" action="">
+
+
+             <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">队伍名称</label>
+                    <div class="layui-input-inline">
+                         <input id="ID" name="ID" type="hidden" value="">
+                         <input id="SeasonID" name="SeasonID" type="hidden" value="">
+                       <input id="Name" type="text" name="Name" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">短队名</label>
+                    <div class="layui-input-inline">
+                      <input id="ShortName" type="text" name="ShortName" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">队长名</label>
+                <div class="layui-input-block">
+                    <input id="Captain" type="text" name="Captain" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+
+             <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">队长-电子邮件</label>
+                    <div class="layui-input-inline">
+                            <input id="Email" type="text" name="Email" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-inline">
+                    <label class="layui-form-label">队长手机</label>
+                    <div class="layui-input-inline">
+                           <input id="Tel" type="text" name="Tel" autocomplete="off" placeholder="请输入" class="layui-input">
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">队长-微信</label>
+                <div class="layui-input-block">
+                    <input id="Wechat" type="text" name="Wechat" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+             <div class="layui-inline">
+               <label class="layui-form-label">Logo</label>
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" id="test1">上传图片</button>
+                    <input  type="hidden" id="LogoSrc" name="LogoSrc" value="" />
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" width="100px" height="80px" id="demo1" />
+                        <p id="demoText"></p>
+                    </div>
+                </div>
+              </div>
+                     <div class="layui-inline">
+                <label class="layui-form-label">集体照</label>
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" id="test2">上传图片</button>
+                    <input type="hidden" id="PhotoSrc" name="PhotoSrc" value="" />
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" width="100px" height="80px" id="demo2" />
+                        <p id="demoText"></p>
+                    </div>
+                </div>
+                     </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">时间偏好</label>
+                <div class="layui-input-block">
+                    <input type="radio" id="prefer_all" name="TimePreference" value="0" title="都可以">
+                    <input type="radio" id="prefer_morning" name="TimePreference" value="1" title="上午">
+                    <input type="radio" id="prefer_afternoon" name="TimePreference" value="2" title="下午">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">常规赛小组</label>
+                <div class="layui-input-block">
+                    <input id="GroupID" type="hidden" name="" value="">
+                    <select id="GroupID_s" name="GroupID" lay-filter="myselect">
+                        <option value="0">请选择</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                   <label class="layui-form-label">季后赛小组</label>
+                   <div class="layui-input-block">
+                       <input id="PlayoffGroupID" type="hidden" name="" value="">
+                       <select id="PlayoffGroupID_s" name="PlayoffGroupID" lay-filter="myselect">
+                           <option value="0">请选择</option>
+                       </select>
+                   </div>
+            </div>-->
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">简介</label>
+                <div class="layui-input-block">
+                    <input id="Description"  type="text" name="Description" autocomplete="off" placeholder="简介" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即修改</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="layui/layui.js"></script>
+    <script>
+        layui.use(['table', 'form', 'upload'], function() {
+            var table = layui.table;
+            var form = layui.form;
+            var $ = layui.jquery;
+            var upload = layui.upload;
+
+            var uploadInst = upload.render({
+                elem: '#test1',
+                url: '../uploadimage',
+                acceptMime: 'image/*',
+                multiple: true,
+                before: function (obj) {
+                    this.data = {
+                        Name: $('input[name="Name"]').val(),
+                        ShortName: $('input[name="ShortName"]').val(),
+                        Captain: $('input[name="Captain"]').val(),
+                        Email: $('input[name="Email"]').val(),
+                        Tel: $('input[name="Tel"]').val(),
+                        Wechat: $('input[name="Wechat"]').val(),
+                        Description: $('input[id="Description"]').val(),
+                        TimePreference: $('input[id="TimePreference"]').val(),
+                        PlayoffGroupID: $('input[id="PlayoffGroupID"]').val(),
+                        GroupID: $('input[id="GroupID"]').val(),
+                        LogoSrc: $('input[name="LogoSrc"]').val(),
+                        PhotoSrc: $('input[id="demo2"]').val(),
+                    }
+                },
+                choose: function(obj) {
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function(index, file, result) {
+                        $('#demo1').attr('src', result); //图片链接（base64）
+                    });
+                },
+                done: function(res) {
+                    //如果上传失败
+                    if (res.code > 0) {
+                        return layer.msg('上传失败');
+                    }
+                    //上传成功
+                    console.log(res);
+                    picture = res.data.savename;
+                    $("#LogoSrc").attr("value", picture)
+                },
+                error: function() {
+                    //演示失败状态，并实现重传
+                    var demoText = $('#demoText1');
+                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                    demoText.find('.demo-reload').on('click', function() {
+                        uploadInst.upload();
+                    });
+                }
+            });
+
+              var uploadInst2 = upload.render({
+                elem: '#test2',
+                url: '../uploadimage',
+                acceptMime: 'image/*',
+                multiple: true,
+                before: function (obj) {
+                    this.data = {
+                        Name: $('input[name="Name"]').val(),
+                        ShortName: $('input[name="ShortName"]').val(),
+                        Captain: $('input[name="Captain"]').val(),
+                        Email: $('input[name="Email"]').val(),
+                        Tel: $('input[name="Tel"]').val(),
+                        Wechat: $('input[name="Wechat"]').val(),
+                        Description: $('input[id="Description"]').val(),
+                        TimePreference: $('input[id="TimePreference"]').val(),
+                        PlayoffGroupID: $('input[id="PlayoffGroupID"]').val(),
+                        GroupID: $('input[id="GroupID"]').val(),
+                        LogoSrc: $('input[name="LogoSrc"]').val(),
+                        PhotoSrc: $('input[id="demo2"]').val(),
+                    }
+                },
+                choose: function(obj) {
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function(index, file, result) {
+                        $('#demo2').attr('src', result); //图片链接（base64）
+                    });
+                },
+                done: function(res) {
+                    //如果上传失败
+                    if (res.code > 0) {
+                        return layer.msg('上传失败');
+                    }
+                    //上传成功
+                    console.log(res);
+                    picture = res.data.savename;
+                    $("#PhotoSrc").attr("value", picture)
+                },
+                error: function() {
+                    //演示失败状态，并实现重传
+                    var demoText = $('#demoText2');
+                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                    demoText.find('.demo-reload').on('click', function() {
+                        uploadInst2.upload();
+                    });
+                }
+            });
+            form.on('submit(add)', function(data) {
+                var index = parent.layer.getFrameIndex(window.name);
+                axios.post('../BBTeam/' + data.field.ID ,{
+                        Name: data.field.Name,
+                        ShortName: data.field.ShortName,
+                        Captain: data.field.Captain,
+                        Email: data.field.Email,
+                        Tel: data.field.Tel,
+                        Wechat: data.field.Wechat,
+                        LogoSrc:  data.field.LogoSrc,
+                        PhotoSrc: data.field.PhotoSrc,
+                        Description: data.field.Description,
+                        TimePreference: data.field.TimePreference,
+                        PlayoffGroupID: data.field.PlayoffGroupID,
+                        GroupID: data.field.GroupID,
+                    })
+                    .then(function(response) {
+                        layer.msg('修改成功', {
+                            icon: 1,
+                            time: 1500
+                        }, function() {
+                            parent.layer.close(index);
+                        });
+                    })
+                    .catch(function(error) {
+                        console.log(error);
+                    });
+            });
+            axios.get('../BBSeason', {}).then(function(response) {
+                    console.log(response);
+                    $.each(response.data.data, function(index, item) {
+                        if (item.SeasonID == $("#SeasonID").val()) {
+                          console.log(item);
+                          // Populate GroupID select box values.
+                          for (var i = 1; i <= item.GroupNumber; i++) {
+                             $('#GroupID_s').append('<option value=' + i + '>' + '第' + i + '小组' + '</option>');
+                          }
+                          form.render();
+                          // Select GroupID.
+                          var selected_group = $("#GroupID").val();
+                          var groups = $("#GroupID_s").find("option"); // get all the elements of the select box.
+                          console.log(groups);
+                          for (var i = 1; i < groups.length; i++) {
+                            if ($(groups[i]).val() == selected_group) {
+                              console.log('populating group id.');
+                              $(groups[i]).attr("selected", "selected");
+                              $(groups[i]).attr("class", "layui-this");
+                              form.render();
+                            }
+                          }
+                          // Populate PlayoffGroupID select box values.
+                          for (var i = 1; i <= item.PlayoffGroupNumber; i++) {
+                             $('#PlayoffGroupID_s').append('<option value=' + i + '>季后赛第' + i + '小组' + '</option>');
+                          }
+                          form.render();
+                          // Select playoffID.
+                          var selected_playoff_group = $("#PlayoffGroupID").val();
+                          var playoff_groups = $("#PlayoffGroupID_s").find("option"); // get all the elements of the select box.
+                          console.log(playoff_groups);
+                          for (var i = 1; i < playoff_groups.length; i++) {
+                            if ($(playoff_groups[i]).val() == selected_playoff_group) {
+                              console.log('populating playoff group id.');
+                              $(playoff_groups[i]).attr("selected", "selected");
+                              $(playoff_groups[i]).attr("class", "layui-this");
+                              form.render();
+                            }
+                          }
+                      }
+                    });
+                })
+                .catch(function(error) {
+                    console.log(error);
+                });
+        });
+    </script>
+
+</body>
+>>>>>>> 37313bc (Initial commit)

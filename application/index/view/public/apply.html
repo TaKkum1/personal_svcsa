@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div class="inside-banner block img_1-banner">
     <h3>申请加入</h3>
     <p>篮球一起奋斗一起拼搏一起奉献，没有自私，没有不信任，永不言弃、团结拼搏。</p>
@@ -25,4 +26,33 @@
     </ul>
     </div>
 
+=======
+<div class="inside-banner block img_1-banner">
+    <h3>申请加入</h3>
+    <p>篮球一起奋斗一起拼搏一起奉献，没有自私，没有不信任，永不言弃、团结拼搏。</p>
+</div>
+<div class="site-box">
+    <div class="block">
+        <span class="icon-home home_icon icon"></span><a href="">首页</a><span class="icon-arrow-right arrow_icon icon"></span><span class="active">申请加入</span>
+    </div>
+</div>
+</div>
+<div class="link-wrap block clearfix">
+    <div class="txt-box" style="width:100%">
+    <ul>
+        {if condition="!$recentbbseasons OR !$recentctfcmatches"}
+        <li>暂时没有可加入的项目，请与管理员联系！</li>
+        {/if}
+
+        {volist name='recentbbseasons' id='recentbbseason'}
+        <li>申请加入 <a href="{:url('index/bbteam/apply',['seasonid'=>$recentbbseason['SeasonID']])}">{$recentbbseason['CompetitionName']} - {$recentbbseason['SeasonName']} >>>></a></li>
+        {/volist}
+
+        {volist name='recentctfcmatches' id='recentctfcmatch'}
+        <li>申请加入 <a href="{:url('index/ctfcplayer/apply',['matchid'=>$recentctfcmatch['MatchID']])}">{$recentctfcmatch['SeasonName']} - {$recentctfcmatch['EventName']} >>>></a></li>
+        {/volist}
+    </ul>
+    </div>
+
+>>>>>>> 37313bc (Initial commit)
 </div>

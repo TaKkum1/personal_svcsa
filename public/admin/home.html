@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 
@@ -183,3 +184,190 @@
 </body>
 
 </html>
+=======
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="layui/css/layui.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 95%;
+        }
+
+        .side_left {
+            height: 100%;
+        }
+
+        .message {
+            margin: -8px 28px 0 !important;
+            border-radius: 50%;
+            top: 31% !important;
+        }
+
+        .title {
+            position: absolute !important;
+            /* left: 200px; */
+            top: 0;
+            color: rgba(255, 255, 255, .7);
+            padding: 0 20px;
+            line-height: 60px;
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .content {
+            top: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="ayui-layout-admin" style="height:60px;background:#393D49;">
+        <!-- 标题 -->
+        <h1 class="title">后台管理系统</h1>
+        <ul class="layui-nav layui-layout-right">
+            <!-- <li class="layui-nav-item">
+                <a href="#">通知
+                    <span class="layui-badge message">9</span>
+                </a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="#">退出
+                </a>
+            </li>
+            <li class="layui-nav-item">
+            </li> -->
+        </ul>
+    </nav>
+    <ul class="layui-nav layui-nav-tree layui-inline side_left">
+        <li class="layui-nav-item layui-this">
+            <a href="">
+                <i class="iconfont icon-shouye1"></i>
+                首页
+            </a>
+        </li>
+        <li class="layui-nav-item">
+            <a href="javascript:;">篮球</a>
+            <dl class="layui-nav-child">
+                <dd> <a href="javascript:;" id="changeToSet"><i class="iconfont icon-shouye1"></i>篮球比赛项目</a></dd>
+                <dd> <a href="javascript:;" id="changeToSet2"><i class="iconfont icon-shouye1"></i>篮球赛季</a></dd>
+                <dd> <a href="javascript:;" id="changeToSet6"><i class="iconfont icon-shouye1"></i>篮球季后赛</a></dd>
+                <dd> <a href="javascript:;" id="changeToSet3"><i class="iconfont icon-shouye1"></i>篮球球队</a></dd>
+                <dd> <a href="javascript:;" id="changeToSet4"><i class="iconfont icon-shouye1"></i>篮球队员</a></dd>
+                <dd> <a href="javascript:;" id="changeToSet5"><i class="iconfont icon-shouye1"></i>篮球比赛</a></dd>
+
+            </dl>
+
+        </li>
+        <li class="layui-nav-item">
+            <a href="javascript:;">田径</a>
+            <dl class="layui-nav-child">
+                <dd> <a href="javascript:;" id="changeToSet0"><i class="iconfont icon-shouye1"></i>田径赛事</a></dd>
+                <dd> <a href="javascript:;" id="changeToSet02"><i class="iconfont icon-shouye1"></i>田径项目</a></dd>
+                <dd> <a href="javascript:;" id="changeToSet03"><i class="iconfont icon-shouye1"></i>田径比赛</a></dd>
+                <dd> <a href="javascript:;" id="changeToSet04"><i class="iconfont icon-shouye1"></i>田径选手</a></dd>
+            </dl>
+
+        </li>
+        <li class="layui-nav-item">
+            <a href="javascript:;">其他</a>
+            <dl class="layui-nav-child">
+                <dd> <a href="javascript:;" id="changeToSet1"><i class="iconfont icon-shouye1"></i>新闻</a></dd>
+                <dd> <a href="javascript:;" id="changeToSet12"><i class="iconfont icon-shouye1"></i>FAQ</a></dd>
+                <dd> <a href="javascript:;" id="changeToSet13"><i class="iconfont icon-shouye1"></i>友情链接</a></dd>
+                <dd> <a href="javascript:;" id="changeToSet14"><i class="iconfont icon-shouye1"></i>认证</a></dd>
+                <dd> <a href="javascript:;" id="changeToSet15"><i class="iconfont icon-shouye1"></i>系统</a></dd>
+            </dl>
+
+        </li>
+        <!-- <li class="layui-nav-item layui-nav-itemed" id="changeToSet3">
+            <a href="javascript:;">
+                <i class="iconfont icon-shouye1"></i>
+                篮球球队
+            </a>
+        </li> -->
+    </ul>
+    <div class="layui-body content">
+        <iframe style="width: 100%;height: 90%;overflow:visible;" src="main.html" frameborder="0" id="contentIframe"></iframe>
+    </div>
+    <script src="layui/layui.js"></script>
+    <script>
+        $(function() {
+            $('#changeToSet').on('click', function() {
+                $(window.parent.document).find('#contentIframe').attr('src', 'bb_competition.html')
+                $(this).addClass('layui-this').siblings().removeClass('layui-this');
+            })
+            $('#changeToSet2').on('click', function() {
+                $(window.parent.document).find('#contentIframe').attr('src', 'bb_season.html')
+                $(this).addClass('layui-this').siblings().removeClass('layui-this');
+            })
+            $('#changeToSet6').on('click', function() {
+                $(window.parent.document).find('#contentIframe').attr('src', 'bb_playoff.html')
+                $(this).addClass('layui-this').siblings().removeClass('layui-this');
+            })
+            $('#changeToSet3').on('click', function() {
+                $(window.parent.document).find('#contentIframe').attr('src', 'bb_team.html')
+                $(this).addClass('layui-this').siblings().removeClass('layui-this');
+            })
+            $('#changeToSet4').on('click', function() {
+                $(window.parent.document).find('#contentIframe').attr('src', 'bb_player.html')
+                $(this).addClass('layui-this').siblings().removeClass('layui-this');
+            })
+            $('#changeToSet5').on('click', function() {
+                $(window.parent.document).find('#contentIframe').attr('src', 'bb_match.html')
+                $(this).addClass('layui-this').siblings().removeClass('layui-this');
+            })
+            $('#changeToSet0').on('click', function() {
+                $(window.parent.document).find('#contentIframe').attr('src', 'ctfc_season.html')
+                $(this).addClass('layui-this').siblings().removeClass('layui-this');
+            })
+            $('#changeToSet02').on('click', function() {
+                $(window.parent.document).find('#contentIframe').attr('src', 'ctfc_event.html')
+                $(this).addClass('layui-this').siblings().removeClass('layui-this');
+            })
+            $('#changeToSet03').on('click', function() {
+                $(window.parent.document).find('#contentIframe').attr('src', 'ctfc_match.html')
+                $(this).addClass('layui-this').siblings().removeClass('layui-this');
+            })
+            $('#changeToSet04').on('click', function() {
+                $(window.parent.document).find('#contentIframe').attr('src', 'ctfc_player.html')
+                $(this).addClass('layui-this').siblings().removeClass('layui-this');
+            })
+            $('#changeToSet1').on('click', function() {
+                $(window.parent.document).find('#contentIframe').attr('src', 'news.html')
+                $(this).addClass('layui-this').siblings().removeClass('layui-this');
+            })
+            $('#changeToSet12').on('click', function() {
+                $(window.parent.document).find('#contentIframe').attr('src', 'FAQ.html')
+                $(this).addClass('layui-this').siblings().removeClass('layui-this');
+            })
+            $('#changeToSet13').on('click', function() {
+                $(window.parent.document).find('#contentIframe').attr('src', 'link.html')
+                $(this).addClass('layui-this').siblings().removeClass('layui-this');
+            })
+			 $('#changeToSet14').on('click', function() {
+                $(window.parent.document).find('#contentIframe').attr('src', 'Authentication.html')
+                $(this).addClass('layui-this').siblings().removeClass('layui-this');
+            })
+			 $('#changeToSet15').on('click', function() {
+                $(window.parent.document).find('#contentIframe').attr('src', 'system_edit.html')
+                $(this).addClass('layui-this').siblings().removeClass('layui-this');
+            })
+        })
+        layui.use('element', function() {
+            var element = layui.element;
+        });
+    </script>
+</body>
+
+</html>
+>>>>>>> 37313bc (Initial commit)

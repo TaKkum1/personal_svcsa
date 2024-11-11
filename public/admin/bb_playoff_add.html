@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <link rel="stylesheet" href="layui/css/layui.css">
 
 <body class="layui-layout-body">
@@ -149,3 +150,156 @@
     });
   </script>
 </body>
+=======
+<link rel="stylesheet" href="layui/css/layui.css">
+
+<body class="layui-layout-body">
+
+    <div style="padding: 15px;">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">小组名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="Title" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">赛制</label>
+                <div class="layui-input-block">
+                    <!--
+                    <input type="text" name="Rules" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                    -->
+                    <select id="Rules" lay-verify="required" name="Rule" lay-filter="myselect">
+                        <option value="0">2-2-1排位赛</option>
+                        <option value="1">单循环</option>
+                        <option value="2">女篮</option>
+                    </select>
+                </div>
+            </div>
+
+           <div class="layui-form-item">
+                <label class="layui-form-label">所属赛季</label>
+                <div class="layui-input-block">
+                    <input id="SeasonID" type="hidden" name="" value="">
+                    <select id="SeasonID_s" lay-verify="required" name="SeasonID" lay-filter="myselect">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+           </div>
+
+           <div class="layui-form-item">
+                <label class="layui-form-label">所属项目</label>
+                <div class="layui-input-block">
+                    <input id="CompetitionID" type="hidden" name="" value="">
+                    <select id="CompetitionID_s" lay-verify="required" name="CompetitionID" lay-filter="myselect">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+           </div>
+
+           <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即添加</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+           </div>
+        </form>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="layui/layui.js"></script>
+    <script>
+
+    layui.use(['table', 'form','laydate',], function() {
+      var laydate = layui.laydate;
+      var table = layui.table;
+      var form = layui.form;
+
+      form.on('submit(add)', function(data) {
+        var index = parent.layer.getFrameIndex(window.name);
+        $.ajax({
+          url:'../BBPlayoff',
+          type : 'POST',
+          dataType : 'json',
+          data : {
+            Title: data.field.Title,
+            Rule: data.field.Rule,
+            SeasonID: data.field.SeasonID,
+            CompetitionID: data.field.CompetitionID,
+          },
+          header:{
+            Accept:'application/json'
+          },
+          success:function(data) {
+            layer.msg('添加成功', {
+              icon: 1,
+              time: 1500
+            },
+            function() {
+              parent.layer.close(index);
+            });
+          },
+          error:function(xhr) {
+            if (xhr.status == 401) {
+              top.location.href = 'login.html';
+            }
+            layer.msg('添加失败: '+ xhr.responseText), {
+              icon: 1,
+              time: 1500
+            }
+          }
+        });
+      });
+
+      // Render Season Selection Drop menu.
+      axios.get('../bbseason', {}).then(function(response) {
+        console.log(response);
+        $.each(response.data.data, function(index, item) {
+          $('#SeasonID_s').append('<option value="' + item.SeasonID + '">' + item.SeasonName + '</option>');
+        });
+        form.render();
+        var num = $("#SeasonID").val();
+        var numbers = $("#SeasonID_s").find("option"); //获取select下拉框的所有值
+        console.log(numbers);
+        for (var j = 1; j < numbers.length; j++) {
+          console.log(numbers);
+          if ($(numbers[j]).val() == num) {
+            console.log('ok');
+            $(numbers[j]).attr("selected", "selected");
+            $(numbers[j]).attr("class", "layui-this");
+            form.render();
+          }
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+
+      // Render Competition Selection Drop menu.
+      axios.get('../bbcompetition', {}).then(function(response) {
+        console.log(response);
+        $.each(response.data.data, function(index, item) {
+          $('#CompetitionID_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+        });
+        form.render();
+        var num = $("#CompetitionID").val();
+        var numbers = $("#CompetitionID_s").find("option"); //获取select下拉框的所有值
+        console.log(numbers);
+        for (var j = 1; j < numbers.length; j++) {
+          console.log(numbers);
+          if ($(numbers[j]).val() == num) {
+            console.log('ok');
+            $(numbers[j]).attr("selected", "selected");
+            $(numbers[j]).attr("class", "layui-this");
+            form.render();
+          }
+        }
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+    });
+  </script>
+</body>
+>>>>>>> 37313bc (Initial commit)

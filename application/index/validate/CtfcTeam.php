@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 /**
  * Created by Yu Lu.
@@ -15,4 +16,23 @@ class CtfcTeam extends Validate
     protected $rule = [
         'Name'  => 'require',
     ];
+=======
+<?php
+/**
+ * Created by Yu Lu.
+ * Date: Dec 28, 2022
+ * Time: 15:50
+ */
+
+namespace app\index\validate;
+
+
+use think\Validate;
+
+class CtfcTeam extends Validate
+{
+    protected $rule = [
+        'Name'  => 'require',
+    ];
+>>>>>>> 37313bc (Initial commit)
 }

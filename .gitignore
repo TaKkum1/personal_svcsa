@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # VScode setting, 
 .vscode/*
 !.vscode/settings.json
@@ -38,3 +39,45 @@ public/uploads
 public/uploads/*
 #godaddy ssl
 godaddy.html
+=======
+# VScode setting, 
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+
+#backup
+backup/*
+
+# Server info
+# nginx.conf
+nginx-local/*
+
+
+#image
+uploads/*
+
+# MAC file
+.DS_Store
+
+runtime/temp/*
+runtime/log/*
+
+application/database.php
+
+#Dependency
+# thinkphp/*
+# vendor/*
+
+#composer files
+composer-setup.php
+composer.phar
+
+#public static asset
+public/uploads
+public/uploads/*
+#godaddy ssl
+godaddy.html
+>>>>>>> 37313bc (Initial commit)

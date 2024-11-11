@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 comment:
   layout: header, changes, diff
 coverage:
@@ -10,3 +11,17 @@ coverage:
   - console.php
   status:
     patch: false
+=======
+comment:
+  layout: header, changes, diff
+coverage:
+  ignore:
+  - base.php
+  - helper.php
+  - convention.php
+  - lang/zh-cn.php
+  - start.php
+  - console.php
+  status:
+    patch: false
+>>>>>>> 37313bc (Initial commit)

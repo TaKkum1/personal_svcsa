@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 
 namespace {%namespace%};
@@ -8,3 +9,15 @@ class {%className%} extends Controller
 {
     //
 }
+=======
+<?php
+
+namespace {%namespace%};
+
+use think\Controller;
+
+class {%className%} extends Controller
+{
+    //
+}
+>>>>>>> 37313bc (Initial commit)

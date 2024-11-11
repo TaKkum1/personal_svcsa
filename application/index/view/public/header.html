@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html>
 <head>
@@ -127,3 +128,134 @@
             </ul>
         </div>
     </div>
+=======
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>SVCSA</title>
+    <link rel="shortcut icon" href="{$Think.config.public_assets}/images/favicon.ico" />
+    <link rel="stylesheet" type="text/css" href="{$Think.config.public_assets}/css/common.css">
+    <link rel="stylesheet" type="text/css" href="{$Think.config.public_assets}/css/style.css">
+    <link rel="stylesheet" type="text/css" href="{$Think.config.public_assets}/css/font.css">
+    <link rel="stylesheet" type="text/css" href="{$Think.config.public_assets}/css/index.css">
+    <link rel="stylesheet" type="text/css" href="{$Think.config.public_assets}/css/jBox.css">
+    <link rel="stylesheet" type="text/css" href="{$Think.config.public_assets}/css/jBox.Image.css">
+    <link rel="stylesheet" type="text/css" href="{$Think.config.public_assets}/css/animate.min.css">
+    <link rel="stylesheet" type="text/css" href="{$Think.config.public_assets}/css/swiper.min.css">
+    <link rel="stylesheet" type="text/css" href="{$Think.config.public_assets}/css/main.min.css">
+    <link rel="stylesheet" type="text/css" href="{$Think.config.public_assets}/css/bracket.css">
+
+    <script type="text/javascript" src="{$Think.config.public_assets}/js/jquery-2.2.4.min.js"></script>
+</head>
+<body>
+<div class="index-top">
+    <div class="public-header">
+        <div class="header-top block clearfix">
+            <div class="logo-box"><a href="index.html"><img src="{$Think.config.public_assets}/images/logo.png"></a></div>
+            <!--
+            <div class="right-box">
+                <span class="title">联系方式</span>
+                <a href="{:url('index/system/contactus')}"><span class="icon-wechat icon"></a>
+                <a href="{:url('index/system/contactus')}"><span class="icon-facebook icon"></span></a>
+                <a href="{:url('index/system/contactus')}"><span class="icon-twitter icon"></span></a>
+                <a href="{:url('index/system/contactus')}"><span class="icon-youtube icon"></span></a>
+                <a href="{:url('index/system/contactus')}"><span class="icon-vimeo icon"></span></a>
+                <span class="ml20">
+                        <a href="{:url('index/system/contactus')}"><span class="icon-earth icon"></span></a>
+                        <a href="{:url('index/system/contactus')}"><span class="icon-user icon"></span></a>
+                        <a href="{:url('index/system/contactus')}"><span class="icon icon-envelop"></span></a>
+                    </span>
+                <a href="" class="btn">比赛视频</a>
+            </div>
+          -->
+        </div>
+        <div class="body-box block clearfix">
+            <div class="logo-box">
+                <a href="index.html"><img src="{$Think.config.public_assets}/images/logo.png"></a>
+            </div>
+            <ul class="one-box">
+                <li{if condition="$nav eq 'index'"} class="on"{/if}>
+                    <a href="{$Think.config.public_assets}/index">
+                        <span>首页</span>
+                        <span class="bg"></span>
+                    </a>
+                </li>
+                <!--
+                <li{if condition="$nav eq 'competition'"} class="on"{/if}>
+                    <a href="#">
+                        <span>比赛项目 <i class="icon-chevron-down"></i></span>
+                        <span class="bg"></span>
+                    </a>
+                    <ul>
+                        {volist name="bbcompetition" id="vo_bbcomp" empty='暂时没有信息！'}
+                        <li>
+                            <a href="{$Think.config.public_assets}/bbcompetition/{$vo_bbcomp.ID}">{$vo_bbcomp.Name}</a>
+                        </li>
+                        {/volist}
+                    </ul>
+                </li>
+              -->
+                <li{if condition="$nav eq 'competition1'"} class="on"{/if}>
+                    <a href="{$Think.config.public_assets}/bbcompetition/1">
+                        <span>男篮公开组</span>
+                        <span class="bg"></span>
+                    </a>
+                </li>
+                <li{if condition="$nav eq 'competition2'"} class="on"{/if}>
+                    <a href="{$Think.config.public_assets}/bbcompetition/2">
+                        <span>女篮公开组</span>
+                        <span class="bg"></span>
+                    </a>
+                </li>
+                <li{if condition="$nav eq 'competition4'"} class="on"{/if}>
+                    <a href="{$Think.config.public_assets}/bbcompetition/4">
+                        <span>男篮壮年组</span>
+                        <span class="bg"></span>
+                    </a>
+                </li>
+                <li{if condition="$nav eq 'ctfc'"} class="on"{/if}>
+                    <a href="{$Think.config.public_assets}/ctfc">
+                        <span>华锦赛</span>
+                        <span class="bg"></span>
+                    </a>
+                </li>
+                <li{if condition="$nav eq 'news'"} class="on"{/if}>
+                    <a href="{$Think.config.public_assets}/news">
+                        <span>新闻</span>
+                        <span class="bg"></span>
+                    </a>
+                </li>
+                
+
+               
+                <!--
+                <li{if condition="$nav eq 'player'"} class="on"{/if}>
+                    <a href="{$Think.config.public_assets}/player">
+                        <span>选手</span>
+                        <span class="bg"></span>
+                    </a>
+                </li>
+                <li{if condition="$nav eq 'gallery'"} class="on"{/if}>
+                    <a href="{:url('index/picture/lists',['category'=>'all'])}">
+                        <span>图集</span>
+                        <span class="bg"></span>
+                    </a>
+                </li>
+                <li{if condition="$nav eq 'faq'"} class="on"{/if}>
+                    <a href="{$Think.config.public_assets}/faq">
+                        <span>FAQ</span>
+                        <span class="bg"></span>
+                    </a>
+                </li>
+              -->
+                <li{if condition="$nav eq 'contactus'"} class="on"{/if}>
+                    <a href="{$Think.config.public_assets}/contactus">
+                        <span>联系我们</span>
+                        <span class="bg"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+>>>>>>> 37313bc (Initial commit)

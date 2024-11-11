@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <link rel="stylesheet" href="layui/css/layui.css">
 
 <body class="childrenBody">
@@ -110,3 +111,117 @@
 </script>
 
 </body>
+=======
+<link rel="stylesheet" href="layui/css/layui.css">
+
+<body class="childrenBody">
+
+<div style="padding: 15px;">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">标题</label>
+            <div class="layui-input-block">
+                <input type="text" name="Title" lay-verify="required" autocomplete="off" placeholder="请输入"
+                       class="layui-input">
+            </div>
+        </div>
+
+
+        <!-- 注意， 只需要引用 JS，无需引用任何 CSS ！！！-->
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">文章内容</label>
+            <div id="editor" name="Content" class="layui-input-block">
+                <!--<textarea name="Content" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input"-->
+                <!--style="height:200px;"></textarea>-->
+                <!--<div id="editor">-->
+                <!--<p name="Content"></p>-->
+                <!--</div>-->
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">文章作者</label>
+            <div class="layui-input-block">
+                <input type="text" name="Author" lay-verify="required" autocomplete="off" placeholder="请输入"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即添加</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="public/wangEditor.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+
+    var E = window.wangEditor
+    var editor = new E('#editor')
+    // 或者 var editor = new E( document.getElementById('editor') )
+    editor.customConfig.customUploadImg = function (files, insert) {
+        var formData = new FormData();
+        formData.append("file", files[0]);
+        $.ajax({
+            url: '../uploadimage',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                insert('../uploads/' + JSON.parse(data).data.savename)
+            },
+            error: function(xhr){
+                if (xhr.status == 401) {
+                    $(top).location.href = 'login.html';
+                }
+            }
+        });
+        // files 是 input 中选中的文件列表
+        // insert 是获取图片 url 后，插入到编辑器的方法
+        // 上传代码返回结果之后，将图片插入到编辑器中
+        // insert("http://www.pptok.com/wp-content/uploads/2012/08/xunguang-9.jpg")
+    }
+    editor.create();
+    layui.use(['table', 'form'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        form.on('submit(add)', function (data) {
+            var index = parent.layer.getFrameIndex(window.name);
+            $.ajax({
+                url: '../Article',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    Title: data.field.Title,
+                    Content: editor.txt.html(),
+                    Author: data.field.Author,
+                    Category: 0,
+                },
+                header: {
+                    Accept: 'application/json'
+                },
+                success: function (data) {
+                    layer.msg('添加成功', {
+                        icon: 1,
+                        time: 1500
+                    }, function () {
+                        parent.layer.close(index);
+                    });
+                },
+                error: function (xhr) {
+                    if (xhr.status == 401) {
+                        top.location.href = 'login.html';
+                    }
+                }
+            });
+
+        });
+    });
+</script>
+
+</body>
+>>>>>>> 37313bc (Initial commit)

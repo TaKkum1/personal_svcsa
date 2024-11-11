@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div class="inside-banner block athlete-banner" style="background: url({$Think.config.public_assets}/uploads/{$player.PlayerPhotoSrc}) right bottom no-repeat;background-size: contain;">
     <h3>球员简介</h3>
     <div class="introduce-box">
@@ -84,3 +85,91 @@
         </div>
     </div>
 </div>
+=======
+<div class="inside-banner block athlete-banner" style="background: url({$Think.config.public_assets}/uploads/{$player.PlayerPhotoSrc}) right bottom no-repeat;background-size: contain;">
+    <h3>球员简介</h3>
+    <div class="introduce-box">
+        <span class="name">{$player.PlayerName}</span>
+        <div class="info">
+            <div class="item">
+                号码<i>{$player.PlayerNumber}</i>
+            </div><!--
+            <div class="item">
+                年龄<i></i>
+            </div>-->
+            <div class="item">
+                身高<i>{$player.Height}cm</i>
+            </div>
+            <div class="item">
+                体重<i>{$player.Weight}Kg</i>
+            </div>
+        </div>
+        <div class="session_1">
+            <table>
+                <thead>
+                <tr>
+                    <th>电子邮箱</th>
+                    <th>所在球队</th>
+                    <th>所属赛季</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{$player.PlayerEmail}</td>
+                    <td>{$player.TeamName?$player.TeamName:'未分配'}</td>
+                    <td>{$player_seasonname}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</div>
+<div class="pro-wrap">
+    <div class="clearfix block">
+        <div class="public-left">
+            <div class="title-box">
+                {$player.PlayerName} - 技术统计
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>得分</th>
+                        <th>篮板</th>
+                        <th>助攻</th>
+                        <th>抢断</th>
+                        <th>盖帽</th>
+                        <th>投篮</th>
+                        <th>3分</th>
+                        <th>罚球</th>
+                        <th>失误</th>
+                        <th>犯规</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {if condition="!$playerstats"}
+                        <tr>
+                            <td>暂没有可用排行！</td>
+                        </tr>
+                    {/if}
+                    {volist name="playerstats" id="stats"}
+                        <tr>
+                                <td>{$stats['Points']|number_format=###,1,'.',''}</td>
+                                <td>{$stats['Rebound']|number_format=###,1,'.',''}</td>
+                                <td>{$stats['Assist']|number_format=###,1,'.',''}</td>
+                                <td>{$stats['Steal']|number_format=###,1,'.',''}</td>
+                                <td>{$stats['Block']|number_format=###,1,'.',''}</td>
+                                <td>{$stats['FGP']|number_format=###*100,1,'.',''}%</td>
+                                <td>{$stats['3GP']|number_format=###*100,1,'.',''}%</td>
+                                <td>{$stats['FTP']|number_format=###*100,1,'.',''}%</td>
+                                <td>{$stats['Turnover']|number_format=###,1,'.',''}</td>
+                                <td>{$stats['Foul']|number_format=###,1,'.',''}</td>
+                        </tr>
+                    {/volist}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+>>>>>>> 37313bc (Initial commit)

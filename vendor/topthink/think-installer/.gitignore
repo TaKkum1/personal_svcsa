@@ -1,3 +1,8 @@
+<<<<<<< HEAD
 /.idea
 composer.lock
+=======
+/.idea
+composer.lock
+>>>>>>> 37313bc (Initial commit)
 /vendor

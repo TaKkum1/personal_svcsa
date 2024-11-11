@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!-- 内容主体区域 -->
 <link rel="stylesheet" href="layui/css/layui.css">
 <style>.layui-table-cell {
@@ -196,3 +197,203 @@
         });
     });
 </script>
+=======
+<!-- 内容主体区域 -->
+<link rel="stylesheet" href="layui/css/layui.css">
+<style>.layui-table-cell {
+    height: 40px;
+    line-height: 40px;
+}
+
+.layui-table-cell img {
+    max-height: 70px;
+}</style>
+<div style="padding: 15px;">
+    <div class="layui-tab">
+        <div class="layui-tab-content">
+            <div class="" style="">
+                <div class="layui-input-inline">
+                    <button id="add" class="layui-btn layui-btn-normal">新建比赛项目</button>
+                </div>
+            </div>
+            <table class="layui-hide" id="test" lay-filter="test"></table>
+            <div id="demo0"></div>
+            <script type="text/html" id="toolbarDemo">
+            </script>
+            <script type="text/html" id="show-img">
+                <img src="../uploads/{{d.Picture}}" alt="图片名">
+            </script>
+            <script type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </script>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    function hoverOpenImg() {
+        var img_show = null; // tips提示
+        $('td img').hover(function () {
+            var kd = $(this).width();
+            kd1 = kd * 3;          //图片放大倍数
+            kd2 = kd * 3 + 30;       //图片放大倍数
+            var img = "<img class='img_msg' src='" + $(this).attr('src') + "' style='width:" + kd1 + "px;' />";
+            img_show = layer.tips(img, this, {
+                tips: [2, 'rgba(41,41,41,.5)']
+                , area: [kd2 + 'px']
+            });
+        }, function () {
+            layer.close(img_show);
+        });
+        $('td img').attr('style', 'max-width:70px;display:block!important');
+    }
+
+    layui.use(['table', 'form'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        table.render({
+            elem: '#test',
+            url: '../bbcompetition',
+            parseData: function (res) {
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": '', //解析提示文本
+                    "count": res.totalcount, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            },
+            limit: 20,
+            page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                layout: ['count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+                //,curr: 5 //设定初始在第 5 页
+                , groups: 1 //只显示 1 个连续页码
+                , first: false //不显示首页
+                , last: false //不显示尾页
+
+            },
+            layout: ['prev', 'page', 'next', 'skip', 'count'],
+            method: 'get',
+            request: {
+                pageName: 'page' //页码的参数名称，默认：page
+                ,limitName: 'pagesize' //每页数据量的参数名，默认：limit
+            },
+            contentType: 'application/json',
+            // toolbar: '#toolbarDemo',
+            title: '用户数据表',
+            cols: [
+                [{
+                    field: 'ID',
+                    title: 'ID',
+                    width: 80,
+                    fixed: 'left',
+                    unresize: true,
+                    sort: true,
+                }, {
+                    field: 'Name',
+                    title: '项目名称',
+                    width: 200,
+                }, {
+                    field: 'Picture',
+                    title: '项目相片',
+                    templet: '#show-img',
+                    width: 150,
+                },
+                    {
+                        field: 'Description',
+                        title: '项目说明',
+                        width: 150,
+                    }, {
+                    title: '操作',
+                    width: 150,
+                    toolbar: '#barDemo'
+                }
+                ]
+            ], done: function (res, curr, count) {
+                hoverOpenImg();//显示大图
+                $('table tr').on('click', function () {
+                    $('table tr').css('background', '');
+                    $(this).css('background', '<%=PropKit.use("config.properties").get("table_color")%>');
+                });
+            }
+        });
+        $("#add").click(function () {
+            layer.open({
+                type: 2,
+                title: '新建比赛项目',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['45%', '80%'],
+                offset: '50px',
+                content: 'bb_competition_add.html',
+                success: function (layero, index) {
+                    layer.iframeAuto(index);
+                },
+                end: function () {
+                    location.reload();
+                }
+            });
+        })
+        table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if (layEvent === 'edit') { //查看
+                console.log(obj.data);
+                layer.open({
+                    type: 2,
+                    title: '修改比赛项目',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['45%', '80%'],
+                    offset: '50px',
+                    content: 'bb_competition_edit.html',
+                    success: function (layero, index) {
+                        layer.iframeAuto(index);
+                        var body = layer.getChildFrame('body', index);
+                        body.find('#Name').val(obj.data.Name)
+                        body.find('#Description').val(obj.data.Description)
+                        body.find('#ID').val(obj.data.ID)
+                        body.find('#demo1').attr("src", "../uploads/" + data.Picture)
+                        body.find('#Picture').val(obj.data.Picture)
+                    },
+                    end: function () {
+                        location.reload();
+                    }
+                });
+            } else if (layEvent === 'del') {
+                layer.confirm('确认删除', {
+                    btn: ['确认', '取消'] //按钮
+                }, function () {
+                    $.ajax({
+                        url: '../bbcompetition/' + data.ID,
+                        //url:"../bbcompetition",
+                        type: 'delete',
+                        dataType: 'json',
+                        header: {
+                            Accept: 'application/json'
+                        },
+                        success: function (data) {
+                            console.log(data)
+                        },
+                        error: function (xhr) {
+                            if (xhr.status == 401)
+							top.location.href = 'login.html';
+                        }
+                    });
+                    layer.msg('删除成功', {
+                        icon: 1,
+                        time: 1200
+                    }, function () {
+                        location.reload();
+                    });
+                }, function () {
+                });
+            }
+        });
+    });
+</script>
+>>>>>>> 37313bc (Initial commit)

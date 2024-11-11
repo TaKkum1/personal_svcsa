@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!-- 内容主体区域 -->
 <link rel="stylesheet" href="layui/css/layui.css">
 <style>
@@ -533,3 +534,540 @@
 
     });
 </script>
+=======
+<!-- 内容主体区域 -->
+<link rel="stylesheet" href="layui/css/layui.css">
+<style>
+    .layui-form-checkbox[lay-skin="primary"]{
+        height: 80px;
+        line-height: 80px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    .layui-table-cell {
+        height: 80px;
+        line-height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .layui-table-cell img {
+        max-height: 70px;
+    }
+    .layui-tab-content {
+    display: flex; /* Use flexbox to align children inline */
+    align-items: center; /* Align items vertically in the center */
+    justify-content: start; /* Align children to the start of the container */
+    flex-wrap: nowrap; /* Prevent wrapping of items */
+    }
+
+    .layui-btn { /* Adjust button styling if necessary */
+        margin-right: 10px; /* Add margin between buttons */
+    }
+
+</style>
+<div style="padding: 15px;">
+    <div class="layui-tab">
+        <div class="layui-tab-content" style="display: flex; align-items: center; justify-content: start; flex-wrap: nowrap;">
+            <button id="tongguoAll" class="layui-btn layui-btn-normal">审核通过</button>
+            <button id="add" class="layui-btn layui-btn-normal">新建球队</button>
+            <button id="confirmDelete" class="layui-btn layui-btn-normal">确认删除</button>
+            <form class="layui-form" action="" style="margin-left: 10px;">
+                <select id="Season" name="city" lay-verify="" lay-filter="Season">
+                    <option value="">选择赛季</option>
+                </select>
+            </form>
+        </div>
+        
+        <!-- <div class="layui-tab-content">
+            <div class="layui-input-inline" style="">
+                <div class="layui-input-inline">
+                    <button id="tongguoAll" class="layui-btn layui-btn-normal">审核通过</button>
+                </div>
+            </div>
+            <div class="layui-input-inline" style="">
+                <div class="layui-input-inline">
+                    <button id="add" class="layui-btn layui-btn-normal">新建球队</button>
+                </div>
+            </div>
+            <div class="layui-input-inline" style="">
+                <div class="layui-input-inline">
+                    <button id="confirmDelete" class="layui-btn layui-btn-normal">确认删除</button>
+                </div>
+            </div>
+        </div>
+               
+            <div class="layui-input-inline">
+                <form class="layui-form" action="">
+                    <select id="Season" name="city" lay-verify="" lay-filter="Season">
+                        <option value="">选择赛季</option>
+                    </select>
+                </form>
+            </div> -->
+            <table class="layui-hide" id="test" lay-filter="test"></table>
+            <script type="text/html" id="toolbarDemo">
+            </script>
+            <script type="text/html" id="show-img">
+                <img src="../uploads/{{d.LogoSrc}}" alt="图片名">
+            </script>
+            <script type="text/html" id="show-img2">
+                <img src="../uploads/{{d.PhotoSrc}}" alt="图片名">
+            </script>
+            <script type="text/html" id="add_player">
+                {{#  if(d.Approval==0){ }}
+                <a class="layui-btn layui-btn-xs" lay-event="add_player">添加球员</a>
+                {{#  } else { }}
+                <a class="layui-btn layui-btn-disabled" lay-event="add_player">添加球员</a>
+                {{#  } }}
+            </script>
+            <script type="text/html" id="search_player">
+                <a class="layui-btn layui-btn-xs" lay-event="search_player">球员管理</a>
+            </script>
+            <script type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-xs" lay-event="search_player">球员管理</a>
+                <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </script>
+            <script type="text/html" id="shenhe">
+                {{#  if(d.Approval==0){ }}
+                <a class="layui-btn layui-btn layui-btn-xs" lay-event="tongguo">通过</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="bohui">驳回</a>
+
+                {{#  } else { }}
+                <a class="layui-btn layui-btn-disabled layui-btn-xs">已通过</a>
+                {{#  } }}
+            </script>
+            <script type="text/html" id="Approval">
+                {{#  if(d.Approval==0){ }}
+                申请中
+                {{#  } else { }}
+                通过申请
+                {{#  } }}
+            </script>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    function tongguo(ids, passed) {
+      console.log(ids);
+      console.log(passed);
+        $.ajax({
+            url: '../bbteam/passapp',
+            type: 'Post',
+            dataType: 'json',
+            data: {
+                TeamIDs: ids,
+                Passed: passed
+            },
+            header: {
+                Accept: 'application/json'
+            },
+            success: function (data) {
+                    layer.msg('成功审核通过' + data['affectedRows']  + '个球队，发送了' + data['affectedEmails'] +'个邮件', {
+                        icon: 1,
+                        time: 1200
+                    }, function () {
+                        location.reload();
+                    });
+            },
+            error: function (xhr) {
+                if (xhr.status == 401)
+							top.location.href = 'login.html';
+            }
+        });
+    }
+
+    layui.use(['table', 'form'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        table.render({
+            elem: '#test',
+            url: '../BBTeam',
+            parseData: function (res) {
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": '', //解析提示文本
+                    "count": res.totalcount, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            },
+            method: 'get',
+            request: {
+                pageName: 'page' //页码的参数名称，默认：page
+                ,limitName: 'pagesize' //每页数据量的参数名，默认：limit
+            },
+            title: '用户数据表',
+            cols: [
+                [{
+                    type: 'checkbox',
+                    fixed: 'left',
+                    width: 90
+                },
+                    {
+                        field: 'ID',
+                        title: 'ID',
+                        width: 70,
+                        fixed: 'left',
+                        unresize: true,
+                        sort: true,
+                    }, {
+                    field: 'Name',
+                    title: '队伍名称',
+                    width: 200,
+                }
+                    // , {
+                    //     field: 'ShortName',
+                    //     title: '短队名',
+                    //     width: 100,
+                    // }
+                    , {
+                    field: 'Captain',
+                    title: '队长名',
+                    width: 150,
+                }
+                    // , {
+                    //     field: 'Email',
+                    //     title: '队长联系方式-电子邮件',
+                    //     width: 150,
+                    // }
+                    , {
+                    field: 'Tel',
+                    title: '队长手机',
+                    width: 150,
+                }
+                    // , {
+                    //     field: 'Wechat',
+                    //     title: '队长联系方式-微信',
+                    //     width: 150,
+                    // }
+                    , {
+                        field: 'LogoSrc',
+                        title: 'Logo',
+                        templet: '#show-img',
+                        width: 100,
+                    }, {
+                        field: 'PhotoSrc',
+                        title: '集体照',
+                        templet: '#show-img2',
+                        width: 100,
+                    }
+                    // , {
+                    //     field: 'Wechat',
+                    //     title: '队长联系方式-微信',
+                    //     width: 150,
+                    // }
+                    , {
+                        field: 'TimePreference',
+                        title: '时间偏好',
+                        width: 100,
+                    },
+                    {
+                        field: 'Approval',
+                        title: '通过审核',
+                        templet: '#Flag',
+                        width: 100,
+                    },
+                    {
+                        field: 'SeasonName',
+                        title: '赛季',
+                        width: 120,
+                    },
+                    {
+                        field: 'GroupID',
+                        title: '常规赛小组',
+                        width: 120,
+                    },
+                    {
+                        field: 'PlayoffGroupID',
+                        title: '季后赛小组',
+                        width: 120,
+                    // ,
+                    // {
+                    //     title: '添加球员',
+                    //     width: 150,
+                    //     toolbar: '#add_player'
+                    // }
+                    // , {
+                    //     title: '球员管理',
+                    //     width: 150,
+                    //     toolbar: '#search_player'
+                    // }
+                    }, {
+                    title: '审核',
+                    width: 130,
+                    toolbar: '#shenhe'
+                }
+                    , {
+                    title: '操作',
+                    width: 200,
+                    toolbar: '#barDemo'
+                }]
+            ],
+            limit: 20,
+            page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                layout: ['count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+                //,curr: 5 //设定初始在第 5 页
+                , groups: 1 //只显示 1 个连续页码
+                , first: false //不显示首页
+                , last: false //不显示尾页
+
+            }
+        });
+        $('#tongguoAll').click(function () {
+            var mycars = ''
+            var data = table.checkStatus('test').data; //idTest 即为基础参数 id 对应的值
+            mycars = '';
+            if (data.length === 0) {
+                layer.alert('请至少选择一个项目')
+            } else {
+                for (var i = 0; i < data.length; i++) {
+                    if (i === data.length - 1) {
+                        if (data[i].Approval === 0) {
+                            mycars += data[i].ID
+                        }
+                    } else {
+                        if (data[i].Approval === 0) {
+                            mycars += data[i].ID + ','
+                        }
+                    }
+                }
+                tongguo(mycars, 1)
+            }
+
+        })
+        $("#add").click(function () {
+            var bb_index = layer.open({
+                type: 2,
+                title: '新建球队',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['100%', '100%'],
+                content: 'bb_team_add.html',
+                success: function (layero, index) {
+                    // layer.iframeAuto(index);
+                },
+                end: function () {
+                    location.reload();
+                }
+            });
+            layer.full(bb_index);
+            window.sessionStorage.setItem("bb_index", bb_index);
+            //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+            $(window).on("resize", function () {
+                layer.full(window.sessionStorage.getItem("bb_index"));
+            })
+        })
+        $('#confirmDelete').click(function () {
+            var checkStatus = table.checkStatus('test'); // 'test' is the table container's ID
+            var data = checkStatus.data; // Get the selected data
+
+            if (data.length === 0) {
+                layer.msg('请至少选择一个球队', {time: 1200, icon: 5});
+                return;
+            }
+
+            // Assemble the selected IDs
+            var idsToDelete = data.map(function(item) {
+                return item.ID;
+            }).join(',');
+
+            layer.confirm('确认删除选中的球队信息？', {
+                btn: ['确认', '取消'] //buttons
+            }, function () {
+                $.ajax({
+                    url: '../bbteam/deleteteams', // Assuming you have a backend endpoint for batch deletion
+                    type: 'POST',
+                    contentType: 'application/x-www-form-urlencoded; charset=UTF-8', // Ensure correct content type
+                    data: {
+                        TeamIDs: idsToDelete // Send array of IDs, matching the expected field in your PHP backend
+                    },
+                    success: function (response) {
+                        layer.msg('删除成功', {
+                        //layer.msg('删除成功，共删除' + response.deletedCount + '个球队', {
+                            icon: 1,
+                            time: 1200
+                        }, function () {
+                            table.reload('test'); // Reload the table to reflect changes
+                        });
+                    },
+                    error: function (xhr) {
+                        var errorMsg = xhr.responseJSON && xhr.responseJSON.message ? xhr.responseJSON.message : xhr.statusText;
+                        layer.msg('删除失败: ' + errorMsg, {
+                            icon: 2,
+                            time: 1200
+                        });
+                    }
+                });
+            }, function () {
+                // Action on cancel
+            });
+        });
+        
+        table.on('tool(test)', function (obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if (layEvent === 'edit') { //查看
+                console.log(obj.data);
+                var bb_index = layer.open({
+                    type: 2,
+                    title: '修改篮球球队',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['100%', '100%'],
+                    content: 'bb_team_edit.html',
+                    success: function (layero, index) {
+                        // layer.iframeAuto(index);
+                        var body = layer.getChildFrame('body', index);
+                        body.find('#Name').val(data.Name)
+                        body.find('#ShortName').val(data.ShortName)
+                        body.find('#Captain').val(data.Captain)
+                        body.find('#Email').val(data.Email)
+                        body.find('#Tel').val(data.Tel)
+                        body.find('#Wechat').val(data.Wechat)
+                        //body.find('#img_url1').val(data.LogoSrc)
+                        //body.find('#img_url2').val(data.PhotoSrc)
+                        if (data.TimePreference == 0) {
+                          body.find('#prefer_all').attr("checked", "true");
+                        } else if (data.TimePreference == 1) {
+                          body.find('#prefer_morning').attr("checked", "true");
+                        } else if (data.TimePreference == 2) {
+                          body.find('#prefer_afternoon').attr("checked", "true");
+                        }
+                        body.find('#PlayoffGroupID').attr("value", data.PlayoffGroupID)
+                        body.find('#GroupID').attr("value", data.GroupID)
+                        body.find('#demo1').attr("src", "../uploads/" + data.LogoSrc)
+                        body.find('#demo2').attr("src", "../uploads/" + data.PhotoSrc)
+                        body.find('#ID').val(data.ID)
+                        body.find('#SeasonID').val(data.SeasonID)
+                        body.find('#Description').val(data.Description)
+                        //body.find("input[name='Approval']").get(parseInt(data.Approval)).checked = true
+
+                    },
+                    end: function () {
+                        location.reload();
+                    }
+                });
+                layer.full(bb_index);
+                window.sessionStorage.setItem("bb_index", bb_index);
+                //改变窗口大小时，重置弹窗的宽高，防止超出可视区域（如F12调出debug的操作）
+                $(window).on("resize", function () {
+                    layer.full(window.sessionStorage.getItem("bb_index"));
+                })
+            } else if (layEvent === 'add_player') {
+                layer.open({
+                    type: 2,
+                    title: '添加球员',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['50%', '80%'],
+                    content: 'bb_team_player_add.html?id=' + data.ID,
+                    success: function (layero, index) {
+                    },
+                    end: function () {
+                        location.reload();
+                    }
+                });
+            } else if (layEvent === 'search_player') {//球员管理
+                var contenturl = 'bb_team_player_search.html?id=';
+                contenturl += data.ID;
+                contenturl += "&playerids=";
+                contenturl += (data.PlayerIDs==null?"":data.PlayerIDs);
+                contenturl += "&playernums=";
+                contenturl += (data.PlayerNumbers==null?"":data.PlayerNumbers);
+                contenturl += "&teamid=";
+                contenturl += data.ID;
+                contenturl += "&passed=";
+                contenturl += data.Approval;
+                contenturl += "&seasonid=";
+                contenturl += data.SeasonID;
+                var ly = layer.open({
+                    type: 2,
+                    title: '球员管理',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['100%', '100%'],
+                    content: contenturl,
+                    success: function (layero, index) {
+                    },
+                    end: function () {
+
+                    }
+                });
+                layer.full(ly)
+            } else if (layEvent === 'del') {
+                layer.confirm('确认删除', {
+                    btn: ['确认', '取消'] //按钮
+                }, function () {
+                    $.ajax({
+                        url: '../BBTeam/' + data.ID,
+                        type: 'delete',
+                        dataType: 'json',
+                        header: {
+                            Accept: 'application/json'
+                        },
+                        success: function (data) {
+                            console.log(data)
+                        },
+                        error: function (xhr) {
+                            if (xhr.status == 401)
+							top.location.href = 'login.html';
+                        }
+                    });
+                    layer.msg('删除成功', {
+                        icon: 1,
+                        time: 1200
+                    }, function () {
+                        location.reload();
+                    });
+                }, function () {
+                });
+            } else if (layEvent === 'tongguo') {
+                layer.confirm('确认要审核通过吗？', {
+                    btn: ['确认', '取消'] //按钮
+                }, function () {
+                    layer.msg('正在通过...', {icon: 7});
+                    tongguo(data.ID, 1)
+                }, function () {
+                });
+            } else if (layEvent === 'bohui') {
+                layer.confirm('确认要驳回吗？', {
+                    btn: ['确认', '取消'] //按钮
+                }, function () {
+                    layer.msg('正在驳回...', {icon: 7});
+                    tongguo(data.ID, 0)
+                }, function () {
+                });
+            }
+        });
+        axios.get('../BBSeason', {}).then(function (response) {
+            console.log(response);
+            $.each(response.data.data, function (index, item) {
+                $('#Season').append('<option value="' + item.SeasonID + '">' + item.SeasonName + '</option>');
+            });
+            form.render();
+        })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+        form.on('select(Season)', function (data) {
+            table.reload('test', {
+                // where: { //设定异步数据接口的额外参数，任意设
+                //     // SeasonID: data.value,
+                //     url: '../bbseason/' + data.value + '/bbplayer',
+                // },
+                url: '../bbteam?seasonid=' + data.value,
+                page: {
+                    curr: 1 //重新从第 1 页开始
+                }
+            });
+        });
+
+    });
+</script>
+>>>>>>> 37313bc (Initial commit)

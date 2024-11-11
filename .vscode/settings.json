@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {
   "liveSassCompile.settings.generateMap" : false,
   "liveSassCompile.settings.formats": [
@@ -11,4 +12,19 @@
     "public/scss/main.scss",
   ]
 
+=======
+{
+  "liveSassCompile.settings.generateMap" : false,
+  "liveSassCompile.settings.formats": [
+    {
+      "format": "compressed",
+      "extensionName": ".min.css",
+      "savePath": "public/css/",
+    }
+  ],
+  "liveSassCompile.settings.includeItems": [
+    "public/scss/main.scss",
+  ]
+
+>>>>>>> 37313bc (Initial commit)
 }

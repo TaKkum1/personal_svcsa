@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <link rel="stylesheet" href="layui/css/layui.css">
 
 <body class="childrenBody">
@@ -106,3 +107,113 @@
     </script>
 
 </body>
+=======
+<link rel="stylesheet" href="layui/css/layui.css">
+
+<body class="childrenBody">
+
+    <div style="padding: 15px;">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-block">
+                     <input id="ID" name="ID" type="hidden" name="" value="">
+                    <input id="Username" type="text" name="Username" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+			<div class="layui-form-item">
+                <label class="layui-form-label">原密码</label>
+                <div class="layui-input-block">
+              <input id="OldPassword" type="password" name="OldPassword" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">新密码</label>
+                <div class="layui-input-block">
+                    <input id="Password" type="password" name="Password" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">重复新密码</label>
+                <div class="layui-input-block">
+                    <input id="RePassword" type="password" name="RePassword" lay-verify="regPwd" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+                  <div class="layui-form-item">
+                <label class="layui-form-label">等级</label>
+                <div class="layui-input-block">
+                    <input id="Level" type="text" name="Level" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即修改</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="layui/layui.js"></script>
+    <script>
+              layui.use(['table', 'form'], function() {
+            var table = layui.table;
+            var form = layui.form;
+
+                  form.verify({
+                      regPwd: function(value) {
+                          //获取密码
+                          var pwd = $("#Password").val();
+                          if(!new RegExp(pwd).test(value)) {
+                              return '两次输入的密码不一致';
+                          }
+                      }
+                  });
+
+            form.on('submit(add)', function(data) {
+                var index = parent.layer.getFrameIndex(window.name);
+
+
+                $.ajax({
+                    url:'../Authorization/' + data.field.ID,
+                    type : 'POST',
+                    dataType : 'json',
+                    data : {
+                        Username: data.field.Username,
+                        OldPassword: data.field.OldPassword,
+                        Password: data.field.Password,
+                        Level: data.field.Level,
+                    },
+                    header:{
+                        Accept:'application/json'
+                    },
+                    success:function(data){
+                        if(data.affectedRows==0)
+                            layer.msg('修改失败，请检查密码', {
+                                icon: 5,
+                                time: 1500
+                            }, function() {
+                               return false;
+                            });
+                        else
+                            layer.msg('修改成功', {
+                                icon: 1,
+                                time: 1500
+                            }, function() {
+                                parent.layer.close(index);
+                            });
+                    },
+                    error:function(xhr){
+                        if (xhr.status == 401)
+							top.location.href = 'login.html';
+                    }
+                });
+
+            });
+        });
+    </script>
+
+</body>
+>>>>>>> 37313bc (Initial commit)

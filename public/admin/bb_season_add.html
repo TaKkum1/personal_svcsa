@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <link rel="stylesheet" href="layui/css/layui.css">
 
 <body class="layui-layout-body">
@@ -148,3 +149,155 @@
     </script>
 
 </body>
+=======
+<link rel="stylesheet" href="layui/css/layui.css">
+
+<body class="layui-layout-body">
+
+    <div style="padding: 15px;">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">赛季名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="Name" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-inline">
+                <label class="layui-form-label">赛季开始时间</label>
+                <div class="layui-input-inline">
+                  <input id="StartTime" type="text" name="StartTime" class="layui-input" placeholder="yyyy-MM-dd">
+                </div>
+              </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">球队数量</label>
+                <div class="layui-input-block">
+                    <input type="text" name="TeamNumber" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">常规赛小组数量</label>
+                <div class="layui-input-block">
+                    <input type="text" name="GroupNumber" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">季后赛小组数量</label>
+                <div class="layui-input-block">
+                    <input type="text" name="PlayoffGroupNumber" autocomplete="off" placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">赛制</label>
+                <div class="layui-input-block">
+                    <!--
+                    <input type="text" name="Rules" lay-verify="required" autocomplete="off" placeholder="请输入" class="layui-input">
+                    -->
+                    <select id="Rules" lay-verify="required" name="Rules" lay-filter="myselect">
+                        <option value="1">单循环</option>
+                        <option value="2">双循环</option>
+                        <option value="3">瑞士制</option>
+                        <option value="4">分组单循环</option>
+                    </select>
+                </div>
+            </div>
+
+           <div class="layui-form-item">
+                <label class="layui-form-label">比赛项目</label>
+                <div class="layui-input-block">
+                    <input id="CompetitionID" type="hidden" name="" value="">
+                    <select id="CompetitionID_s" lay-verify="required" name="CompetitionID" lay-filter="myselect">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+
+
+
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" type="button" lay-submit="" lay-filter="add">立即添加</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="layui/layui.js"></script>
+    <script>
+             layui.use(['table', 'form','laydate',], function() {
+              var laydate = layui.laydate;
+            var table = layui.table;
+            var form = layui.form;
+
+                laydate.render({
+                  elem: '#StartTime',
+                  type: 'date'
+                });
+
+            form.on('submit(add)', function(data) {
+                var index = parent.layer.getFrameIndex(window.name);
+                $.ajax({
+                    url:'../BBCompetition/'+data.field.CompetitionID+'/BBSeason' ,
+                    type : 'POST',
+                    dataType : 'json',
+                    data : {
+                        Name: data.field.Name,
+                        StartTime: data.field.StartTime,
+                        TeamNumber: data.field.TeamNumber,
+                        GroupNumber: data.field.GroupNumber,
+                        PlayoffGroupNumber: data.field.PlayoffGroupNumber,
+                        Rules: data.field.Rules,
+                        CompetitionID: data.field.CompetitionID,
+                    },
+                    header:{
+                        Accept:'application/json'
+                    },
+                    success:function(data){
+                        layer.msg('添加成功', {
+                            icon: 1,
+                            time: 1500
+                        }, function() {
+                            parent.layer.close(index);
+                        });
+                    },
+                    error:function(xhr){
+                        if (xhr.status == 401)
+							top.location.href = 'login.html';
+                    }
+                });
+
+            });
+
+                               axios.get('../bbcompetition', {}).then(function(response) {
+                    console.log(response);
+                    $.each(response.data.data, function(index, item) {
+                $('#CompetitionID_s').append('<option value="' + item.ID + '">' + item.Name + '</option>');
+                    });
+                    form.render();
+                    var num = $("#CompetitionID").val();
+                    var numbers = $("#CompetitionID_s").find("option"); //获取select下拉框的所有值
+                    console.log(numbers);
+                    for (var j = 1; j < numbers.length; j++) {
+                        console.log(numbers);
+                        if ($(numbers[j]).val() == num) {
+                            console.log('ok');
+                            $(numbers[j]).attr("selected", "selected");
+                            $(numbers[j]).attr("class", "layui-this");
+                            form.render();
+                        }
+                    }
+                })
+
+                .catch(function(error) {
+                    console.log(error);
+                });
+
+
+        });
+    </script>
+
+</body>
+>>>>>>> 37313bc (Initial commit)

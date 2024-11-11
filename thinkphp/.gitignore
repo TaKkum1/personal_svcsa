@@ -1,4 +1,11 @@
+<<<<<<< HEAD
 /composer.lock
 /vendor
 .idea
 .DS_Store
+=======
+/composer.lock
+/vendor
+.idea
+.DS_Store
+>>>>>>> 37313bc (Initial commit)

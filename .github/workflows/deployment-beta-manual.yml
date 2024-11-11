@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 on: workflow_dispatch
 name: 🚀 Test deployment on beta branch 
@@ -31,3 +32,38 @@ jobs:
           .env
           nginx.conf
           application/database.php
+=======
+
+on: workflow_dispatch
+name: 🚀 Test deployment on beta branch 
+jobs:
+  web-deploy:
+    name: 🎉 Deploy
+    runs-on: ubuntu-latest
+    steps:
+    - name: 🚚 Get latest code
+      uses: actions/checkout@v3
+      with:
+        ref: beta
+
+    - name: 📂 Sync files
+      uses: SamKirkland/FTP-Deploy-Action@4.3.3
+      with:
+        server: svcsa.org
+        username: phpapi
+        password: ${{ secrets.Ftp_Password }}
+        server-dir: ./svcsa/svcsa-beta/
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/node_modules/**
+          **/.vscode/**
+          **/db_backup/**
+          extend/**
+          runtime/**
+          thinkphp/**
+          vendor/**
+          .env
+          nginx.conf
+          application/database.php
+>>>>>>> 37313bc (Initial commit)

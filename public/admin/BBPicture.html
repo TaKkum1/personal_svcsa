@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!-- 内容主体区域 -->
 <link rel="stylesheet" href="layui/css/layui.css">
 <script type="application/javascript" src="public/jquery.min.js"></script>
@@ -189,3 +190,196 @@
 
     });
 </script>
+=======
+<!-- 内容主体区域 -->
+<link rel="stylesheet" href="layui/css/layui.css">
+<script type="application/javascript" src="public/jquery.min.js"></script>
+<div style="padding: 15px;">
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">比赛视频图片</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="layui-input-inline" style="">
+                <div class="layui-input-inline">
+                    <button id="add" class="layui-btn layui-btn-normal">新建篮球视频图片</button>
+                </div>
+            </div>
+            <table class="layui-hide" id="test" lay-filter="test"></table>
+            <script type="text/html" id="toolbarDemo">
+            </script>
+
+        </div>
+    </div>
+
+
+    <div class="layui-form">
+        <table class="layui-table">
+            <colgroup>
+                <col width="150">
+                <col width="150">
+                <col width="150">
+                <col width="200">
+                <col width="150">
+                <col>
+            </colgroup>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>图像</th>
+                <th>图像类型</th>
+                <th>图像说明</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="l_data">
+
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="layui/layui.js"></script>
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>-->
+<script>
+    //     url传参获取
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null)
+            return unescape(r[2]);
+        return null; //返回参数值
+    }
+
+    $(document).ready(function () {
+//        var xx = getUrlParam('MatchID');
+//        console.log(xx);
+        $.ajax({
+            type: "GET",
+            url: "../bbpicture?matchid=" + getUrlParam('MatchID'),
+            data: {},
+            dataType: "json",
+            async: false,
+            headers: {
+                Accept: "application/json" //设置header头
+            },
+
+            success: function (data) {
+                var data = data.data;
+                if (data.length > 0) {
+                    var src = "";
+                    for (var i = 0; i < data.length; i++) {
+                        var id = data[i].ID;
+                        var Src = data[i].Src
+                        var Description = data[i].Description
+                        src += "<tr>";
+                        src += "<td>" + data[i].ID + "</td>";
+                        if(data[i].Flag=="1" && data[i].Src) {
+                            var srcstr = data[i].Src;
+                            var youtubecode = srcstr.substring(srcstr.length-11);
+                            src += "<td><iframe width=\"100\" height=\"100\" src=\"https://www.youtube.com/embed/" + youtubecode + "\" frameborder=\"0\" allow=\"accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture\" allowfullscreen></iframe></td>";
+                        } else {
+                            src += "<td><img style='width: 30px;height: 30px;' src='../uploads/" + data[i].Src + "'/></td>";
+                        }
+                        src += "<td>" + (data[i].Flag=="1"?"视频":"图片") + "</td>";
+                        src += "<td><a>"+data[i].Description + "</a></td>";
+                        src += "<td>" + '<button data-desc=' + data[i].Description + ' data-src="' + data[i].Src + '"  data-id="' + data[i].ID + '"   class="layui-btn layui-btn-normal layui-btn-sm edit">修改</button><button data-id="' + data[i].ID + '" class="layui-btn layui-btn-normal layui-btn-sm del">删除</button></td>';
+                        src += "</tr>";
+                    }
+                    $("#l_data").html(src);
+                }
+
+
+            }
+
+        });
+
+        function edit(id) {
+            alert(id);
+        }
+    });
+
+    layui.use(['table', 'form'], function () {
+
+        var table = layui.table;
+        var form = layui.form;
+
+        $("#add").click(function () {
+            layer.open({
+                type: 2,
+                title: '新建视频图片',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['40%', '70%'],
+                content: 'BBPicture_add.html?MatchID=' + getUrlParam('MatchID'),
+                success: function (layero, index) {
+
+                },
+                end: function () {
+                    location.reload();
+                }
+            });
+        })
+        $(".edit").click(function () {
+            var id = $(this).attr('data-id')
+            var src = $(this).attr('data-src')
+            var desc = $(this).attr('data-desc')
+//            alert(id)
+//             alert(src)
+//              alert(desc)
+            layer.open({
+                type: 2,
+                title: '修改视频图片',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['40%', '50%'],
+                //                怎么获取到id
+                content: 'BBPicture_edit.html?edit_id=' + id,
+                success: function (layero, index) {
+                    layer.iframeAuto(index);
+                    var body = layer.getChildFrame('body', index);
+                    body.find('#Src').attr("value",src)
+                    body.find('#Description').attr("value", desc)
+                    body.find('#demo1').attr("src", "../uploads/" +src)
+                },
+                end: function () {
+                    location.reload();
+                }
+            });
+        })
+
+        $(".del").click(function () {
+            var id = $(this).attr('data-id')
+//            alert(id)
+            layer.confirm('确认删除', {
+                btn: ['确认', '取消'] //按钮
+            }, function () {
+                $.ajax({
+                    url: '../bbpicture/' + id,
+                    type: 'delete',
+                    dataType: 'json',
+                    header: {
+                        Accept: 'application/json'
+                    },
+                    success: function (data) {
+                        console.log(data)
+                    },
+                    error: function (xhr) {
+                        if (xhr.status == 401)
+							top.location.href = 'login.html';
+                    }
+                });
+                layer.msg('删除成功', {
+                    icon: 1,
+                    time: 1200
+                }, function () {
+                    location.reload();
+                });
+            }, function () {
+            });
+
+        })
+
+
+    });
+</script>
+>>>>>>> 37313bc (Initial commit)

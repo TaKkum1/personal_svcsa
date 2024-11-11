@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!-- 内容主体区域 -->
 <link rel="stylesheet" href="layui/css/layui.css">
 <div style="padding: 15px;">
@@ -129,3 +130,136 @@
         });
     });
 </script>
+=======
+<!-- 内容主体区域 -->
+<link rel="stylesheet" href="layui/css/layui.css">
+<div style="padding: 15px;">
+    <div class="layui-tab">
+        <ul class="layui-tab-title">
+            <li class="layui-this">系统</li>
+        </ul>
+        <div class="layui-tab-content">
+            <div class="" style="">
+                <div class="layui-input-inline">
+                    <button id="add" class="layui-btn layui-btn-normal">新建</button>
+                </div>
+            </div>
+            <table class="layui-hide" id="test" lay-filter="test"></table>
+            <script type="text/html" id="toolbarDemo">
+            </script>
+            <script type="text/html" id="show-img">
+
+            </script>
+            <script type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
+            </script>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+    layui.use(['table', 'form'], function() {
+        var table = layui.table;
+        var form = layui.form;
+        table.render({
+            elem: '#test',
+            url: '../System',
+            parseData: function(res) {
+                return {
+                    "code": 0, //解析接口状态
+                    "msg": '', //解析提示文本
+                    "count": 10, //解析数据长度
+                    "data": res.data //解析数据列表
+                };
+            },
+            method: 'get',
+            request: {
+                page: 'curr',
+                pagesize: 'nums' //每页数据量的参数名，默认：limit
+            },
+            contentType: 'application/json',
+            // toolbar: '#toolbarDemo',
+            title: '用户数据表',
+            cols: [
+                [ {
+                        field: 'Contact',
+                        title: '联系方式',
+                        width: 200,
+                    }, {
+                        field: 'POP3',
+                        title: '名称',
+                        width: 200,
+                    }, {
+                        field: 'SMTP',
+                        title: '密码',
+                        width: 150,
+                    },{
+                        field: 'TwilioAuth',
+                        title: 'Twilio服务认证字串',
+                        width: 150,
+                    },{
+                        field: 'TwilioNumber',
+                        title: 'Twilio号码',
+                        width: 150,
+                    } ,{
+                        field: 'TwilioSid',
+                        title: 'Twilio服务账号',
+                        width: 150,
+                    }, {
+                        title: '操作',
+                        width: 150,
+                        toolbar: '#barDemo'
+                    }
+                ]
+            ]
+        });
+        $("#add").click(function() {
+            layer.open({
+                type: 2,
+                title: '新建',
+                shadeClose: true,
+                shade: 0.8,
+                area: ['40%', '80%'],
+                content: 'system_add.html',
+                success: function(layero, index) {
+                    layer.iframeAuto(index);
+                },
+                end: function() {
+                    location.reload();
+                }
+            });
+        })
+        table.on('tool(test)', function(obj) { //注：tool是工具条事件名，test是table原始容器的属性 lay-filter="对应的值"
+            var data = obj.data; //获得当前行数据
+            var layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
+            var tr = obj.tr; //获得当前行 tr 的DOM对象
+
+            if (layEvent === 'edit') { //查看
+                console.log(obj.data);
+                layer.open({
+                    type: 2,
+                    title: '修改',
+                    shadeClose: true,
+                    shade: 0.8,
+                    area: ['50%', '80%'],
+                    content: 'system_edit.html',
+                    success: function(layero, index) {
+                        layer.iframeAuto(index);
+                        var body = layer.getChildFrame('body', index);
+                        body.find('#Contact').val(obj.data.Contact)
+                        body.find('#POP3').val(obj.data.POP3)
+                        body.find('#SMTP').val(obj.data.SMTP)
+                        body.find('#TwilioSid').val(obj.data.TwilioSid)
+                        body.find('#TwilioAuth').val(obj.data.TwilioAuth)
+                        body.find('#TwilioNumber').val(obj.data.TwilioNumber)
+                    },
+                    end: function() {
+                        location.reload();
+                    }
+                });
+            }
+        });
+    });
+</script>
+>>>>>>> 37313bc (Initial commit)

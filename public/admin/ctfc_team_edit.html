@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <link rel="stylesheet" href="layui/css/layui.css">
 
 <body class="layui-layout-body">
@@ -298,3 +299,305 @@
 </script>
 
 </body>
+=======
+<link rel="stylesheet" href="layui/css/layui.css">
+
+<body class="layui-layout-body">
+
+<div style="padding: 15px;">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">队伍名称</label>
+                <div class="layui-input-block">
+                          <input id="ID" name="ID" type="hidden" value="">
+                    <input id="Name" type="text" name="Name" lay-verify="required" autocomplete="off" placeholder="请输入"
+                           class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">短队名</label>
+                <div class="layui-input-block">
+                    <input id="ShortName" type="text" name="ShortName" lay-verify="required" autocomplete="on"
+                           placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+       
+
+            <div class="layui-inline">
+                <label class="layui-form-label">队伍简介</label>
+                <div class="layui-input-block">
+                    <input id="Description" type="text" name="description" lay-verify="required" autocomplete="on"
+                           placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">队长名</label>
+                <div class="layui-input-block">
+                    <input id="CaptainName" type="text" name="CaptainName" lay-verify="required" autocomplete="on"
+                           placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            
+            <div class="layui-inline">
+                <label class="layui-form-label">队长-电子邮件</label>
+                <div class="layui-input-block">
+                    <input id="CaptainEmail" type="text" name="email" lay-verify="required" autocomplete="on"
+                           placeholder="请输入" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-inline">
+                <label class="layui-form-label">队长手机</label>
+                <div class="layui-input-block">
+                    <input id="CaptainPhone" type="text" name="CaptainPhone" lay-verify="required" autocomplete="on"
+                           placeholder="请输入" class="layui-input">
+                </div>
+        </div>
+        
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">Logo</label>
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" id="test1">上传logo</button>
+                    <input type="hidden" id="LogoSrc" name="LogoSrc" value=""/>
+                    <input type="hidden" id="LogoSelected" value=""/>
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" width="100px" height="80px" id="demo1"/>
+                        <p id="demoText1"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">集体照</label>
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" id="test2">上传图片</button>
+                    <input type="hidden" id="PhotoSrc" name="PhotoSrc" value=""/>
+                    <input type="hidden" id="PhotoSelected" value=""/>
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" width="100px" height="80px" id="demo2"/>
+                        <p id="demoText2"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" type="button" lay-submit="" lay-filter="add" id="commit">立即修改</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+<script src="layui/layui.js"></script>
+<script>
+
+    layui.use(['table', 'form', 'upload'], function () {
+        var table = layui.table;
+        var form = layui.form;
+        var $ = layui.jquery;
+        var upload = layui.upload;
+        var apiurl = '../ctfcteam/' + $('input[name="ID"]').val();
+       
+        var uploadInst = upload.render({
+            elem: '#test1',
+            url: "../uploadimage",
+            acceptMime: 'image/*',
+            auto:false,
+            multiple: true,
+            before: function (obj) {
+                
+                this.data = {
+                    Name: $('input[name="Name"]').val(),
+                    ShortName: $('input[name="ShortName"]').val(),
+                    Description: $('input[name="description"]').val(),
+                    CaptainName:$('input[name="CaptainName"]').val(),
+                    CaptainEmail:$('input[name="email"]').val(),
+                    CaptainPhone:$('input[name="CaptainPhone"]').val(),
+                    LogoSrc: $('input[name="LogoSrc"]').val(),
+                    PhotoSrc: $('input[name="PhotoSrc"]').val(),
+                }
+            },
+            //选择文件后的回调
+            choose: function (obj) {
+                obj.preview(function (index, file, result) {
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                    $('#LogoSelected').val('selected');
+                })
+            },
+            done: function (res) {
+                var index = parent.layer.getFrameIndex(window.name);
+
+                //如果上传失败
+                if (res.status == '0') {
+                    return layer.msg('上传图片失败，请检查网络。');
+                }
+                //上传成功
+                console.log(res);
+                picture = res.data.savename;
+                $("#LogoSrc").attr("value", picture);
+                axios.post('../ctfcteam/' + $('input[name="ID"]').val(), {
+                Name: $('input[name="Name"]').val(),
+                ShortName: $('input[name="ShortName"]').val(),
+                Description: $('input[name="description"]').val(),
+                CaptainName:$('input[name="CaptainName"]').val(),
+                CaptainEmail:$('input[name="email"]').val(),
+                CaptainPhone:$('input[name="CaptainPhone"]').val(),
+                LogoSrc: $('input[name="LogoSrc"]').val(),
+                PhotoSrc: $('input[id="demo2"]').val()
+            })
+            .then(function (response) {
+                    layer.msg('修改成功', {
+                        icon: 1,
+                        time: 1500
+                    }, function () {
+                        parent.layer.close(index);
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
+            error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText1');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    console.log("uploadInst.upload");
+                    uploadInst.upload();
+                });
+            }
+        });
+
+        var uploadInst2 = upload.render({
+            elem: '#test2',
+            url: "../uploadimage",
+            acceptMime: 'image/*',
+            auto:false,
+            multiple: true,
+            before: function (obj) {
+                this.data = {
+                    Name: $('input[name="Name"]').val(),
+                    ShortName: $('input[name="ShortName"]').val(),
+                    Description: $('input[name="description"]').val(),
+                    CaptainName:$('input[name="CaptainName"]').val(),
+                    CaptainEmail:$('input[name="email"]').val(),
+                    CaptainPhone:$('input[name="CaptainPhone"]').val(),
+                    LogoSrc: $('input[name="LogoSrc"]').val(),
+                    PhotoSrc: $('input[name="PhotoSrc"]').val(),
+                }
+            },
+            //选择文件后的回调
+            choose: function (obj) {
+                obj.preview(function (index, file, result) {
+                    $('#demo2').attr('src', result); //图片链接（base64）
+                    $('#PhotoSelected').val('selected');
+                })
+            },
+            done: function (res) {
+                var index = parent.layer.getFrameIndex(window.name);
+
+                //如果上传失败
+                if (res.status == '0') {
+                    return layer.msg('上传图片失败，请检查网络。');
+                }
+                //上传成功
+                console.log(res);
+                picture = res.data.savename;
+                $("#PhotoSrc").attr("value", picture);
+                axios.post('../ctfcteam/' + $('input[name="ID"]').val(), {
+                Name: $('input[name="Name"]').val(),
+                ShortName: $('input[name="ShortName"]').val(),
+                Description: $('input[name="description"]').val(),
+                CaptainName:$('input[name="CaptainName"]').val(),
+                CaptainEmail:$('input[name="email"]').val(),
+                CaptainPhone:$('input[name="CaptainPhone"]').val(),
+                LogoSrc: $('input[id="demo1"]').val(),
+                PhotoSrc: $('input[name="PhotoSrc"]').val()
+            })
+            .then(function (response) {
+                    layer.msg('修改成功', {
+                        icon: 1,
+                        time: 1500
+                    }, function () {
+                        parent.layer.close(index);
+                    });
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            },
+            
+            error: function () {
+                //演示失败状态，并实现重传
+                var demoText = $('#demoText2');
+                demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                demoText.find('.demo-reload').on('click', function () {
+                    console.log("uploadInst2.upload");
+                    uploadInst2.upload();
+                });
+            }
+        });
+
+        form.verify({
+            // chkbirth: [/^\d{1,4}-\d{1,2}-\d{1,2}$/, '生日必须是YYYY-MM-dd格式！'],
+            chkphotoupl: function(value) {
+                if(value=="") {
+                    alert('图片上传较慢请等待10秒后，再点击添加按钮。');
+                    return '图片上传较慢请等待10秒后，再尝试。';
+                }
+            }
+        });
+
+        form.on('submit(add)', function (data) {
+            if ($('input[id="PhotoSelected"]').val()!="" && $('input[id="LogoSelected"]').val()!="") {
+                uploadInst2.upload();
+                uploadInst.upload();
+                return;
+            } else if ($('input[id="PhotoSelected"]').val() != "") {
+                uploadInst2.upload();
+                return;
+            } else if ($('input[id="LogoSelected"]').val() != "") {
+                uploadInst.upload();
+                return;
+            } 
+                console.log("the third axios.post");
+                var index = parent.layer.getFrameIndex(window.name);
+                axios.post('../ctfcteam/' + $('input[name="ID"]').val(), {
+                    Name: $('input[name="Name"]').val(),
+                    ShortName: $('input[name="ShortName"]').val(),
+                    Description: $('input[name="description"]').val(),
+                    CaptainName:$('input[name="CaptainName"]').val(),
+                    CaptainEmail:$('input[name="email"]').val(),
+                    CaptainPhone:$('input[name="CaptainPhone"]').val(),
+                    LogoSrc: $('input[id="demo1"]').val(),
+                    PhotoSrc: $('input[id="demo2"]').val()
+            })
+            .then(function (response) {
+                    layer.msg('修改成功', {
+                        icon: 1,
+                        time: 1500
+                    }, function () {
+                        parent.layer.close(index);
+                    });
+                })
+            .catch(function (error) {
+                    console.log(error);
+                });
+            
+
+            if(!form.verify()) return;
+        });
+        
+    });
+</script>
+
+</body>
+>>>>>>> 37313bc (Initial commit)

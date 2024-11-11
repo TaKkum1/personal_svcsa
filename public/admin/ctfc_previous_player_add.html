@@ -1,0 +1,364 @@
+<link rel="stylesheet" href="layui/css/layui.css">
+<body class="childrenBody">
+    <div class="layui-container">
+        <div>
+            <table id="dataTable"  class="layui-hide" lay-filter="dataTableFilter"></table>
+            <button id="addRow" class="layui-btn">添加行</button>
+            <button id="submitData" class="layui-btn layui-btn-normal" lay-filter="add">储存数据</button>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="layui/layui.js"></script>
+    <script>
+        layui.use(['table','form'], function(){
+            var table = layui.table;
+            var form = layui.form;
+            var data = [];
+            for (var i = 0;i<10;i++){
+                data.push({
+                    id:i,
+                    season:'',
+                    teamName:'',
+                    Name:'',
+                    eventName: '',
+                    ageGroupID :'',
+                    Sex: '',
+                    result :  '' ,
+                    timeSpan : '' ,
+                });
+            }
+            table.render ({
+                elem : '#dataTable',
+                cols:[[
+                    {field: 'season', title: '赛季名称', edit :'text',width: 110},
+                    {field: 'teamName',title:'队伍名称',edit: 'text'},
+                    {field: 'Name',title: '运动员姓名',edit:'text'},
+                    {field: 'eventName',title :'项目名称',edit:'text'},
+                    {field: 'ageGroupID', title:'年龄组别', edit : 'text',width:90},
+                    {field: 'Sex',title:'性别',edit:'text',width: 70},
+                    {field: 'result',title: '成绩', edit: 'text',width:100},
+                    {field: 'timeSpan', title: '时间成绩', templet:'#timeSpanTemplate',width:110},
+                    {field: 'operation', title: '操作', toolbar: '#actionButtons',width:65}
+                ]],
+                data: data,
+                page:false,
+                limit : 100,
+                height : 'auto',
+            });
+            document.getElementById('addRow').onclick = function(){
+                var newData={
+                    id : Date.now(),
+                    season:'',
+                    teamName:'',
+                    Name:'',
+                    eventName: '',
+                    ageGroupID :'',
+                    Sex: '',
+                    result :  '' ,
+                    timeSpan : '' ,
+                };
+                data.push(newData);
+                table.reload('dataTable',{
+                    data:data
+                });
+                window.scrollTo(0,document.body.scrollHeight);
+            };
+            document.getElementById('submitData').onclick= function(){
+                var tableData = [];
+                table.on('edit(dataTableFilter)',function(obj){
+                    tableData.push(obj.data);
+                });
+            }
+            form.on('submit(add)', function (data){
+                var index = parent.layer.getFrameIndex(Window.name);
+                axios.post('../ctfc',{
+                    season: $('input[name="season"]').val(),
+                    teamName:$('input[name="teamName"]').val(),
+                    Name:$('input[name="Name"]').val(),
+                    eventName: $('input[name="eventName"]').val(),
+                    ageGroupID :$('input[name="ageGruopID"]').val(),
+                    Sex: $('input[name="Sex"]').val(),
+                    result :  $('input[name="result"]').val() ,
+                    timeSpan : $('input[name="timespan"]').val(),
+                })
+                .then(function(response){
+                    layer.msg('添加成功',{
+                        icon:1,
+                        time:1500
+                    },function(){
+                        parent.layer.close(index);
+                    });
+                })
+                .catch(function(error){
+                    console.log(error);
+                });
+            });
+            table.on('tool(dataTableFilter)', function(obj) {
+                var dataItem = obj.data; // 获取当前行的数据
+                if (obj.event === 'delete') {
+                        // 删除当前行
+                        obj.del();
+                        // 在数据数组中找到并删除该行对应的对象
+                        var index = data.findIndex(item => item.id === dataItem.id); // 使用 findIndex 替换 indexOf
+                        if (index !== -1) {
+                            data.splice(index, 1); // 从数据数组中删除该项
+                        }
+                        table.reload('dataTable', {
+                            data: data
+                        });// 重新渲染表格
+                    layer.msg('删除成功');// 显示删除成功消息
+                }
+            });
+            table.on('edit(dataTableFilter)',function(obj){
+                var value = obj.value;
+                var data= obj.data;
+                var field =obj.field;
+                console.log(valule,data,field);
+            });
+        })
+    </script>
+    <script type="text/html" id="timeSpanTemplate">
+        <input type="text" name="timeSpan" class="layui-input" placeholder="hh:mm:ss" value="">
+    </script>
+    <script type="text/html" id="actionButtons">
+        <button class="layui-btn layui-btn-danger layui-btn-xs" lay-event="delete" >删除</button>
+    </script>
+
+
+ <!-- <div style="padding: 15px;">
+//     <form class="layui-form" action="" id="form1">
+//         <div class = "">
+
+//         </div>
+//         <div class="layui-form-item">
+//             <div class="layui-inline">
+//                 <label class="layui-form-label">赛季</label>
+//                 <div class="layui-input-block">
+//                     <input id="Name" type="text" name="SeasonID"  autocomplete="off" placeholder="请输入"
+//                            class="layui-input">
+//                 </div>
+//             </div>
+//             <div class="layui-inline">
+//                 <label class="layui-form-label">队伍名称</label>
+//                 <div class="layui-input-inline">
+//                     <input id="Sex" type="text" name="TeamName" autocomplete="on"
+//                            placeholder="请输入" class="layui-input">
+//                 </div>
+//             </div>
+//         </div>
+
+
+//         <div class="layui-form-item">
+//             <div class="layui-inline">
+//                 <label class="layui-form-label">运动员姓名</label>
+//                 <div class="layui-input-block">
+//                     <input id="Email" type="text" name="Name"  autocomplete="off"
+//                            placeholder="请输入" class="layui-input">
+//                 </div>
+//             </div>
+//             <div class="layui-inline">
+//                 <label class="layui-form-label">项目名称</label>
+//                 <div class="layui-input-inline">
+//                     <input id="Birthday" type="text" name="Item" class="layui-input" placeholder="请输入">
+//                 </div>
+//             </div>
+//         </div>
+//         <div class="layui-form-item">
+//             <div class="layui-inline">
+//                 <label class="layui-form-label">年龄组别</label>
+//                 <div class="layui-input-block">
+//                     <input id="Name" type="text" name="AgeGroupID" autocomplete="off" placeholder="请输入"
+//                            class="layui-input">
+//                 </div>
+//             </div>
+//             <div class="layui-inline">
+//                 <label class="layui-form-label">性别</label>
+//                 <div class="layui-input-block">
+//                     <input id="Name" type="text" name="Sex"  autocomplete="off" placeholder="请输入"
+//                            class="layui-input">
+//                 </div>
+//             </div>
+//         </div>
+//         <div class="layui-form-item">
+//             <div class="layui-inline">
+//                 <label class="layui-form-label">成绩</label>
+//                 <div class="layui-input-inline">
+//                     <input id="Sex" type="text" name="Result" autocomplete="off"
+//                            placeholder="请输入" class="layui-input">
+//                 </div>
+//             </div>
+//         </div>
+
+        
+//         <div class="layui-form-item">
+//             <div class="layui-input-block">
+//                 <button class="layui-btn" type="button" lay-submit="" lay-filter="add" id="commit">储存</button>
+//             </div>
+//         </div>
+//     </form>
+// </div>
+// <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+// <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+// <script src="layui/layui.js"></script>
+// <script>
+//     layui.use(function(){
+//         var table = layui.table;
+//         var form =layui.form;
+//         var laydate = layui.date;
+//         table.render({
+//             elem : '#test1',
+//             url: '../ctfc_previous_player',
+//             cols: [[
+//                 {type :'Seasonid', title: ''},
+//                 {type : 'TeamName', title: ''},
+//                 {type : 'PlayerName',title:''},
+//                 {type: 'Item', title:''},
+//                 {type: 'AgeGroupID', title: ''},
+//                 {type: 'Sex', title:''},
+//                 {type: 'Result', title:''},
+//                 {type: 'Time_span',title:''}
+//             ]]
+//         }
+
+//         )
+
+
+
+
+//     })
+
+// </script>
+
+
+
+// <script>
+
+//     layui.use(['table', 'form', 'upload', 'laydate'], function () {
+//         var table = layui.table;
+//         var form = layui.form;
+//         var $ = layui.jquery;
+//         var upload = layui.upload;
+//         var laydate = layui.laydate;
+//         var uploadInst = upload.render({
+//             elem: '#test1',
+//             //url: '../CTFCPlayer',
+//             url: "../uploadimage",
+//             acceptMime: 'image/*',
+//             auto:false,
+//             bindAction:'',
+//             multiple: false,
+//             before: function (obj) {
+
+//                 this.data = {
+//                     Name: $('input[name="Name"]').val(),
+//                     Sex: $('input[name="Sex"]').val(),
+//                     Birthday: $('input[name="Birthday"]').val(),
+//                     Email: $('input[name="Email"]').val(),
+//                     Approval:  $('input[name="Approval"]').val()
+
+//                 }
+
+//             },
+//             //选择文件后的回调
+//             choose: function (obj) {
+//                 $("input[name=\"PhotoSrc\"]").attr("value", "");
+//                 obj.preview(function (index, file, result) {
+//                     $('#demo1').attr('src', result); //图片链接（base64）
+//                 })
+//             },
+//             done: function (res) {
+//                 var index = parent.layer.getFrameIndex(window.name);
+
+//                 //如果上传失败
+//                 if (res.status == '0') {
+//                     return layer.msg('上传失败');
+//                 }
+//                 //上传成功
+//                 console.log(res);
+//                 console.log(res.data.savename);
+//                 picture = res.data.savename;
+//                 $("#PhotoSrc").attr("value", picture);
+//                 axios.post('../CTFCPlayer/', {
+//                 Name: $('input[name="Name"]').val(),
+//                 Sex: $('input[name="Sex"]').val(),
+//                 Birthday: $('input[name="Birthday"]').val(),
+//                 PhotoSrc: $('input[name="PhotoSrc"]').val(),
+//                 Email: $('input[name="Email"]').val(),
+//                 Approval:  $('input[name="Approval"]').val()
+
+//             })
+//                 .then(function (response) {
+//                     layer.msg('添加成功', {
+//                         icon: 1,
+//                         time: 1500
+//                     }, function () {
+//                         parent.layer.close(index);
+//                     });
+//                 })
+//                 .catch(function (error) {
+//                     console.log(error);
+//                 });
+//             },
+//             error: function (index,upload) {
+
+//                 return layer.msg('网络异常，新增失败。可能需要重新登录。');
+//             }
+//         });
+
+
+//         form.on('submit(add)', function (data) {
+//             if ($('input[name="file"]').val()!="") {
+//                 uploadInst.upload();
+//                 return;
+//             }
+
+//             if(!form.verify()) return;
+
+//             var index = parent.layer.getFrameIndex(window.name);
+//             axios.post('../CTFCPlayer/', {
+//                 Name: $('input[name="Name"]').val(),
+//                 Sex: $('input[name="Sex"]').val(),
+//                 Birthday: $('input[name="Birthday"]').val(),
+//                 PhotoSrc: $('input[name="PhotoSrc"]').val(),
+//                 Email: $('input[name="Email"]').val(),
+//                 Approval:  $('input[name="Approval"]').val()
+
+//             })
+//                 .then(function (response) {
+//                     layer.msg('添加成功', {
+//                         icon: 1,
+//                         time: 1500
+//                     }, function () {
+//                         parent.layer.close(index);
+//                     });
+//                 })
+//                 .catch(function (error) {
+//                     console.log(error);
+//                 });
+//         });
+
+//         axios.get('../CTFCSeason', {}).then(function (response) {
+//             console.log(response);
+//             $.each(response.data.data, function (index, item) {
+//                 $('#SeasonID_s').append('<option value="' + item.SeasonID + '">' + item.SeasonName + '</option>');
+//             });
+//             form.render();
+//             var num = $("#SeasonID").val();
+//             var numbers = $("#SeasonID_s").find("option"); //获取select下拉框的所有值
+//             console.log(numbers);
+//             for (var j = 1; j < numbers.length; j++) {
+//                 console.log(numbers);
+//                 if ($(numbers[j]).val() == num) {
+//                     console.log('ok');
+//                     $(numbers[j]).attr("selected", "selected");
+//                     $(numbers[j]).attr("class", "layui-this");
+//                     form.render();
+//                 }
+//             }
+//         })
+
+//     });
+// </script> -->
+
+</body> 
