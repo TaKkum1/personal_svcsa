@@ -112,11 +112,7 @@
 				{
 					"title": "历届成绩",
 					"icon": "icon-text",
-<<<<<<< HEAD
-					"href": "ctfc_previous_result.html",
-=======
 					"href": "ctfc_previous_player.html",
->>>>>>> 37313bc (Initial commit)
 					"spread": false
 				}
 			]

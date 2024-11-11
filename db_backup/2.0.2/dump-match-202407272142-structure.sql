@@ -1240,23 +1240,6 @@ CREATE TABLE `system` (
 
 -- Dump completed on 2024-07-27 21:44:35
 
-<<<<<<< HEAD
-DROP TABLE IF EXISTS `ctfc_previousplayer`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `ctfc_Previousplayer` (
-  `SeasonID` int(11) unsigned NOT NULL,
-  `TeamName` varchar(1023) NOT NULL,
-  `Name` varchar(1023) DEFAULT NULL,
-  `Item` varchar(1023) DEFAULT NULL,
-  `Sex` varchar(1023) DEFAULT NULL,
-  `AgeGroupID` int(11) DEFAULT NULL,
-  `Result_Distance/Height` Decimal(100,6) NOT NULL DEFAULT 0,
-  `Result_Time` Time(4) NOT NULL DEFAULT '00:00:00',
-  PRIMARY KEY (`SeasonID`, `TeamID`, `Name`,`ItemID`)
-) ENGINE=InnoDB CHARSET=utf8 ROW_FORMAT=COMPACT;
-/*!40101 SET character_set_client = @saved_cs_client */;
-=======
 -- DROP TABLE IF EXISTS `ctfc_previousplayer`;
 -- /*!40101 SET @saved_cs_client     = @@character_set_client */;
 -- /*!50503 SET character_set_client = utf8mb4 */;
@@ -1272,4 +1255,3 @@ CREATE TABLE `ctfc_Previousplayer` (
 --   PRIMARY KEY (`SeasonID`, `TeamID`, `Name`,`ItemID`)
 -- ) ENGINE=InnoDB CHARSET=utf8 ROW_FORMAT=COMPACT;
 -- /*!40101 SET character_set_client = @saved_cs_client */;
->>>>>>> 37313bc (Initial commit)
